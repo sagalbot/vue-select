@@ -23,7 +23,7 @@ export default {
   components: {vSelect},
   data() {
      return {
-        selected: null,
+        value: null,
         options: ['foo','bar','baz']
      }
   }
