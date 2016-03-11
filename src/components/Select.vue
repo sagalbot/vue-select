@@ -190,7 +190,19 @@
 
     watch: {
       options() {
-        this.$set('value', this.multiple ? [] : null)
+        var newValue = null;
+        if ( this.value !== null ) {
+          var optionsArr = this.options.map( opt => opt.label || opt )
+          var previousValue = [].concat( this.value )
+          newValue = previousValue.filter( value => {
+            value = value.label || value
+            return optionsArr.indexOf( value ) >= 0
+          })
+          if ( !this.multiple ) {
+            newValue = newValue[0] || null
+          }
+        }
+        this.$set('value', newValue)
       },
       multiple( val ) {
         this.$set('value', val ? [] : null)
@@ -317,9 +329,8 @@
         if( this.multiple ) {
           return this.value
         } else if (this.value) {
-            return [this.value]
+            return [].concat( this.value )
         }
-
         return []
       }
     }

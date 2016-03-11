@@ -73,9 +73,9 @@ describe('Select.vue', () => {
     expect(select.isValueEmpty).toEqual(true)
   })
 
-  it('resets the selected values when the options property changes', () => {
+  it('resets the selected values when the options property changes', (done) => {
     const vm = new Vue({
-      template: '<div><v-select :value.sync="value"></v-select></div>',
+      template: '<div><v-select :value.sync="value" :multiple="true"></v-select></div>',
       components: { vSelect },
       data: {
         value: ['one'],
@@ -83,13 +83,16 @@ describe('Select.vue', () => {
       }
     }).$mount()
 
-    vm.$children[0].options = ['four','five','six']
-    expect(vm.$children[0].$get('value')).toEqual([])
+    vm.$children[0].$set( 'options', ['four','five','six'] )
+    Vue.nextTick(function() {
+      expect(vm.$children[0].$get('value')).toEqual([])
+      done()
+    })
   })
 
-  it('can retain values present in a new array of options', () => {
+  it('can retain values present in a new array of options (multiple)', (done) => {
     const vm = new Vue({
-      template: '<div><v-select :value.sync="value"></v-select></div>',
+      template: '<div><v-select :value.sync="value" :multiple="true"></v-select></div>',
       components: { vSelect },
       data: {
         value: ['one'],
@@ -98,7 +101,27 @@ describe('Select.vue', () => {
     }).$mount()
 
     vm.$children[0].$set('options', ['one','five','six'])
-    expect(vm.$children[0].value).toEqual(['one'])
+    Vue.nextTick(function() {
+      expect(vm.$children[0].value).toEqual(['one'])
+      done()
+    })
+  })
+
+  it('can retain values present in a new array of options (single)', (done) => {
+    const vm = new Vue({
+      template: '<div><v-select :value.sync="value"></v-select></div>',
+      components: { vSelect },
+      data: {
+        value: 'one',
+        options: ['one','two','three']
+      }
+    }).$mount()
+
+    vm.$children[0].$set('options', ['one','five','six'])
+    Vue.nextTick(function() {
+      expect(vm.$children[0].value).toEqual('one')
+      done()
+    })
   })
 })
 

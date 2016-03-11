@@ -258,7 +258,6 @@ export default {
         advanced: require('./countries.js'),
         simple: require('./simpleCountries.js'),
         simpler: [{label: 'This is Foo', value: 'foo'}, {label: 'This is Bar', value: 'bar'}, {label: 'This is Baz', value: 'baz'}]
-
       },
       optionType: 'advanced'
     }
