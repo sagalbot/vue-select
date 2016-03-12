@@ -300,8 +300,8 @@
       },
 
       maybeDeleteValue() {
-        if( ! this.$els.search.value.length ) {
-          this.value.pop();
+        if( ! this.$els.search.value.length && this.value ) {
+          return this.multiple ? this.value.pop() : this.$set('value', null)
         }
       }
     },
