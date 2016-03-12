@@ -105,7 +105,7 @@
         </span>
 
         <span class="alert alert-info" v-for="option in valueAsArray">
-          {{ getOptionLabel(option) }}
+          {{{ getOptionLabel(option) }}}
           <button v-if="multiple" @click="select(option)" type="button" class="close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -132,7 +132,7 @@
     <ul v-show="open" v-el:dropdown-menu :transition="transition" :style="{ 'max-height': maxHeight }" class="dropdown-menu animated">
       <li v-for="option in filteredOptions" :class="{ active: isOptionSelected(option), highlight: $index === typeAheadPointer }" @mouseover="typeAheadPointer = $index">
         <a @mousedown.prevent="select(option)">
-          {{ getOptionLabel(option) }}
+          {{{ getOptionLabel(option) }}}
         </a>
       </li>
       <li transition="fade" v-if="!filteredOptions.length" class="divider"></li>
