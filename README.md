@@ -121,7 +121,34 @@ export default {
    * an action, rather than using :value.sync to retreive the selected value.
    * @type {[type]}
    */
-  onChange: Function
+  onChange: Function,
+
+  /**
+   * Enable/disable creating options from searchInput.
+   * @type {Boolean}
+   */
+  tagable: {
+    type: Boolean,
+    default: false
+  },
+
+  /**
+   * User defined function for adding Options
+   * @type {Function}
+   */
+  createOption: {
+    type: Function,
+    default: function (value) {
+      let firstOption = this.options[0]
+      if (firstOption && typeof firstOption === 'object' ) {
+        value = {
+          value
+        }
+        value[this.label] = value
+      }
+      return value
+    }
+  }
 ```
 
 ## Todos:

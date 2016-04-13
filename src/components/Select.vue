@@ -251,7 +251,35 @@
        * @type {Function}
        * @default {null}
        */
-      onChange: Function
+      onChange: Function,
+
+      /**
+       * Enable/disable creating options from searchInput.
+       * @type {Boolean}
+       */
+      taggable: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
+       * User defined function for adding Options
+       * @type {Function}
+       */
+      createOption: {
+        type: Function,
+        default: function (newOption) {
+          let value = newOption
+          let firstOption = this.options ? this.options[0] : null
+          if (firstOption && typeof firstOption === 'object' ) {
+            value = {
+              value
+            }
+            value[this.label] = newOption
+          }
+          return value
+        }
+      }
     },
 
     data() {
@@ -267,13 +295,15 @@
         this.onChange && val !== old ? this.onChange(val) : null
       },
       options() {
-        this.$set('value', this.multiple ? [] : null)
+        if (!this.taggable) {
+          this.$set('value', this.multiple ? [] : null)
+        }
       },
       multiple( val ) {
         this.$set('value', val ? [] : null)
       },
       filteredOptions() {
-        this.typeAheadPointer = 0;
+        this.typeAheadPointer = 0
       },
     },
 
@@ -352,7 +382,7 @@
           return this.value.indexOf(option) !== -1
         }
 
-        return this.value === option;
+        return this.value === option
       },
 
       /**
@@ -379,7 +409,7 @@
       getOptionLabel( option ) {
         if( typeof option === 'object' ) {
           if( this.label && option[this.label] ) {
-            return option[this.label];
+            return option[this.label]
           } else if( option.label ) {
             return option.label
           }
@@ -413,6 +443,12 @@
       typeAheadSelect() {
         if( this.filteredOptions[ this.typeAheadPointer ] ) {
           this.select( this.filteredOptions[ this.typeAheadPointer ] );
+        } else if (this.taggable && this.search.length){
+          let option = this.createOption(this.search)
+          this.$set('options', [option, ...this.options])
+          this.$nextTick(() => {
+            this.select(option)
+          })
         }
 
         if( this.clearSearchOnSelect ) {
