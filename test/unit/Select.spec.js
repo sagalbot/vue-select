@@ -250,6 +250,41 @@ describe('Select.vue', () => {
       done()
     })
   })
+
+  it('should prepend search value as first option', (done) => {
+    const vm = new Vue({
+      template: '<div><v-select :options="options" :value.sync="value" :multiple="true" :taggable="true"></v-select></div>',
+      components: { vSelect },
+      data: {
+        value: [],
+        options: ['foo']
+      }
+    }).$mount()
+    vm.$children[0].search = 'bar'
+    expect(vm.$children[0].filteredOptions[0]).toEqual('bar')
+    done()
+  })
+
+  it('should run callback with new tag as first arguement if not already an option', (done) => {
+    const vm = new Vue({
+      template: '<div><v-select :options="options" :value.sync="value" :multiple="true" :taggable="true" :create-option="foo"></v-select></div>',
+      components: { vSelect },
+      data: {
+        value: [],
+        options: ['one'],
+        bar: ''
+      },
+      methods: {
+        foo(value) {
+          expect(value).toEqual('baz')
+          done()
+        }
+      }
+    }).$mount()
+    
+    vm.$children[0].select('one')
+    vm.$children[0].select('baz')
+  })
 })
 
 // also see example testing a component with mocks at
