@@ -269,15 +269,11 @@
       createOption: {
         type: Function,
         default: function (newOption) {
-          let value = newOption
-          let firstOption = this.options ? this.options[0] : null
-          if (firstOption && typeof firstOption === 'object' ) {
-            value = {
-              value
-            }
-            value[this.label] = newOption
+          if (typeof this.options[0] === 'object') {
+            return {[this.label]: newOption}
           }
-          return value
+
+          return newOption
         }
       }
     },
@@ -316,6 +312,11 @@
        */
       select(option) {
           if (! this.isOptionSelected(option) ) {
+            if (this.taggable && this.options.indexOf(option) === -1) {
+              newOption = this.createOption(option)
+              option = typeof newOption === 'undefined' ? option : newOption
+            }
+
             if (this.multiple) {
 
               if( ! this.value ) {
@@ -511,7 +512,12 @@
        * @return {[type]} [description]
        */
       filteredOptions() {
-        return this.$options.filters.filterBy(this.options, this.search)
+        let options = this.$options.filters.filterBy(this.options, this.search)
+        if( this.taggable && this.search.length && options.indexOf(this.search) === -1) {
+          options.unshift(this.search)
+        }
+
+        return options
       },
 
       /**
