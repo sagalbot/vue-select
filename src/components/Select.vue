@@ -362,6 +362,16 @@
 			},
 
 			/**
+			 * Enable/disable clean value when refresh options.
+			 * clean for default
+			 * @type {Boolean}
+			 */
+			clanValue:{
+				type: Boolean,
+				default: true
+			}
+
+			/**
 			 * When true, newly created tags will be added to
 			 * the options list.
 			 * @type {Boolean}
@@ -402,7 +412,7 @@
 				}
 			},
 			options() {
-				if (!this.taggable) {
+				if (this.cleanValue) {
 					this.$set('value', this.multiple ? [] : null)
 				}
 			},
