@@ -217,7 +217,7 @@
 			</li>
 			<li transition="fade" v-if="!filteredOptions.length" class="divider"></li>
 			<li transition="fade" v-if="!filteredOptions.length" class="text-center">
-				<slot name="no-options">Sorry, no matching options.</slot>
+				<slot name="no-options">{{noOptionMsg}}</slot>
 			</li>
 		</ul>
 	</div>
@@ -393,6 +393,15 @@
 				type: Boolean,
 				default: false
 			},
+			
+			/**
+			 * User defined message for when not finding any options
+			 * @type {String}
+			 */
+			noOptionMsg: {
+				type: String,
+				default: 'Sorry, no matching options.'
+			}
 		},
 
 		data() {
