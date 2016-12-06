@@ -30,8 +30,10 @@ module.exports = {
      */
     pixelsToPointerTop() {
       let pixelsToPointerTop = 0
-      for (let i = 0; i < this.typeAheadPointer; i++) {
-        pixelsToPointerTop += this.$refs.dropdownMenu.children[i].offsetHeight
+      if (this.$refs['dropdown-menu'] && this.$refs['dropdown-menu'].children) {
+        for (let i = 0; i < this.typeAheadPointer; i++) {
+          pixelsToPointerTop += this.$refs['dropdown-menu'].children[i].offsetHeight
+        }
       }
       return pixelsToPointerTop
     },
@@ -50,7 +52,7 @@ module.exports = {
      * @returns {number}
      */
     pointerHeight() {
-      let element = this.$refs.dropdownMenu.children[this.typeAheadPointer]
+      const element = (this.$refs['dropdown-menu'] && this.$refs['dropdown-menu'].children) ? this.$refs['dropdown-menu'].children[this.typeAheadPointer] : undefined
       return element ? element.offsetHeight : 0
     },
 
@@ -59,9 +61,13 @@ module.exports = {
      * @returns {{top: (string|*|number), bottom: *}}
      */
     viewport() {
-      return {
-        top: this.$refs.dropdownMenu.scrollTop,
-        bottom: this.$refs.dropdownMenu.offsetHeight + this.$refs.dropdownMenu.scrollTop
+      if (this.$refs['dropdown-menu']) {
+        return {
+          top: this.$refs['dropdown-menu'].scrollTop,
+          bottom: this.$refs['dropdown-menu'].offsetHeight + this.$refs['dropdown-menu'].scrollTop
+        }
+      } else {
+        return { top: 0, bottom: 0 }
       }
     },
 
@@ -71,7 +77,11 @@ module.exports = {
      * @returns {*}
      */
     scrollTo(position) {
-      return this.$refs.dropdownMenu.scrollTop = position
+      if (this.$refs['dropdown-menu']) {
+        return this.$refs['dropdown-menu'].scrollTop = position
+      } else {
+        return 0;
+      }
     },
   }
 }
