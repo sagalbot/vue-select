@@ -23,7 +23,7 @@ module.exports = {
 		 */
 		onSearch: {
 			type: Function,
-			default: false
+			default: function(search, loading){}
 		},
 
 		/**
