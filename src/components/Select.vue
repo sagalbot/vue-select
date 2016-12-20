@@ -185,11 +185,8 @@
 							ref="search"
 							:debounce="debounce"
 							v-model="search"
-							@keydown.delete="maybeDeleteValue"
-							@keyup.esc="onEscape"
-							@keydown.up.prevent="typeAheadUp"
-							@keydown.down.prevent="typeAheadDown"
-							@keyup.enter.prevent="typeAheadSelect"
+							@keyup="onKeyUp"
+							@keydown="onKeyDown"
 							@blur="open = false"
 							@focus="open = true"
 							type="search"
@@ -237,7 +234,7 @@
 			/**
 			 * Contains the currently selected value. Very similar to a
 			 * `value` attribute on an <input>. You can listen for changes
-			 * using 'change' event using v-on			 
+			 * using 'change' event using v-on
 			 * @type {Object||String||null}
 			 */
 			value: {
@@ -350,7 +347,7 @@
 			 * @default {null}
 			 */
 			onChange: Function,
-		
+
 
 			/**
 			 * Enable/disable creating options from searchInput.
@@ -428,7 +425,7 @@
 					this.currentSelection = this.multiple ? [] : null
 				}
 			},
-			multiple(val) {				
+			multiple(val) {
 				this.currentSelection = val ? [] : null
  			}
 		},
@@ -481,7 +478,7 @@
 						}
 					})
 					var index = this.currentSelection.indexOf(ref)
-					this.currentSelection.splice(index, 1)					
+					this.currentSelection.splice(index, 1)
 				} else {
 					this.currentSelection = null
 				}
@@ -538,6 +535,26 @@
 				}
 
 				return this.currentSelection === option
+			},
+
+			onKeyUp(e) {
+				if (e.key == 'Escape') { //esc
+					this.onEscape(e)
+				}
+			},
+
+			onKeyDown(e) {
+				if (e.key == 'Enter') { // Enter
+					this.typeAheadSelect(e)
+				} else if (e.key == 'Backspace') { // Backspace
+					this.maybeDeleteValue(e)
+				} else if (e.key == 'ArrowUp') {
+					e.preventDefault()
+					this.typeAheadUp(e)
+				} else if (e.key == 'ArrowDown') {
+					e.preventDefault()
+					this.typeAheadDown(e)
+				}
 			},
 
 			/**
@@ -620,7 +637,11 @@
 			 * @return {array}
 			 */
 			filteredOptions() {
-				let options = this.$options.filters.filterBy?this.$options.filters.filterBy(this.currentOptions, this.search):this.currentOptions
+				const options = this.currentOptions && this.currentOptions.filter ?
+					this.currentOptions.filter(option => {
+						const val = typeof option == 'object' && option.label || option
+						return ~String(val).indexOf(this.search)
+					}) : []
 				if (this.taggable && this.search.length && !this.optionExists(this.search)) {
 					options.unshift(this.search)
 				}
@@ -657,7 +678,7 @@
 			}
 		},
 		created: function() {
-			this.currentSelection = this.value			
+			this.currentSelection = this.value
 			this.currentOptions = this.options.slice(0)
 			this.showLoading = this.loading
 		}
