@@ -282,7 +282,7 @@
       <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
       <slot name="spinner">
-        <div class="spinner" v-show="mutableLoading">{{ translations.txtLoading }}div>
+        <div class="spinner" v-show="mutableLoading">{{ translations.txtLoading }}</div>
       </slot>
     </div>
 
