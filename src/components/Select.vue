@@ -415,16 +415,9 @@
             }
           }
           return option;
-        },
-
-        translations: {
-          type: Object,
-          default: {
-            txtLoading: 'Loading...',
-            txtNoMatchingOptions: 'Sorry, no matching options.',
-          }
         }
-      },
+
+     },
 
       /**
        * An optional callback function that is called each time the selected
@@ -499,7 +492,17 @@
        */
       inputId: {
         type: String
-      }
+      },
+
+      translations: {
+        type: Object,
+          default() {
+            return {
+              txtLoading: 'Loading...',
+              txtNoMatchingOptions: 'Sorry, no matching options.',
+            }
+          }
+        }
     },
 
     data() {
