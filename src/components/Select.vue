@@ -282,7 +282,7 @@
       <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
       <slot name="spinner">
-        <div class="spinner" v-show="mutableLoading">Loading...</div>
+        <div class="spinner" v-show="mutableLoading">{{ translations.txtLoading }}div>
       </slot>
     </div>
 
@@ -294,7 +294,7 @@
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
-          <slot name="no-options">Sorry, no matching options.</slot>
+          <slot name="no-options">{{ transitions.txtNoMatchingOptions }}</slot>
         </li>
       </ul>
     </transition>
@@ -415,6 +415,14 @@
             }
           }
           return option;
+        },
+
+        translations: {
+          type: Object,
+          default: {
+            txtLoading: 'Loading...',
+            txtNoMatchingOptions: 'Sorry, no matching options.',
+          }
         }
       },
 
