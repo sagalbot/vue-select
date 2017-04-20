@@ -31,7 +31,11 @@
 
 <body>
     <div id="app">
-        <v-select placeholder="multiple" multiple :options="options"></v-select>
+        <v-select placeholder="multiple" multiple :options="options" :filter-by-value="true">
+            <div slot="no-options">
+                Nenhum resultado encontrado
+            </div>
+        </v-select>
         <v-select placeholder="multiple, taggable" multiple taggable :options="options" no-drop></v-select>
         <v-select placeholder="multiple, taggable, push-tags" multiple push-tags taggable :options="[{label: 'Foo', value: 'foo'}]"></v-select>
         <v-select placeholder="multiple, closeOnSelect=true" multiple :options="['cat', 'dog', 'bear']"></v-select>
