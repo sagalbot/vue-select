@@ -444,6 +444,27 @@
       },
 
       /**
+       * Tells vue-select what key to use when filtering visible options.
+       * Specify `filter-key` override default behavior of using `label` for filtering.
+       * @type {String}
+       */
+      filterKey: {
+        type: String
+      },
+
+      /**
+       * Callback to override default filter logic.
+       * For instance you could use Levenshtein for "fuzzy" matching of user input.
+       * @type {Function}
+       */
+      filterCallback: {
+        type: Function,
+        default(userInput, candidate) {
+          return candidate.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+        }
+      },
+
+      /**
        * An optional callback function that is called each time the selected
        * value(s) change. When integrating with Vuex, use this callback to trigger
        * an action, rather than using :value.sync to retreive the selected value.
@@ -805,7 +826,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
@@ -845,13 +866,16 @@
        * @return {array}
        */
       filteredOptions() {
+        let filterProp = this.filterKey || this.label
         let options = this.mutableOptions.filter((option) => {
-          if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
-            return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
-          } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
-            return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
+          let val = option
+          if (typeof option === 'object') {
+            if (!option.hasOwnProperty(filterProp)) {
+              return console.warn(`[vue-select warn]: filter key "option.${filterProp}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
+            }
+            val = option[filterProp]
           }
-          return option.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+          return this.filterCallback(this.search, val)
         })
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
