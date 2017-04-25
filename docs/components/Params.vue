@@ -26,6 +26,15 @@
     },
 
     /**
+     * Enable/Disable deselect the option by double select it
+     * @type {Boolean}
+     */
+    toggleSelectOption: {
+      type: Boolean,
+      default: true
+    },
+
+    /**
      * Enable/disable filtering the options.
      * @type {Boolean}
      */

@@ -32,6 +32,7 @@
 <body>
     <div id="app">
         <v-select placeholder="default" :options="options"></v-select>
+        <v-select placeholder="toggleSelectOption=false" :options="options" :toggle-select-option=false></v-select>
         <v-select placeholder="multiple" multiple :options="options"></v-select>
         <v-select placeholder="multiple, taggable" multiple taggable :options="options" no-drop></v-select>
         <v-select placeholder="multiple, taggable, push-tags" multiple push-tags taggable :options="[{label: 'Foo', value: 'foo'}]"></v-select>
