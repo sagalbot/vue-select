@@ -40,7 +40,7 @@
         <v-select placeholder="unsearchable" :options="options" :searchable="false"></v-select>
         <v-select placeholder="search github.." label="full_name" @search="search" :options="ajaxRes"></v-select>
         <v-select placeholder="custom filter key" multiple :options="options" filter-key="value"></v-select>
-        <v-select placeholder="custom filter function" multiple :options="options" :filter-callback="customFilter"></v-select>
+        <v-select placeholder="custom filter function" multiple :options="options" :filter="ignoreSpaceMatcher"></v-select>
     </div>
 </body>
 

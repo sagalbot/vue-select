@@ -333,10 +333,10 @@ describe('Select.vue', () => {
 
 		it('can filter an array using a custom filter function', () => {
 			const vm = new Vue({
-				template: `<div><v-select ref="select" :options="[{label: 'Foo Bar', value: 'foo'}, {label: 'FooBar', value: 'bar'}, {label: 'Baz', value: 'baz'}]" :filter-callback="ignoreSpaceMatcher" v-model="value"></v-select></div>`,
+				template: `<div><v-select ref="select" :options="[{label: 'Foo Bar', value: 'foo'}, {label: 'FooBar', value: 'bar'}, {label: 'Baz', value: 'baz'}]" :filter="ignoreSpaceMatcher" v-model="value"></v-select></div>`,
 				data: {value: 'foo'},
 				methods: {
-					ignoreSpaceMatcher(userInput, candidate) {
+					ignoreSpaceMatcher(candidate, userInput) {
 						if (userInput) userInput = userInput.replace(/\s/g, '')
 						if (candidate) candidate = candidate.replace(/\s/g, '')
 						return candidate.toLowerCase().indexOf(userInput.toLowerCase()) > -1

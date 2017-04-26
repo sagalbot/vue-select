@@ -30,7 +30,7 @@ new Vue({
         loading(false)
       })
     }, 250),
-    customFilter(userInput, candidate) {
+    ignoreSpaceMatcher(candidate, userInput) {
       if (userInput) userInput = userInput.replace(/\s/g, '')
       if (candidate) candidate = candidate.replace(/\s/g, '')
       return candidate.toLowerCase().indexOf(userInput.toLowerCase()) > -1

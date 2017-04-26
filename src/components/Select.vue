@@ -457,9 +457,9 @@
        * For instance you could use Levenshtein for "fuzzy" matching of user input.
        * @type {Function}
        */
-      filterCallback: {
+      filter: {
         type: Function,
-        default(userInput, candidate) {
+        default(candidate, userInput) {
           return candidate.toLowerCase().indexOf(userInput.toLowerCase()) > -1
         }
       },
@@ -875,7 +875,7 @@
             }
             val = option[filterProp]
           }
-          return this.filterCallback(this.search, val)
+          return this.filter(val, this.search, option)
         })
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
