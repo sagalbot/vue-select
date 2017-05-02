@@ -355,11 +355,11 @@
 
       /**
        * Enable/disable filtering the options by value.
-       * @type {Boolean}
+       * @type {String}
        */
-      filterByValue: {
-        type: Boolean,
-        default: false
+      filterBy: {
+        type: String,
+        default: null
       },
 
       /**
@@ -810,7 +810,7 @@
         let options = this.mutableOptions.filter((option) => {
           if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
             return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1  || 
-              (this.filterByValue && option.value.toLowerCase().indexOf(this.search.toLowerCase()) > -1)
+              (this.filterBy && (option[this.filterBy] || '').toLowerCase().indexOf(this.search.toLowerCase()) > -1)
           } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
             return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
           }
