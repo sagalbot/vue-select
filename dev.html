@@ -31,13 +31,13 @@
 
 <body>
     <div id="app">
-        <v-select placeholder="multiple" multiple :options="options" filter-by="value">
-            <div slot="no-options">
-                Nenhum resultado encontrado
-            </div>
-        </v-select>
+        <v-select placeholder="default" :options="options"></v-select>
+        <v-select placeholder="default" placeholder="filtering by custom property" filter-by="value" :options="options"></v-select>
+        <v-select placeholder="multiple" multiple :options="options"></v-select>
         <v-select placeholder="multiple, taggable" multiple taggable :options="options" no-drop></v-select>
         <v-select placeholder="multiple, taggable, push-tags" multiple push-tags taggable :options="[{label: 'Foo', value: 'foo'}]"></v-select>
+        <v-select placeholder="multiple, closeOnSelect=true" multiple :options="['cat', 'dog', 'bear']"></v-select>
+        <v-select placeholder="multiple, closeOnSelect=false" multiple :close-on-select="false" :options="['cat', 'dog', 'bear']"></v-select>
         <v-select placeholder="unsearchable" :options="options" :searchable="false"></v-select>
         <v-select placeholder="search github.." label="full_name" @search="search" :options="ajaxRes"></v-select>
     </div>
