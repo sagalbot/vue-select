@@ -76,7 +76,7 @@
     cursor: pointer;
   }
   .v-select.disabled, .v-select.disabled .dropdown-toggle, .v-select.disabled .dropdown-toggle>input, .v-select.disabled .dropdown-toggle>i {
-    background-color: #cccccc;
+    background-color: #eee;
     cursor: not-allowed;
   }
   .v-select.open .dropdown-toggle {
