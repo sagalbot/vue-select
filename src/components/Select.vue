@@ -281,7 +281,9 @@
         >
 
         <div class="searchbar--action">
-          <i class="mo-search orange-text"></i>
+          <div class="searchbar--launch">
+            <i class="mo-search orange-text"></i>
+          </div>
         </div>
       </div>
 
