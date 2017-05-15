@@ -516,7 +516,7 @@
        */
       inputId: {
         type: String
-      }
+      },
       
        /**
        * Sets the text when data is loading.
@@ -524,9 +524,9 @@
        * @default {Loading...}
        */
       loadingText: {
-        type: String
+        type: String,
 	default: 'Loading...'
-      }
+      },
       
       /**
        * Sets the text when no data matching query.
@@ -534,8 +534,8 @@
        * @default {Sorry, no matching options.}
        */
       noResultsText: {
-        type: String
-	default: 'Sorry, no matching options.'
+        type: String,
+	default: 'Sorry, no matching results.'
       }
       
     },
