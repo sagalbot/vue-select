@@ -309,7 +309,9 @@
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
-          <slot name="no-options">Sorry, no matching options.</slot>
+          <slot name="no-options">
+            <span>{{ emptySearchResultMessage }}</span>
+          </slot>
         </li>
       </ul>
     </transition>
@@ -382,6 +384,15 @@
        * @type {Object}
        */
       placeholder: {
+        type: String,
+        default: ''
+      },
+
+      /**
+       * Custom empty search result message.
+       * @type {Object}
+       */
+      emptySearchMessage: {
         type: String,
         default: ''
       },
@@ -805,7 +816,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
@@ -834,6 +845,14 @@
         if (this.isValueEmpty && this.placeholder) {
           return this.placeholder;
         }
+      },
+
+      /**
+      * Return a custom or a default message fot the empty search result message.
+      * @type {String}
+      */
+      emptySearchResultMessage() {
+        return this.emptySearchMessage || 'Sorry, no matching options'
       },
 
       /**
