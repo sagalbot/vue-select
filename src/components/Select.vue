@@ -297,7 +297,7 @@
       <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
       <slot name="spinner">
-        <div class="spinner" v-show="mutableLoading">Loading...</div>
+        <div class="spinner" v-show="mutableLoading">{{ loadingText }}</div>
       </slot>
     </div>
 
@@ -309,7 +309,7 @@
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
-          <slot name="no-options">Sorry, no matching options.</slot>
+          <slot name="no-options">{{ noMatchingOptionsText }}</slot>
         </li>
       </ul>
     </transition>
@@ -441,7 +441,8 @@
           }
           return option;
         }
-      },
+
+     },
 
       /**
        * An optional callback function that is called each time the selected
@@ -516,7 +517,21 @@
        */
       inputId: {
         type: String
-      }
+      },
+
+      /**
+       * Holds the actual text for everything, allowing to change it
+       * @type {Object}
+       */
+      translations: {
+        type: Object,
+          default() {
+            return {
+              txtLoading: 'Loading...',
+              txtNoMatchingOptions: 'Sorry, no matching options.',
+            }
+          }
+        }
     },
 
     data() {
@@ -886,7 +901,24 @@
         }
 
         return []
+      },
+
+      /**
+      * Returns the text that indicate loading.
+      * @return {String} of loading
+      */
+      loadingText() {
+        return this.translations.txtLoading;
+      },
+
+      /**
+      * Returns the text that indicates that no matching option found.
+      * @return {String} of no matching option found
+      */
+      noMatchingOptionsText() {
+        return this.translations.txtNoMatchingOptions;
       }
+
     },
 
   }
