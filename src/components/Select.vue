@@ -75,6 +75,10 @@
   .v-select.unsearchable .dropdown-toggle {
     cursor: pointer;
   }
+  .v-select.disabled, .v-select.disabled .dropdown-toggle, .v-select.disabled .dropdown-toggle>input, .v-select.disabled .dropdown-toggle>i {
+    background-color: #eee;
+    cursor: not-allowed;
+  }
   .v-select.open .dropdown-toggle {
     border-bottom-color: transparent;
     border-bottom-left-radius: 0;
@@ -397,6 +401,15 @@
       },
 
       /**
+      * Enables/disables select.
+      * @type {Boolean}
+      */
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
        * Enables/disables clearing the search text when an option is selected.
        * @type {Boolean}
        */
@@ -666,7 +679,7 @@
        * @return {void}
        */
       toggleDropdown(e) {
-        if (e.target === this.$refs.openIndicator || e.target === this.$refs.search || e.target === this.$refs.toggle || e.target === this.$el) {
+        if (!this.disabled && (e.target === this.$refs.openIndicator || e.target === this.$refs.search || e.target === this.$refs.toggle || e.target === this.$el)) {
           if (this.open) {
             this.$refs.search.blur() // dropdown will close on blur
           } else {
@@ -795,7 +808,8 @@
           searching: this.searching,
           searchable: this.searchable,
           unsearchable: !this.searchable,
-          loading: this.mutableLoading
+          loading: this.mutableLoading,
+          disabled: this.disabled
         }
       },
 
