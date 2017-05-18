@@ -1,13 +1,48 @@
 <style>
-  .v-select.theme-default {
-    position: relative;
-    font-family: sans-serif;
+  /* Dropdown Default Transition */
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity .15s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-  .v-select.theme-default,
-  .v-select.theme-default * {
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  /* theme independent styles (override if need) */
+  .v-select {
+    position: relative;
+  }
+  .v-select,
+  .v-select * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+  }
+  .v-select .open-indicator {
+    cursor: pointer;
+    pointer-events: all;
+  }
+  .v-select.searchable .dropdown-toggle {
+    cursor: text;
+  }
+  .v-select.unsearchable .dropdown-toggle {
+    cursor: pointer;
+  }
+  .v-select .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    overflow-y: scroll;
+  }
+  .v-select li:hover {
+    cursor: pointer;
+  }
+
+  /* default theme */
+  .v-select.theme-default {
+    font-family: sans-serif;
   }
   /* Open Indicator */
   .v-select.theme-default .open-indicator {
@@ -15,8 +50,6 @@
     bottom: 6px;
     right: 10px;
     display: inline-block;
-    cursor: pointer;
-    pointer-events: all;
     transition: all 150ms cubic-bezier(1.000, -0.115, 0.975, 0.855);
     transition-timing-function: cubic-bezier(1.000, -0.115, 0.975, 0.855);
     opacity: 1;
@@ -69,12 +102,6 @@
     height: 0;
   }
   /* Dropdown Toggle States */
-  .v-select.theme-default.searchable .dropdown-toggle {
-    cursor: text;
-  }
-  .v-select.theme-default.unsearchable .dropdown-toggle {
-    cursor: pointer;
-  }
   .v-select.theme-default.open .dropdown-toggle {
     border-bottom-color: transparent;
     border-bottom-left-radius: 0;
@@ -83,15 +110,10 @@
   /* Dropdown Menu */
   .v-select.theme-default .dropdown-menu {
     display:block;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
     min-width: 160px;
     padding: 5px 0;
     margin: 0;
     width: 100%;
-    overflow-y: scroll;
     border: 1px solid rgba(0, 0, 0, .26);
     box-shadow: 0px 3px 6px 0px rgba(0,0,0,.15);
     border-top: none;
@@ -192,9 +214,6 @@
     color: #333; /* Overrides most CSS frameworks */
     white-space: nowrap;
   }
-  .v-select.theme-default li:hover {
-    cursor: pointer;
-  }
   .v-select.theme-default .dropdown-menu .active > a {
     color: #333;
     background: rgba(50, 50, 50, .1);
@@ -253,15 +272,6 @@
     100% {
       transform: rotate(360deg);
     }
-  }
-  /* Dropdown Default Transition */
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity .15s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  }
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
   }
 </style>
 
