@@ -52,7 +52,8 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
     padding: 0;
     background: none;
     border: 1px solid rgba(60, 60, 60, .26);
@@ -87,7 +88,7 @@
     top: 100%;
     left: 0;
     z-index: 1000;
-    min-width: 160px;
+    min-width: initial;
     padding: 5px 0;
     margin: 0;
     width: 100%;
@@ -105,15 +106,15 @@
   }
   /* Selected Tags */
   .v-select .selected-tag {
+    position: relative;
     color: #333;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 26px;
-    margin: 4px 1px 0px 3px;
-    padding: 1px 0.25em;
+    height: auto;
+    margin: 2px 1px 2px 3px;
+    padding: 0px 20px 0px 5px;
     float: left;
-    line-height: 24px;
   }
   .v-select.single .selected-tag {
     background-color: transparent;
@@ -128,13 +129,15 @@
     display: none;
   }
   .v-select .selected-tag .close {
-    float: none;
-    margin-right: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 20px;
     font-size: 20px;
-    appearance: none;
     padding: 0;
     cursor: pointer;
-    background: 0 0;
+    background: transparent;
     border: 0;
     font-weight: 700;
     line-height: 1;
@@ -163,14 +166,15 @@
     -moz-appearance: none;
     line-height: 1.42857143;
     font-size:1em;
-    height: 34px;
+    height: 33px;
     display: inline-block;
+    flex-basis: 20px;
+    flex-grow: 1;
     border: none;
     outline: none;
     margin: 0;
-    padding: 0 .5em;
-    width: 10em;
-    max-width: 100%;
+    padding: 0 20px 0 10px;
+    width: 100%;
     background: none;
     position: relative;
     box-shadow: none;
@@ -269,12 +273,12 @@
   <div class="dropdown v-select" :class="dropdownClasses">
     <div ref="toggle" @mousedown.prevent="toggleDropdown" class="dropdown-toggle">
 
-      <span class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
+      <div class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
         {{ getOptionLabel(option) }}
         <button v-if="multiple" @click="deselect(option)" type="button" class="close">
-          <span aria-hidden="true">&times;</span>
+          &times;
         </button>
-      </span>
+      </div>
 
       <input
               ref="search"
@@ -290,7 +294,6 @@
               class="form-control"
               :placeholder="searchPlaceholder"
               :readonly="!searchable"
-              :style="{ width: isValueEmpty ? '100%' : 'auto' }"
               :id="inputId"
       >
 
