@@ -286,6 +286,15 @@ describe('Select.vue', () => {
 	})
 
 	describe('Filtering Options', () => {
+		it('should not filter an array of strings if filterable is false', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :filterable="false" :options="['foo','bar','baz']" v-model="value"></v-select></div>`,
+				data: {value: 'foo'}
+			}).$mount()
+			vm.$refs.select.search = 'ba'
+			expect(vm.$refs.select.filteredOptions).toEqual(['foo', 'bar','baz'])
+		})
+
 		it('should filter an array of strings', () => {
 			const vm = new Vue({
 				template: `<div><v-select ref="select" :options="['foo','bar','baz']" v-model="value"></v-select></div>`,
@@ -1154,11 +1163,11 @@ describe('Select.vue', () => {
 					options: ['one', 'two', 'three']
 				}
 			}).$mount()
-			
+
 			vm.$children[0].open = true
 			vm.$refs.select.search = "t"
 			expect(vm.$refs.select.search).toEqual('t')
-			
+
 			vm.$children[0].onSearchBlur()
 			Vue.nextTick(() => {
 				expect(vm.$refs.select.search).toEqual('')
