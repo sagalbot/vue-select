@@ -268,31 +268,39 @@
 <template>
   <div class="dropdown v-select" :class="dropdownClasses">
     <div ref="toggle" @mousedown.prevent="toggleDropdown" class="dropdown-toggle">
+      <div class="form--tag-options-selected">      
+        <span class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
+          {{ getOptionLabel(option) }}
+          <button v-if="multiple" @click="deselect(option)" type="button" class="close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </span>
+      </div>
+      
+      <div class="form--tag-input_container">      
+        <input
+                ref="search"
+                v-model="search"
+                @keydown.delete="maybeDeleteValue"
+                @keyup.esc="onEscape"
+                @keydown.up.prevent="typeAheadUp"
+                @keydown.down.prevent="typeAheadDown"
+                @keyup.enter.prevent="typeAheadSelect"
+                @blur="onSearchBlur"
+                @focus="onSearchFocus"
+                type="search"
+                class="form-control"
+                :placeholder="searchPlaceholder"
+                :readonly="!searchable"
+                :style="{ width: isValueEmpty ? '100%' : 'auto' }"
+        >
 
-      <span class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
-        {{ getOptionLabel(option) }}
-        <button v-if="multiple" @click="deselect(option)" type="button" class="close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </span>
-
-      <input
-              ref="search"
-              v-model="search"
-              @keydown.delete="maybeDeleteValue"
-              @keyup.esc="onEscape"
-              @keydown.up.prevent="typeAheadUp"
-              @keydown.down.prevent="typeAheadDown"
-              @keyup.enter.prevent="typeAheadSelect"
-              @blur="onSearchBlur"
-              @focus="onSearchFocus"
-              type="search"
-              class="form-control"
-              :placeholder="searchPlaceholder"
-              :readonly="!searchable"
-              :style="{ width: isValueEmpty ? '100%' : 'auto' }"
-              :id="inputId"
-      >
+        <div class="searchbar--action">
+          <div class="searchbar--launch">
+            <i class="mo-search orange-text"></i>
+          </div>
+        </div>
+      </div>
 
       <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
@@ -507,15 +515,6 @@
       noDrop: {
         type: Boolean,
         default: false
-      },
-
-      /**
-       * Sets the id of the input element.
-       * @type {String}
-       * @default {null}
-       */
-      inputId: {
-        type: String
       }
     },
 
@@ -531,12 +530,12 @@
     watch: {
       /**
        * When the value prop changes, update
-			 * the internal mutableValue.
+             * the internal mutableValue.
        * @param  {mixed} val
        * @return {void}
        */
       value(val) {
-				this.mutableValue = val
+                this.mutableValue = val
       },
 
       /**
@@ -545,7 +544,7 @@
        * @param  {string|object} old
        * @return {void}
        */
-			mutableValue(val, old) {
+            mutableValue(val, old) {
         if (this.multiple) {
           this.onChange ? this.onChange(val) : null
         } else {
@@ -564,24 +563,24 @@
       },
 
       /**
-			 * Maybe reset the mutableValue
+             * Maybe reset the mutableValue
        * when mutableOptions change.
        * @return {[type]} [description]
        */
       mutableOptions() {
         if (!this.taggable && this.resetOnOptionsChange) {
-					this.mutableValue = this.multiple ? [] : null
+                    this.mutableValue = this.multiple ? [] : null
         }
       },
 
       /**
-			 * Always reset the mutableValue when
+             * Always reset the mutableValue when
        * the multiple prop changes.
        * @param  {Boolean} val
        * @return {void}
        */
       multiple(val) {
-				this.mutableValue = val ? [] : null
+                this.mutableValue = val ? [] : null
       }
     },
 
@@ -590,9 +589,9 @@
      * attach any event listeners.
      */
     created() {
-			this.mutableValue = this.value
+            this.mutableValue = this.value
       this.mutableOptions = this.options.slice(0)
-			this.mutableLoading = this.loading
+            this.mutableLoading = this.loading
 
       this.$on('option:created', this.maybePushTag)
     },
@@ -831,7 +830,7 @@
        * @return {String} Placeholder text
        */
       searchPlaceholder() {
-        if (this.isValueEmpty && this.placeholder) {
+        if (this.placeholder) {
           return this.placeholder;
         }
       },
