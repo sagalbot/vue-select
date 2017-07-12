@@ -1488,6 +1488,28 @@ describe('Select.vue', () => {
       })
     })
 
+    it('should trigger the reset event if the search text is empty', (done) => {
+      const vm = new Vue({
+        template: '<div><v-select ref="select" @reset="foo"></v-select></div>',
+        data: { called: false },
+        methods: {
+          foo(val) {
+            this.called = val
+          }
+        }
+      }).$mount()
+
+      vm.$refs.select.search = 'foo'
+      Vue.nextTick(() => {
+        expect(vm.called).toBe(false)
+        vm.$refs.select.search = ''
+        Vue.nextTick(() => {
+          expect(vm.called).toEqual('')
+          done()
+        })
+      })
+    })
+
 		it('can set loading to false from the onSearch callback', (done) => {
 			const vm = new Vue({
 				template: '<div><v-select loading ref="select" :on-search="foo"></v-select></div>',
