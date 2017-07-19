@@ -309,8 +309,11 @@
             {{ getOptionLabel(option) }}
           </a>
         </li>
-        <li v-if="!filteredOptions.length" class="no-options">
+        <li v-if="!filteredOptions.length && search" class="no-options">
           <slot name="no-options">Sorry, no matching options.</slot>
+        </li>
+        <li v-if="!filteredOptions.length && !search" class="no-options">
+          <slot name="no-options">Start Searching...</slot>
         </li>
       </ul>
     </transition>
