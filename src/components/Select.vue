@@ -698,7 +698,9 @@
           return selected
         }
 
-        return this.mutableValue === option
+        return typeof this.mutableValue === 'object'
+          ? this.mutableValue.label === option.label
+          : this.mutableValue === option
       },
 
       /**
@@ -806,7 +808,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
