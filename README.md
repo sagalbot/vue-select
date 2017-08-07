@@ -51,7 +51,7 @@ You may now use the component in your markup
 Just include `vue` & `vue-select.js` - I recommend using [unpkg](https://unpkg.com/#/).
 
 ```html
-<script scr="https://unpkg.com/vue@latest"></script>
+<script src="https://unpkg.com/vue@latest"></script>
 <!-- use the latest release -->
 <script src="https://unpkg.com/vue-select@latest"></script>
 <!-- or point to a specific release -->
