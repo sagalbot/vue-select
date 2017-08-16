@@ -100,6 +100,11 @@
     list-style: none;
     background: #fff;
   }
+  .v-select .dropdown-menu .dropdown-menu-description {
+    color: #999;
+    font-size: 0.9em;
+    white-space: normal;
+  }
   .v-select .no-options {
     text-align: center;
   }
@@ -207,6 +212,10 @@
     background: #5897fb;
     color: #fff;
   }
+  .v-select .dropdown-menu > .highlight > a .dropdown-menu-description {
+    color: #fff;
+  }
+
   .v-select .highlight:not(:last-child) {
     margin-bottom: 0; /* Fixes Bulma Margin */
   }
@@ -307,6 +316,9 @@
         <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
             {{ getOptionLabel(option) }}
+            <div class="dropdown-menu-description" v-if="getOptionDescription(option)">
+              {{ getOptionDescription(option) }}
+            </div>
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
@@ -427,6 +439,16 @@
       },
 
       /**
+       * Tells vue-select what key to use when generating option
+       * descriptions when each `option` is an object.
+       * @type {String}
+       */
+      description: {
+        type: String,
+        default: 'description'
+      },
+
+      /**
        * Callback to generate the label text. If {option}
        * is an object, returns option[this.label] by default.
        * @param  {Object || String} option
@@ -441,6 +463,22 @@
             }
           }
           return option;
+        }
+      },
+
+      /**
+       * Callback to generate the description text. If {option}
+       * is an object, returns option[this.description] by default.
+       * @param  {Object || String} option
+       * @return {String}
+       */
+      getOptionDescription: {
+        type: Function,
+        default(option) {
+          if (typeof option === 'object' && this.description && option[this.description]) {
+            return option[this.description]
+          }
+          return ''
         }
       },
 
@@ -806,7 +844,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
