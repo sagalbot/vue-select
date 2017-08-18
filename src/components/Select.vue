@@ -292,6 +292,7 @@
               :readonly="!searchable"
               :style="{ width: isValueEmpty ? '100%' : 'auto' }"
               :id="inputId"
+              :tabindex="tabIndex"
               aria-label="Search for option"
       >
 
@@ -326,6 +327,15 @@
     mixins: [pointerScroll, typeAheadPointer, ajax],
 
     props: {
+      /**
+       * Handle Tabindex
+       * @type {Number}
+       */
+      tabIndex: {
+        type: Number,
+        default: -1
+      },
+
       /**
        * Contains the currently selected value. Very similar to a
        * `value` attribute on an <input>. You can listen for changes
@@ -806,7 +816,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
