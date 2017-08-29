@@ -369,6 +369,7 @@
         default: true
       },
 
+
       /**
        * Equivalent to the `multiple` attribute on a `<select>` input.
        * @type {Object}
@@ -442,6 +443,23 @@
           }
           return option;
         }
+      },
+      /**
+       * Callback to use you own search algorithm.
+       * @param  {Object || String} option
+       * @param  {String} search
+       * @return {Boolean}
+       */
+      searchMethod:{
+          type:Function,
+          default(option,search){
+              if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
+                return option[this.label].toLowerCase().indexOf(search.toLowerCase()) > -1
+              } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
+                return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
+              }
+              return option.toLowerCase().indexOf(search.toLowerCase()) > -1
+          }
       },
 
       /**
@@ -806,7 +824,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
@@ -847,12 +865,7 @@
        */
       filteredOptions() {
         let options = this.mutableOptions.filter((option) => {
-          if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
-            return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
-          } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
-            return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
-          }
-          return option.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            return this.searchMethod(option,this.search);
         })
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
