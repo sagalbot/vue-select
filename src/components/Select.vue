@@ -195,6 +195,14 @@
   .v-select li:hover {
     cursor: pointer;
   }
+  .v-select li.disabled:hover {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .v-select li > a.disabled {
+    color: #999;
+  }
   .v-select .dropdown-menu .active > a {
     color: #333;
     background: rgba(50, 50, 50, .1);
@@ -304,8 +312,10 @@
 
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
-        <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
-          <a @mousedown.prevent="select(option)">
+        <li v-for="(option, index) in filteredOptions" v-bind:key="index"
+            :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer, disabled: isOptionDisabled(option) }"
+            @mouseover="isOptionDisabled(option)?()=>{}:typeAheadPointer = index">
+          <a @mousedown.prevent="select(option)" :class="{disabled: isOptionDisabled(option)}">
             {{ getOptionLabel(option) }}
           </a>
         </li>
@@ -606,6 +616,9 @@
        * @return {void}
        */
       select(option) {
+      	if (option === null || option === undefined || this.isOptionDisabled(option)) {
+      		return;
+        }
         if (this.isOptionSelected(option)) {
           this.deselect(option)
         } else {
@@ -699,6 +712,10 @@
         }
 
         return this.mutableValue === option
+      },
+
+      isOptionDisabled(option) {
+      	return !!option.disabled;
       },
 
       /**
