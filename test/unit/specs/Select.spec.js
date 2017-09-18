@@ -312,6 +312,24 @@ describe('Select.vue', () => {
 			vm.$refs.select.search = 'ba'
 			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Bar', value: 'bar'}, {label: 'Baz', value: 'baz'}]))
 		})
+
+		it('should filter diacritic marked characters by substituting their non-accented versions for string comparisons', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :options="['Something to filter','Ănother','ănother','Ånother','Should not appear']" v-model="value"></v-select></div>`,
+				data: {value: 'Something to filter'}
+			}).$mount()
+			vm.$refs.select.search = 'anot'
+			expect(vm.$refs.select.filteredOptions).toEqual(['Ănother','ănother','Ånother'])
+		})
+
+		it('can filter an array of objects based on the objects label key for diacritic marked characters by substituting their non-accented versions for string comparisons', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :options="[{label: 'Something to filter', value: '1'},{label: 'Ănother', value: '2'},{label: 'ănother', value: '3'},{label: 'Ånother', value: '4'},{label: 'Should not appear', value: '5'}]" v-model="value"></v-select></div>`,
+				data: {value: 'Something to filter'}
+			}).$mount()
+			vm.$refs.select.search = 'anot'
+			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Ănother', value: '2'},{label: 'ănother', value: '3'},{label: 'Ånother', value: '4'}]))
+		})
 	})
 
 	describe('Toggling Dropdown', () => {
@@ -1154,11 +1172,11 @@ describe('Select.vue', () => {
 					options: ['one', 'two', 'three']
 				}
 			}).$mount()
-			
+
 			vm.$children[0].open = true
 			vm.$refs.select.search = "t"
 			expect(vm.$refs.select.search).toEqual('t')
-			
+
 			vm.$children[0].onSearchBlur()
 			Vue.nextTick(() => {
 				expect(vm.$refs.select.search).toEqual('')
