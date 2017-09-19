@@ -518,7 +518,16 @@
        */
       inputId: {
         type: String
-      }
+      },
+
+      /**
+       * Enable the remove diacritics support
+       * @type {Boolean}
+       */
+      removeDiacritics: {
+        type: Boolean,
+        default: false
+      },
     },
 
     data() {
@@ -849,11 +858,18 @@
       filteredOptions() {
         let options = this.mutableOptions.filter((option) => {
           if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
-            return this.removeDiacritics(option[this.label]).toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            if (this.removeDiacritics) {
+              return this.removeDiacriticsFromString(option[this.label]).toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            }
+            return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
           } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
             return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
           }
-          return this.removeDiacritics(option).toLowerCase().indexOf(this.search.toLowerCase()) > -1
+
+          if (this.removeDiacritics) {
+            return this.removeDiacriticsFromString(option).toLowerCase().indexOf(this.search.toLowerCase()) > -1
+          }
+          return option.toLowerCase().indexOf(this.search.toLowerCase()) > -1
         })
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)

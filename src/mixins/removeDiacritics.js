@@ -278,7 +278,7 @@ module.exports = {
 		 * @param str String
 		 * @returns String
 		 */
-		removeDiacritics(str) {
+		removeDiacriticsFromString(str) {
 			const diacriticsMap = this.diacriticsMap;
 			return str.replace(/[^\u0000-\u007E]/g, function(a) {
 		    return diacriticsMap[a] || a;
