@@ -187,7 +187,7 @@
   }
   .v-select li > a {
     display: block;
-    padding: 3px 20px;
+    padding: 3px 10px;
     clear: both;
     color: #333; /* Overrides most CSS frameworks */
     white-space: nowrap;
@@ -307,10 +307,11 @@
         <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
             <template v-if="checkboxed === true">
-              <input type="checkbox" :name="option" :value="option" :checked="isOptionSelected(option)"> {{ getOptionLabel(option) }} </input>
+              <input id="option-checkbox" type="checkbox" :name="option" :value="option" :checked="isOptionSelected(option)">&nbsp; {{ getOptionLabel(option) }} </input>
             </template>
             <template v-else>
               {{ getOptionLabel(option) }}
+
             </template>
           </a>
         </li>
