@@ -306,7 +306,12 @@
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
         <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
-            {{ getOptionLabel(option) }}
+            <template v-if="checkboxed === true">
+              <input type="checkbox" :name="option" :value="option" :checked="isOptionSelected(option)"> {{ getOptionLabel(option) }} </input>
+            </template>
+            <template v-else>
+              {{ getOptionLabel(option) }}
+            </template>
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
@@ -517,6 +522,10 @@
        */
       inputId: {
         type: String
+      },
+      checkboxed: {
+        type:Boolean,
+        default:false
       }
     },
 
@@ -806,7 +815,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
