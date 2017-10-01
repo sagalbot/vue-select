@@ -312,6 +312,40 @@ describe('Select.vue', () => {
 			vm.$refs.select.search = 'ba'
 			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Bar', value: 'bar'}, {label: 'Baz', value: 'baz'}]))
 		})
+
+		it('can filter an array of objects based on value key', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :options="[{label: 'Foo', value: 'foo'}, {label: 'Bar', value: 'blue1'}, {label: 'Baz', value: 'blue2'}]" filter-key="value" v-model="value"></v-select></div>`,
+				data: {value: 'foo'}
+			}).$mount()
+			vm.$refs.select.search = 'blue'
+			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Bar', value: 'blue1'}, {label: 'Baz', value: 'blue2'}]))
+		})
+
+		it('can filter an array of objects based on the objects arbitrary key', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :options="[{label: 'Foo', value: 'foo', search: 'red'}, {label: 'Bar', value: 'bar', search: 'blue'}, {label: 'Baz', value: 'baz', search: 'Blue'}]" filter-key="search" v-model="value"></v-select></div>`,
+				data: {value: 'foo'}
+			}).$mount()
+			vm.$refs.select.search = 'blue'
+			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Bar', value: 'bar', search: 'blue'}, {label: 'Baz', value: 'baz', search: 'Blue'}]))
+		})
+
+		it('can filter an array using a custom filter function', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :options="[{label: 'Foo Bar', value: 'foo'}, {label: 'FooBar', value: 'bar'}, {label: 'Baz', value: 'baz'}]" :filter="ignoreSpaceMatcher" v-model="value"></v-select></div>`,
+				data: {value: 'foo'},
+				methods: {
+					ignoreSpaceMatcher(candidate, userInput) {
+						if (userInput) userInput = userInput.replace(/\s/g, '')
+						if (candidate) candidate = candidate.replace(/\s/g, '')
+						return candidate.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+					}
+				}
+			}).$mount()
+			vm.$refs.select.search = 'foob'
+			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Foo Bar', value: 'foo'}, {label: 'FooBar', value: 'bar'}]))
+		})
 	})
 
 	describe('Toggling Dropdown', () => {
@@ -726,7 +760,7 @@ describe('Select.vue', () => {
 			}).$mount()
 			Vue.nextTick(() => {
 				expect(console.warn).toHaveBeenCalledWith(
-						'[vue-select warn]: Label key "option.label" does not exist in options object.' +
+						'[vue-select warn]: filter key "option.label" does not exist in options object.' +
 						'\nhttp://sagalbot.github.io/vue-select/#ex-labels'
 				)
 				done()
@@ -1154,11 +1188,11 @@ describe('Select.vue', () => {
 					options: ['one', 'two', 'three']
 				}
 			}).$mount()
-			
+
 			vm.$children[0].open = true
 			vm.$refs.select.search = "t"
 			expect(vm.$refs.select.search).toEqual('t')
-			
+
 			vm.$children[0].onSearchBlur()
 			Vue.nextTick(() => {
 				expect(vm.$refs.select.search).toEqual('')
