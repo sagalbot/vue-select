@@ -361,10 +361,19 @@
       },
 
       /**
-       * Enable/disable filtering the options.
+       * Enable/disable search input field.
        * @type {Boolean}
        */
       searchable: {
+        type: Boolean,
+        default: true
+      },
+
+      /**
+       * Enable/disable filtering the options.
+       * @type {Boolean}
+       */
+      filterable: {
         type: Boolean,
         default: true
       },
@@ -806,7 +815,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
@@ -846,14 +855,19 @@
        * @return {array}
        */
       filteredOptions() {
-        let options = this.mutableOptions.filter((option) => {
-          if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
-            return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
-          } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
-            return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
-          }
-          return option.toLowerCase().indexOf(this.search.toLowerCase()) > -1
-        })
+        var options;
+        if (this.filterable) {
+          options = this.mutableOptions.filter((option) => {
+            if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
+              return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
+              return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
+            }
+            return option.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+          })
+        } else {
+          options = this.mutableOptions.slice()
+        }
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
