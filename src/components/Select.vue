@@ -330,9 +330,10 @@
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
+  import removeDiacritics from '../mixins/removeDiacritics'
 
   export default {
-    mixins: [pointerScroll, typeAheadPointer, ajax],
+    mixins: [pointerScroll, typeAheadPointer, ajax, removeDiacritics],
 
     props: {
       /**
@@ -536,7 +537,16 @@
        */
       inputId: {
         type: String
-      }
+      },
+
+      /**
+       * Enable the remove diacritics support
+       * @type {Boolean}
+       */
+      removeDiacritics: {
+        type: Boolean,
+        default: false
+      },
     },
 
     data() {
@@ -827,7 +837,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
@@ -869,9 +879,16 @@
       filteredOptions() {
         let options = this.mutableOptions.filter((option) => {
           if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
+            if (this.removeDiacritics) {
+              return this.removeDiacriticsFromString(option[this.label]).toLowerCase().indexOf(this.search.toLowerCase()) > -1
+            }
             return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
           } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
             return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
+          }
+
+          if (this.removeDiacritics) {
+            return this.removeDiacriticsFromString(option).toLowerCase().indexOf(this.search.toLowerCase()) > -1
           }
           return option.toLowerCase().indexOf(this.search.toLowerCase()) > -1
         })

@@ -312,6 +312,24 @@ describe('Select.vue', () => {
 			vm.$refs.select.search = 'ba'
 			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Bar', value: 'bar'}, {label: 'Baz', value: 'baz'}]))
 		})
+
+    it('should filter diacritic marked characters by substituting their non-accented versions for string comparisons when remove-diacritics prop is set to true', () => {
+      const vm = new Vue({
+        template: `<div><v-select ref="select" remove-diacritics :options="['Something to filter','Ănother','ănother','Ånother','Should not appear']" v-model="value"></v-select></div>`,
+        data: {value: 'Something to filter'}
+      }).$mount()
+      vm.$refs.select.search = 'anot'
+      expect(vm.$refs.select.filteredOptions).toEqual(['Ănother','ănother','Ånother'])
+    })
+
+    it('should not filter diacritic marked characters by substituting their non-accented versions when remove-diacritics prop is not set', () => {
+      const vm = new Vue({
+        template: `<div><v-select ref="select" :options="['Something to filter','Ănother','ănother','Ånother','Should not appear']" v-model="value"></v-select></div>`,
+        data: {value: 'Something to filter'}
+      }).$mount()
+      vm.$refs.select.search = 'anot'
+      expect(vm.$refs.select.filteredOptions).toEqual([])
+    })
 	})
 
 	describe('Toggling Dropdown', () => {
@@ -1173,11 +1191,11 @@ describe('Select.vue', () => {
 					options: ['one', 'two', 'three']
 				}
 			}).$mount()
-			
+
 			vm.$children[0].open = true
 			vm.$refs.select.search = "t"
 			expect(vm.$refs.select.search).toEqual('t')
-			
+
 			vm.$children[0].onSearchBlur()
 			Vue.nextTick(() => {
 				expect(vm.$refs.select.search).toEqual('')
