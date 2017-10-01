@@ -133,6 +133,32 @@ describe('Select.vue', () => {
 			expect(vm.$children[0].mutableValue.length).toEqual(1)
 		}),
 
+		it('should deselect a pre-selected string when toggleSelectOption is true', () => {
+			const vm = new Vue({
+				template: `<div><v-select :value="'foo'" :options="options" :toggle-select-option=true></v-select></div>`,
+				data: {
+					options: ['foo', 'bar']
+				}
+			}).$mount()
+
+			expect(vm.$children[0].mutableValue).toEqual('foo')
+			vm.$children[0].select('foo')
+			expect(vm.$children[0].mutableValue).toEqual(null)
+		})
+
+		it('should not deselect a pre-selected string when toggleSelectOption is false', () => {
+			const vm = new Vue({
+				template: `<div><v-select :value="'foo'" :options="options" :toggle-select-option=false></v-select></div>`,
+				data: {
+					options: ['foo', 'bar']
+				}
+			}).$mount()
+
+			expect(vm.$children[0].mutableValue).toEqual('foo')
+			vm.$children[0].select('foo')
+			expect(vm.$children[0].mutableValue).toEqual('foo')
+		})
+
 		it('can deselect an option when multiple is false', () => {
 			const vm = new Vue({
 				template: `<div><v-select :value="'foo'"></v-select></div>`,
@@ -1154,11 +1180,11 @@ describe('Select.vue', () => {
 					options: ['one', 'two', 'three']
 				}
 			}).$mount()
-			
+
 			vm.$children[0].open = true
 			vm.$refs.select.search = "t"
 			expect(vm.$refs.select.search).toEqual('t')
-			
+
 			vm.$children[0].onSearchBlur()
 			Vue.nextTick(() => {
 				expect(vm.$refs.select.search).toEqual('')

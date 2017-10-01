@@ -351,6 +351,15 @@
       },
 
       /**
+       * Enable/Disable deselect the option by double select it
+       * @type {Boolean}
+       */
+      toggleSelectOption: {
+        type: Boolean,
+        default: true
+      },
+
+      /**
        * Sets the max-height property on the dropdown list.
        * @deprecated
        * @type {String}
@@ -607,7 +616,9 @@
        */
       select(option) {
         if (this.isOptionSelected(option)) {
-          this.deselect(option)
+          if (this.toggleSelectOption) {
+            this.deselect(option)
+          }
         } else {
           if (this.taggable && !this.optionExists(option)) {
             option = this.createOption(option)
@@ -806,7 +817,7 @@
        */
       clearSearchOnBlur() {
         return this.clearSearchOnSelect && !this.multiple
-      },  
+      },
 
       /**
        * Return the current state of the
