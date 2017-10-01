@@ -10,6 +10,18 @@ Vue.component('v-select', vSelect)
 
 Vue.config.devtools = true
 
+function filter(item, key) {
+  var b = [];
+  var j = 0;
+  for (var i = 0; i < item.length; i++) {
+    if (j < key.length && item[i] == key[j]) {
+      j++;
+      b.push(i);
+    }
+  }
+  return j == key.length;
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -17,7 +29,10 @@ new Vue({
     placeholder: "placeholder",
     value: null,
     options: countries,
-    ajaxRes: []
+    ajaxRes: [],
+    mySearch(option, search) {
+      return filter(option.label.toLowerCase(), search);
+    },
   },
   methods: {
     search(search, loading) {
