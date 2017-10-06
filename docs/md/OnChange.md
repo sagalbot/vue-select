@@ -10,7 +10,7 @@ This is very useful when integrating with Vuex, as it will allow your to trigger
 </div>
 
 ```html
-<v-select v-on:change="consoleCallback" :options="countries"></v-select>
+<v-select :on-change="consoleCallback" :options="countries"></v-select>
 ```
 
 ```js
