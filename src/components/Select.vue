@@ -455,6 +455,33 @@
       },
 
       /**
+       * Tells vue-select what key to use when describing whether
+       * an option is disabled.
+       * @type {String}
+       */
+      disabled: {
+        type: String,
+        default: 'disabled'
+      },
+
+      /**
+       * Callback to generate boolean value about whether an option
+       * is disabled. Disabled = false by default.
+       * @type {Boolean}
+       */
+      isOptionDisabled: {
+        type: Function,
+        default(option) {
+          if (typeof option === 'object') {
+            if (this.disabled && option[this.disabled]) {
+              return !!option[this.disabled]  // in case this value is not a boolean value itself
+            }
+          }
+          return false;
+        }
+      },
+
+      /**
        * An optional callback function that is called each time the selected
        * value(s) change. When integrating with Vuex, use this callback to trigger
        * an action, rather than using :value.sync to retreive the selected value.
@@ -712,10 +739,6 @@
         }
 
         return this.mutableValue === option
-      },
-
-      isOptionDisabled(option) {
-      	return !!option.disabled;
       },
 
       /**
