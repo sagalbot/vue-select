@@ -307,7 +307,7 @@
               @blur="onSearchBlur"
               @focus="onSearchFocus"
               type="search"
-              class="form-control"
+              class="v-select-search"
               :disabled="disabled"
               :placeholder="searchPlaceholder"
               :readonly="!searchable"
