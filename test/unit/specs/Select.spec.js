@@ -312,6 +312,15 @@ describe('Select.vue', () => {
 			vm.$refs.select.search = 'ba'
 			expect(JSON.stringify(vm.$refs.select.filteredOptions)).toEqual(JSON.stringify([{label: 'Bar', value: 'bar'}, {label: 'Baz', value: 'baz'}]))
 		})
+
+		it('should have a search class name', () => {
+			const vm = new Vue({
+				template: '<div><v-select></v-select></div>',
+				components: {vSelect}
+			}).$mount()
+
+			expect(vm.$el.querySelector('.v-select-search')).not.toBeNull();
+		})
 	})
 
 	describe('Toggling Dropdown', () => {
