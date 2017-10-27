@@ -122,7 +122,7 @@
     </div>
 
     <div class="col-md-6">
-      <pre><v-code lang="markup">&#x3C;v-select v-on:change=&#x22;consoleCallback&#x22; :options=&#x22;countries&#x22;&#x3E;&#x3C;/v-select&#x3E;</v-code></pre>
+      <pre><v-code lang="markup">&#x3C;v-select :on-change=&#x22;consoleCallback&#x22; :options=&#x22;countries&#x22;&#x3E;&#x3C;/v-select&#x3E;</v-code></pre>
       <pre><v-code lang="javascript">methods: {
   consoleCallback(val) {
     console.dir(JSON.stringify(val))
