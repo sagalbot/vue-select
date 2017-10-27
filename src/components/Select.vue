@@ -190,6 +190,14 @@
     clear: none;
   }
   /* List Items */
+  .v-select ul.selected-tag-list {
+    margin: 0;
+    padding: 0;
+  }
+  .v-select li.selected-tag {
+    display: inline;
+    list-style-type: none;
+  }
   .v-select li {
     line-height: 1.42857143; /* Normalize line height */
   }
@@ -285,16 +293,19 @@
 
 <template>
   <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
-    <div ref="toggle" @mousedown.prevent="toggleDropdown" :class="['dropdown-toggle', 'clearfix']">
 
-      <span class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
+    <ul class="selected-tag-list" v-sortable>
+      <li class="selected-tag" v-for="option in valueAsArray" v-bind:key="option">
         <slot name="selected-option" v-bind="option">
           {{ getOptionLabel(option) }}
         </slot>
         <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
           <span aria-hidden="true">&times;</span>
         </button>
-      </span>
+      </li>
+    </ul>
+
+    <div ref="toggle" @mousedown.prevent="toggleDropdown" :class="['dropdown-toggle', 'clearfix']">
 
       <input
               ref="search"
@@ -344,9 +355,26 @@
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
+  import Sortable from 'sortablejs'
+  import 'array.prototype.move'
 
   export default {
     mixins: [pointerScroll, typeAheadPointer, ajax],
+
+    directives: {
+      sortable: {
+        inserted(el, binding, vnode) {
+          let options = {
+            onSort(evt) {
+              // sortable works on the DOM (rearranges list items),
+              // must apply this change to the vue model
+              vnode.context.moveValue(evt.oldIndex, evt.newIndex)
+            }
+          }
+          new Sortable(el, options)
+        }
+      }
+    },
 
     props: {
       /**
@@ -643,6 +671,13 @@
     },
 
     methods: {
+
+      /**
+       * Move a value's position in the mutableValue list
+       */
+      moveValue(oldIndex, newIndex) {
+        this.mutableValue.move(oldIndex, newIndex)
+      },
 
       /**
        * Select a given option.

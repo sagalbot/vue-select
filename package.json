@@ -74,5 +74,9 @@
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0",
     "webpack-merge": "^0.13.0"
+  },
+  "dependencies": {
+    "array.prototype.move": "0.0.4",
+    "sortablejs": "^1.6.1"
   }
 }
