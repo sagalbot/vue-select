@@ -294,7 +294,7 @@
 <template>
   <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
 
-    <ul class="selected-tag-list" v-sortable>
+    <ul class="selected-tag-list" v-sortable="sortable">
       <li class="selected-tag" v-for="option in valueAsArray" v-bind:key="option">
         <slot name="selected-option" v-bind="option">
           {{ getOptionLabel(option) }}
@@ -364,6 +364,7 @@
     directives: {
       sortable: {
         inserted(el, binding, vnode) {
+          if (!binding.value) return // do not make sortable
           let options = {
             onSort(evt) {
               // sortable works on the DOM (rearranges list items),
@@ -427,6 +428,15 @@
       searchable: {
         type: Boolean,
         default: true
+      },
+
+      /**
+       * Enable/disable drag-drop sortability of selected options.
+       * @type {Boolean}
+       */
+      sortable: {
+        type: Boolean,
+        default: false
       },
 
       /**
