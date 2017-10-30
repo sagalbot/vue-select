@@ -35,6 +35,15 @@
     },
 
     /**
+     * Enable/disable drag-drop sortability of selected options.
+     * @type {Boolean}
+     */
+    sortable: {
+      type: Boolean,
+      default: false
+    },
+
+    /**
      * Equivalent to the `multiple` attribute on a `&lt;select&gt;` input.
      * @type {Boolean}
      */
