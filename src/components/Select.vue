@@ -295,7 +295,7 @@
   <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
 
     <ul class="selected-tag-list" v-sortable="sortable">
-      <li class="selected-tag" v-for="option in valueAsArray" v-bind:key="option">
+      <li class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
         <slot name="selected-option" v-bind="option">
           {{ getOptionLabel(option) }}
         </slot>
