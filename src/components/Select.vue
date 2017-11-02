@@ -211,6 +211,14 @@
   .v-select li:hover {
     cursor: pointer;
   }
+  .v-select li.disabled:hover {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .v-select li > a.disabled {
+    color: #999;
+  }
   .v-select .dropdown-menu .active > a {
     color: #333;
     background: rgba(50, 50, 50, .1);
@@ -336,8 +344,10 @@
 
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
-        <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
-          <a @mousedown.prevent="select(option)">
+        <li v-for="(option, index) in filteredOptions" v-bind:key="index"
+            :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer, disabled: isOptionDisabled(option) }"
+            @mouseover="isOptionDisabled(option)?()=>{}:typeAheadPointer = index">
+          <a @mousedown.prevent="select(option)" :class="{disabled: isOptionDisabled(option)}">
           <slot name="option" v-bind="option">
             {{ getOptionLabel(option) }}
           </slot>
@@ -512,6 +522,33 @@
             }
           }
           return option;
+        }
+      },
+
+      /**
+       * Tells vue-select what key to use when describing whether
+       * an option is disabled.
+       * @type {String}
+       */
+      disabledkey: {
+        type: String,
+        default: 'disabled'
+      },
+
+      /**
+       * Callback to generate boolean value about whether an option
+       * is disabled. Disabled = false by default.
+       * @type {Boolean}
+       */
+      isOptionDisabled: {
+        type: Function,
+        default(option) {
+          if (typeof option === 'object') {
+            if (this.disabledkey && option[this.disabledkey]) {
+              return !!option[this.disabledkey]  // in case this value is not a boolean value itself
+            }
+          }
+          return false;
         }
       },
 
@@ -695,6 +732,9 @@
        * @return {void}
        */
       select(option) {
+      	if (option === null || option === undefined || this.isOptionDisabled(option)) {
+      		return;
+        }
         if (this.isOptionSelected(option)) {
           this.deselect(option)
         } else {

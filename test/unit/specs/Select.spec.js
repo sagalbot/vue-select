@@ -221,6 +221,23 @@ describe('Select.vue', () => {
 			expect(vm.$children[0].isOptionSelected({label: 'one'})).toEqual(true)
 		})
 
+		it('can handle option with disabled property', () => {
+			const disabledOption = {label: 'one', value: 'one', disabled: true};
+			const vm = new Vue({
+				template: '<div><v-select ref="select" :options="options" multiple v-model="value"></v-select></div>',
+				components: {vSelect},
+				data: {
+					value: [],
+					options: [disabledOption, {label: 'two', value: 'two'}]
+				}
+			}).$mount()
+
+			expect(vm.$children[0].isOptionDisabled(disabledOption)).toEqual(true);
+			expect(vm.$children[0].isOptionSelected(disabledOption)).toEqual(false);
+			vm.$refs.select.select(disabledOption);
+			expect(vm.$children[0].isOptionSelected(disabledOption)).toEqual(false);
+		})
+
 		it('can use v-model syntax for a two way binding to a parent component', (done) => {
 			const vm = new Vue({
 				template: '<div><v-select :options="options" v-model="value"></v-select></div>',
