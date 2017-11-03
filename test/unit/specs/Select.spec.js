@@ -1033,26 +1033,25 @@ describe('Select.vue', () => {
 			})
 		})
 
-		it('should not trigger the onSearch callback if the search text is empty', (done) => {
-			const vm = new Vue({
-				template: '<div><v-select ref="select" search="foo" :on-search="foo"></v-select></div>',
-				data: { called: false },
-				methods: {
-					foo(val) {
-						this.called = ! this.called
-					}
-				}
-			}).$mount()
+		it('should trigger the onSearch callback when the dropdown is opened with no search text', (done) => {
+            const vm = new Vue({
+                template: '<div><v-select ref="select" :on-search="foo"></v-select></div>',
+                data: {
+                    called: false
+                },
+                methods: {
+                    foo(val) {
+                        this.called = val
+                    }
+                }
+            }).$mount()
 
-			vm.$refs.select.search = 'foo'
-			Vue.nextTick(() => {
-				expect(vm.called).toBe(true)
-				vm.$refs.select.search = ''
-				Vue.nextTick(() => {
-					expect(vm.called).toBe(true)
-					done()
-				})
-			})
+            vm.$refs.select.open = true
+
+            Vue.nextTick(() => {
+                expect(vm.called).toEqual('')
+                done()
+            })
 		})
 
     it('should trigger the search event when the search text changes', (done) => {
@@ -1076,26 +1075,25 @@ describe('Select.vue', () => {
       })
     })
 
-    it('should not trigger the search event if the search text is empty', (done) => {
-      const vm = new Vue({
-        template: '<div><v-select ref="select" search="foo" @search="foo"></v-select></div>',
-        data: { called: false },
-        methods: {
-          foo(val) {
-            this.called = ! this.called
-          }
-        }
-      }).$mount()
+    it('should trigger the search event when the dropdown opens with no search text', (done) => {
+        const vm = new Vue({
+            template: '<div><v-select ref="select" @search="foo"></v-select></div>',
+            data: {
+                called: false
+            },
+            methods: {
+                foo(val) {
+                    this.called = val
+                }
+            }
+        }).$mount()
 
-      vm.$refs.select.search = 'foo'
-      Vue.nextTick(() => {
-        expect(vm.called).toBe(true)
-        vm.$refs.select.search = ''
+        vm.$refs.select.open = true
+
         Vue.nextTick(() => {
-          expect(vm.called).toBe(true)
-          done()
+            expect(vm.called).toEqual('')
+            done()
         })
-      })
     })
 
 		it('can set loading to false from the onSearch callback', (done) => {

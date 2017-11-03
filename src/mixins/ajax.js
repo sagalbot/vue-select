@@ -29,30 +29,34 @@ module.exports = {
 
 	data() {
 		return {
-      mutableLoading: false
-    }
-	},
-
-	watch: {
-		/**
-		 * If a callback & search text has been provided,
-		 * invoke the onSearch callback.
-		 */
-		search() {
-			if (this.search.length > 0) {
-				this.onSearch(this.search, this.toggleLoading)
-        this.$emit('search', this.search, this.toggleLoading)
-      }
-		},
-    /**
-		 * Sync the loading prop with the internal
-		 * mutable loading value.
-     * @param val
-     */
-		loading(val) {
-			this.mutableLoading = val
+		  mutableLoading: false
 		}
 	},
+
+    watch: {
+        /**
+         * If a callback & search text has been provided,
+         * invoke the onSearch callback.
+         */
+        search() {
+            this.invokeOnSearch()
+        },
+
+		open() {
+        	if (this.open && this.search === '') {
+                this.invokeOnSearch()
+            }
+		},
+
+        /**
+         * Sync the loading prop with the internal
+         * mutable loading value.
+         * @param val
+         */
+        loading(val) {
+            this.mutableLoading = val
+        }
+    },
 
 	methods: {
 		/**
@@ -67,6 +71,11 @@ module.exports = {
 				return this.mutableLoading = !this.mutableLoading
 			}
 			return this.mutableLoading = toggle
+		},
+
+		invokeOnSearch() {
+            this.onSearch(this.search, this.toggleLoading)
+            this.$emit('search', this.search, this.toggleLoading)
 		}
 	}
 }
