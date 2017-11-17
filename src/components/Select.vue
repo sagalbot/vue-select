@@ -531,14 +531,14 @@
        * @see getOptionKey()
        * @type {String}
        */
-      key: {
+      optionKey: {
         type: String,
         default: 'key'
       },
 
       /**
        * Callback to generate the vue key text. If {option}
-       * is an object and this.key is set, returns option[this.key].
+       * is an object and this.optionKey is set, returns option[this.optionKey].
        * Otherwise, returns the option itself.
        *
        * It is imperative that sortable options have a unique key,
@@ -553,8 +553,8 @@
         type: Function,
         default(option) {
           if (typeof option === 'object') {
-            if (this.key && option[this.key]) {
-              return option[this.key]
+            if (this.optionKey && option[this.optionKey]) {
+              return option[this.optionKey]
             }
           }
           return option
