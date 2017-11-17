@@ -303,7 +303,7 @@
   <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
 
     <ul class="selected-tag-list" v-sortable="sortable">
-      <li class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
+      <li class="selected-tag" v-for="option in valueAsArray" :key="getOptionKey(option)">
         <slot name="selected-option" v-bind="option">
           {{ getOptionLabel(option) }}
         </slot>
@@ -522,6 +522,42 @@
             }
           }
           return option;
+        }
+      },
+
+      /**
+       * Tells vue-select what key to use when generating option
+       * element vue keys when each `option` is an object.
+       * @see getOptionKey()
+       * @type {String}
+       */
+      key: {
+        type: String,
+        default: 'key'
+      },
+
+      /**
+       * Callback to generate the vue key text. If {option}
+       * is an object and this.key is set, returns option[this.key].
+       * Otherwise, returns the option itself.
+       *
+       * It is imperative that sortable options have a unique key,
+       * otherwise Vue will lose track of which DOM elements match
+       * which options when re-sorted.
+       *
+       * @type {Function}
+       * @param  {Object || String} option
+       * @return {String}
+       */
+      getOptionKey: {
+        type: Function,
+        default(option) {
+          if (typeof option === 'object') {
+            if (this.key && option[this.key]) {
+              return option[this.key]
+            }
+          }
+          return option
         }
       },
 
