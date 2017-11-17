@@ -287,35 +287,39 @@
   <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
     <div ref="toggle" @mousedown.prevent="toggleDropdown" :class="['dropdown-toggle', 'clearfix']">
 
-      <span class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
-        <slot name="selected-option" v-bind="option">
-          {{ getOptionLabel(option) }}
-        </slot>
-        <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </span>
-
-      <input
-              ref="search"
-              v-model="search"
-              @keydown.delete="maybeDeleteValue"
-              @keyup.esc="onEscape"
-              @keydown.up.prevent="typeAheadUp"
-              @keydown.down.prevent="typeAheadDown"
-              @keydown.enter.prevent="typeAheadSelect"
-              @blur="onSearchBlur"
-              @focus="onSearchFocus"
-              type="search"
-              class="form-control"
-              :disabled="disabled"
-              :placeholder="searchPlaceholder"
-              :readonly="!searchable"
-              :style="{ width: isValueEmpty ? '100%' : 'auto' }"
-              :id="inputId"
-              aria-label="Search for option"
-      >
-
+      <div style="float:left;" @click="$refs.search.focus()">
+        <span class="selected-tag" v-for="option in valueAsArray" v-bind:key="option.index">
+          <slot name="selected-option" v-bind="option">
+            {{ getOptionLabel(option) }}
+          </slot>
+          <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </span>
+      </div>
+      
+      <div style="overflow: hidden;">
+        <input
+                ref="search"
+                v-model="search"
+                @keydown.delete="maybeDeleteValue"
+                @keyup.esc="onEscape"
+                @keydown.up.prevent="typeAheadUp"
+                @keydown.down.prevent="typeAheadDown"
+                @keydown.enter.prevent="typeAheadSelect"
+                @blur="onSearchBlur"
+                @focus="onSearchFocus"
+                type="search"
+                class="form-control"
+		:disabled="disabled"
+                :placeholder="searchPlaceholder"
+                :readonly="!searchable"
+                :style="{ width: isValueEmpty ? '100%' : '' }"
+                :id="inputId"
+                aria-label="Search for option"
+        >
+      </div>
+      
       <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
       <slot name="spinner">
