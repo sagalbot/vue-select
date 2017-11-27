@@ -594,7 +594,7 @@
         if (this.multiple) {
           this.onChange ? this.onChange(val) : null
         } else {
-          this.onChange && val !== old ? this.onChange(val) : null
+          this.onChange && JSON.stringify(val) !== JSON.stringify(old) ? this.onChange(val) : null
         }
       },
 
