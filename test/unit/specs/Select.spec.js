@@ -249,6 +249,23 @@ describe('Select.vue', () => {
 			expect(vm.$children[0].isOptionSelected('foo')).toEqual(true)
 		}),
 
+		it('won\'t call onChange repeatedly if new value is deep equal to old value', () => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options" :value="value" :on-change="onChange"></v-select></div>',
+				data: {
+					value: null,
+					options: [{label: 'This is Foo', value: 'foo'}, {label: 'This is Bar', value: 'bar'}]
+				},
+				methods: {
+					onChange ({label, value}) {
+						this.value = {label, value}
+					}
+				}
+			}).$mount()
+			vm.$children[0].select({label: 'This is Foo', value: 'foo'})
+			expect(JSON.stringify(vm.$children[0].mutableValue)).toEqual(JSON.stringify({label: 'This is Foo', value: 'foo'}))
+		})
+
 		describe('change Event', () => {
 			it('will trigger the input event when the selection changes', (done) => {
 				const vm = new Vue({
