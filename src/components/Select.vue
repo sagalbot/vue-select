@@ -679,7 +679,9 @@
             option = this.createOption(option)
           }
 
-          if (this.multiple && !this.mutableValue) {
+          if (!option) {
+            // nothing.
+          } else if (this.multiple && !this.mutableValue) {
             this.mutableValue = [option]
           } else if (this.multiple) {
             this.mutableValue.push(option)
