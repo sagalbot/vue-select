@@ -468,15 +468,25 @@
        * @return {String}
        */
       getOptionLabel: {
-        type: Function,
-        default(option) {
-          if (typeof option === 'object') {
-            if (this.label && option[this.label]) {
-              return option[this.label]
-            }
+          type: Function,
+          default(option) {
+              if (typeof option === 'object') {
+                  if (this.label && option[this.label]) {
+                      return option[this.label]
+                  }
+              } else if (typeof option === 'string') {
+                  let label = null
+                  this.options.forEach(opt => {
+                      if (typeof opt === 'object' && opt[this.value] === option[this.value]) {
+                          label = opt[this.label]
+                      } else if (typeof opt === 'object' && opt[this.value] === option) {
+                          label = opt[this.label]
+                      }
+                  });
+                  if (label != null) return label
+              }
+              return option;
           }
-          return option;
-        }
       },
 
       /**
