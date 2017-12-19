@@ -690,11 +690,24 @@
           }
 
           if (this.multiple && !this.mutableValue) {
+            if (typeof option === 'object' && option.value) {
+              this.mutableValue = [option.value]
+            } else {
+              this.mutableValue = [option]
+            }
             this.mutableValue = [option]
           } else if (this.multiple) {
-            this.mutableValue.push(option)
+            if (typeof option === 'object' && option.value) {
+              this.mutableValue.push(option.value)
+            } else {
+              this.mutableValue.push(option)
+            }
           } else {
-            this.mutableValue = option
+            if (typeof option === 'object' && option.value) {
+              this.mutableValue = option.value
+            } else {
+              this.mutableValue = option
+            }
           }
         }
 
@@ -775,7 +788,9 @@
           })
           return selected
         }
-
+        if (typeof option === 'object' && option.value) {
+            return this.mutableValue === option.value
+        }
         return this.mutableValue === option
       },
 
