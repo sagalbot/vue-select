@@ -721,7 +721,9 @@
         if (this.multiple) {
           let ref = -1
           this.mutableValue.forEach((val) => {
-            if (val === option || typeof val === 'object' && val[this.label] === option[this.label]) {
+            if (val === option
+              || typeof val === 'object' && val[this.label] === option[this.label]
+              || typeof option === 'object' && val === option.value) {
               ref = val
             }
           })
@@ -779,8 +781,9 @@
               selected = true
             } else if (typeof opt === 'object' && opt[this.label] === option) {
               selected = true
-            }
-            else if (opt === option) {
+            } else if (typeof option === 'object' && option.value === opt) {
+              selected = true
+            } else if (opt === option) {
               selected = true
             }
           })
