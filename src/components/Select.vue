@@ -329,9 +329,9 @@
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
         <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
-          <slot name="option" v-bind="option">
-            {{ getOptionLabel(option) }}
-          </slot>
+            <slot name="option" v-bind="option">
+              {{ getOptionLabel(option) }}
+            </slot>
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
@@ -468,25 +468,23 @@
        * @return {String}
        */
       getOptionLabel: {
-          type: Function,
-          default(option) {
-              if (typeof option === 'object') {
-                  if (this.label && option[this.label]) {
-                      return option[this.label]
-                  }
-              } else if (typeof option === 'string') {
-                  let label = null
-                  this.options.forEach(opt => {
-                      if (typeof opt === 'object' && opt[this.value] === option[this.value]) {
-                          label = opt[this.label]
-                      } else if (typeof opt === 'object' && opt[this.value] === option) {
-                          label = opt[this.label]
-                      }
-                  });
-                  if (label != null) return label
+        type: Function,
+        default(option) {
+          if (typeof option === 'object') {
+            if (this.label && option[this.label]) {
+              return option[this.label]
+            }
+          } else if (typeof option === 'string') {
+            let label = null
+            this.options.forEach(opt => {
+              if (typeof opt === 'object' && opt["value"] === option) {
+                label = opt[this.label]
               }
-              return option;
+            });
+            if (label != null) return label
           }
+          return option;
+        }
       },
 
       /**
@@ -608,12 +606,12 @@
     watch: {
       /**
        * When the value prop changes, update
-			 * the internal mutableValue.
+       * the internal mutableValue.
        * @param  {mixed} val
        * @return {void}
        */
       value(val) {
-				this.mutableValue = val
+        this.mutableValue = val
       },
 
       /**
@@ -622,7 +620,7 @@
        * @param  {string|object} old
        * @return {void}
        */
-			mutableValue(val, old) {
+      mutableValue(val, old) {
         if (this.multiple) {
           this.onChange ? this.onChange(val) : null
         } else {
@@ -641,24 +639,24 @@
       },
 
       /**
-			 * Maybe reset the mutableValue
+       * Maybe reset the mutableValue
        * when mutableOptions change.
        * @return {[type]} [description]
        */
       mutableOptions() {
         if (!this.taggable && this.resetOnOptionsChange) {
-					this.mutableValue = this.multiple ? [] : null
+          this.mutableValue = this.multiple ? [] : null
         }
       },
 
       /**
-			 * Always reset the mutableValue when
+       * Always reset the mutableValue when
        * the multiple prop changes.
        * @param  {Boolean} val
        * @return {void}
        */
       multiple(val) {
-				this.mutableValue = val ? [] : null
+        this.mutableValue = val ? [] : null
       }
     },
 
@@ -667,9 +665,9 @@
      * attach any event listeners.
      */
     created() {
-			this.mutableValue = this.value
+      this.mutableValue = this.value
       this.mutableOptions = this.options.slice(0)
-			this.mutableLoading = this.loading
+      this.mutableLoading = this.loading
 
       this.$on('option:created', this.maybePushTag)
     },
@@ -789,7 +787,7 @@
           return selected
         }
         if (typeof option === 'object' && option && option.value) {
-            return this.mutableValue === option.value
+          return this.mutableValue === option.value
         }
         return this.mutableValue === option
       },
