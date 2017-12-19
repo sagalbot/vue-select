@@ -690,20 +690,20 @@
           }
 
           if (this.multiple && !this.mutableValue) {
-            if (typeof option === 'object' && option.value) {
+            if (typeof option === 'object' && option && option.value) {
               this.mutableValue = [option.value]
             } else {
               this.mutableValue = [option]
             }
             this.mutableValue = [option]
           } else if (this.multiple) {
-            if (typeof option === 'object' && option.value) {
+            if (typeof option === 'object' && option && option.value) {
               this.mutableValue.push(option.value)
             } else {
               this.mutableValue.push(option)
             }
           } else {
-            if (typeof option === 'object' && option.value) {
+            if (typeof option === 'object' && option && option.value) {
               this.mutableValue = option.value
             } else {
               this.mutableValue = option
@@ -788,7 +788,7 @@
           })
           return selected
         }
-        if (typeof option === 'object' && option.value) {
+        if (typeof option === 'object' && option && option.value) {
             return this.mutableValue === option.value
         }
         return this.mutableValue === option
