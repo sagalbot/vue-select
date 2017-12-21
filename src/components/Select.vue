@@ -118,7 +118,7 @@
   /* Selected Tags */
   .v-select .selected-tag {
     color: #333;
-    background-color: #f0f0f0;
+    font-weight: bold;
     border: 1px solid #ccc;
     border-radius: 4px;
     height: 26px;
