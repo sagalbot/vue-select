@@ -598,12 +598,12 @@
     watch: {
       /**
        * When the value prop changes, update
-			 * the internal mutableValue.
+       * the internal mutableValue.
        * @param  {mixed} val
        * @return {void}
        */
       value(val) {
-				this.mutableValue = val
+        this.mutableValue = val
       },
 
       /**
@@ -612,7 +612,7 @@
        * @param  {string|object} old
        * @return {void}
        */
-			mutableValue(val, old) {
+      mutableValue(val, old) {
         if (this.multiple) {
           this.onChange ? this.onChange(val) : null
         } else {
@@ -631,24 +631,24 @@
       },
 
       /**
-			 * Maybe reset the mutableValue
+       * Maybe reset the mutableValue
        * when mutableOptions change.
        * @return {[type]} [description]
        */
       mutableOptions() {
         if (!this.taggable && this.resetOnOptionsChange) {
-					this.mutableValue = this.multiple ? [] : null
+          this.mutableValue = this.multiple ? [] : null
         }
       },
 
       /**
-			 * Always reset the mutableValue when
+       * Always reset the mutableValue when
        * the multiple prop changes.
        * @param  {Boolean} val
        * @return {void}
        */
       multiple(val) {
-				this.mutableValue = val ? [] : null
+        this.mutableValue = val ? [] : null
       }
     },
 
@@ -657,9 +657,9 @@
      * attach any event listeners.
      */
     created() {
-			this.mutableValue = this.value
+      this.mutableValue = this.value
       this.mutableOptions = this.options.slice(0)
-			this.mutableLoading = this.loading
+      this.mutableLoading = this.loading
 
       this.$on('option:created', this.maybePushTag)
     },
