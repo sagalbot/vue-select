@@ -335,7 +335,7 @@
               aria-label="Search for option"
       >
 
-      <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
+      <i v-if="!noDrop && !noOpenIndicator" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
       <slot name="spinner">
         <div class="spinner" v-show="mutableLoading">Loading...</div>
@@ -650,6 +650,15 @@
        * @type {Boolean}
        */
       noDrop: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
+       * Hide the open indicator dropdown toggle.
+       * @type {Boolean}
+       */
+      noOpenIndicator: {
         type: Boolean,
         default: false
       },
