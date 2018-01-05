@@ -921,9 +921,15 @@
         }
         let options = this.mutableOptions.filter((option) => {
           if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
+            if(typeof option[this.label] === 'number') {
+              return option[this.label].toString().indexOf(this.search) > -1
+            }
             return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
           } else if (typeof option === 'object' && !option.hasOwnProperty(this.label)) {
             return console.warn(`[vue-select warn]: Label key "option.${this.label}" does not exist in options object.\nhttp://sagalbot.github.io/vue-select/#ex-labels`)
+          }
+          if(typeof option === 'number') {
+            return option.toString().indexOf(this.search) > -1
           }
           return option.toLowerCase().indexOf(this.search.toLowerCase()) > -1
         })
