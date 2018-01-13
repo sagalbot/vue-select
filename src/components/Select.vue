@@ -854,11 +854,21 @@
        * @return {void}
        */
       onSearchBlur() {
-        if (this.clearSearchOnBlur) {
-          this.search = ''
-        }
-        this.open = false
-        this.$emit('search:blur')
+
+        var self = this;
+        setTimeout(function(){
+          var target = document.activeElement;
+          if (!target.classList.contains('dropdown')) {
+            if (self.clearSearchOnBlur) {
+              self.search = ''
+            }
+            self.open = false
+            self.$emit('search:blur')
+          }
+          else{
+            self.$refs.search.focus()
+          }
+        }, 1);
       },
 
       /**
