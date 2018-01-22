@@ -682,6 +682,23 @@
         type: String,
         default: 'auto'
       },
+
+      /**
+       * When re-selecting an existing selection, whether to deselect the value.
+       */
+      deselectIfSelected: {
+        type: Boolean,
+        default: true
+      },
+
+      /**
+       * When re-selecting an existing selection, whether to deselect, then reselect
+       * (as if just selected). If this is true, then deselectIfSelected is ignored.
+       */
+      reselectIfSelected: {
+        type: Boolean,
+        default: false
+      }
     },
 
     data() {
@@ -780,11 +797,15 @@
       	if (option === null || option === undefined || this.isOptionDisabled(option)) {
       		return;
         }
-        if (this.isOptionSelected(option)) {
-          this.deselect(option)
+        if (this.isOptionSelected(option) && !this.reselectIfSelected) {
+          if (this.deselectIfSelected) this.deselect(option)
         } else {
           if (this.taggable && !this.optionExists(option)) {
             option = this.createOption(option)
+          }
+
+          if (this.reselectIfSelected && this.isOptionSelected(option)) {
+            this.deselect(option) // will be re-selected below
           }
 
           if (this.multiple && !this.mutableValue) {
