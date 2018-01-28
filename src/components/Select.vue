@@ -341,7 +341,7 @@
               :placeholder="searchPlaceholder"
               :tabindex="tabindex"
               :readonly="!searchable"
-              :style="{ width: isValueEmpty ? '100%' : 'auto' }"
+              :style="{ width: isValueEmpty ? '100%' : '1px' }"
               :id="inputId"
               aria-label="Search for option"
       >
