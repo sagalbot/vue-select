@@ -141,7 +141,7 @@
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 26px;
+    min-height: 26px;
     margin: 4px 1px 0px 3px;
     padding: 1px 0.25em;
     float: left;
