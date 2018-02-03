@@ -339,6 +339,7 @@
                 @keydown.down.prevent="typeAheadDown"
                 @keydown.enter.prevent="typeAheadSelect"
                 @keydown.tab="onTab"
+                @keydown.188="maybeTagSearch"
                 @blur="onSearchBlur"
                 @focus="onSearchFocus"
                 type="search"
@@ -879,7 +880,9 @@
       onAfterSelect(option) {
         if (this.closeOnSelect) {
           this.open = !this.open
-          this.$refs.search.blur()
+          if (!this.taggable) {
+            this.$refs.search.blur()
+          }
         }
 
         if (this.clearSearchOnSelect) {
@@ -1042,6 +1045,20 @@
           this.mutableOptions.push(option)
         }
       },
+
+      /**
+       * If taggable is true, add the current
+       * search as a tag on comma keydown.
+       *
+       * @param {Object} e
+       * @return {void}
+       */
+       maybeTagSearch(e) {
+         if (this.taggable) {
+            e.preventDefault()
+            this.typeAheadSelect()
+         }
+       },
 
       /**
        * Event-Handler to help workaround IE11 (probably fixes 10 as well)
