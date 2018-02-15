@@ -315,7 +315,28 @@
 
     <div ref="toggle" @mousedown.prevent="toggleDropdown" :class="['dropdown-toggle', 'clearfix']">
 
+      <textarea
+              v-if="textareaInput"
+              ref="search"
+              v-model="search"
+              @keydown.delete="maybeDeleteValue"
+              @keyup.esc="onEscape"
+              @keydown.up.prevent="typeAheadUp"
+              @keydown.down.prevent="typeAheadDown"
+              @keydown.enter.prevent="typeAheadSelect"
+              @blur="onSearchBlur"
+              @focus="onSearchFocus"
+              type="search"
+              class="form-control"
+              :disabled="disabled"
+              :placeholder="searchPlaceholder"
+              :readonly="!searchable"
+              :style="{ width: isValueEmpty ? '100%' : 'auto' }"
+              :id="inputId"
+              aria-label="Search for option"
+      />
       <input
+              v-else
               ref="search"
               v-model="search"
               @keydown.delete="maybeDeleteValue"
@@ -388,6 +409,15 @@
     },
 
     props: {
+
+      /**
+       * Whether to use a textarea rather than input element
+       */
+      textareaInput: {
+        type: Boolean,
+        default: false
+      },
+
       /**
        * Contains the currently selected value. Very similar to a
        * `value` attribute on an <input>. You can listen for changes
