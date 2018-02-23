@@ -307,7 +307,7 @@
         <slot name="selected-option" v-bind="option">
           {{ getOptionLabel(option) }}
         </slot>
-        <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
+        <button :tabindex="navSelections ? false : '-1'" v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
           <span aria-hidden="true">&times;</span>
         </button>
       </li>
@@ -728,7 +728,16 @@
       reselectIfSelected: {
         type: Boolean,
         default: false
-      }
+      },
+
+      /**
+       * Whether to enable (tab) navigation of selection elements. Specifically, this
+       * applies tabindex="-1" to selection close buttons when false.
+       */
+      navSelections: {
+        type: Boolean,
+        default: true
+      },
     },
 
     data() {
