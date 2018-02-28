@@ -312,6 +312,15 @@ describe('Select.vue', () => {
 			expect(vm.$refs.select.filteredOptions).toEqual(['bar','baz'])
 		})
 
+		it('should not filter the array of strings if filterable is false', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :filterable="false" :options="['foo','bar','baz']" v-model="value"></v-select></div>`,
+				data: {value: 'foo'}
+			}).$mount()
+			vm.$refs.select.search = 'ba'
+			expect(vm.$refs.select.filteredOptions).toEqual(['foo','bar','baz'])
+		})
+
 		it('should filter without case-sensitivity', () => {
 			const vm = new Vue({
 				template: `<div><v-select ref="select" :options="['Foo','Bar','Baz']" v-model="value"></v-select></div>`,
@@ -905,6 +914,21 @@ describe('Select.vue', () => {
 			expect(vm.$children[0].mutableOptions).toEqual(['one', 'two', 'three'])
 		})
 
+		it('should add a freshly created option/tag to the options list when pushTags is true and filterable is false', () => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options" push-tags :value="value" :filterable="false" :multiple="true" :taggable="true"></v-select></div>',
+				components: {vSelect},
+				data: {
+					value: ['one'],
+					options: ['one', 'two']
+				}
+			}).$mount()
+
+			searchSubmit(vm, 'three')
+			expect(vm.$children[0].mutableOptions).toEqual(['one', 'two', 'three'])
+			expect(vm.$children[0].filteredOptions).toEqual(['one', 'two', 'three'])
+		})
+
 		it('wont add a freshly created option/tag to the options list when pushTags is false', () => {
 			const vm = new Vue({
 				template: '<div><v-select :options="options" :value="value" :multiple="true" :taggable="true"></v-select></div>',
@@ -917,6 +941,21 @@ describe('Select.vue', () => {
 
 			searchSubmit(vm, 'three')
 			expect(vm.$children[0].mutableOptions).toEqual(['one', 'two'])
+		})
+
+		it('wont add a freshly created option/tag to the options list when pushTags is false and filterable is false', () => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options" :value="value" :multiple="true" :filterable="false" :taggable="true"></v-select></div>',
+				components: {vSelect},
+				data: {
+					value: ['one'],
+					options: ['one', 'two']
+				}
+			}).$mount()
+
+			searchSubmit(vm, 'three')
+			expect(vm.$children[0].mutableOptions).toEqual(['one', 'two'])
+			expect(vm.$children[0].filteredOptions).toEqual(['one', 'two'])
 		})
 
 		it('should select an existing option if the search string matches a string from options', (done) => {
@@ -960,9 +999,47 @@ describe('Select.vue', () => {
 			})
 		})
 
+		it('should select an existing option if the search string matches an objects label from options when filter-options is false', (done) => {
+			let two = {label: 'two'}
+			const vm = new Vue({
+				template: '<div><v-select :options="options" taggable :filterable="false"></v-select></div>',
+				data: {
+					options: [{label: 'one'}, two]
+				}
+			}).$mount()
+
+			vm.$children[0].search = 'two'
+
+			Vue.nextTick(() => {
+				searchSubmit(vm)
+				//	This needs to be wrapped in nextTick() twice so that filteredOptions can
+				//	calculate after setting the search text, and move the typeAheadPointer index to 0.
+				Vue.nextTick(() => {
+					expect(vm.$children[0].mutableValue.label).toBe(two.label)
+					done()
+				})
+			})
+		})
+
 		it('should not reset the selected value when the options property changes', (done) => {
 			const vm = new Vue({
 				template: '<div><v-select :options="options" :value="value" :multiple="true" taggable></v-select></div>',
+				components: {vSelect},
+				data: {
+					value: [{label: 'one'}],
+					options: [{label: 'one'}]
+				}
+			}).$mount()
+			vm.$children[0].mutableOptions = [{label: 'two'}]
+			Vue.nextTick(() => {
+				expect(vm.$children[0].mutableValue).toEqual([{label: 'one'}])
+				done()
+			})
+		})
+
+		it('should not reset the selected value when the options property changes when filterable is false', (done) => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options" :value="value" :multiple="true" :filterable="false" taggable></v-select></div>',
 				components: {vSelect},
 				data: {
 					value: [{label: 'one'}],
@@ -1239,4 +1316,61 @@ describe('Select.vue', () => {
 			})
 		})
 	})
+
+	describe( 'Clear button', () => {
+
+		it( 'should be displayed on single select when value is selected', () => {
+			const VueSelect = Vue.extend( vSelect )
+			const vm = new VueSelect({
+				propsData: {
+					options: ['foo','bar'],
+					value: 'foo'
+				}
+			}).$mount()
+
+			expect(vm.showClearButton).toEqual(true)
+		})
+
+		it( 'should not be displayed on multiple select', () => {
+			const VueSelect = Vue.extend( vSelect )
+			const vm = new VueSelect({
+				propsData: {
+					options: ['foo','bar'],
+					value: 'foo',
+					multiple: true
+				}
+			}).$mount()
+
+			expect(vm.showClearButton).toEqual(false)
+		})
+
+		it( 'should remove selected value when clicked', () => {
+			const VueSelect = Vue.extend( vSelect )
+			const vm = new VueSelect({
+				propsData: {
+					options: ['foo','bar'],
+					value: 'foo'
+				}
+			}).$mount()
+			
+			expect(vm.mutableValue).toEqual('foo')
+			vm.$el.querySelector( 'button.clear' ).click()
+			expect(vm.mutableValue).toEqual(null)
+		})
+
+		it( 'should be disabled when component is disabled', () => {
+			const VueSelect = Vue.extend( vSelect )
+			const vm = new VueSelect({
+				propsData: {
+					options: ['foo','bar'],
+					value: 'foo',
+					disabled: true
+				}
+			}).$mount()
+
+			const buttonEl = vm.$el.querySelector( 'button.clear' )
+			expect(buttonEl.disabled).toEqual(true);
+		})
+	
+	});
 })

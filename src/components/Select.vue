@@ -23,6 +23,10 @@
   .v-select.rtl .dropdown-menu {
     text-align: right;
   }
+  .v-select.rtl .dropdown-toggle .clear {
+    left: 30px;
+    right: auto;
+  }
   /* Open Indicator */
   .v-select .open-indicator {
     position: absolute;
@@ -80,6 +84,22 @@
     clear: both;
     height: 0;
   }
+
+  /* Clear Button */
+  .v-select .dropdown-toggle .clear {
+    position: absolute;
+    bottom: 9px;
+    right: 30px;
+    font-size: 23px;
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(60, 60, 60, .5);
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
   /* Dropdown Toggle States */
   .v-select.searchable .dropdown-toggle {
     cursor: text;
@@ -186,8 +206,12 @@
     background: none;
     position: relative;
     box-shadow: none;
-    float: left;
-    clear: none;
+  }
+  .v-select.unsearchable input[type="search"] {
+    opacity: 0;
+  }
+  .v-select.unsearchable input[type="search"]:hover {
+    cursor: pointer;
   }
   /* List Items */
   .v-select ul.selected-tag-list {
@@ -260,6 +284,7 @@
 
   /* Disabled state */
   .v-select.disabled .dropdown-toggle,
+  .v-select.disabled .dropdown-toggle .clear,
   .v-select.disabled .dropdown-toggle input,
   .v-select.disabled .selected-tag .close,
   .v-select.disabled .open-indicator {
@@ -328,8 +353,10 @@
               @focus="onSearchFocus"
               type="search"
               class="form-control"
+              autocomplete="false"
               :disabled="disabled"
               :placeholder="searchPlaceholder"
+              :tabindex="tabindex"
               :readonly="!searchable"
               :style="{ width: isValueEmpty ? '100%' : 'auto' }"
               :id="inputId"
@@ -348,13 +375,26 @@
               @focus="onSearchFocus"
               type="search"
               class="form-control"
+              autocomplete="false"
               :disabled="disabled"
               :placeholder="searchPlaceholder"
+              :tabindex="tabindex"
               :readonly="!searchable"
               :style="{ width: isValueEmpty ? '100%' : 'auto' }"
               :id="inputId"
               aria-label="Search for option"
       >
+
+      <button
+        v-show="showClearButton"
+        :disabled="disabled"
+        @click="clearSelection"
+        type="button"
+        class="clear"
+        title="Clear selection"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
 
       <i v-if="!noDrop && !noOpenIndicator" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
@@ -642,6 +682,15 @@
       },
 
       /**
+       * Set the tabindex for the input field.
+       * @type {Number}
+       */
+      tabindex: {
+        type: Number,
+        default: null
+      },
+
+      /**
        * When true, newly created tags will be added to
        * the options list.
        * @type {Boolean}
@@ -649,6 +698,17 @@
       pushTags: {
         type: Boolean,
         default: false
+      },
+
+      /**
+       * When true, existing options will be filtered
+       * by the search text. Should not be used in conjunction
+       * with taggable.
+       * @type {Boolean}
+       */
+      filterable: {
+        type: Boolean,
+        default: true
       },
 
       /**
@@ -880,6 +940,14 @@
       },
 
       /**
+       * Clears the currently selected value(s)
+       * @return {void}
+       */
+       clearSelection() {
+         this.mutableValue = this.multiple ? [] : null
+       },
+
+      /**
        * Called from this.select after each selection.
        * @param  {Object|String} option
        * @return {void}
@@ -1084,6 +1152,9 @@
        * @return {array}
        */
       filteredOptions() {
+        if (!this.filterable && !this.taggable) {
+          return this.mutableOptions.slice()
+        }
         let options = this.mutableOptions.filter((option) => {
           if (typeof option === 'object' && option.hasOwnProperty(this.label)) {
             return option[this.label].toLowerCase().indexOf(this.search.toLowerCase()) > -1
@@ -1125,6 +1196,14 @@
         }
 
         return []
+      },
+
+      /**
+       * Determines if the clear button should be displayed.
+       * @return {Boolean}
+       */
+      showClearButton() {
+        return !this.multiple && !this.open && this.mutableValue != null
       }
     },
 

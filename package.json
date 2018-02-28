@@ -1,6 +1,6 @@
 {
   "name": "vue-select",
-  "version": "2.3.0-digitalfusion.1.6.0",
+  "version": "2.4.0",
   "description": "A native Vue.js component that provides similar functionality to Select2 without the overhead of jQuery.",
   "author": "Jeff Sagal <sagalbot@gmail.com>",
   "private": false,
@@ -74,9 +74,5 @@
     "webpack-dev-middleware": "^1.4.0",
     "webpack-hot-middleware": "^2.6.0",
     "webpack-merge": "^0.13.0"
-  },
-  "dependencies": {
-    "array.prototype.move": "0.0.4",
-    "sortablejs": "^1.6.1"
   }
 }
