@@ -594,7 +594,14 @@
         if (this.multiple) {
           this.onChange ? this.onChange(val) : null
         } else {
-          this.onChange && JSON.stringify(val) !== JSON.stringify(old) ? this.onChange(val) : null
+          const isEqual = (a, b) => {
+            if (typeof a === 'object' && typeof b === 'object' && a && b) {
+              return a.value === b.value              
+            } else {
+              return a === b
+            }
+          }
+          this.onChange && !isEqual(val, old) ? this.onChange(val) : null
         }
       },
 
