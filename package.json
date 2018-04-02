@@ -60,6 +60,8 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "0.0.26",
     "karma-webpack": "^1.7.0",
+    "lodash.get": "^4.4.2",
+    "lodash.has": "^4.5.2",
     "lolex": "^1.4.0",
     "markdown-loader": "^0.1.7",
     "node-sass": "^3.7.0",

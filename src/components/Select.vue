@@ -385,6 +385,8 @@
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
+  import has from 'lodash.has'
+  import get from 'lodash.get'
 
   export default {
     mixins: [pointerScroll, typeAheadPointer, ajax],
