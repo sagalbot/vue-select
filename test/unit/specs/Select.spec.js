@@ -804,6 +804,18 @@ describe('Select.vue', () => {
 			expect(vm.$children[0].$refs.toggle.querySelector('.selected-tag').textContent).toContain('Baz')
 		})
 
+		it('can generate labels using a custom label key using object notation when options contain nested objects', () => {
+			const vm = new Vue({
+				template: '<div><v-select label="human.name" :options="options" v-model="value" :multiple="true"></v-select></div>',
+				components: {vSelect},
+				data: {
+					value: [{human: {name: 'james'}}],
+					options: [{human: {name: 'rick'}}, {human: {name: 'james'}} ]
+				}
+			}).$mount()
+			expect(vm.$children[0].$refs.toggle.querySelector('.selected-tag').textContent).toContain('james')
+		})
+
 		it('will console.warn when options contain objects without a valid label key', (done) => {
 			spyOn(console, 'warn')
 			const vm = new Vue({
@@ -1377,7 +1389,7 @@ describe('Select.vue', () => {
 					value: 'foo'
 				}
 			}).$mount()
-			
+
 			expect(vm.mutableValue).toEqual('foo')
 			vm.$el.querySelector( 'button.clear' ).click()
 			expect(vm.mutableValue).toEqual(null)
@@ -1396,6 +1408,6 @@ describe('Select.vue', () => {
 			const buttonEl = vm.$el.querySelector( 'button.clear' )
 			expect(buttonEl.disabled).toEqual(true);
 		})
-	
+
 	});
 })
