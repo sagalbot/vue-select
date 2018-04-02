@@ -1,6 +1,6 @@
 {
   "name": "vue-select",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "A native Vue.js component that provides similar functionality to Select2 without the overhead of jQuery.",
   "author": "Jeff Sagal <sagalbot@gmail.com>",
   "private": false,
