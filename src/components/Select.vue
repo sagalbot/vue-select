@@ -346,13 +346,13 @@
               aria-label="Search for option"
       >
 
-      <button 
-        v-show="showClearButton" 
-        :disabled="disabled" 
+      <button
+        v-show="showClearButton"
+        :disabled="disabled"
         @click="clearSelection"
-        type="button" 
-        class="clear" 
-        title="Clear selection" 
+        type="button"
+        class="clear"
+        title="Clear selection"
       >
         <span aria-hidden="true">&times;</span>
       </button>
@@ -521,15 +521,15 @@
         type: Function,
         default(option) {
           if (typeof option === 'object') {
-            if (!option.hasOwnProperty(this.label)) {
+            if (!has(option, this.label)) {
               return console.warn(
                 `[vue-select warn]: Label key "option.${this.label}" does not` +
                 ` exist in options object ${JSON.stringify(option)}.\n` +
                 'http://sagalbot.github.io/vue-select/#ex-labels'
               )
             }
-            if (this.label && option[this.label]) {
-              return option[this.label]
+            if (this.label && has(option, this.label)) {
+              return get(option, this.label)
             }
           }
           return option;
