@@ -1,4 +1,4 @@
-<style>
+<style scoped>
   .v-select {
     position: relative;
     font-family: sans-serif;
@@ -20,7 +20,7 @@
     margin-right: 3px;
     margin-left: 1px;
   }
-  .v-select.rtl .dropdown-menu {
+  .v-select.rtl .v-select-dropdown-menu {
     text-align: right;
   }
   .v-select.rtl .dropdown-toggle .clear {
@@ -113,7 +113,7 @@
     border-bottom-right-radius: 0;
   }
   /* Dropdown Menu */
-  .v-select .dropdown-menu {
+  .v-select .v-select-dropdown-menu {
     display:block;
     position: absolute;
     top: 100%;
@@ -227,14 +227,17 @@
   .v-select li:hover {
     cursor: pointer;
   }
-  .v-select .dropdown-menu .active > a {
+  .v-select .v-select-dropdown-menu li {
+    display: block!important;
+  }
+  .v-select .v-select-dropdown-menu .active > a {
     color: #333;
     background: rgba(50, 50, 50, .1);
   }
-  .v-select .dropdown-menu > .highlight > a {
+  .v-select .v-select-dropdown-menu > .highlight > a {
     /*
      * required to override bootstrap 3's
-     * .dropdown-menu > li > a:hover {} styles
+     * .v-select-dropdown-menu > li > a:hover {} styles
      */
     background: #5897fb;
     color: #fff;
@@ -365,7 +368,7 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
+      <ul ref="dropdownMenu" v-if="dropdownOpen" class="v-select-dropdown-menu" :style="{ 'max-height': maxHeight }">
         <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
           <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
