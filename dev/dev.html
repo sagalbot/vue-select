@@ -47,6 +47,12 @@
                 {{option.label}} ({{option.value}})
             </template>
         </v-select>
+
+        <v-select placeholder="custom close template" :options="options">
+            <template slot="clear">
+                <span>=D</span>
+            </template>
+        </v-select>
         <v-select placeholder="custom option template for string array" taggable :options="['cat', 'dog', 'bear']" multiple>
             <template slot="selected-option" slot-scope="option">
                 {{option.label}}

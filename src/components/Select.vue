@@ -90,13 +90,17 @@
     position: absolute;
     bottom: 9px;
     right: 30px;
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+  }
+  .v-select .dropdown-toggle .clear .cross{
     font-size: 23px;
     font-weight: 700;
     line-height: 1;
     color: rgba(60, 60, 60, .5);
     padding: 0;
     border: 0;
-    background-color: transparent;
     cursor: pointer;
   }
 
@@ -345,16 +349,17 @@
               :id="inputId"
               aria-label="Search for option"
       >
-
-      <button 
-        v-show="showClearButton" 
-        :disabled="disabled" 
+      <button
+        v-show="showClearButton"
+        :disabled="disabled"
         @click="clearSelection"
-        type="button" 
-        class="clear" 
-        title="Clear selection" 
+        type="button"
+        class="clear"
+        title="Clear selection"
       >
-        <span aria-hidden="true">&times;</span>
+        <slot name="clear">
+          <span class="cross" aria-hidden="true">&times;</span>
+        </slot>
       </button>
 
       <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
