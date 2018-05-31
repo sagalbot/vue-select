@@ -327,6 +327,7 @@
       <input
               ref="search"
               v-model="search"
+	      @keyup="setSearchValue"
               @keydown.delete="maybeDeleteValue"
               @keyup.esc="onEscape"
               @keydown.up.prevent="typeAheadUp"
@@ -761,6 +762,14 @@
     },
 
     methods: {
+    
+      /**
+       * Listen to the keyup event to fix unexpected behaviour on android devices.
+       *
+       */
+      setSearchValue(event) {
+        this.search = event.target.value;
+      },
 
       /**
        * Select a given option.
