@@ -77,6 +77,10 @@
                 <em>{{ `${option.author.firstName} ${option.author.lastName}` }}</em>
             </template>
         </v-select>
+        <v-select placeholder="custom listHeader and listFooter templates" :options="options">
+            <li slot="listHeader">List Header</li>
+            <li slot="listFooter">List Footer</li>
+        </v-select>
     </div>
 </body>
 

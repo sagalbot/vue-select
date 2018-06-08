@@ -366,6 +366,7 @@
 
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
+        <slot name="listHeader"></slot>
         <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
           <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
@@ -376,6 +377,7 @@
         <li v-if="!filteredOptions.length" class="no-options">
           <slot name="no-options">Sorry, no matching options.</slot>
         </li>
+        <slot name="listFooter"></slot>
       </ul>
     </transition>
   </div>
