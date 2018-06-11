@@ -141,6 +141,22 @@ describe('Select.vue', () => {
 			expect(vm.$children[0].mutableValue).toEqual(null)
 		})
 
+		it('should not deselect an already selected option by selecting it again if allowDeselect is not enabled', () => {
+			const vm = new Vue({
+				template: `<div><v-select :value="'foo'"></v-select></div>`,
+			}).$mount()
+			vm.$children[0].select('foo')
+			expect(vm.$children[0].mutableValue).toEqual('foo')
+		})
+
+		it('can deselect an already selected option by selecting it again if allowDeselect is enabled', () => {
+			const vm = new Vue({
+				template: `<div><v-select :value="'foo'" allowDeselect></v-select></div>`,
+			}).$mount()
+			vm.$children[0].select('foo')
+			expect(vm.$children[0].mutableValue).toEqual(null)
+		})
+
 		it('can determine if the value prop is empty', () => {
 			const vm = new Vue({
 				template: '<div><v-select :options="options" :value="value"></v-select></div>',

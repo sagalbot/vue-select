@@ -501,6 +501,15 @@
       },
 
       /**
+       * Allow deselect when selecting an already selected item
+       * @type {Boolean}
+       */
+      allowDeselect: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
        * Tells vue-select what key to use when generating option
        * labels when each `option` is an object.
        * @type {String}
@@ -770,7 +779,11 @@
        * @return {void}
        */
       select(option) {
-        if (!this.isOptionSelected(option)) {
+        if (this.isOptionSelected(option)) {
+          if (this.allowDeselect) {
+            this.deselect(option)
+          }
+        } else {
           if (this.taggable && !this.optionExists(option)) {
             option = this.createOption(option)
           }
