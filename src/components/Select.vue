@@ -3,7 +3,26 @@
     position: relative;
     font-family: inherit;
   }
-
+  .v-select.direction-top {
+    display: flex;
+    flex-direction: column-reverse;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+  .v-select.direction-top .dropdown-menu {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .v-select.direction-bottom {
+    display: block;
+  }
+  .v-select.direction-bottom .dropdown-menu {
+    position: absolute;
+  }
   .v-select,
   .v-select * {
     -webkit-box-sizing: border-box;
@@ -112,6 +131,16 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
+  .v-select.direction-bottom.open .dropdown-toggle {
+    border-bottom-color: transparent;
+    border-top-color: rgba(60, 60, 60, .26);
+    border-radius: 4px 4px 0 0;
+  }
+  .v-select.direction-top.open .dropdown-toggle {
+    border-top-color: transparent;
+    border-bottom-color: rgba(60, 60, 60, .26);
+    border-radius: 0 0 4px 4px;
+  }
   /* Dropdown Menu */
   .v-select .dropdown-menu {
     display:block;
@@ -131,6 +160,12 @@
     text-align: left;
     list-style: none;
     background: #fff;
+  }
+  .v-select.direction-top .dropdown-menu {
+    border: 1px solid rgba(0, 0, 0, .26);
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    box-shadow: none;
   }
   .v-select .no-options {
     text-align: center;
@@ -680,6 +715,16 @@
         type: String,
         default: 'auto'
       },
+
+      /**
+       * Sets dropdown direction.
+       * @type {String}
+       * @default 'bottom'
+       */
+      direction: {
+        type: String,
+        default: 'bottom'
+      },
     },
 
     data() {
@@ -953,7 +998,7 @@
       }
     },
 
-    computed: {
+    computed: { 
 
       /**
        * Classes to be output on .dropdown
@@ -968,7 +1013,9 @@
           unsearchable: !this.searchable,
           loading: this.mutableLoading,
           rtl: this.dir === 'rtl',
-          disabled: this.disabled
+          disabled: this.disabled,
+          'direction-top': this.direction === 'top',
+          'direction-bottom': this.direction === 'bottom'
         }
       },
 
