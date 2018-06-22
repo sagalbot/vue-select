@@ -1190,6 +1190,28 @@ describe('Select.vue', () => {
 			})
 		})
 
+		it('should trigger the onSearch callback if the search text is empty and searchOnEmptyText is true', (done) => {
+			const vm = new Vue({
+				template: '<div><v-select ref="select" search="foo" :on-search="foo" searchOnEmptyText></v-select></div>',
+				data: { called: false },
+				methods: {
+					foo(val) {
+						this.called = val
+					}
+				}
+			}).$mount()
+
+			vm.$refs.select.search = 'foo'
+			Vue.nextTick(() => {
+				expect(vm.called).toEqual('foo')
+				vm.$refs.select.search = ''
+				Vue.nextTick(() => {
+					expect(vm.called).toEqual('')
+					done()
+				})
+			})
+		})
+
     it('should trigger the search event when the search text changes', (done) => {
       const vm = new Vue({
         template: '<div><v-select ref="select" @search="foo"></v-select></div>',
@@ -1228,6 +1250,28 @@ describe('Select.vue', () => {
         vm.$refs.select.search = ''
         Vue.nextTick(() => {
           expect(vm.called).toBe(true)
+          done()
+        })
+      })
+    })
+
+    it('should trigger the search event if the search text is empty and searchOnEmptyText is true', (done) => {
+      const vm = new Vue({
+        template: '<div><v-select ref="select" search="foo" @search="foo" searchOnEmptyText></v-select></div>',
+        data: { called: false },
+        methods: {
+          foo(val) {
+            this.called = val
+          }
+        }
+      }).$mount()
+
+      vm.$refs.select.search = 'foo'
+      Vue.nextTick(() => {
+        expect(vm.called).toEqual('foo')
+        vm.$refs.select.search = ''
+        Vue.nextTick(() => {
+          expect(vm.called).toEqual('')
           done()
         })
       })

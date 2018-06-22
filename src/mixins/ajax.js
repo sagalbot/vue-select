@@ -39,10 +39,10 @@ module.exports = {
 		 * invoke the onSearch callback.
 		 */
 		search() {
-			if (this.search.length > 0) {
+			if (this.search.length > 0 || this.searchOnEmptyText) {
 				this.onSearch(this.search, this.toggleLoading)
-        this.$emit('search', this.search, this.toggleLoading)
-      }
+	        	this.$emit('search', this.search, this.toggleLoading)
+			}
 		},
     /**
 		 * Sync the loading prop with the internal

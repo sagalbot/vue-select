@@ -640,6 +640,14 @@
       },
 
       /**
+       * Enable search on empty text
+       */
+      searchOnEmptyText: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
        * User defined function for adding Options
        * @type {Function}
        */
@@ -1036,8 +1044,9 @@
         if (!this.filterable && !this.taggable) {
           return this.mutableOptions.slice()
         }
-        let options = this.search.length ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
-        if (this.taggable && this.search.length && !this.optionExists(this.search)) {
+        const shouldSearch = this.search.length || this.searchOnEmptyText
+        let options = shouldSearch ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
+        if (this.taggable && shouldSearch && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
         return options
