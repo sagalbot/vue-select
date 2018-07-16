@@ -280,6 +280,13 @@
   .v-select.loading .spinner {
     opacity: 1;
   }
+
+  .v-select .disabled-item
+  {
+      pointer-events:none; 
+      opacity:0.6;
+  }
+
   /* KeyFrames */
   @-webkit-keyframes vSelectSpinner {
     0% {
@@ -366,7 +373,9 @@
 
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }">
-        <li v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
+        <li v-for="(option, index) in filteredOptions" v-bind:key="index" 
+          :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer, 'disabled-item': getItemDisabled(option)}" 
+          @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent="select(option)">
           <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
             {{ getOptionLabel(option) }}
@@ -509,6 +518,38 @@
       },
 
       /**
+       * Tells vue-select what key to use to determine if item is disabled
+       * when each `option` is an object.
+       * @type {String}
+       */
+      itemDisabled: {
+        type: String,
+        default: 'isDisabled'
+      },
+
+      /**
+       * Callback to determine if item need to be disabled. If {option}
+       * is an object, returns option[this.isDisabled] by default.
+       * @type {Function}
+       * @param  {Object || String} option
+       * @return {String}
+       */
+      getItemDisabled: {
+        type: Function,       
+        default(option) {
+          if (typeof option === 'object') {
+            if (!option.hasOwnProperty(this.itemDisabled)) {
+              return false;              
+            }
+            if (this.itemDisabled && option[this.itemDisabled]) {
+              return option[this.itemDisabled]
+            }
+          }
+          return false;
+        }
+      },
+
+      /**
        * Callback to generate the label text. If {option}
        * is an object, returns option[this.label] by default.
        * @type {Function}
@@ -532,7 +573,7 @@
           }
           return option;
         }
-      },
+      },      
 
       /**
        * An optional callback function that is called each time the selected
@@ -724,7 +765,7 @@
        */
       options(val) {
         this.mutableOptions = val
-        
+
       },
 
       /**
