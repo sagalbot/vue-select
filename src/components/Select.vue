@@ -324,11 +324,15 @@
   <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
     <div ref="toggle" @mousedown.prevent="toggleDropdown" :class="['dropdown-toggle', 'clearfix']">
 
-      <slot v-for="option in valueAsArray" name="selected-option-container"
-            :option="(typeof option === 'object')?option:{[label]: option}" :deselect="deselect" :multiple="multiple" :disabled="disabled">
+      <slot v-for="option in valueAsArray"
+            name="selected-option-container"
+            :option="(typeof option === 'object')?option:{[label]: option}"
+            :deselect="deselect"
+            :multiple="multiple"
+            :disabled="disabled">
         <span class="selected-tag" v-bind:key="option.index">
           <slot name="selected-option" v-bind="(typeof option === 'object')?option:{[label]: option}">
-            {{ getOptionLabel(option) }}
+            <label :for="inputId" @click="$refs.search.focus()">{{ getOptionLabel(option) }}</label>
           </slot>
           <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
             <span aria-hidden="true">&times;</span>
