@@ -555,8 +555,8 @@
        */
       onChange: {
         type: Function,
-        default: function (val) {
-          this.$emit('input', val)
+        default: function (val, vm) {
+          vm.$emit('input', val)
         }
       },
 
@@ -722,9 +722,9 @@
        */
 			mutableValue(val, old) {
         if (this.multiple) {
-          this.onChange ? this.onChange(val) : null
+          this.onChange ? this.onChange(val, this) : null
         } else {
-          this.onChange && val !== old ? this.onChange(val) : null
+          this.onChange && val !== old ? this.onChange(val, this) : null
         }
       },
 
