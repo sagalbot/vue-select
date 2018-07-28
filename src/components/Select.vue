@@ -868,7 +868,7 @@
         if (this.multiple && this.mutableValue) {
           let selected = false
           this.mutableValue.forEach(opt => {
-            if (typeof opt === 'object' && opt[this.label] === option[this.label]) {
+            if (typeof opt === 'object' && opt[this.label] === option[this.label] && opt.value === option.value) {
               selected = true
             } else if (typeof opt === 'object' && opt[this.label] === option) {
               selected = true
