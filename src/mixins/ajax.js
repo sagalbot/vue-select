@@ -37,12 +37,17 @@ module.exports = {
 		/**
 		 * If a callback & search text has been provided,
 		 * invoke the onSearch callback.
+		 * If search length is 0 return a search:cleared event
 		 */
 		search() {
+			console.log('search function')
 			if (this.search.length > 0) {
 				this.onSearch(this.search, this.toggleLoading)
         this.$emit('search', this.search, this.toggleLoading)
-      }
+      } else {
+		  console.log('cleared')
+		this.$emit('search:cleared')
+	  }
 		},
     /**
 		 * Sync the loading prop with the internal
