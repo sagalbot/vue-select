@@ -45,7 +45,6 @@ module.exports = {
 				this.onSearch(this.search, this.toggleLoading)
         this.$emit('search', this.search, this.toggleLoading)
       } else {
-		  console.log('cleared')
 		this.$emit('search:cleared')
 	  }
 		},
