@@ -1603,7 +1603,6 @@ describe('Select.vue', () => {
       expect(vm.$children[0].inputClasses.hidden).toEqual(true)
     })
 
-
     it('should not apply the "hidden" class to the search input when a value is present, and the dropdown is open', (done) => {
       const vm = new Vue({
         template: '<div><v-select ref="select" :options="options" :value="value"></v-select></div>',
@@ -1617,6 +1616,24 @@ describe('Select.vue', () => {
       Vue.nextTick(() => {
         Vue.nextTick(() => {
           expect(vm.$children[0].open).toEqual(true)
+          expect(vm.$children[0].inputClasses.hidden).toEqual(false)
+          done()
+        })
+      })
+    })
+
+    it('should not apply the "hidden" class to the search input when a value is present, the dropdown is closed, and options are loading', (done) => {
+      const vm = new Vue({
+        template: '<div><v-select ref="select" :options="options" :value="value"></v-select></div>',
+        data: {
+          value: 'one',
+          options: ['one', 'two', 'three'],
+          open: true
+        }
+      }).$mount()
+      vm.$refs.select.toggleLoading(true)
+      Vue.nextTick(() => {
+        Vue.nextTick(() => {
           expect(vm.$children[0].inputClasses.hidden).toEqual(false)
           done()
         })

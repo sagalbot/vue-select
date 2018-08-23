@@ -1080,7 +1080,7 @@
        */
       inputClasses() {
         return {
-          hidden: !this.isValueEmpty && !this.dropdownOpen
+          hidden: !this.isValueEmpty && !this.dropdownOpen && !this.mutableLoading
         }
       },
 
