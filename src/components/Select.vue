@@ -341,6 +341,7 @@
                 @keydown.tab="onTab"
                 @blur="onSearchBlur"
                 @focus="onSearchFocus"
+                @input="searchQuery = $event.target.value"
                 type="search"
                 class="form-control"
                 :class="inputClasses"
