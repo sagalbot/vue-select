@@ -246,6 +246,11 @@
     background: #5897fb;
     color: #fff;
   }
+  .v-select .dropdown-menu li > .option-group {
+    cursor: default;
+    padding: 3px 10px;
+    font-weight: bold;
+  }
   .v-select .highlight:not(:last-child) {
     margin-bottom: 0; /* Fixes Bulma Margin */
   }
@@ -379,10 +384,13 @@
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" @mousedown="onMousedown">
         <li role="option" v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
-          <a @mousedown.prevent.stop="select(option)">
-          <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
-            {{ getOptionLabel(option) }}
-          </slot>
+          <div v-if="option.type === 'group'" class="option-group">
+            {{ option.label }}
+          </div>
+          <a v-else @mousedown.prevent.stop="select(option)">
+            <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
+                {{ getOptionLabel(option) }}
+            </slot>
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
@@ -804,7 +812,7 @@
      */
     created() {
       this.mutableValue = this.value
-      this.mutableOptions = this.options.slice(0)
+      this.mutableOptions = this.maybeAddGroups()
       this.mutableLoading = this.loading
 
       this.$on('option:created', this.maybePushTag)
@@ -1041,6 +1049,37 @@
         if (this.pushTags) {
           this.mutableOptions.push(option)
         }
+      },
+
+      maybeAddGroups() {
+        const mutableOptions = this.options.slice(0);
+
+        // Assume we have groups if one is set on the first option
+        if (mutableOptions.length > 0 && typeof mutableOptions[0].group !== 'string') {
+            return mutableOptions;
+        }
+
+        return mutableOptions.reduce((accumulator, option, index, options) => {
+            const groupedOptions = accumulator.filter(function(element) {
+                return element.group === option.group;
+            });
+
+            if (
+              typeof option.group === 'string' &&
+              groupedOptions.length === 0
+            ) {
+                accumulator.push({
+                    label: option.group,
+                    type: 'group'
+                });
+
+                // In case options are not sorted by group
+                accumulator.push(...(options.filter((element) => element.group === option.group)));
+            }
+
+            return accumulator;
+        }, []);
+
       },
 
       /**

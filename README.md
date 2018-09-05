@@ -105,6 +105,12 @@ When provided an array of objects, `vue-select` will display a single value of t
 <v-select :options="[{label: 'foo', value: 'Foo'}]"></v-select>
 ```
 
+You can also group the options by adding the `group` key.
+
+```html
+<v-select :options="[{label: 'foo', value: 'Foo', group: 'fooGroup'}]"></v-select>
+```
+
 ### For more information, please visit the [vue-select documentation.](https://sagalbot.github.io/vue-select)
 
 ## License

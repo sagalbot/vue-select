@@ -1700,5 +1700,51 @@ describe('Select.vue', () => {
 			expect(buttonEl.disabled).toEqual(true);
 		})
 
-	});
+    });
+
+    describe('Grouped options', () => {
+        it('should add 2 option groups', () => {
+            const vm = new Vue({
+                template: '<div><v-select ref="select" :options="options" :value="value"></v-select></div>',
+                data: {
+                    value: {label: 'one', value: 'one', group: 'group1'},
+                    options: [
+                        {label: 'one', value: 'one', group: 'group1'},
+                        {label: 'two', value: 'two', group: 'group1'},
+                        {label: 'three', value: 'three', group: 'group2'}
+                    ]
+                }
+            }).$mount()
+
+            expect(vm.$children[0].mutableOptions).toEqual([
+                {label: 'group1', type: 'group'},
+                {label: 'one', value: 'one', group: 'group1'},
+                {label: 'two', value: 'two', group: 'group1'},
+                {label: 'group2', type: 'group'},
+                {label: 'three', value: 'three', group: 'group2'}
+            ]);
+        });
+
+        it('should add 2 option groups in the right order', () => {
+            const vm = new Vue({
+                template: '<div><v-select ref="select" :options="options" :value="value"></v-select></div>',
+                data: {
+                    value: {label: 'one', value: 'one', group: 'group1'},
+                    options: [
+                        {label: 'one', value: 'one', group: 'group1'},
+                        {label: 'three', value: 'three', group: 'group2'},
+                        {label: 'two', value: 'two', group: 'group1'}
+                    ]
+                }
+            }).$mount()
+
+            expect(vm.$children[0].mutableOptions).toEqual([
+                {label: 'group1', type: 'group'},
+                {label: 'one', value: 'one', group: 'group1'},
+                {label: 'two', value: 'two', group: 'group1'},
+                {label: 'group2', type: 'group'},
+                {label: 'three', value: 'three', group: 'group2'}
+            ]);
+        });
+    });
 })
