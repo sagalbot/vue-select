@@ -546,7 +546,7 @@
       getOptionLabel: {
         type: Function,
         default(option) {
-          if( this.index ) {
+          if( this.index || this.valueProp ) {
             option = this.findOptionByIndexValue(option)
           }
 
@@ -961,12 +961,12 @@
        * where option[this.index] matches
        * the passed in value.
        *
-       * @param value {Object}
+       * @param value {Object, String}
        * @returns {*}
        */
       findOptionByIndexValue(value) {
         this.options.forEach(_option => {
-          if (this.valueProp && typeof option === 'object'
+          if (this.valueProp && typeof _option === 'object'
             && _option[this.valueProp] === value) {
             value = _option
           } else
