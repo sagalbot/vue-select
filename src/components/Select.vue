@@ -538,7 +538,7 @@
       getOptionLabel: {
         type: Function,
         default(option) {
-          if( this.index ) {
+          if( this.index || this.valueProp ) {
             option = this.findOptionByIndexValue(option)
           }
 
@@ -721,6 +721,14 @@
       selectOnTab: {
         type: Boolean,
         default: false
+      },
+      /**
+       * When defined, and option is an object, will sync object property value
+       * @type {String}
+       */
+      valueProp: {
+        type: String | undefined,
+        default: undefined
       }
     },
 
@@ -823,12 +831,15 @@
             }
             option = option[this.index]
           }
+          const optionValue = (this.valueProp && typeof option === 'object')
+            ? option[this.valueProp] : option;
+
           if (this.multiple && !this.mutableValue) {
-            this.mutableValue = [option]
+            this.mutableValue = [optionValue]
           } else if (this.multiple) {
-            this.mutableValue.push(option)
+            this.mutableValue.push(optionValue)
           } else {
-            this.mutableValue = option
+            this.mutableValue = optionValue
           }
         }
 
@@ -844,7 +855,11 @@
         if (this.multiple) {
           let ref = -1
           this.mutableValue.forEach((val) => {
-            if (val === option || (this.index && val === option[this.index]) || (typeof val === 'object' && val[this.label] === option[this.label])) {
+            if (val === option
+              || (this.index && val === option[this.index])
+              || (typeof option === 'object' && this.valueProp && val === option[this.valueProp])
+              || (typeof val === 'object' && val[this.label] === option[this.label])
+            ) {
               ref = val
             }
           })
@@ -938,15 +953,19 @@
        * where option[this.index] matches
        * the passed in value.
        *
-       * @param value {Object}
+       * @param value {Object, String}
        * @returns {*}
        */
       findOptionByIndexValue(value) {
         this.options.forEach(_option => {
+          if (this.valueProp && typeof _option === 'object'
+            && _option[this.valueProp] === value) {
+            value = _option
+          } else
           if (JSON.stringify(_option[this.index]) === JSON.stringify(value)) {
             value = _option
           }
-        })
+        });
         return value
       },
 
