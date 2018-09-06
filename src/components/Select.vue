@@ -966,10 +966,14 @@
        */
       findOptionByIndexValue(value) {
         this.options.forEach(_option => {
+          if (this.valueProp && typeof option === 'object'
+            && _option[this.valueProp] === value) {
+            value = _option
+          } else
           if (JSON.stringify(_option[this.index]) === JSON.stringify(value)) {
             value = _option
           }
-        })
+        });
         return value
       },
 
