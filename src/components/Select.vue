@@ -796,10 +796,12 @@
      */
     created() {
       this.mutableValue = this.value;
-      this.mutableOptions = '';
       if (this.options){
         this.mutableOptions = this.options.slice(0)
+      }else{
+          this.mutableOptions = '';
       }
+
       this.mutableLoading = this.loading;
 
       this.$on('option:created', this.maybePushTag)
