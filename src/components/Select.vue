@@ -342,6 +342,7 @@
                 :tabindex="tabindex"
                 :readonly="!searchable"
                 :id="inputId"
+                :name="inputName"
                 role="combobox"
                 :aria-expanded="dropdownOpen"
                 aria-label="Search for option"
@@ -702,6 +703,15 @@
        */
       inputId: {
         type: String
+      },
+
+      /**
+       * Sets the name of the input element.
+       * @type {String}
+       * @default {null}
+       */
+      inputName: {
+          type: String
       },
 
       /**
