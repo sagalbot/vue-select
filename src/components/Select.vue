@@ -428,7 +428,7 @@
       },
 
       /**
-       * Can the user clear the selected property?
+       * Can the user clear the selected property.
        * @type {Boolean}
        */
       clearable: {

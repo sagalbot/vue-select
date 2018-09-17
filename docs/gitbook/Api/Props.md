@@ -91,6 +91,15 @@ clearSearchOnSelect: {
 },
 
 /**
+ * Enables/disables allowing the user to clear the selected property.
+ * @type {Boolean}
+ */
+clearable: {
+  type: Boolean,
+  default: true
+},
+
+/**
  * Close a dropdown when an option is chosen. Set to false to keep the dropdown
  * open (useful when combined with multi-select, for example)
  * @type {Boolean}
