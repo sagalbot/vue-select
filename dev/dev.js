@@ -16,6 +16,20 @@ new Vue({
     placeholder: "placeholder",
     value: null,
     options: countries,
+    optgroups: [
+      'Text Not in Group', 
+      {
+        label: 'Text in group',
+        value: 'text-in-group'
+      },
+      {
+        title: 'Opt Group With Text Elements',
+        options: ['Item A', 'Item B', 'Item C']
+      },
+      {
+      title: 'Opt Group with Objects',
+      options: countries
+    }],
     ajaxRes: [],
     people: [],
     fuseSearchOptions
