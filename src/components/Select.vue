@@ -311,10 +311,10 @@
     <div ref="toggle" @mousedown.prevent="toggleDropdown" class="dropdown-toggle">
 
       <div class="vs__selected-options" ref="selectedOptions">
-        <slot v-for="option in valueAsArray" name="selected-option-container"
-              :option="(typeof option === 'object')?option:{[label]: option}" :deselect="deselect" :multiple="multiple" :disabled="disabled">
-          <span class="selected-tag" v-bind:key="option.index">
-            <slot name="selected-option" v-bind="(typeof option === 'object')?option:{[label]: option}">
+        <slot v-for="(option, index) in selectedOptions" name="selected-option-container"
+              :option="option" :deselect="deselect" :multiple="multiple" :disabled="disabled">
+          <span class="selected-tag" v-bind:key="index">
+            <slot name="selected-option" v-bind="option">
               {{ getOptionLabel(option) }}
             </slot>
             <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
@@ -1135,6 +1135,27 @@
         }
 
         return true;
+      },
+
+      /**
+       * Return the selected options in array format
+       * @return {Array}
+       */
+      selectedOptions() {
+        const selected = []
+
+        this.mutableOptions.forEach(option => {
+          for(let index in this.valueAsArray) {
+            const value = this.valueAsArray[index]
+            if (typeof value === 'object' && this.optionObjectComparator(value, option)) {
+              selected.push(option)
+            } else if (value === option || value === option[this.index]) {
+              selected.push(option)
+            }
+          }
+        })
+
+        return selected
       },
 
       /**
