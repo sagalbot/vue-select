@@ -136,6 +136,7 @@
     display: block;
     padding: 5px;
     background: rgba(50, 50, 50, .1);
+    cursor: initial;
   }
   .v-select .no-options {
     text-align: center;
