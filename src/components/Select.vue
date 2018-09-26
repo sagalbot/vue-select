@@ -377,7 +377,7 @@
           </slot>
           </a>
         </li>
-        <li v-if="!filteredOptions.length" class="no-options">
+        <li v-if="!filteredOptions.length" class="no-options" @mousedown.stop="">
           <slot name="no-options">Sorry, no matching options.</slot>
         </li>
       </ul>
