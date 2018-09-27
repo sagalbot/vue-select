@@ -642,7 +642,7 @@
        * Callback to filter results when search text
        * is provided. Default implementation loops
        * each option, and returns the result of
-       * thisfilteredOptionsBy.
+       * this.filterBy.
        * @type   {Function}
        * @param  {Array} list of options
        * @param  {String} search text
