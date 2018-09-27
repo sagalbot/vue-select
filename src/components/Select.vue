@@ -1118,7 +1118,7 @@
         if (!this.filterable && !this.taggable) {
           return this.mutableOptions.slice()
         }
-        let options = this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
+        let options = this.filter(this.mutableOptions, this.search, this);
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
