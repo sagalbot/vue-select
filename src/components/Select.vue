@@ -642,7 +642,7 @@
        * Callback to filter results when search text
        * is provided. Default implementation loops
        * each option, and returns the result of
-       * this.filterBy.
+       * thisfilteredOptionsBy.
        * @type   {Function}
        * @param  {Array} list of options
        * @param  {String} search text
@@ -652,6 +652,9 @@
       filter: {
         "type": Function,
         default(options, search) {
+          if(this.search.length == 0) {
+            return options;
+          }
           return options.filter((option) => {
             let label = this.getOptionLabel(option)
             if (typeof label === 'number') {
@@ -1115,7 +1118,7 @@
         if (!this.filterable && !this.taggable) {
           return this.mutableOptions.slice()
         }
-        let options = this.search.length ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
+        let options = this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
