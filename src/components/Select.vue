@@ -612,8 +612,7 @@
 
       /**
        * When true, existing options will be filtered
-       * by the search text. Should not be used in conjunction
-       * with taggable.
+       * by the search text.
        * @type {Boolean}
        */
       filterable: {
@@ -1112,10 +1111,14 @@
        * @return {array}
        */
       filteredOptions() {
-        if (!this.filterable && !this.taggable) {
-          return this.mutableOptions.slice()
+        let options = [...this.mutableOptions];
+
+        // apply filter to options
+        if (this.filterable && this.search.length) {
+          options = this.filter(options, this.search, this)
         }
-        let options = this.search.length ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
+
+        // prepend current search value if taggable and option does not already exist
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
