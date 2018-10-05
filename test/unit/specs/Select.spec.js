@@ -1295,12 +1295,11 @@ describe('Select.vue', () => {
 			})
 		})
 
-		it('should select an existing option if the search string matches an objects label from options when filter-options is false', (done) => {
-			let two = {label: 'two'}
+		it('should select first option if the search string matches an objects label from options when filterable is false', (done) => {
 			const vm = new Vue({
 				template: '<div><v-select :options="options" taggable :filterable="false"></v-select></div>',
 				data: {
-					options: [{label: 'one'}, two]
+					options: [{label: 'one'}, {label: 'two'}]
 				}
 			}).$mount()
 
@@ -1311,7 +1310,7 @@ describe('Select.vue', () => {
 				//	This needs to be wrapped in nextTick() twice so that filteredOptions can
 				//	calculate after setting the search text, and move the typeAheadPointer index to 0.
 				Vue.nextTick(() => {
-					expect(vm.$children[0].mutableValue.label).toBe(two.label)
+					expect(vm.$children[0].mutableValue).toEqual({label: 'one'})
 					done()
 				})
 			})
