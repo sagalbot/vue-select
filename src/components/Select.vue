@@ -44,10 +44,8 @@
     border-style: solid;
     border-width: 3px 3px 0 0;
     content: '';
-    display: inline-block;
     height: 10px;
     width: 10px;
-    vertical-align: text-top;
     transform: rotate(133deg);
     transition: all 150ms cubic-bezier(1.000, -0.115, 0.975, 0.855);
     transition-timing-function: cubic-bezier(1.000, -0.115, 0.975, 0.855);
@@ -55,7 +53,7 @@
   }
   /* Open Indicator States */
   .v-select.open .open-indicator:before {
-    transform: rotate(315deg);
+    transform: translateY(4px) rotate(315deg);
   }
   .v-select.loading .open-indicator {
     opacity: 0;
