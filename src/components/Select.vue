@@ -227,6 +227,16 @@
   .v-select li:hover {
     cursor: pointer;
   }
+  .v-select li[disabled] {
+    cursor: not-allowed;
+  }
+  .v-select li[disabled] a {
+    color: #aaa;
+    pointer-events: none;
+  }
+  .v-select li[disabled].highlight a {
+    background: #aaa;
+  }
   .v-select .dropdown-menu .active > a {
     color: #333;
     background: rgba(50, 50, 50, .1);
@@ -370,7 +380,7 @@
 
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" @mousedown="onMousedown">
-        <li role="option" v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
+        <li role="option" v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index" :disabled="option.disabled">
           <a @mousedown.prevent.stop="select(option)">
           <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
             {{ getOptionLabel(option) }}
@@ -810,6 +820,9 @@
        * @return {void}
        */
       select(option) {
+        if(option.disabled) {
+          return false
+        }
         if (!this.isOptionSelected(option)) {
           if (this.taggable && !this.optionExists(option)) {
             option = this.createOption(option)

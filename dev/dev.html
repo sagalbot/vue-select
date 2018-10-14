@@ -71,6 +71,7 @@
         <v-select placeholder="select on tab" :select-on-tab="true" :options="options"></v-select>
         <v-select placeholder="disabled" disabled  value="disabled"></v-select>
         <v-select placeholder="disabled multiple" disabled multiple :value="['disabled', 'multiple']"></v-select>
+        <v-select placeholder="disabled option" :options="[{ label:'Foo', value:'foo' }, { label:'Bar', value:'bar', disabled: true }, { label:'Baz', value:'baz' }]"></v-select>
         <v-select placeholder="filterable=false, @search=searchPeople" label="first_name" :filterable="false" @search="searchPeople" :options="people"></v-select>
         <v-select placeholder="filtering with fuse.js" label="title" :options="fuseSearchOptions" :filter="fuseSearch">
             <template slot="option" scope="option">
