@@ -265,6 +265,16 @@ describe('Select.vue', () => {
 			expect(vm.$children[0].isOptionSelected('foo')).toEqual(true)
 		}),
 
+		it('should not be able to select disabled elements', () => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :options="[{label: 'foo', value: 'foo', disabled: true}, {label: 'bar', value: 'bar'}]"></v-select></div>`,
+			}).$mount()
+
+			vm.$refs.select.select('foo')
+
+			expect(vm.$children[0].isOptionSelected('foo')).toEqual(false)
+		}),
+
 		describe('change Event', () => {
 			it('will trigger the input event when the selection changes', (done) => {
 				const vm = new Vue({
