@@ -369,7 +369,7 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" @mousedown="onMousedown">
+      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" @mousedown="onMousedown" @mouseup="onMouseUp">
         <li role="option" v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent.stop="select(option)">
           <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
@@ -969,9 +969,7 @@
        * @return {void}
        */
       onSearchBlur() {
-        if (this.mousedown && !this.searching) {
-          this.mousedown = false
-        } else {
+        if (!this.mousedown) {
           if (this.clearSearchOnBlur) {
             this.search = ''
           }
@@ -1044,6 +1042,19 @@
        */
       onMousedown() {
         this.mousedown = true
+      },
+
+      /**
+       * Event-Handler for IE11 workaround
+       * losing focus on search, causing it
+       * not to collapse when user wants to.
+       * @return {void}
+       */
+      onMouseUp() {
+        if (this.mousedown) {
+          this.mousedown = false
+          this.$refs.search.focus();
+        }
       }
     },
 
