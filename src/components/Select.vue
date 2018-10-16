@@ -820,8 +820,7 @@
        * @return {void}
        */
       select(option) {
-        const origOption = this.mutableOptions.filter((o) => o === option || o.value === option)[0]
-        if(option.disabled || origOption.disabled) {
+        if(option && option.disabled) {
           return false
         }
         if (!this.isOptionSelected(option)) {

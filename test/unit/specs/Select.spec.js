@@ -270,7 +270,7 @@ describe('Select.vue', () => {
 				template: `<div><v-select ref="select" :options="[{label: 'foo', value: 'foo', disabled: true}, {label: 'bar', value: 'bar'}]"></v-select></div>`,
 			}).$mount()
 
-			vm.$refs.select.select('foo')
+			vm.$refs.select.select({label: 'foo', value: 'foo', disabled: true})
 
 			expect(vm.$children[0].isOptionSelected('foo')).toEqual(false)
 		}),
