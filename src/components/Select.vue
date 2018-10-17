@@ -385,7 +385,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
@@ -904,15 +904,15 @@
        * @return {Boolean}        True when selected | False otherwise
        */
       isOptionSelected(option) {
-          let selected = false
-          this.valueAsArray.forEach(value => {
-            if (typeof value === 'object') {
-              selected = this.optionObjectComparator(value, option)
-            } else if (value === option || value === option[this.index]) {
-              selected = true
-            }
-          })
-          return selected
+        for (const key in this.valueAsArray) {
+          const value = this.valueAsArray[key];
+          if (typeof value === 'object') {
+            if (this.optionObjectComparator(value, option)) return true;
+          } else if (value === option || value === option[this.index]) {
+            return true;
+          }
+        }
+        return false;
       },
 
       /**
