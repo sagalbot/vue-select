@@ -11,7 +11,7 @@ clearSearchOnSelect,Boolean
 closeOnSelect,Boolean
 label,String
 getOptionLabel,Function
-filterFunction,Function
+filterBy,Function
 filter,Function
 onChange,Function
 taggable,Boolean
