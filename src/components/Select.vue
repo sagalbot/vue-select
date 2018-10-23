@@ -1112,7 +1112,7 @@
        * @return {array}
        */
       filteredOptions() {
-        if (!this.filterable && !this.taggable) {
+        if (!this.filterable) {
           return this.mutableOptions.slice()
         }
         let options = this.search.length ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
