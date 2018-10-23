@@ -969,7 +969,7 @@
        * @return {void}
        */
       onSearchBlur() {
-        if (this.mousedown && !this.searching) {
+        if (this.mousedown && this.searching) {
           this.mousedown = false
         } else {
           if (this.clearSearchOnBlur) {
