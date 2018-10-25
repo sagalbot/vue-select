@@ -1179,6 +1179,19 @@ describe('Select.vue', () => {
 			})
 		})
 
+		it('can set the maxlength of the search input field', () => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options" :value="value" :multiple="true" :maxlength="10" taggable></v-select></div>',
+				components: {vSelect},
+				data: {
+					value: ['one'],
+					options: ['one', 'two']
+				}
+			}).$mount()
+
+			expect(vm.$children[0].$refs.search.maxLength).toEqual(10)
+		})
+
 		it('can select the current search text as an object', (done) => {
 			const vm = new Vue({
 				template: '<div><v-select :options="options" :value="value" :multiple="true" taggable></v-select></div>',
