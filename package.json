@@ -17,7 +17,8 @@
     "deploy": "yarn run build:homepage && node build/build-docs.js && gh-pages -d site",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
     "test": "karma start test/unit/karma.conf.js --single-run",
-    "test-watch": "karma start test/unit/karma.conf.js --single-run=false --auto-watch=true"
+    "test-watch": "karma start test/unit/karma.conf.js --single-run=false --auto-watch=true",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
