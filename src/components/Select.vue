@@ -1025,7 +1025,9 @@
         let exists = false
 
         this.mutableOptions.forEach(opt => {
-          if (typeof opt === 'object' && opt[this.label] === option) {
+          if (typeof opt === 'object' && typeof option === 'object' && opt[this.label] === option[this.label]) {
+            exists = true
+          } else if (typeof opt === 'object' && opt[this.label] === option) {
             exists = true
           } else if (opt === option) {
             exists = true
