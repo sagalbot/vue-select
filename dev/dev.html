@@ -9,7 +9,7 @@
     <!--<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">-->
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.min.css">-->
     <style>
-        
+
         #app {
             height: 95vh;
             display: flex;
@@ -18,6 +18,7 @@
             justify-content: flex-start;
             flex-wrap: wrap;
             align-content: center;
+            font-family: -apple-system, sans-serif;
         }
 
         .v-select {
@@ -67,7 +68,7 @@
               </button>
             </span>
         </v-select>
-
+        <v-select placeholder="select on tab" :select-on-tab="true" :options="options"></v-select>
         <v-select placeholder="disabled" disabled  value="disabled"></v-select>
         <v-select placeholder="disabled multiple" disabled multiple :value="['disabled', 'multiple']"></v-select>
         <v-select placeholder="filterable=false, @search=searchPeople" label="first_name" :filterable="false" @search="searchPeople" :options="people"></v-select>

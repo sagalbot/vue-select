@@ -91,6 +91,15 @@ clearSearchOnSelect: {
 },
 
 /**
+ * Enables/disables allowing the user to clear the selected property.
+ * @type {Boolean}
+ */
+clearable: {
+  type: Boolean,
+  default: true
+},
+
+/**
  * Close a dropdown when an option is chosen. Set to false to keep the dropdown
  * open (useful when combined with multi-select, for example)
  * @type {Boolean}
@@ -137,14 +146,16 @@ getOptionLabel: {
 },
 
 /**
- * Callback to filter the search result the label text.
- * @type   {Function}
- * @param  {Object || String} option
- * @param  {String} label
- * @param  {String} search
- * @return {Boolean}
- */
-filterFunction: {
+* Callback to determine if the provided option should
+* match the current search text. Used to determine
+* if the option should be displayed.
+* @type   {Function}
+* @param  {Object || String} option
+* @param  {String} label
+* @param  {String} search
+* @return {Boolean}
+*/
+filterBy: {
 	type: Function,
 	default(option, label, search) {
 		return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1

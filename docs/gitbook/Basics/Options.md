@@ -33,6 +33,27 @@ If you wanted to display `Canada` in the dropdown, you'd use the `countryName` k
 
 [](codepen://sagalbot/aEjLPB?height=500)
 
+
+### Option index {#values}
+
+When the `options` array contains objects, `vue-select` returns the whole object as dropdown value upon selection. You can specify your own `index` prop to return only the value contained in the specific property.
+
+For example, consider an object with `value` and `label` properties:
+
+```json
+{
+  value: "CA",
+  label: "Canada"
+}
+```
+
+If you wanted to return `CA` in the dropdown when `Canada` is selected, you'd use the `index` key:
+
+```html
+<v-select index="value" :options="countries"></v-select>
+```
+
+
 ### Null / Empty Options {#null}
 
 `vue-select` requires the `option` property to be an `array`. If you are using Vue in development mode, you will get warnings attempting to pass anything other than an `array` to the `options` prop. If you need a `null`/`empty` value, use an empty array `[]`.
