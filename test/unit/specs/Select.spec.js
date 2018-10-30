@@ -1387,6 +1387,62 @@ describe('Select.vue', () => {
 				})
 
 		})
+
+		it('should call preblur event when control loses focus', (done) => {
+			const vm = new Vue({
+				template: '<div><v-select ref="select"></v-select></div>',
+			}).$mount()
+			spyOn(vm.$children[0], '$emit')
+			vm.$refs.select.search = 'one'
+			vm.$children[0].onSearchBlur()
+			Vue.nextTick(() => {
+				expect(vm.$children[0].$emit).toHaveBeenCalledWith('search:preblur')
+				done()
+			})
+		})
+
+		it('should not call preblur event when control loses focus and search text is empty', (done) => {
+			const vm = new Vue({
+				template: '<div><v-select ref="select"></v-select></div>',
+			}).$mount()
+			spyOn(vm.$children[0], '$emit')
+			vm.$refs.select.search = ''
+			vm.$children[0].onSearchBlur()
+			Vue.nextTick(() => {
+				expect(vm.$children[0].$emit).not.toHaveBeenCalledWith('search:preblur')
+				done()
+			})
+			})
+
+		it('should allow selection of existing option despite search text during preblur event', (done) => {
+			const vm = new Vue({
+				template: '<div><v-select ref="select" :options="options" @search:preblur="searchPreBlur"></v-select></div>',
+				data: {
+					options: ['option1'],
+				},
+				methods: {
+					searchPreBlur() {
+						const select = this.$refs.select
+						select.select(select.search)
+					},
+				},
+			}).$mount()
+
+			let count = 0
+
+			spyOn(vm.$children[0].$refs.search, 'blur').and.callFake(() => {
+				count++
+				if (count < 2) {
+					vm.$children[0].onSearchBlur()
+				}
+			})
+			vm.$refs.select.search = 'abc'
+			vm.$refs.select.select('option1')
+			Vue.nextTick(() => {
+				expect(vm.$refs.select.mutableValue).toEqual('option1')
+				done()
+			})
+		})
 	})
 
 	describe('Asynchronous Loading', () => {
