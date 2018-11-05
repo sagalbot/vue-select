@@ -981,10 +981,6 @@
        * @return {void}
        */
       onSearchBlur() {
-        console.log('search blur mousedown: ' + this.mousedown + ', ' + this.search)
-        if (this.mousedown && !this.searching) {
-          this.mousedown = false
-        } else {
           if(!!this.search) {
             this.$emit('search:preblur')
           }
@@ -993,8 +989,6 @@
           }
           this.open = false
           this.$emit('search:blur')
-        }
-          console.log('after search blur mousedown: ' + this.mousedown + ', ' + this.search)
       },
 
       /**
@@ -1062,8 +1056,7 @@
        * @return {void}
        */
       onMousedown() {
-        this.mousedown = true
-        console.log('on mousedown: ' + this.mousedown)
+        // this.mousedown = true
       }
     },
 
