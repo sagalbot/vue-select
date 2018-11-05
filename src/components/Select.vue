@@ -981,6 +981,7 @@
        * @return {void}
        */
       onSearchBlur() {
+        console.log('search blur mousedown: ' + this.mousedown)
         if (this.mousedown && !this.searching) {
           this.mousedown = false
         } else {
@@ -1060,6 +1061,7 @@
        * @return {void}
        */
       onMousedown() {
+        console.log('on mousedown: ' + this.mousedown)
         this.mousedown = true
       }
     },
