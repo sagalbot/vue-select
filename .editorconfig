@@ -1,0 +1,26 @@
+root = true
+
+[*]
+charset=utf-8
+end_of_line=lf
+insert_final_newline=true
+indent_style=space
+tab_width=2
+indent_size=4
+indent_brace_style=K&R
+spaces_around_operators=true
+continuation_indent_size=4
+max_line_length=120
+
+[{.babelrc,.stylelintrc,jest.config,.eslintrc,*.json,*.jsb3,*.jsb2,*.bowerrc}]
+indent_size=2
+
+[{*.applejs,*.js,*.vue}]
+trim_trailing_whitespace=true
+indent_size=2
+
+[{*.less,*.scss}]
+indent_size=2
+
+[{*.yml,*.yaml}]
+indent_size=2

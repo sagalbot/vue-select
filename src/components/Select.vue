@@ -3,6 +3,7 @@
     position: relative;
     font-family: inherit;
   }
+
   .v-select,
   .v-select * {
     -webkit-box-sizing: border-box;
@@ -16,14 +17,17 @@
   .v-select[dir="rtl"] .vs__actions {
     padding: 0 3px 0 6px;
   }
+
   .v-select[dir="rtl"] .dropdown-toggle .clear {
     margin-left: 6px;
     margin-right: 0;
   }
+
   .v-select[dir="rtl"] .selected-tag .close {
     margin-left: 0;
     margin-right: 2px;
   }
+
   .v-select[dir="rtl"] .dropdown-menu {
     text-align: right;
   }
@@ -39,6 +43,7 @@
     opacity: 1;
     width: 12px; /* To account for extra width from rotating. */
   }
+
   .v-select .open-indicator:before {
     border-color: rgba(60, 60, 60, .5);
     border-style: solid;
@@ -53,10 +58,12 @@
     transition-timing-function: cubic-bezier(1.000, -0.115, 0.975, 0.855);
     box-sizing: inherit;
   }
+
   /* Open Indicator States */
   .v-select.open .open-indicator:before {
     transform: rotate(315deg);
   }
+
   .v-select.loading .open-indicator {
     opacity: 0;
   }
@@ -73,6 +80,7 @@
     border-radius: 4px;
     white-space: normal;
   }
+
   .v-select .vs__selected-options {
     display: flex;
     flex-basis: 100%;
@@ -81,6 +89,7 @@
     padding: 0 2px;
     position: relative;
   }
+
   .v-select .vs__actions {
     display: flex;
     align-items: stretch;
@@ -104,17 +113,20 @@
   .v-select.searchable .dropdown-toggle {
     cursor: text;
   }
+
   .v-select.unsearchable .dropdown-toggle {
     cursor: pointer;
   }
+
   .v-select.open .dropdown-toggle {
     border-bottom-color: transparent;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
+
   /* Dropdown Menu */
   .v-select .dropdown-menu {
-    display:block;
+    display: block;
     position: absolute;
     top: 100%;
     left: 0;
@@ -125,16 +137,18 @@
     width: 100%;
     overflow-y: scroll;
     border: 1px solid rgba(0, 0, 0, .26);
-    box-shadow: 0px 3px 6px 0px rgba(0,0,0,.15);
+    box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, .15);
     border-top: none;
     border-radius: 0 0 4px 4px;
     text-align: left;
     list-style: none;
     background: #fff;
   }
+
   .v-select .no-options {
     text-align: center;
   }
+
   /* Selected Tags */
   .v-select .selected-tag {
     display: flex;
@@ -148,17 +162,21 @@
     padding: 0 0.25em;
     transition: opacity .25s;
   }
+
   .v-select.single .selected-tag {
     background-color: transparent;
     border-color: transparent;
   }
+
   .v-select.single.open .selected-tag {
     position: absolute;
     opacity: .4;
   }
+
   .v-select.single.searching .selected-tag {
     display: none;
   }
+
   .v-select .selected-tag .close {
     margin-left: 2px;
     font-size: 1.25em;
@@ -174,9 +192,11 @@
     filter: alpha(opacity=20);
     opacity: .2;
   }
+
   .v-select.single.searching:not(.open):not(.loading) input[type="search"] {
     opacity: .2;
   }
+
   /* Search Input */
   .v-select input[type="search"]::-webkit-search-decoration,
   .v-select input[type="search"]::-webkit-search-cancel-button,
@@ -184,9 +204,11 @@
   .v-select input[type="search"]::-webkit-search-results-decoration {
     display: none;
   }
+
   .v-select input[type="search"]::-ms-clear {
     display: none;
   }
+
   .v-select input[type="search"],
   .v-select input[type="search"]:focus {
     appearance: none;
@@ -206,9 +228,11 @@
     flex-grow: 1;
     width: 0;
   }
+
   .v-select.unsearchable input[type="search"] {
     opacity: 0;
   }
+
   .v-select.unsearchable input[type="search"]:hover {
     cursor: pointer;
   }
@@ -217,6 +241,7 @@
   .v-select li {
     line-height: 1.42857143; /* Normalize line height */
   }
+
   .v-select li > a {
     display: block;
     padding: 3px 20px;
@@ -224,13 +249,16 @@
     color: #333; /* Overrides most CSS frameworks */
     white-space: nowrap;
   }
+
   .v-select li:hover {
     cursor: pointer;
   }
+
   .v-select .dropdown-menu .active > a {
     color: #333;
     background: rgba(50, 50, 50, .1);
   }
+
   .v-select .dropdown-menu > .highlight > a {
     /*
      * required to override bootstrap 3's
@@ -239,9 +267,11 @@
     background: #5897fb;
     color: #fff;
   }
+
   .v-select .highlight:not(:last-child) {
     margin-bottom: 0; /* Fixes Bulma Margin */
   }
+
   /* Loading Spinner */
   .v-select .spinner {
     align-self: center;
@@ -257,6 +287,7 @@
     animation: vSelectSpinner 1.1s infinite linear;
     transition: opacity .1s;
   }
+
   .v-select .spinner,
   .v-select .spinner:after {
     border-radius: 50%;
@@ -278,6 +309,7 @@
   .v-select.loading .spinner {
     opacity: 1;
   }
+
   /* KeyFrames */
   @-webkit-keyframes vSelectSpinner {
     0% {
@@ -287,6 +319,7 @@
       transform: rotate(360deg);
     }
   }
+
   @keyframes vSelectSpinner {
     0% {
       transform: rotate(0deg);
@@ -295,11 +328,13 @@
       transform: rotate(360deg);
     }
   }
+
   /* Dropdown Default Transition */
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity .15s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
+
   .fade-enter,
   .fade-leave-to {
     opacity: 0;
@@ -312,50 +347,52 @@
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in valueAsArray" name="selected-option-container"
-              :option="(typeof option === 'object')?option:{[label]: option}" :deselect="deselect" :multiple="multiple" :disabled="disabled">
-          <span class="selected-tag" v-bind:key="option.index">
+              :option="(typeof option === 'object')?option:{[label]: option}" :deselect="deselect" :multiple="multiple"
+              :disabled="disabled">
+          <span class="selected-tag" :key="option.index">
             <slot name="selected-option" v-bind="(typeof option === 'object')?option:{[label]: option}">
               {{ getOptionLabel(option) }}
             </slot>
-            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
+            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close"
+                    aria-label="Remove option">
               <span aria-hidden="true">&times;</span>
             </button>
           </span>
         </slot>
 
         <input
-                ref="search"
-                v-model="search"
-                @keydown.delete="maybeDeleteValue"
-                @keyup.esc="onEscape"
-                @keydown.up.prevent="typeAheadUp"
-                @keydown.down.prevent="typeAheadDown"
-                @keydown.enter.prevent="typeAheadSelect"
-                @keydown.tab="onTab"
-                @blur="onSearchBlur"
-                @focus="onSearchFocus"
-                type="search"
-                class="form-control"
-                autocomplete="off"
-                :disabled="disabled"
-                :placeholder="searchPlaceholder"
-                :tabindex="tabindex"
-                :readonly="!searchable"
-                :id="inputId"
-                role="combobox"
-                :aria-expanded="dropdownOpen"
-                aria-label="Search for option"
+            ref="search"
+            v-model="search"
+            @keydown.delete="maybeDeleteValue"
+            @keyup.esc="onEscape"
+            @keydown.up.prevent="typeAheadUp"
+            @keydown.down.prevent="typeAheadDown"
+            @keydown.enter.prevent="typeAheadSelect"
+            @keydown.tab="onTab"
+            @blur="onSearchBlur"
+            @focus="onSearchFocus"
+            type="search"
+            class="form-control"
+            autocomplete="off"
+            :disabled="disabled"
+            :placeholder="searchPlaceholder"
+            :tabindex="tabindex"
+            :readonly="!searchable"
+            :id="inputId"
+            role="combobox"
+            :aria-expanded="dropdownOpen"
+            aria-label="Search for option"
         >
 
       </div>
       <div class="vs__actions">
         <button
-          v-show="showClearButton"
-          :disabled="disabled"
-          @click="clearSelection"
-          type="button"
-          class="clear"
-          title="Clear selection"
+            v-show="showClearButton"
+            :disabled="disabled"
+            @click="clearSelection"
+            type="button"
+            class="clear"
+            title="Clear selection"
         >
           <span aria-hidden="true">&times;</span>
         </button>
@@ -369,12 +406,15 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" @mousedown="onMousedown">
-        <li role="option" v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
-          <a @mousedown.prevent.stop="select(option)">
-          <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
-            {{ getOptionLabel(option) }}
-          </slot>
+      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }"
+          role="listbox" @mousedown="onMousedown">
+        <li role="option" v-for="(option, index) in filteredOptions" :key="index"
+            :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }"
+            @mouseover="typeAheadPointer = index">
+          <a @click="select(option)">
+            <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
+              {{ getOptionLabel(option) }}
+            </slot>
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options">
@@ -538,16 +578,16 @@
       getOptionLabel: {
         type: Function,
         default(option) {
-          if( this.index ) {
+          if ( this.index ) {
             option = this.findOptionByIndexValue(option)
           }
 
-          if (typeof option === 'object') {
-            if (!option.hasOwnProperty(this.label)) {
+          if ( typeof option === 'object' ) {
+            if ( !option.hasOwnProperty(this.label) ) {
               return console.warn(
-                `[vue-select warn]: Label key "option.${this.label}" does not` +
-                ` exist in options object ${JSON.stringify(option)}.\n` +
-                'http://sagalbot.github.io/vue-select/#ex-labels'
+                  `[vue-select warn]: Label key "option.${this.label}" does not` +
+                  ` exist in options object ${JSON.stringify(option)}.\n` +
+                  'http://sagalbot.github.io/vue-select/#ex-labels'
               )
             }
             return option[this.label]
@@ -565,7 +605,7 @@
        */
       onChange: {
         type: Function,
-        default: function (val) {
+        default: function(val) {
           this.$emit('input', val)
         }
       },
@@ -575,8 +615,8 @@
        */
       onTab: {
         type: Function,
-        default: function () {
-          if (this.selectOnTab) {
+        default: function() {
+          if ( this.selectOnTab ) {
             this.typeAheadSelect();
           }
         },
@@ -653,8 +693,8 @@
         "type": Function,
         default(options, search) {
           return options.filter((option) => {
-            let label = this.getOptionLabel(option)
-            if (typeof label === 'number') {
+            let label = this.getOptionLabel(option);
+            if ( typeof label === 'number' ) {
               label = label.toString()
             }
             return this.filterBy(option, label, search)
@@ -669,10 +709,10 @@
       createOption: {
         type: Function,
         default(newOption) {
-          if (typeof this.mutableOptions[0] === 'object') {
+          if ( typeof this.mutableOptions[0] === 'object' ) {
             newOption = {[this.label]: newOption}
           }
-          this.$emit('option:created', newOption)
+          this.$emit('option:created', newOption);
           return newOption
         }
       },
@@ -741,7 +781,8 @@
        * @return {void}
        */
       value(val) {
-        this.mutableValue = val
+        if ( val.isEmpty && val.isEmpty() ) this.mutableValue = null;
+        else this.mutableValue = val;
       },
 
       /**
@@ -751,7 +792,9 @@
        * @return {void}
        */
       mutableValue(val, old) {
-        if (this.multiple) {
+        if ( this.value.set ) this.value.set(val);
+
+        if ( this.multiple ) {
           this.onChange ? this.onChange(val) : null
         } else {
           this.onChange && val !== old ? this.onChange(val) : null
@@ -774,7 +817,7 @@
        * @return {[type]} [description]
        */
       mutableOptions() {
-        if (!this.taggable && this.resetOnOptionsChange) {
+        if ( !this.taggable && this.resetOnOptionsChange ) {
           this.mutableValue = this.multiple ? [] : null
         }
       },
@@ -795,9 +838,9 @@
      * attach any event listeners.
      */
     created() {
-      this.mutableValue = this.value
-      this.mutableOptions = this.options.slice(0)
-      this.mutableLoading = this.loading
+      this.mutableValue = this.value;
+      this.mutableOptions = this.options.slice(0);
+      this.mutableLoading = this.loading;
 
       this.$on('option:created', this.maybePushTag)
     },
@@ -810,12 +853,12 @@
        * @return {void}
        */
       select(option) {
-        if (!this.isOptionSelected(option)) {
-          if (this.taggable && !this.optionExists(option)) {
+        if ( !this.isOptionSelected(option) ) {
+          if ( this.taggable && !this.optionExists(option) ) {
             option = this.createOption(option)
           }
-          if(this.index) {
-            if (!option.hasOwnProperty(this.index)) {
+          if ( this.index ) {
+            if ( !option.hasOwnProperty(this.index) ) {
               return console.warn(
                   `[vue-select warn]: Index key "option.${this.index}" does not` +
                   ` exist in options object ${JSON.stringify(option)}.`
@@ -823,9 +866,9 @@
             }
             option = option[this.index]
           }
-          if (this.multiple && !this.mutableValue) {
+          if ( this.multiple && !this.mutableValue ) {
             this.mutableValue = [option]
-          } else if (this.multiple) {
+          } else if ( this.multiple ) {
             this.mutableValue.push(option)
           } else {
             this.mutableValue = option
@@ -841,14 +884,14 @@
        * @return {void}
        */
       deselect(option) {
-        if (this.multiple) {
-          let ref = -1
+        if ( this.multiple ) {
+          let ref = -1;
           this.mutableValue.forEach((val) => {
-            if (val === option || (this.index && val === option[this.index]) || (typeof val === 'object' && val[this.label] === option[this.label])) {
+            if ( val === option || (this.index && val === option[this.index]) || (typeof val === 'object' && val[this.label] === option[this.label]) ) {
               ref = val
             }
-          })
-          var index = this.mutableValue.indexOf(ref)
+          });
+          const index = this.mutableValue.indexOf(ref);
           this.mutableValue.splice(index, 1)
         } else {
           this.mutableValue = null
@@ -869,12 +912,12 @@
        * @return {void}
        */
       onAfterSelect(option) {
-        if (this.closeOnSelect) {
-          this.open = !this.open
+        if ( this.closeOnSelect ) {
+          this.open = !this.open;
           this.$refs.search.blur()
         }
 
-        if (this.clearSearchOnSelect) {
+        if ( this.clearSearchOnSelect ) {
           this.search = ''
         }
       },
@@ -885,13 +928,13 @@
        * @return {void}
        */
       toggleDropdown(e) {
-        if (e.target === this.$refs.openIndicator || e.target === this.$refs.search || e.target === this.$refs.toggle ||
-            e.target.classList.contains('selected-tag') || e.target === this.$el) {
-          if (this.open) {
+        if ( e.target === this.$refs.openIndicator || e.target === this.$refs.search || e.target === this.$refs.toggle ||
+            e.target.classList.contains('selected-tag') || e.target === this.$el ) {
+          if ( this.open ) {
             this.$refs.search.blur() // dropdown will close on blur
           } else {
-            if (!this.disabled) {
-              this.open = true
+            if ( !this.disabled ) {
+              this.open = true;
               this.$refs.search.focus()
             }
           }
@@ -904,15 +947,15 @@
        * @return {Boolean}        True when selected | False otherwise
        */
       isOptionSelected(option) {
-          let selected = false
-          this.valueAsArray.forEach(value => {
-            if (typeof value === 'object') {
-              selected = this.optionObjectComparator(value, option)
-            } else if (value === option || value === option[this.index]) {
-              selected = true
-            }
-          })
-          return selected
+        let selected = false;
+        this.valueAsArray.forEach(value => {
+          if ( typeof value === 'object' ) {
+            selected = this.optionObjectComparator(value, option)
+          } else if ( value === option || value === option[this.index] ) {
+            selected = true
+          }
+        });
+        return selected
       },
 
       /**
@@ -923,11 +966,11 @@
        * @returns {boolean}
        */
       optionObjectComparator(value, option) {
-        if (this.index && value === option[this.index]) {
+        if ( this.index && value === option[this.index] ) {
           return true
-        } else if ((value[this.label] === option[this.label]) || (value[this.label] === option)) {
+        } else if ( (value[this.label] === option[this.label]) || (value[this.label] === option) ) {
           return true
-        } else if (this.index && value[this.index] === option[this.index]) {
+        } else if ( this.index && value[this.index] === option[this.index] ) {
           return true
         }
         return false;
@@ -943,10 +986,10 @@
        */
       findOptionByIndexValue(value) {
         this.options.forEach(_option => {
-          if (JSON.stringify(_option[this.index]) === JSON.stringify(value)) {
+          if ( JSON.stringify(_option[this.index]) === JSON.stringify(value) ) {
             value = _option
           }
-        })
+        });
         return value
       },
 
@@ -956,7 +999,7 @@
        * @return {void}
        */
       onEscape() {
-        if (!this.search.length) {
+        if ( !this.search.length ) {
           this.$refs.search.blur()
         } else {
           this.search = ''
@@ -969,13 +1012,13 @@
        * @return {void}
        */
       onSearchBlur() {
-        if (this.mousedown && !this.searching) {
+        if ( this.mousedown && !this.searching ) {
           this.mousedown = false
         } else {
-          if (this.clearSearchOnBlur) {
+          if ( this.clearSearchOnBlur ) {
             this.search = ''
           }
-          this.open = false
+          this.open = false;
           this.$emit('search:blur')
         }
       },
@@ -986,7 +1029,7 @@
        * @return {void}
        */
       onSearchFocus() {
-        this.open = true
+        this.open = true;
         this.$emit('search:focus')
       },
 
@@ -996,7 +1039,7 @@
        * @return {this.value}
        */
       maybeDeleteValue() {
-        if (!this.$refs.search.value.length && this.mutableValue) {
+        if ( !this.$refs.search.value.length && this.mutableValue ) {
           return this.multiple ? this.mutableValue.pop() : this.mutableValue = null
         }
       },
@@ -1009,15 +1052,15 @@
        * @return {boolean}
        */
       optionExists(option) {
-        let exists = false
+        let exists = false;
 
         this.mutableOptions.forEach(opt => {
-          if (typeof opt === 'object' && opt[this.label] === option) {
+          if ( typeof opt === 'object' && opt[this.label] === option ) {
             exists = true
-          } else if (opt === option) {
+          } else if ( opt === option ) {
             exists = true
           }
-        })
+        });
 
         return exists
       },
@@ -1030,7 +1073,7 @@
        * @return {void}
        */
       maybePushTag(option) {
-        if (this.pushTags) {
+        if ( this.pushTags ) {
           this.mutableOptions.push(option)
         }
       },
@@ -1098,7 +1141,7 @@
        * @return {String} Placeholder text
        */
       searchPlaceholder() {
-        if (this.isValueEmpty && this.placeholder) {
+        if ( this.isValueEmpty && this.placeholder ) {
           return this.placeholder;
         }
       },
@@ -1112,11 +1155,11 @@
        * @return {array}
        */
       filteredOptions() {
-        if (!this.filterable && !this.taggable) {
+        if ( !this.filterable && !this.taggable ) {
           return this.mutableOptions.slice()
         }
         let options = this.search.length ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
-        if (this.taggable && this.search.length && !this.optionExists(this.search)) {
+        if ( this.taggable && this.search.length && !this.optionExists(this.search) ) {
           options.unshift(this.search)
         }
         return options
@@ -1127,11 +1170,14 @@
        * @return {Boolean}
        */
       isValueEmpty() {
-        if (this.mutableValue) {
-          if (typeof this.mutableValue === 'object') {
-            return ! Object.keys(this.mutableValue).length
+        if ( this.mutableValue ) {
+          if ( typeof this.mutableValue === 'object' ) {
+            if ( this.value.isEmpty ){
+              return this.value.isEmpty();
+            }
+            else return !Object.keys(this.mutableValue).length;
           }
-          return ! this.valueAsArray.length
+          return !this.valueAsArray.length
         }
 
         return true;
@@ -1142,9 +1188,9 @@
        * @return {Array}
        */
       valueAsArray() {
-        if (this.multiple && this.mutableValue) {
+        if ( this.multiple && this.mutableValue ) {
           return this.mutableValue
-        } else if (this.mutableValue) {
+        } else if ( this.mutableValue ) {
           return [].concat(this.mutableValue)
         }
 
@@ -1156,7 +1202,7 @@
        * @return {Boolean}
        */
       showClearButton() {
-        return !this.multiple && this.clearable && !this.open && this.mutableValue != null
+        return !this.multiple && this.clearable && !this.open && !this.isValueEmpty
       }
     },
 
