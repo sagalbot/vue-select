@@ -877,6 +877,9 @@
         if (this.clearSearchOnSelect) {
           this.search = ''
         }
+        if (this.noDrop && this.multiple) {
+          this.focusInput()
+        }
       },
 
       /**
@@ -1033,6 +1036,14 @@
         if (this.pushTags) {
           this.mutableOptions.push(option)
         }
+      },
+
+      /**
+       * Gives focus to the input element.
+       * @return {void}
+       */
+      focusInput() {
+        this.$nextTick(() => this.$refs.search.focus())
       },
 
       /**
