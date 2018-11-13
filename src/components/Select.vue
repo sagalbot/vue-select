@@ -777,11 +777,11 @@
       /**
        * When the value prop changes, update
        * the internal mutableValue.
-       * @param  {mixed} val
+       * @param  {*} val
        * @return {void}
        */
       value(val) {
-        if ( val.isEmpty && val.isEmpty() ) this.mutableValue = null;
+        if ( val && val.isEmpty && val.isEmpty() ) this.mutableValue = null;
         else this.mutableValue = val;
       },
 
@@ -792,7 +792,7 @@
        * @return {void}
        */
       mutableValue(val, old) {
-        if ( this.value.set ) this.value.set(val);
+        if ( this.value && this.value.set ) this.value.set(val);
 
         if ( this.multiple ) {
           this.onChange ? this.onChange(val) : null
@@ -1172,7 +1172,7 @@
       isValueEmpty() {
         if ( this.mutableValue ) {
           if ( typeof this.mutableValue === 'object' ) {
-            if ( this.value.isEmpty ){
+            if ( this.value && this.value.isEmpty ){
               return this.value.isEmpty();
             }
             else return !Object.keys(this.mutableValue).length;
