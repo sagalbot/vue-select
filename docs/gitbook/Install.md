@@ -16,7 +16,7 @@ Then, import and register the component:
 
 ```js
 import Vue from 'vue'
-import vSelect from './components/Select.vue'
+import vSelect from 'vue-select'
 
 Vue.component('v-select', vSelect)
 ```
