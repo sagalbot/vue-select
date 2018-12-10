@@ -1669,4 +1669,78 @@ describe('Select.vue', () => {
 		})
 
 	});
+
+
+	describe('Option Groups', () => {
+
+		it( 'should display an opt group title followed by two text options', () => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options"></v-select></div>',
+				components: {vSelect},
+				data: {
+					options: [{
+						title: 'Opt Group',
+						options: ['one', 'two']
+					}]
+				}
+			}).$mount()
+			expect(vm.$children[0].mutableOptions).toEqual([{optgroup: 'Opt Group'}, 'one', 'two'])
+		})
+
+		it( 'should display an opt group title followed by two object options', () => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options"></v-select></div>',
+				components: {vSelect},
+				data: {
+					options: [{
+						title: 'Opt Group',
+						options: [{
+							label: 'Test',
+							value: 'test'
+						}, {
+							label: 'Test 2',
+							value: 'test2'
+						}]
+					}]
+				}
+			}).$mount()
+			expect(vm.$children[0].mutableOptions).toEqual([{optgroup: 'Opt Group'}, {
+				label: 'Test',
+				value: 'test'
+			}, {
+				label: 'Test 2',
+				value: 'test2'
+			}])
+		})
+
+		it( 'should display mix a non-grouped text item with an opt group', () => {
+			const vm = new Vue({
+				template: '<div><v-select :options="options"></v-select></div>',
+				components: {vSelect},
+				data: {
+					options: [
+						'one',
+						{
+						title: 'Opt Group',
+						options: [{
+							label: 'Test',
+							value: 'test'
+						}, {
+							label: 'Test 2',
+							value: 'test2'
+						}]
+					}]
+				}
+			}).$mount()
+			expect(vm.$children[0].mutableOptions).toEqual(['one', {optgroup: 'Opt Group'}, {
+				label: 'Test',
+				value: 'test'
+			}, {
+				label: 'Test 2',
+				value: 'test2'
+			}])
+		})
+
+
+	});
 })

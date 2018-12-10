@@ -132,6 +132,12 @@
     list-style: none;
     background: #fff;
   }
+  .v-select .dropdown-menu .optgroup-header {
+    display: block;
+    padding: 5px;
+    background: rgba(50, 50, 50, .1);
+    cursor: initial;
+  }
   .v-select .no-options {
     text-align: center;
   }
@@ -371,8 +377,9 @@
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" @mousedown="onMousedown">
         <li role="option" v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
-          <a @mousedown.prevent.stop="select(option)">
-          <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
+          <span class="optgroup-header" v-if="option.optgroup">{{option.optgroup}}</span>
+          <a v-if="!option.optgroup" @mousedown.prevent.stop="select(option)">
+          <slot v-if="!option.optgroup" name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
             {{ getOptionLabel(option) }}
           </slot>
           </a>
@@ -659,6 +666,7 @@
             }
             return this.filterBy(option, label, search)
           });
+        
         }
       },
 
@@ -765,7 +773,7 @@
        * @return {void}
        */
       options(val) {
-        this.mutableOptions = val
+        this.mutableOptions = this.normaliseOptGroups(val)
       },
 
       /**
@@ -796,14 +804,27 @@
      */
     created() {
       this.mutableValue = this.value
-      this.mutableOptions = this.options.slice(0)
+      this.mutableOptions = this.normaliseOptGroups(this.options.slice(0))
       this.mutableLoading = this.loading
 
       this.$on('option:created', this.maybePushTag)
     },
 
     methods: {
-
+      /** check if the list has elements which have 
+       *  title and a list of options, and flatten out 
+       */
+      normaliseOptGroups(val) {
+        return val.map(item => {
+          if (item.title && item.options && item.options instanceof Array) {
+            return [{optgroup : item.title}].concat(item.options)
+          } else {
+            return [item]
+          }
+        }).reduce((arr, group) => {
+          return arr.concat(group)
+        },[])
+      },
       /**
        * Select a given option.
        * @param  {Object|String} option
