@@ -721,6 +721,14 @@
       selectOnTab: {
         type: Boolean,
         default: false
+      },
+      /**
+       * When true, unfocusing on the search bar will select the current select value
+       * @type {Boolean}
+       */
+      selectOnSearchBlur: {
+        type: Boolean,
+        default: false
       }
     },
 
@@ -969,6 +977,9 @@
        * @return {void}
        */
       onSearchBlur() {
+        if (this.selectOnSearchBlur) {
+          this.typeAheadSelect();
+        }
         if (this.mousedown && !this.searching) {
           this.mousedown = false
         } else {
