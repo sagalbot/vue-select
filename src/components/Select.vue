@@ -826,7 +826,7 @@
           if (this.multiple && !this.mutableValue) {
             this.mutableValue = [option]
           } else if (this.multiple) {
-            this.mutableValue.push(option)
+            this.mutableValue = this.mutableValue.concat(option)
           } else {
             this.mutableValue = option
           }
@@ -848,8 +848,7 @@
               ref = val
             }
           })
-          var index = this.mutableValue.indexOf(ref)
-          this.mutableValue.splice(index, 1)
+          this.mutableValue = this.mutableValue.filter(item => item !== ref)
         } else {
           this.mutableValue = null
         }
@@ -997,7 +996,11 @@
        */
       maybeDeleteValue() {
         if (!this.$refs.search.value.length && this.mutableValue) {
-          return this.multiple ? this.mutableValue.pop() : this.mutableValue = null
+          if (this.multiple) {
+              this.mutableValue = this.mutableValue.slice(0, this.mutableValue.length -1)
+          } else {
+              return this.mutableValue = null
+          }
         }
       },
 
