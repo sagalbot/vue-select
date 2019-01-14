@@ -35,6 +35,16 @@ disabled: {
 },
 
 /**
+ * Value of the 'autocomplete' field of the input
+ * element.
+ * @type {String}
+ */
+autocomplete: {
+  type: String,
+  default: 'off'
+},
+
+/**
  * Sets the max-height property on the dropdown list.
  * @deprecated
  * @type {String}

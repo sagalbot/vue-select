@@ -336,7 +336,7 @@
                 @focus="onSearchFocus"
                 type="search"
                 class="form-control"
-                autocomplete="off"
+                :autocomplete="autocomplete"
                 :disabled="disabled"
                 :placeholder="searchPlaceholder"
                 :tabindex="tabindex"
@@ -510,6 +510,17 @@
       label: {
         type: String,
         default: 'label'
+      },
+
+
+      /**
+       * Value of the 'autocomplete' field of the input
+       * element.
+       * @type {String}
+       */
+      autocomplete: {
+        type: String,
+        default: 'off'
       },
 
       /**
