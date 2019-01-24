@@ -36,6 +36,8 @@
         <v-select placeholder="multiple" multiple :options="options"></v-select>
         <v-select placeholder="multiple, taggable" multiple taggable :options="options" no-drop></v-select>
         <v-select placeholder="multiple, taggable, push-tags" multiple push-tags taggable :options="[{label: 'Foo', value: 'foo'}]"></v-select>
+        <v-select placeholder="multiple, duplicate" multiple duplicate :options="options"></v-select>
+        <v-select placeholder="multiple, taggable, duplicate" multiple duplicate taggable :options="options"></v-select>
         <v-select placeholder="multiple, closeOnSelect=true" multiple :options="['cat', 'dog', 'bear']"></v-select>
         <v-select placeholder="multiple, closeOnSelect=false" multiple :close-on-select="false" :options="['cat', 'dog', 'bear']"></v-select>
         <v-select placeholder="searchable=false" :options="options" :searchable="false"></v-select>
