@@ -11,7 +11,7 @@
     "dev": "node build/dev-server.js",
     "dev:homepage": "node build/dev-server.js --docs",
     "dev:docs": "gitbook serve",
-    "build": "node build/build.js",
+    "build:dev": "node build/build.js",
     "build:homepage": "node build/build.js --homepage",
     "build:docs": "yarn run build:homepage && node build/build-docs.js",
     "deploy": "yarn run build:homepage && node build/build-docs.js && gh-pages -d site",
