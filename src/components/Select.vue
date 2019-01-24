@@ -369,7 +369,7 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" @mousedown="onMousedown">
+      <ul ref="dropdownMenu" v-if="dropdownOpen" class="dropdown-menu" :style="{ 'max-height': maxHeight }" role="listbox" >
         <li role="option" v-for="(option, index) in filteredOptions" v-bind:key="index" :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }" @mouseover="typeAheadPointer = index">
           <a @mousedown.prevent.stop="select(option)">
           <slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
@@ -969,9 +969,7 @@
        * @return {void}
        */
       onSearchBlur() {
-        if (this.mousedown && !this.searching) {
-          this.mousedown = false
-        } else {
+        if (!this.searching) {
           if (this.clearSearchOnBlur) {
             this.search = ''
           }
@@ -1041,10 +1039,12 @@
        * the dropdown's scrollbar, causing it
        * to collapse abruptly.
        * @return {void}
+       * 
+       * (Temporarily) removed. IE11 still seems to work fine without it. 
        */
-      onMousedown() {
-        this.mousedown = true
-      }
+      // onMousedown() {
+        // this.mousedown = true
+      // }
     },
 
     computed: {
