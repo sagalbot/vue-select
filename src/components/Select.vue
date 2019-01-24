@@ -969,13 +969,13 @@
        * @return {void}
        */
       onSearchBlur() {
-        if (!this.searching) {
+        // if (!this.searching) {
           if (this.clearSearchOnBlur) {
             this.search = ''
           }
           this.open = false
           this.$emit('search:blur')
-        }
+        // }
       },
 
       /**
