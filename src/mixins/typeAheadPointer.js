@@ -2,12 +2,12 @@ module.exports = {
   data() {
     return {
       typeAheadPointer: -1
-    }
+    };
   },
 
   watch: {
     filteredOptions() {
-      this.typeAheadPointer = 0
+      this.typeAheadPointer = 0;
     }
   },
 
@@ -19,9 +19,9 @@ module.exports = {
      */
     typeAheadUp() {
       if (this.typeAheadPointer > 0) {
-        this.typeAheadPointer--
-        if( this.maybeAdjustScroll ) {
-          this.maybeAdjustScroll()
+        this.typeAheadPointer--;
+        if (this.maybeAdjustScroll) {
+          this.maybeAdjustScroll();
         }
       }
     },
@@ -33,9 +33,9 @@ module.exports = {
      */
     typeAheadDown() {
       if (this.typeAheadPointer < this.filteredOptions.length - 1) {
-        this.typeAheadPointer++
-        if( this.maybeAdjustScroll ) {
-          this.maybeAdjustScroll()
+        this.typeAheadPointer++;
+        if (this.maybeAdjustScroll) {
+          this.maybeAdjustScroll();
         }
       }
     },
@@ -46,15 +46,21 @@ module.exports = {
      * @return {void}
      */
     typeAheadSelect() {
-      if( this.filteredOptions[ this.typeAheadPointer ] ) {
-        this.select( this.filteredOptions[ this.typeAheadPointer ] );
-      } else if (this.taggable && this.search.length){
-        this.select(this.search)
+      if (this.filteredOptions[this.typeAheadPointer]) {
+        this.select(this.filteredOptions[this.typeAheadPointer]);
+      } else if (this.taggable && this.search.length) {
+        this.select(this.search);
       }
 
-      if( this.clearSearchOnSelect ) {
+      if (this.clearSearchOnSelect) {
         this.search = "";
       }
-    },
+
+      // Refocus the same input again to continue selecting values
+      // Tab or ESC can be used to finish/unfocus the selection
+      if (this.multiple) {
+        this.$refs.search.focus();
+      }
+    }
   }
-}
+};
