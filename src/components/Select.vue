@@ -318,7 +318,7 @@
           :multiple="multiple"
           :disabled="disabled"
         >
-          <span class="selected-tag" v-bind:key="option.index" :class="{ 'multiple':multiple }">
+          <span class="selected-tag" v-bind:key="option.index">
             <slot
               name="selected-option"
               v-bind="(typeof option === 'object')?option:{[label]: option}"
