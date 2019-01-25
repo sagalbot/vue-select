@@ -158,7 +158,6 @@
   border-color: transparent;
 }
 .v-select.single.open .selected-tag {
-  position: absolute;
   opacity: 0.4;
 }
 .v-select.single.searching .selected-tag {
