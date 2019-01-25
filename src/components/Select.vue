@@ -159,6 +159,7 @@
 }
 .v-select.single.open .selected-tag {
   opacity: 0.4;
+  width: 100%;
 }
 .v-select.single.searching .selected-tag {
   display: none;
