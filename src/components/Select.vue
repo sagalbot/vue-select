@@ -345,6 +345,7 @@
           @keydown.down.prevent="typeAheadDown"
           @keydown.enter.prevent="typeAheadSelect"
           @keydown.tab="onTab"
+          @keydown.188.prevent="onComma"
           @blur="onSearchBlur"
           @focus="onSearchFocus"
           type="search"
@@ -608,6 +609,18 @@ export default {
     },
 
     /**
+     * Create or select a new value if selectOnComma is enabled
+     */
+    onComma: {
+      type: Function,
+      default: function() {
+        if (this.selectOnComma && this.$refs.search.value != "") {
+          this.typeAheadSelect();
+        }
+      }
+    },
+
+    /**
      * Enable/disable creating options from searchInput.
      * @type {Boolean}
      */
@@ -753,6 +766,15 @@ export default {
      * @type {Boolean}
      */
     selectOnTab: {
+      type: Boolean,
+      default: false
+    },
+
+    /**
+     * When true, hitting the 'comma' key will insert or select a new value
+     * @type {Boolean}
+     */
+    selectOnComma: {
       type: Boolean,
       default: false
     }
