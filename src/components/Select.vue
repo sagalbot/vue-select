@@ -77,9 +77,10 @@
   display: flex;
   flex-basis: 100%;
   flex-grow: 1;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   padding: 0 2px;
   position: relative;
+  width: 0;
 }
 .v-select .vs__actions {
   display: flex;
@@ -137,7 +138,8 @@
 }
 /* Selected Tags */
 .v-select .selected-tag {
-  display: flex;
+  display: block;
+  /* display: flex; */
   align-items: center;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
@@ -147,6 +149,9 @@
   margin: 4px 2px 0px 2px;
   padding: 0 0.25em;
   transition: opacity 0.25s;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .v-select.single .selected-tag {
   background-color: transparent;
@@ -222,6 +227,9 @@
   padding: 3px 20px;
   clear: both;
   color: #333; /* Overrides most CSS frameworks */
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 .v-select li:hover {

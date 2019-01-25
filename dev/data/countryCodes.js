@@ -1,4 +1,5 @@
 export default [
+  {value: "00", label: "A very very very long string that won't break vue-select"},
   {value: "AF", label: "Afghanistan"},
   {value: "AX", label: "Åland Islands"},
   {value: "AL", label: "Albania"},
