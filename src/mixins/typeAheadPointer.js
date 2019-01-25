@@ -55,12 +55,6 @@ module.exports = {
       if (this.clearSearchOnSelect) {
         this.search = "";
       }
-
-      // Refocus the same input again to continue selecting values
-      // Tab or ESC can be used to finish/unfocus the selection
-      if (this.multiple) {
-        this.$refs.search.focus();
-      }
     }
   }
 };
