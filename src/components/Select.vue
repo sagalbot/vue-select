@@ -369,6 +369,8 @@
           type="search"
           class="form-control"
           autocomplete="off"
+          autocapitalize="off"
+          autocorrect="off"
           :disabled="disabled"
           :placeholder="searchPlaceholder"
           :tabindex="tabindex"
