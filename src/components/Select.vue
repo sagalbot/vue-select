@@ -857,10 +857,10 @@ export default {
 
     /**
      * If search text should clear on blur
-     * @return {Boolean} True when clearSearchOnSelect
+     * @return {Boolean} True when single and clearSearchOnSelect
      */
     clearSearchOnBlur() {
-      return this.clearSearchOnSelect;
+      return this.clearSearchOnSelect && !this.multiple;
     },
 
     /**
@@ -1209,13 +1209,13 @@ export default {
      * @return {void}
      */
     onSearchBlur() {
-      if (!this.searching) {
-      if (this.clearSearchOnBlur) {
+      // if (!this.searching) {
+      // if (this.clearSearchOnBlur) {
         this.search = "";
-      }
+      // }
       this.open = false;
       this.$emit("search:blur");
-      }
+      // }
     },
 
     /**
