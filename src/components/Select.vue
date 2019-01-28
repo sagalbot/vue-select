@@ -315,9 +315,20 @@
 </style>
 
 <template>
-  <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
-    <div ref="toggle" @mousedown.prevent="toggleDropdown" class="dropdown-toggle">
-      <div class="vs__selected-options" ref="selectedOptions">
+  <div
+    :dir="dir"
+    class="dropdown v-select"
+    :class="dropdownClasses"
+  >
+    <div
+      ref="toggle"
+      class="dropdown-toggle"
+      @mousedown.prevent="toggleDropdown"
+    >
+      <div
+        ref="selectedOptions"
+        class="vs__selected-options"
+      >
         <slot
           v-for="option in valueAsArray"
           name="selected-option-container"
@@ -326,27 +337,45 @@
           :multiple="multiple"
           :disabled="disabled"
         >
-          <span class="selected-tag" v-bind:key="option.index">
+          <span
+            :key="option.index"
+            class="selected-tag"
+          >
             <slot
               name="selected-option"
               v-bind="(typeof option === 'object')?option:{[label]: option}"
-            >{{ getOptionLabel(option) }}</slot>
+            >
+              {{ getOptionLabel(option) }}
+            </slot>
             <button
               v-if="multiple"
               :disabled="disabled"
-              @click="deselect(option)"
               type="button"
               class="close"
               aria-label="Remove option"
+              @click="deselect(option)"
             >
-              <span aria-hidden="true">&times;</span>
+              <span aria-hidden="true">
+                &times;
+              </span>
             </button>
           </span>
         </slot>
 
         <input
+          :id="inputId"
           ref="search"
           v-model="search"
+          type="search"
+          class="form-control"
+          autocomplete="off"
+          :disabled="disabled"
+          :placeholder="searchPlaceholder"
+          :tabindex="tabindex"
+          :readonly="!searchable"
+          role="combobox"
+          :aria-expanded="dropdownOpen"
+          aria-label="Search for option"
           @keydown.delete="maybeDeleteValue"
           @keyup.esc="onEscape"
           @keydown.up.prevent="typeAheadUp"
@@ -356,63 +385,72 @@
           @keydown.188.prevent="onComma"
           @blur="onSearchBlur"
           @focus="onSearchFocus"
-          type="search"
-          class="form-control"
-          autocomplete="off"
-          :disabled="disabled"
-          :placeholder="searchPlaceholder"
-          :tabindex="tabindex"
-          :readonly="!searchable"
-          :id="inputId"
-          role="combobox"
-          :aria-expanded="dropdownOpen"
-          aria-label="Search for option"
         >
       </div>
       <div class="vs__actions">
         <button
           v-show="showClearButton"
           :disabled="disabled"
-          @click="clearSelection"
           type="button"
           class="clear"
           title="Clear selection"
+          @click="clearSelection"
         >
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">
+            &times;
+          </span>
         </button>
         
-        <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
+        <i
+          v-if="!noDrop"
+          ref="openIndicator"
+          role="presentation"
+          class="open-indicator"
+        />
 
         <slot name="spinner">
-          <div class="spinner" v-show="mutableLoading">Loading...</div>
+          <div
+            v-show="mutableLoading"
+            class="spinner"
+          >
+            Loading...
+          </div>
         </slot>
       </div>
     </div>
 
     <transition :name="transition">
       <ul
-        ref="dropdownMenu"
         v-if="dropdownOpen"
+        ref="dropdownMenu"
         class="dropdown-menu"
         :style="{ 'max-height': maxHeight }"
         role="listbox"
       >
         <li
+          v-for="(option, ind) in filteredOptions"
+          :key="ind"
           role="option"
-          v-for="(option, index) in filteredOptions"
-          v-bind:key="index"
-          :class="{ active: isOptionSelected(option), highlight: index === typeAheadPointer }"
-          @mouseover="typeAheadPointer = index"
+          :class="{ active: isOptionSelected(option), highlight: ind === typeAheadPointer }"
+          @mouseover="typeAheadPointer = ind"
         >
           <a @mousedown.prevent.stop="select(option)">
             <slot
               name="option"
               v-bind="(typeof option === 'object')?option:{[label]: option}"
-            >{{ getOptionLabel(option) }}</slot>
+            >
+              {{ getOptionLabel(option) }}
+            </slot>
           </a>
         </li>
-        <li v-if="!filteredOptions.length" class="no-options" @mousedown.stop>
-          <slot name="no-options">Sorry, no matching options.</slot>
+        <li
+          v-if="!filteredOptions.length"
+          class="no-options"
+          @mousedown.stop
+        >
+          <slot name="no-options">
+            Sorry, no matching options.
+          </slot>
         </li>
       </ul>
     </transition>
@@ -435,7 +473,8 @@ export default {
      * @type {Object||String||null}
      */
     value: {
-      default: null
+      default: null,
+      type: undefined
     },
 
     /**
@@ -756,7 +795,8 @@ export default {
      * @default {null}
      */
     inputId: {
-      type: String
+      type: String,
+      default: ""
     },
 
     /**
@@ -795,6 +835,129 @@ export default {
       mutableValue: null,
       mutableOptions: []
     };
+  },
+
+  computed: {
+    /**
+     * Classes to be output on .dropdown
+     * @return {Object}
+     */
+    dropdownClasses() {
+      return {
+        open: this.dropdownOpen,
+        single: !this.multiple,
+        searching: this.searching,
+        searchable: this.searchable,
+        unsearchable: !this.searchable,
+        loading: this.mutableLoading,
+        rtl: this.dir === "rtl", // This can be removed - styling is handled by `dir="rtl"` attribute
+        disabled: this.disabled
+      };
+    },
+
+    /**
+     * If search text should clear on blur
+     * @return {Boolean} True when single and clearSearchOnSelect
+     */
+    clearSearchOnBlur() {
+      return this.clearSearchOnSelect && !this.multiple;
+    },
+
+    /**
+     * Return the current state of the
+     * search input
+     * @return {Boolean} True if non empty value
+     */
+    searching() {
+      return !!this.search;
+    },
+
+    /**
+     * Return the current state of the
+     * dropdown menu.
+     * @return {Boolean} True if open
+     */
+    dropdownOpen() {
+      return this.noDrop ? false : this.open && !this.mutableLoading;
+    },
+
+    /**
+     * Return the placeholder string if it's set
+     * & there is no value selected.
+     * @return {String} Placeholder text
+     */
+    searchPlaceholder() {
+      // if  {
+        return (this.isValueEmpty && this.placeholder);
+      // }
+    },
+
+    /**
+     * The currently displayed options, filtered
+     * by the search elements value. If tagging
+     * true, the search text will be prepended
+     * if it doesn't already exist.
+     *
+     * @return {array}
+     */
+    filteredOptions() {
+      if (!this.filterable && !this.taggable) {
+        return this.mutableOptions.slice();
+      }
+      let options = this.search.length
+        ? this.filter(this.mutableOptions, this.search, this)
+        : this.mutableOptions;
+      if (
+        this.taggable &&
+        this.search.length &&
+        !this.optionExists(this.search)
+      ) {
+        options.unshift(this.search);
+      }
+      return options;
+    },
+
+    /**
+     * Check if there aren't any options selected.
+     * @return {Boolean}
+     */
+    isValueEmpty() {
+      if (this.mutableValue) {
+        if (typeof this.mutableValue === "object") {
+          return !Object.keys(this.mutableValue).length;
+        }
+        return !this.valueAsArray.length;
+      }
+
+      return true;
+    },
+
+    /**
+     * Return the current value in array format.
+     * @return {Array}
+     */
+    valueAsArray() {
+      if (this.multiple && this.mutableValue) {
+        return this.mutableValue;
+      } else if (this.mutableValue) {
+        return [].concat(this.mutableValue);
+      }
+
+      return [];
+    },
+
+    /**
+     * Determines if the clear button should be displayed.
+     * @return {Boolean}
+     */
+    showClearButton() {
+      return (
+        !this.multiple &&
+        this.clearable &&
+        !this.open &&
+        this.mutableValue != null
+      );
+    }
   },
 
   watch: {
@@ -1124,129 +1287,6 @@ export default {
     // onMousedown() {
     // this.mousedown = true
     // }
-  },
-
-  computed: {
-    /**
-     * Classes to be output on .dropdown
-     * @return {Object}
-     */
-    dropdownClasses() {
-      return {
-        open: this.dropdownOpen,
-        single: !this.multiple,
-        searching: this.searching,
-        searchable: this.searchable,
-        unsearchable: !this.searchable,
-        loading: this.mutableLoading,
-        rtl: this.dir === "rtl", // This can be removed - styling is handled by `dir="rtl"` attribute
-        disabled: this.disabled
-      };
-    },
-
-    /**
-     * If search text should clear on blur
-     * @return {Boolean} True when single and clearSearchOnSelect
-     */
-    clearSearchOnBlur() {
-      return this.clearSearchOnSelect && !this.multiple;
-    },
-
-    /**
-     * Return the current state of the
-     * search input
-     * @return {Boolean} True if non empty value
-     */
-    searching() {
-      return !!this.search;
-    },
-
-    /**
-     * Return the current state of the
-     * dropdown menu.
-     * @return {Boolean} True if open
-     */
-    dropdownOpen() {
-      return this.noDrop ? false : this.open && !this.mutableLoading;
-    },
-
-    /**
-     * Return the placeholder string if it's set
-     * & there is no value selected.
-     * @return {String} Placeholder text
-     */
-    searchPlaceholder() {
-      if (this.isValueEmpty && this.placeholder) {
-        return this.placeholder;
-      }
-    },
-
-    /**
-     * The currently displayed options, filtered
-     * by the search elements value. If tagging
-     * true, the search text will be prepended
-     * if it doesn't already exist.
-     *
-     * @return {array}
-     */
-    filteredOptions() {
-      if (!this.filterable && !this.taggable) {
-        return this.mutableOptions.slice();
-      }
-      let options = this.search.length
-        ? this.filter(this.mutableOptions, this.search, this)
-        : this.mutableOptions;
-      if (
-        this.taggable &&
-        this.search.length &&
-        !this.optionExists(this.search)
-      ) {
-        options.unshift(this.search);
-      }
-      return options;
-    },
-
-    /**
-     * Check if there aren't any options selected.
-     * @return {Boolean}
-     */
-    isValueEmpty() {
-      if (this.mutableValue) {
-        if (typeof this.mutableValue === "object") {
-          return !Object.keys(this.mutableValue).length;
-        }
-        return !this.valueAsArray.length;
-      }
-
-      return true;
-    },
-
-    /**
-     * Return the current value in array format.
-     * @return {Array}
-     */
-    valueAsArray() {
-      if (this.multiple && this.mutableValue) {
-        return this.mutableValue;
-      } else if (this.mutableValue) {
-        return [].concat(this.mutableValue);
-      }
-
-      return [];
-    },
-
-    /**
-     * Determines if the clear button should be displayed.
-     * @return {Boolean}
-     */
-    showClearButton() {
-      return (
-        !this.multiple &&
-        this.clearable &&
-        !this.open &&
-        this.mutableValue != null
-      );
-    }
   }
 };
 </script>

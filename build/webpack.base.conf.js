@@ -1,34 +1,32 @@
+var webpack = require('webpack')
+var VueLoaderPlugin = require('vue-loader').VueLoaderPlugin;
+var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 var path = require('path')
-var config = require('../config')
-var utils = require('./utils')
-var projectRoot = path.resolve(__dirname, '../')
+var chokidar = require('chokidar');
+
+const env = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 module.exports = {
-  entry: {
-    app: utils.shouldServeHomepage() ? './docs/homepage/home.js' : './dev/dev.js',
-  },
+  mode: env,
   output: {
-    path: config.build.assetsRoot,
-    publicPath: config.build.assetsPublicPath,
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '/',
     filename: '[name].js'
   },
+  devtool: env === 'production' ? 'source-map' : 'eval-source-map',
   resolve: {
-    extensions: ['', '.js', '.vue'],
-    fallback: [path.join(__dirname, '../node_modules')],
+    extensions: ['.js', '.vue'],
     alias: {
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../docs/assets'),
       'mixins': path.resolve(__dirname, '../src/mixins'),
       'components': path.resolve(__dirname, '../src/components'),
       'docs': path.resolve(__dirname, '../docs'),
-      'vue$': 'vue/dist/vue.common.js',
+      'vue$': 'vue/dist/vue.esm.js'
     }
   },
-  resolveLoader: {
-    fallback: [path.join(__dirname, '../node_modules')]
-  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader'
@@ -36,12 +34,22 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: projectRoot,
+        include: path.resolve(__dirname, '../'),
         exclude: /node_modules/
       },
       {
         test: /\.json$/,
         loader: 'json-loader'
+      },
+      {
+        test: /\.s?css$/,
+        use: [
+          process.env.NODE_ENV !== 'production'
+            ? 'vue-style-loader'
+            : MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.html$/,
@@ -52,7 +60,7 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
+          name: 'img/[name].[hash:7].[ext]'
         }
       },
       {
@@ -60,12 +68,31 @@ module.exports = {
         loader: 'url',
         query: {
           limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+          name: 'fonts/[name].[hash:7].[ext]'
         }
       }
     ]
   },
-  vue: {
-    loaders: utils.cssLoaders()
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': env
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'vue-select.css'
+    }),
+    new VueLoaderPlugin()
+  ],
+  devServer: {
+    hot: true,
+    hotOnly: true,
+    inline: true,
+    port: 8080,
+    before(app, server) {
+      chokidar.watch([
+        './**/*.html'
+      ]).on('all', function () {
+        server.sockWrite(server.sockets, 'content-changed');
+      })
+    }
   }
 }
