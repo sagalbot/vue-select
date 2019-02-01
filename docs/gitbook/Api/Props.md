@@ -64,6 +64,8 @@ multiple: {
 
 /**
  * Equivalent to the `placeholder` attribute on an `<input>`.
+ * Placeholder for the search field `<input>` element.
+ * For setting the default value, use prop `value`.
  * @type {String}
  */
 placeholder: {
