@@ -123,7 +123,7 @@
     padding: 5px 0;
     margin: 0;
     width: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     border: 1px solid rgba(0, 0, 0, .26);
     box-shadow: 0px 3px 6px 0px rgba(0,0,0,.15);
     border-top: none;
