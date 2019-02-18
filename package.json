@@ -96,8 +96,8 @@
       "!**/node_modules/**"
     ],
     "coverageReporters": [
-      "text-summary",
-      "lcov"
+      "html",
+      "text-summary"
     ]
   }
 }
