@@ -34,6 +34,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^8.0.0",
     "chokidar": "^2.0.4",
+    "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "eventsource-polyfill": "^0.9.6",
