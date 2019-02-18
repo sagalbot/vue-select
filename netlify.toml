@@ -4,11 +4,5 @@
 # “command” is your build command,
 
 [build]
-  publish = "dev/dist"
-  command = "yarn build:dev"
-
-# Production context: All deploys to the main
-# repository branch will inherit these settings.
-[context.branch-site]
   publish = "docs/.vuepress/dist"
   command = "yarn build:docs"
