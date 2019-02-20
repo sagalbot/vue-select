@@ -325,7 +325,8 @@
 
         <input
                 ref="search"
-                v-model="search"
+                :value="search"
+                @input="e => search = e.target.value"
                 @keydown.delete="maybeDeleteValue"
                 @keyup.esc="onEscape"
                 @keydown.up.prevent="typeAheadUp"
