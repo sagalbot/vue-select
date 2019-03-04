@@ -5,6 +5,8 @@
 
       <v-select v-bind="config" />
 
+      <v-select v-model="value" :multiple="true" :options="['ca', 'ab']" />
+
       </template>
     </sandbox>
   </div>
@@ -18,6 +20,14 @@ import Sandbox from '../docs/.vuepress/components/Sandbox';
 
 export default {
   components: {Sandbox, vSelect},
+  data: () => ({
+    value: ['ca']
+  }),
+  watch: {
+    value(newVal) {
+      console.log('value was changed to: ', newVal);
+    }
+  }
 };
 </script>
 

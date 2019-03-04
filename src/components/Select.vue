@@ -440,36 +440,11 @@
       return {
         search: '',
         open: false,
-        mutableValue: null,
         mutableOptions: []
       }
     },
 
     watch: {
-      /**
-       * When the value prop changes, update
-       * the internal mutableValue.
-       * @param  {mixed} val
-       * @return {void}
-       */
-      value(val) {
-        this.mutableValue = val
-      },
-
-      /**
-       * Maybe run the onChange callback.
-       * @param  {string|object} val
-       * @param  {string|object} old
-       * @return {void}
-       */
-      mutableValue(val, old) {
-        if (this.multiple) {
-          this.onChange ? this.onChange(val) : null
-        } else {
-          this.onChange && val !== old ? this.onChange(val) : null
-        }
-      },
-
       /**
        * When options change, update
        * the internal mutableOptions.
@@ -487,7 +462,7 @@
        */
       mutableOptions() {
         if (!this.taggable && this.resetOnOptionsChange) {
-          this.mutableValue = this.multiple ? [] : null
+          this.onInput(this.multiple ? [] : null)
         }
       },
 
@@ -497,8 +472,8 @@
        * @param  {Boolean} val
        * @return {void}
        */
-      multiple(val) {
-        this.mutableValue = val ? [] : null
+      multiple(isMultiple) {
+        this.onInput(isMultiple ? [] : null)
       },
     },
 
@@ -507,7 +482,6 @@
      * attach any event listeners.
      */
     created() {
-      this.mutableValue = this.value
       this.mutableOptions = this.options.slice(0)
       this.mutableLoading = this.loading
 
@@ -535,14 +509,12 @@
             }
             option = option[this.index]
           }
-          if (this.multiple && !this.mutableValue) {
-            this.mutableValue = [option]
-          } else if (this.multiple) {
-            this.mutableValue.push(option)
-          } else {
-            this.mutableValue = option
+
+          let value = option;
+          if (this.multiple) {
+            value = this.selectedValue.concat(option)
           }
-          this.onInput(this.mutableValue);
+          this.onInput(value);
         }
 
         this.onAfterSelect(option)
@@ -554,14 +526,14 @@
        * @return {void}
        */
       deselect(option) {
+        let value = null
+
         if (this.multiple) {
-          this.mutableValue = this.mutableValue.filter(val => {
+          value = this.selectedValue.filter(val => {
             return ! (val === option || (this.index && val === option[this.index]) || (typeof val === 'object' && val[this.label] === option[this.label]));
           });
-        } else {
-          this.mutableValue = null
         }
-        this.onInput(this.mutableValue);
+        this.onInput(value);
       },
 
       /**
@@ -569,8 +541,8 @@
        * @return {void}
        */
       clearSelection() {
-        this.mutableValue = this.multiple ? [] : null
-        this.onInput(this.mutableValue)
+        let value = this.multiple ? [] : null
+        this.onInput(value)
       },
 
       /**
@@ -718,8 +690,12 @@
        * @return {this.value}
        */
       maybeDeleteValue() {
-        if (!this.searchEl.value.length && this.mutableValue && this.clearable) {
-          return this.multiple ? this.mutableValue.pop() : this.mutableValue = null
+        if (!this.searchEl.value.length && this.selectedValue && this.clearable) {
+          let value = null;
+          if (this.multiple) {
+            value = [...this.selectedValue.slice(0, this.selectedValue.length - 1)]
+          }
+          this.onInput(value)
         }
       },
 
@@ -734,10 +710,12 @@
         let exists = false
 
         this.mutableOptions.forEach(opt => {
-          if (typeof opt === 'object' && opt[this.label] === option) {
-            exists = true
-          } else if (opt === option) {
-            exists = true
+          if (!exists) {
+            if (typeof opt === 'object' && opt[this.label] === option) {
+              exists = true
+            } else if (opt === option) {
+              exists = true
+            }
           }
         })
 
@@ -811,6 +789,11 @@
     },
 
     computed: {
+
+      selectedValue () {
+        // TODO: this will be passed through a reducer func in the future
+        return this.value;
+      },
 
       /**
        * Find the search input DOM element.
@@ -934,9 +917,9 @@
        * @return {Boolean}
        */
       isValueEmpty() {
-        if (this.mutableValue) {
-          if (typeof this.mutableValue === 'object') {
-            return ! Object.keys(this.mutableValue).length
+        if (this.selectedValue) {
+          if (typeof this.selectedValue === 'object') {
+            return ! Object.keys(this.selectedValue).length
           }
           return ! this.valueAsArray.length
         }
@@ -949,10 +932,11 @@
        * @return {Array}
        */
       valueAsArray() {
-        if (this.multiple && this.mutableValue) {
-          return this.mutableValue
-        } else if (this.mutableValue) {
-          return [].concat(this.mutableValue)
+        if (this.selectedValue) {
+          if (Array.isArray(this.selectedValue)) {
+            return this.selectedValue
+          }
+          return [].concat(this.selectedValue)
         }
 
         return []
@@ -963,7 +947,7 @@
        * @return {Boolean}
        */
       showClearButton() {
-        return !this.multiple && this.clearable && !this.open && this.mutableValue != null
+        return !this.multiple && this.clearable && !this.open && this.selectedValue != null
       }
     },
 
