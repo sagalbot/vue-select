@@ -90,9 +90,7 @@
        * using 'change' event using v-on
        * @type {Object||String||null}
        */
-      value: {
-        default: null
-      },
+      value: {},
 
       /**
        * An array of strings or objects to be used as dropdown choices.
@@ -263,6 +261,11 @@
       onInput: {
         type: Function,
         default: function (val) {
+          console.log('onInput', val);
+          if (typeof this.value === 'undefined') {
+            // Vue select has to manage value
+            this.mutableValue = val;
+          }
           this.$emit('input', val);
         }
       },
@@ -440,11 +443,16 @@
       return {
         search: '',
         open: false,
+        mutableValue: [],
         mutableOptions: []
       }
     },
 
     watch: {
+      value(val) {
+        console.log('value changed', val);
+      },
+
       /**
        * When options change, update
        * the internal mutableOptions.
@@ -791,8 +799,17 @@
     computed: {
 
       selectedValue () {
+        if (typeof this.value === 'undefined') {
+            // Vue select has to manage value
+            return this.mutableValue;
+          }
+
         // TODO: this will be passed through a reducer func in the future
-        return this.value;
+        console.log('selectedValue', this.value, this.mutableValue);
+        if (this.value) {
+          return [].concat(this.value);
+        }
+        return [];
       },
 
       /**
