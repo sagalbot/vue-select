@@ -2,10 +2,17 @@
   <div id="app">
     <sandbox hide-help>
       <template slot-scope="config">
+      
+      <p>Value managed by `v-model`:</p>
+      <v-select v-model="vModelValue" v-bind="config" />
+      <hr />
 
+      <p>Value managed by `:value` and `@input`:</p>
+      <v-select :value="valueProp" @input="changeValueProp" v-bind="config" />
+      <hr />
+
+      <p>Value managed by Vue Select internally:</p>
       <v-select v-bind="config" />
-
-      <v-select v-model="value" :multiple="true" :options="['ca', 'ab']" />
 
       </template>
     </sandbox>
@@ -21,11 +28,12 @@ import Sandbox from '../docs/.vuepress/components/Sandbox';
 export default {
   components: {Sandbox, vSelect},
   data: () => ({
-    value: ['ca']
+    vModelValue: 'CA',
+    valueProp: 'US'
   }),
-  watch: {
-    value(newVal) {
-      console.log('value was changed to: ', newVal);
+  methods: {
+    changeValueProp(value) {
+      this.valueProp = value;
     }
   }
 };
@@ -41,5 +49,13 @@ export default {
 
   #app {
     height: 100%;
+  }
+
+  hr {
+    border: none;
+    border-bottom: 1px solid #cacaca;
+    margin-bottom: 1em;
+    padding-top: 1em;
+    width: 90%;
   }
 </style>
