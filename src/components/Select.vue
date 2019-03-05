@@ -927,7 +927,7 @@
        * @return {Boolean}
        */
       showClearButton() {
-        return !this.multiple && this.clearable && !this.open && this.selectedValue != null
+        return !this.multiple && this.clearable && !this.open && !this.isValueEmpty
       }
     },
 
