@@ -782,13 +782,14 @@
         let value = this.value;
 
         if (typeof this.value === 'undefined') {
-            // Vue select has to manage value internally
-            value = this.internalValue;
-          }
+          // Vue select has to manage value internally
+          value = this.internalValue;
+        }
 
         if (value) {
           return [].concat(value);
         }
+
         return [];
       },
 
