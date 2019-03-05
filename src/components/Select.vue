@@ -7,7 +7,7 @@
     <div ref="toggle" @mousedown.prevent="toggleDropdown" class="vs__dropdown-toggle">
 
       <div class="vs__selected-options" ref="selectedOptions">
-        <slot v-for="option in valueAsArray"
+        <slot v-for="option in selectedValue"
               name="selected-option-container"
               :option="(typeof option === 'object')?option:{[label]: option}"
               :deselect="deselect"
@@ -189,7 +189,6 @@
         default: 'label'
       },
 
-
       /**
        * Value of the 'autocomplete' field of the input
        * element.
@@ -258,13 +257,12 @@
         }
       },
 
-      onInput: {
+      updateValue: {
         type: Function,
         default: function (val) {
-          console.log('onInput', val);
           if (typeof this.value === 'undefined') {
             // Vue select has to manage value
-            this.mutableValue = val;
+            this.internalValue = val;
           }
           this.$emit('input', val);
         }
@@ -369,9 +367,10 @@
       createOption: {
         type: Function,
         default(newOption) {
-          if (typeof this.mutableOptions[0] === 'object') {
+          if (typeof this.optionList[0] === 'object') {
             newOption = {[this.label]: newOption}
           }
+
           this.$emit('option:created', newOption)
           return newOption
         }
@@ -443,45 +442,31 @@
       return {
         search: '',
         open: false,
-        mutableValue: [],
-        mutableOptions: []
+        pushedTags: [],
+        internalValue: [] // Internal value managed by Vue Select if no `value` prop is passed
       }
     },
 
     watch: {
-      value(val) {
-        console.log('value changed', val);
-      },
-
       /**
-       * When options change, update
-       * the internal mutableOptions.
-       * @param  {array} val
-       * @return {void}
-       */
-      options(val) {
-        this.mutableOptions = val
-      },
-
-      /**
-       * Maybe reset the mutableValue
-       * when mutableOptions change.
+       * Maybe reset the value
+       * when options change.
        * @return {[type]} [description]
        */
-      mutableOptions() {
+      options(val) {
         if (!this.taggable && this.resetOnOptionsChange) {
-          this.onInput(this.multiple ? [] : null)
+          this.updateValue(this.multiple ? [] : null)
         }
       },
 
       /**
-       * Always reset the mutableValue when
+       * Always reset the value when
        * the multiple prop changes.
-       * @param  {Boolean} val
+       * @param  {Boolean} isMultiple
        * @return {void}
        */
       multiple(isMultiple) {
-        this.onInput(isMultiple ? [] : null)
+        this.updateValue(isMultiple ? [] : null)
       },
     },
 
@@ -490,7 +475,6 @@
      * attach any event listeners.
      */
     created() {
-      this.mutableOptions = this.options.slice(0)
       this.mutableLoading = this.loading
 
       this.$on('option:created', this.maybePushTag)
@@ -508,7 +492,8 @@
           if (this.taggable && !this.optionExists(option)) {
             option = this.createOption(option)
           }
-          if(this.index) {
+
+          if (this.index) {
             if (!option.hasOwnProperty(this.index)) {
               return console.warn(
                   `[vue-select warn]: Index key "option.${this.index}" does not` +
@@ -518,11 +503,10 @@
             option = option[this.index]
           }
 
-          let value = option;
           if (this.multiple) {
-            value = this.selectedValue.concat(option)
+            option = this.selectedValue.concat(option)
           }
-          this.onInput(value);
+          this.updateValue(option);
         }
 
         this.onAfterSelect(option)
@@ -538,10 +522,10 @@
 
         if (this.multiple) {
           value = this.selectedValue.filter(val => {
-            return ! (val === option || (this.index && val === option[this.index]) || (typeof val === 'object' && val[this.label] === option[this.label]));
+            return ! this.optionObjectComparator(val, option)
           });
         }
-        this.onInput(value);
+        this.updateValue(value);
       },
 
       /**
@@ -549,8 +533,7 @@
        * @return {void}
        */
       clearSelection() {
-        let value = this.multiple ? [] : null
-        this.onInput(value)
+        this.updateValue(this.multiple ? [] : null)
       },
 
       /**
@@ -594,11 +577,8 @@
        * @return {Boolean}        True when selected | False otherwise
        */
       isOptionSelected(option) {
-        return this.valueAsArray.some(value => {
-          if (typeof value === 'object') {
-            return this.optionObjectComparator(value, option)
-          }
-          return value === option || value === option[this.index]
+        return this.selectedValue.some(value => {
+          return this.optionObjectComparator(value, option)
         })
       },
 
@@ -610,11 +590,16 @@
        * @returns {boolean}
        */
       optionObjectComparator(value, option) {
+        if (value === option) {
+          return true
+        }
         if (this.index && value === option[this.index]) {
           return true
-        } else if ((value[this.label] === option[this.label]) || (value[this.label] === option)) {
+        }
+        if ((value[this.label] === option[this.label]) || (value[this.label] === option)) {
           return true
-        } else if (this.index && value[this.index] === option[this.index]) {
+        }
+        if (this.index && value[this.index] === option[this.index]) {
           return true
         }
         return false;
@@ -666,7 +651,7 @@
           return
         }
         // Fixed bug where no-options message could not be closed
-        if(this.search.length === 0 && this.options.length === 0){
+        if (this.search.length === 0 && this.options.length === 0){
           this.closeSearchOptions()
           return
         }
@@ -703,43 +688,38 @@
           if (this.multiple) {
             value = [...this.selectedValue.slice(0, this.selectedValue.length - 1)]
           }
-          this.onInput(value)
+          this.updateValue(value)
         }
       },
 
       /**
        * Determine if an option exists
-       * within this.mutableOptions array.
+       * within this.optionList array.
        *
        * @param  {Object || String} option
        * @return {boolean}
        */
       optionExists(option) {
-        let exists = false
-
-        this.mutableOptions.forEach(opt => {
-          if (!exists) {
-            if (typeof opt === 'object' && opt[this.label] === option) {
-              exists = true
-            } else if (opt === option) {
-              exists = true
-            }
+        return this.optionList.some(opt => {
+          if (typeof opt === 'object' && opt[this.label] === option) {
+            return true
+          } else if (opt === option) {
+            return true
           }
+          return false
         })
-
-        return exists
       },
 
       /**
        * If push-tags is true, push the
-       * given option to mutableOptions.
+       * given option to `this.pushedTags`.
        *
        * @param  {Object || String} option
        * @return {void}
        */
       maybePushTag(option) {
         if (this.pushTags) {
-          this.mutableOptions.push(option)
+          this.pushedTags.push(option)
         }
       },
 
@@ -799,17 +779,21 @@
     computed: {
 
       selectedValue () {
+        let value = this.value;
+
         if (typeof this.value === 'undefined') {
-            // Vue select has to manage value
-            return this.mutableValue;
+            // Vue select has to manage value internally
+            value = this.internalValue;
           }
 
-        // TODO: this will be passed through a reducer func in the future
-        console.log('selectedValue', this.value, this.mutableValue);
-        if (this.value) {
-          return [].concat(this.value);
+        if (value) {
+          return [].concat(value);
         }
         return [];
+      },
+
+      optionList () {
+        return this.options.concat(this.pushedTags);
       },
 
       /**
@@ -920,9 +904,9 @@
        */
       filteredOptions() {
         if (!this.filterable && !this.taggable) {
-          return this.mutableOptions.slice()
+          return [...this.optionList]
         }
-        let options = this.search.length ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
+        let options = this.search.length ? this.filter(this.optionList, this.search, this) : this.optionList;
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
@@ -934,29 +918,7 @@
        * @return {Boolean}
        */
       isValueEmpty() {
-        if (this.selectedValue) {
-          if (typeof this.selectedValue === 'object') {
-            return ! Object.keys(this.selectedValue).length
-          }
-          return ! this.valueAsArray.length
-        }
-
-        return true;
-      },
-
-      /**
-       * Return the current value in array format.
-       * @return {Array}
-       */
-      valueAsArray() {
-        if (this.selectedValue) {
-          if (Array.isArray(this.selectedValue)) {
-            return this.selectedValue
-          }
-          return [].concat(this.selectedValue)
-        }
-
-        return []
+        return this.selectedValue.length === 0;
       },
 
       /**
