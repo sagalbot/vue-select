@@ -189,21 +189,6 @@ getOptionLabel: {
 },
 ```
 
-## onChange
-
-An optional callback function that is called each time the selected
-value(s) change. When integrating with Vuex, use this callback to trigger
-an action, rather than using `v-model` to retrieve the selected value.
-
-```js
-onChange: {
-	type: Function,
-	default: function(val) {
-		this.$emit("input", val);
-	}
-},
-```
-
 ## onTab
 
 Select the current value if `selectOnTab` is enabled
@@ -311,7 +296,7 @@ User defined function for adding Options
 createOption: {
 	type: Function,
 	default(newOption) {
-		if (typeof this.mutableOptions[0] === "object") {
+		if (typeof this.optionList[0] === "object") {
 			newOption = { [this.label]: newOption };
 		}
 		this.$emit("option:created", newOption);

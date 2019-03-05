@@ -243,20 +243,6 @@
         }
       },
 
-      /**
-       * An optional callback function that is called each time the selected
-       * value(s) change. When integrating with Vuex, use this callback to trigger
-       * an action, rather than using :value.sync to retreive the selected value.
-       * @type {Function}
-       * @param {Object || String} val
-       */
-      onChange: {
-        type: Function,
-        default: function (val) {
-          this.$emit('change', val);
-        }
-      },
-
       updateValue: {
         type: Function,
         default: function (val) {
@@ -590,18 +576,25 @@
        * @returns {boolean}
        */
       optionObjectComparator(value, option) {
-        if (value === option) {
-          return true
+        // This method will need to be cleaned/replaced when the `reducer` API is added
+        if (typeof value !== 'object' && typeof option !== 'object') {
+          // Comparing primitives
+          if (value === option) {
+            return true
+          }
+        } else {
+          // Comparing objects
+          if (this.index && value === option[this.index]) {
+            return true
+          }
+          if ((value[this.label] === option[this.label]) || (value[this.label] === option)) {
+            return true
+          }
+          if (this.index && value[this.index] === option[this.index]) {
+            return true
+          }
         }
-        if (this.index && value === option[this.index]) {
-          return true
-        }
-        if ((value[this.label] === option[this.label]) || (value[this.label] === option)) {
-          return true
-        }
-        if (this.index && value[this.index] === option[this.index]) {
-          return true
-        }
+
         return false;
       },
 
@@ -833,7 +826,7 @@
               'keyup': this.onSearchKeyUp,
               'blur': this.onSearchBlur,
               'focus': this.onSearchFocus,
-              'input': (e) => this.search = e.target.value,
+              'input': (e) => this.search = e.target.value
             },
           },
           spinner: {
@@ -904,10 +897,13 @@
        * @return {array}
        */
       filteredOptions() {
+        const optionList = [].concat(this.optionList);
+
         if (!this.filterable && !this.taggable) {
-          return [...this.optionList]
+          return optionList;
         }
-        let options = this.search.length ? this.filter(this.optionList, this.search, this) : this.optionList;
+
+        let options = this.search.length ? this.filter(optionList, this.search, this) : optionList;
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }

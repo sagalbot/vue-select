@@ -4,17 +4,23 @@ import VueSelect from "../../src/components/Select";
 describe("Reset on options change", () => {
   it("should not reset the selected value by default when the options property changes", () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { value: "one", options: ["one"] }
+      propsData: { options: ["one"] }
     });
-    Select.vm.mutableOptions = ["four", "five", "six"];
-    expect(Select.vm.mutableValue).toEqual("one");
+
+    Select.vm.internalValue = 'one';
+
+    Select.setProps({options: ["four", "five", "six"]});
+    expect(Select.vm.selectedValue).toEqual(["one"]);
   });
 
   it("should reset the selected value when the options property changes", () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { resetOnOptionsChange: true, value: "one", options: ["one"] }
+      propsData: { resetOnOptionsChange: true, options: ["one"] }
     });
-    Select.vm.mutableOptions = ["four", "five", "six"];
-    expect(Select.vm.mutableValue).toEqual(null);
+
+    Select.vm.internalValue = 'one';
+
+    Select.setProps({options: ["four", "five", "six"]});
+    expect(Select.vm.selectedValue).toEqual([]);
   });
 });

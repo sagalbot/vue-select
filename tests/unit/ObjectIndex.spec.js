@@ -10,7 +10,7 @@ describe("When index prop is defined", () => {
         options: [{ label: "This is Foo", value: "foo" }]
       }
     });
-    expect(Select.vm.mutableValue).toEqual("foo");
+    expect(Select.vm.selectedValue).toEqual(["foo"]);
   });
 
   it("can determine if an object is pre-selected", () => {
@@ -66,7 +66,7 @@ describe("When index prop is defined", () => {
       }
     });
 
-    expect(Select.vm.mutableValue).toEqual(["foo", "bar"]);
+    expect(Select.vm.selectedValue).toEqual(["foo", "bar"]);
   });
 
   it("can deselect a pre-selected object", () => {
@@ -74,7 +74,6 @@ describe("When index prop is defined", () => {
       propsData: {
         multiple: true,
         index: "value",
-        value: ["foo", "bar"],
         options: [
           { label: "This is Foo", value: "foo" },
           { label: "This is Bar", value: "bar" }
@@ -82,16 +81,16 @@ describe("When index prop is defined", () => {
       }
     });
 
+    Select.vm.internalValue = ['foo', 'bar'];
+
     Select.vm.deselect("foo");
-    expect(Select.vm.mutableValue.length).toEqual(1);
-    expect(Select.vm.mutableValue).toEqual(["bar"]);
+    expect(Select.vm.selectedValue).toEqual(["bar"]);
   });
 
   it("can deselect an option when multiple is false", () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
         index: "value",
-        value: "foo",
         options: [
           { label: "This is Foo", value: "foo" },
           { label: "This is Bar", value: "bar" }
@@ -100,7 +99,7 @@ describe("When index prop is defined", () => {
     });
 
     Select.vm.deselect("foo");
-    expect(Select.vm.mutableValue).toEqual(null);
+    expect(Select.vm.selectedValue).toEqual([]);
   });
 
   it("can use v-model syntax for a two way binding to a parent component", () => {
@@ -120,7 +119,7 @@ describe("When index prop is defined", () => {
     const Select = Parent.vm.$children[0];
 
     expect(Select.value).toEqual("foo");
-    expect(Select.mutableValue).toEqual("foo");
+    expect(Select.selectedValue).toEqual(["foo"]);
 
     Select.select({ label: "This is Bar", value: "bar" });
     expect(Parent.vm.value).toEqual("bar");

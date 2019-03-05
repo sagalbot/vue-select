@@ -2,10 +2,12 @@ import { selectWithProps } from "../helpers";
 
 describe("Removing values", () => {
   it("can remove the given tag when its close icon is clicked", () => {
-    const Select = selectWithProps({ multiple: true, value: ["foo"] });
+    const Select = selectWithProps({ multiple: true });
+    Select.vm.internalValue = 'one';
 
     Select.find(".vs__deselect").trigger("click");
-    expect(Select.vm.mutableValue).toEqual([]);
+    expect(Select.emitted().input).toEqual([[[]]]);
+    expect(Select.vm.selectedValue).toEqual([]);
   });
 
   it("should not remove tag when close icon is clicked and component is disabled", () => {
@@ -17,28 +19,32 @@ describe("Removing values", () => {
     });
 
     Select.find(".vs__deselect").trigger("click");
-    expect(Select.vm.mutableValue).toEqual(["one"]);
+    expect(Select.vm.selectedValue).toEqual(["one"]);
   });
 
   it("should remove the last item in the value array on delete keypress when multiple is true", () => {
     const Select = selectWithProps({
       multiple: true,
-      value: ["one", "two"],
       options: ["one", "two", "three"]
     });
 
-    Select.vm.maybeDeleteValue();
-    expect(Select.vm.mutableValue).toEqual(["one"]);
+    Select.vm.internalValue = ["one", "two"];
+
+    Select.find('.vs__search').trigger('keydown.backspace')
+
+    expect(Select.emitted().input).toEqual([[['one']]]);
+    expect(Select.vm.selectedValue).toEqual(["one"]);
   });
 
   it("should set value to null on delete keypress when multiple is false", () => {
     const Select = selectWithProps({
-      value: "one",
       options: ["one", "two", "three"]
     });
 
+    Select.vm.internalValue = 'one';
+
     Select.vm.maybeDeleteValue();
-    expect(Select.vm.mutableValue).toEqual(null);
+    expect(Select.vm.selectedValue).toEqual([]);
   });
 
   describe("Clear button", () => {
@@ -64,12 +70,14 @@ describe("Removing values", () => {
     it("should remove selected value when clicked", () => {
       const Select = selectWithProps({
         options: ["foo", "bar"],
-        value: "foo"
       });
+      Select.vm.internalValue = 'foo';
 
-      expect(Select.vm.mutableValue).toEqual("foo");
+      expect(Select.vm.selectedValue).toEqual(["foo"]);
       Select.find("button.vs__clear").trigger("click");
-      expect(Select.vm.mutableValue).toEqual(null);
+
+      expect(Select.emitted().input).toEqual([[null]]);
+      expect(Select.vm.selectedValue).toEqual([]);
     });
 
     it("should be disabled when component is disabled", () => {

@@ -59,11 +59,6 @@ describe("Toggling Dropdown", () => {
       multiple: true,
       closeOnSelect: false
     });
-    // const vm = new Vue({
-    //   template:
-    //     '<div><v-select ref="select" :options="options" multiple :closeOnSelect="false" :value="value"></v-select></div>',
-    //   components: { vSelect },
-    // }).$mount();
 
     Select.vm.open = true;
     Select.vm.select("one");
@@ -120,7 +115,7 @@ describe("Toggling Dropdown", () => {
     });
 
     Select.vm.search = "foo";
-    Select.vm.onEscape();
+    Select.find('.vs__search').trigger('keyup.esc')
     expect(Select.vm.search).toEqual("");
   });
 

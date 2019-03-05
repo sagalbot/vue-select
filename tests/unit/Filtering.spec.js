@@ -2,6 +2,17 @@ import { shallowMount } from "@vue/test-utils";
 import VueSelect from "../../src/components/Select";
 
 describe("Filtering Options", () => {
+  it("should update the search value when the input element receives the 'input' event", () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: { options: ["foo", "bar", "baz"] }
+    });
+    
+    const input = Select.find('.vs__search');
+    input.element.value = 'a'
+    input.trigger('input')
+    expect(Select.vm.search).toEqual('a');
+  });
+
   it("should filter an array of strings", () => {
     const Select = shallowMount(VueSelect, {
       propsData: { options: ["foo", "bar", "baz"] }

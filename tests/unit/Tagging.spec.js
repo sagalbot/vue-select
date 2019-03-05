@@ -44,25 +44,24 @@ describe("When Tagging Is Enabled", () => {
     const Select = selectWithProps({
       taggable: true,
       multiple: true,
-      value: ["one"],
       options: ["one", "two"]
     });
 
     searchSubmit(Select, "three");
-    expect(Select.vm.mutableValue).toEqual(["one", "three"]);
+
+    expect(Select.vm.selectedValue).toEqual(["three"]);
   });
 
   it("can select the current search text as an object", () => {
     const Select = selectWithProps({
       taggable: true,
       multiple: true,
-      value: [{ label: "one" }],
       options: [{ label: "one" }]
     });
 
     searchSubmit(Select, "two");
-    expect(Select.vm.mutableValue).toEqual([
-      { label: "one" },
+
+    expect(Select.vm.selectedValue).toEqual([
       { label: "two" }
     ]);
   });
@@ -77,7 +76,8 @@ describe("When Tagging Is Enabled", () => {
     });
 
     searchSubmit(Select, "three");
-    expect(Select.vm.mutableOptions).toEqual(["one", "two", "three"]);
+    expect(Select.vm.pushedTags).toEqual(["three"]);
+    expect(Select.vm.optionList).toEqual(["one", "two", "three"]);
   });
 
   it("should add a freshly created option/tag to the options list when pushTags is true and filterable is false", () => {
@@ -91,7 +91,8 @@ describe("When Tagging Is Enabled", () => {
     });
 
     searchSubmit(Select, "three");
-    expect(Select.vm.mutableOptions).toEqual(["one", "two", "three"]);
+    expect(Select.vm.pushedTags).toEqual(["three"]);
+    expect(Select.vm.optionList).toEqual(["one", "two", "three"]);
     expect(Select.vm.filteredOptions).toEqual(["one", "two", "three"]);
   });
 
@@ -105,7 +106,7 @@ describe("When Tagging Is Enabled", () => {
     });
 
     searchSubmit(Select, "three");
-    expect(Select.vm.mutableOptions).toEqual(["one", "two"]);
+    expect(Select.vm.optionList).toEqual(["one", "two"]);
   });
 
   it("wont add a freshly created option/tag to the options list when pushTags is false and filterable is false", () => {
@@ -119,16 +120,15 @@ describe("When Tagging Is Enabled", () => {
     });
 
     searchSubmit(Select, "three");
-    expect(Select.vm.mutableOptions).toEqual(["one", "two"]);
+    expect(Select.vm.optionList).toEqual(["one", "two"]);
     expect(Select.vm.filteredOptions).toEqual(["one", "two"]);
   });
 
-  it("should select an existing option if the search string matches a string from options", () => {
+  it("should select an existing option if the search string matches a string from options", async () => {
     let two = "two";
     const Select = selectWithProps({
       taggable: true,
       multiple: true,
-      value: null,
       options: ["one", two]
     });
 
@@ -136,7 +136,7 @@ describe("When Tagging Is Enabled", () => {
 
     searchSubmit(Select);
 
-    expect(Select.vm.mutableValue[0]).toBe(two);
+    expect(Select.vm.selectedValue).toEqual([two]);
   });
 
   it("should select an existing option if the search string matches an objects label from options", () => {
@@ -149,7 +149,7 @@ describe("When Tagging Is Enabled", () => {
     Select.vm.search = "two";
 
     searchSubmit(Select);
-    expect(Select.vm.mutableValue.label).toBe(two.label);
+    expect(Select.vm.selectedValue).toEqual([two]);
   });
 
   it("should select an existing option if the search string matches an objects label from options when filter-options is false", () => {
@@ -163,7 +163,7 @@ describe("When Tagging Is Enabled", () => {
     Select.vm.search = "two";
 
     searchSubmit(Select);
-    expect(Select.vm.mutableValue.label).toBe(two.label);
+    expect(Select.vm.selectedValue).toEqual([two]);
   });
 
   it("should not reset the selected value when the options property changes", () => {
@@ -174,8 +174,8 @@ describe("When Tagging Is Enabled", () => {
       options: [{ label: "one" }]
     });
 
-    Select.vm.mutableOptions = [{ label: "two" }];
-    expect(Select.vm.mutableValue).toEqual([{ label: "one" }]);
+    Select.setProps({ options: [{ label: "two" }] });
+    expect(Select.vm.selectedValue).toEqual([{ label: "one" }]);
   });
 
   it("should not reset the selected value when the options property changes when filterable is false", () => {
@@ -187,8 +187,8 @@ describe("When Tagging Is Enabled", () => {
       options: [{ label: "one" }]
     });
 
-    Select.vm.mutableOptions = [{ label: "two" }];
-    expect(Select.vm.mutableValue).toEqual([{ label: "one" }]);
+    Select.setProps({ options: [{ label: "two" }] });
+    expect(Select.vm.selectedValue).toEqual([{ label: "one" }]);
   });
 
   it("should not allow duplicate tags when using string options", () => {
@@ -198,11 +198,11 @@ describe("When Tagging Is Enabled", () => {
     });
 
     searchSubmit(Select, "one");
-    expect(Select.vm.mutableValue).toEqual(["one"]);
+    expect(Select.vm.selectedValue).toEqual(["one"]);
     expect(Select.vm.search).toEqual("");
 
     searchSubmit(Select, "one");
-    expect(Select.vm.mutableValue).toEqual(["one"]);
+    expect(Select.vm.selectedValue).toEqual(["one"]);
     expect(Select.vm.search).toEqual("");
   });
 
@@ -214,11 +214,11 @@ describe("When Tagging Is Enabled", () => {
     });
 
     searchSubmit(Select, "one");
-    expect(Select.vm.mutableValue).toEqual([{ label: "one" }]);
+    expect(Select.vm.selectedValue).toEqual([{ label: "one" }]);
     expect(Select.vm.search).toEqual("");
 
     searchSubmit(Select, "one");
-    expect(Select.vm.mutableValue).toEqual([{ label: "one" }]);
+    expect(Select.vm.selectedValue).toEqual([{ label: "one" }]);
     expect(Select.vm.search).toEqual("");
   });
 });

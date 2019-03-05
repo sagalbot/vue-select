@@ -15,7 +15,7 @@ describe("VS - Selecting Values", () => {
     const Select = shallowMount(VueSelect, {
       propsData: defaultProps
     });
-    expect(Select.mutableValue).toEqual(Select.value);
+    expect(Select.selectedValue).toEqual(Select.value);
   });
 
   it("can accept an array of objects and pre-selected value (single)", () => {
@@ -28,7 +28,7 @@ describe("VS - Selecting Values", () => {
         ]
       }
     });
-    expect(Select.mutableValue).toEqual(Select.value);
+    expect(Select.selectedValue).toEqual(Select.value);
   });
 
   it("can accept an array of objects and pre-selected values (multiple)", () => {
@@ -46,7 +46,7 @@ describe("VS - Selecting Values", () => {
       multiple: true
     });
 
-    expect(Select.mutableValue).toEqual(Select.value);
+    expect(Select.selectedValue).toEqual(Select.value);
   });
 
   it("can select an option on tab", () => {
@@ -67,10 +67,6 @@ describe("VS - Selecting Values", () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
         multiple: true,
-        value: [
-          { label: "This is Foo", value: "foo" },
-          { label: "This is Bar", value: "bar" }
-        ],
         options: [
           { label: "This is Foo", value: "foo" },
           { label: "This is Bar", value: "bar" }
@@ -78,36 +74,41 @@ describe("VS - Selecting Values", () => {
       }
     });
 
+    Select.vm.internalValue = [
+      { label: "This is Foo", value: "foo" },
+      { label: "This is Bar", value: "bar" }
+    ];
+
     Select.vm.deselect({ label: "This is Foo", value: "foo" });
-    expect(Select.vm.mutableValue.length).toEqual(1);
+    expect(Select.vm.selectedValue).toEqual([{ label: "This is Bar", value: "bar" }]);
   });
 
   it("can deselect a pre-selected string", () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
         multiple: true,
-        value: ["foo", "bar"],
         options: ["foo", "bar"]
       }
     });
+
+    Select.vm.internalValue = "foo";
+
     Select.vm.deselect("foo");
-    expect(Select.vm.mutableValue.length).toEqual(1);
+    expect(Select.vm.selectedValue).toEqual([]);
   });
 
   it("can deselect an option when multiple is false", () => {
-    const Select = shallowMount(VueSelect, {
-      propsData: {
-        value: "foo"
-      }
-    });
+    const Select = shallowMount(VueSelect);
+
+    Select.vm.internalValue = "foo";
+
     Select.vm.deselect("foo");
-    expect(Select.vm.mutableValue).toEqual(null);
+    expect(Select.vm.selectedValue).toEqual([]);
   });
 
   it("can determine if the value prop is empty", () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
-        value: [],
         options: ["one", "two", "three"]
       }
     });
@@ -134,19 +135,16 @@ describe("VS - Selecting Values", () => {
   it("should reset the selected values when the multiple property changes", () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
-        value: ["one"],
         multiple: true,
         options: ["one", "two", "three"]
       }
     });
 
-    expect(Select.vm.mutableValue).toEqual(["one"]);
-
     Select.setProps({ multiple: false });
-    expect(Select.vm.mutableValue).toEqual(null);
+    expect(Select.vm.selectedValue).toEqual([]);
 
     Select.setProps({ multiple: true });
-    expect(Select.vm.mutableValue).toEqual([]);
+    expect(Select.vm.selectedValue).toEqual([]);
   });
 
   it("can retain values present in a new array of options", () => {
@@ -158,7 +156,7 @@ describe("VS - Selecting Values", () => {
     });
 
     Select.setProps({ options: ["one", "five", "six"] });
-    expect(Select.vm.mutableValue).toEqual(["one"]);
+    expect(Select.vm.selectedValue).toEqual(["one"]);
   });
 
   it("can determine if an object is already selected", () => {
@@ -181,7 +179,7 @@ describe("VS - Selecting Values", () => {
     const Select = Parent.vm.$children[0];
 
     expect(Select.value).toEqual("foo");
-    expect(Select.mutableValue).toEqual("foo");
+    expect(Select.selectedValue).toEqual(["foo"]);
 
     Select.select("bar");
     expect(Parent.vm.value).toEqual("bar");
