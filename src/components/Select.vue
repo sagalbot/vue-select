@@ -243,7 +243,7 @@
         }
       },
 
-      updateValue: {
+      onInput: {
         type: Function,
         default: function (val) {
           if (typeof this.value === 'undefined') {
@@ -492,7 +492,7 @@
           if (this.multiple) {
             option = this.selectedValue.concat(option)
           }
-          this.updateValue(option);
+          this.onInput(option);
         }
 
         this.onAfterSelect(option)
@@ -511,7 +511,7 @@
             return ! this.optionObjectComparator(val, option)
           });
         }
-        this.updateValue(value);
+        this.onInput(value);
       },
 
       /**
@@ -519,7 +519,7 @@
        * @return {void}
        */
       clearSelection() {
-        this.updateValue(this.multiple ? [] : null)
+        this.onInput(this.multiple ? [] : null)
       },
 
       /**
@@ -681,7 +681,7 @@
           if (this.multiple) {
             value = [...this.selectedValue.slice(0, this.selectedValue.length - 1)]
           }
-          this.updateValue(value)
+          this.onInput(value)
         }
       },
 
