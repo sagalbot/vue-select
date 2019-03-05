@@ -5,5 +5,4 @@ node_js:
   - node
   
 script:
-  - yarn test --coverage --coverageReporters=text-lcov
-  - codecov
+  - yarn test --coverage --coverageReporters=text-lcov | coveralls
