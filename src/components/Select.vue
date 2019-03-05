@@ -441,7 +441,7 @@
        */
       options(val) {
         if (!this.taggable && this.resetOnOptionsChange) {
-          this.updateValue(this.multiple ? [] : null)
+          this.clearSelection()
         }
       },
 
@@ -451,8 +451,8 @@
        * @param  {Boolean} isMultiple
        * @return {void}
        */
-      multiple(isMultiple) {
-        this.updateValue(isMultiple ? [] : null)
+      multiple() {
+        this.clearSelection()
       },
     },
 
