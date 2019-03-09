@@ -719,7 +719,8 @@
        * @default {null}
        */
       inputId: {
-        type: String
+        type: String,
+        default: null
       },
 
       /**
