@@ -497,7 +497,7 @@
 
         if (this.multiple) {
           value = this.selectedValue.filter(val => {
-            return ! this.optionObjectComparator(val, option)
+            return ! this.optionComparator(val, option)
           });
         }
         this.updateValue(value);
@@ -561,7 +561,7 @@
        */
       isOptionSelected(option) {
         return this.selectedValue.some(value => {
-          return this.optionObjectComparator(value, option)
+          return this.optionComparator(value, option)
         })
       },
 
@@ -572,7 +572,7 @@
        * @param option {Object}
        * @returns {boolean}
        */
-      optionObjectComparator(value, option) {
+      optionComparator(value, option) {
         // This method will need to be cleaned/replaced when the `reducer` API is added
         if (typeof value !== 'object' && typeof option !== 'object') {
           // Comparing primitives
