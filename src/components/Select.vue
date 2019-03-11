@@ -243,17 +243,6 @@
         }
       },
 
-      onInput: {
-        type: Function,
-        default: function (val) {
-          if (typeof this.value === 'undefined') {
-            // Vue select has to manage value
-            this.$data._value = val;
-          }
-          this.$emit('input', val);
-        }
-      },
-
       /**
        * Select the current value if selectOnTab is enabled
        */
@@ -492,7 +481,7 @@
           if (this.multiple) {
             option = this.selectedValue.concat(option)
           }
-          this.onInput(option);
+          this.updateValue(option);
         }
 
         this.onAfterSelect(option)
@@ -511,7 +500,7 @@
             return ! this.optionObjectComparator(val, option)
           });
         }
-        this.onInput(value);
+        this.updateValue(value);
       },
 
       /**
@@ -519,7 +508,7 @@
        * @return {void}
        */
       clearSelection() {
-        this.onInput(this.multiple ? [] : null)
+        this.updateValue(this.multiple ? [] : null)
       },
 
       /**
@@ -536,6 +525,14 @@
         if (this.clearSearchOnSelect) {
           this.search = ''
         }
+      },
+
+      updateValue(value) {
+        if (typeof this.value === 'undefined') {
+          // Vue select has to manage value
+          this.$data._value = value;
+        }
+        this.$emit('input', value);
       },
 
       /**
@@ -681,7 +678,7 @@
           if (this.multiple) {
             value = [...this.selectedValue.slice(0, this.selectedValue.length - 1)]
           }
-          this.onInput(value)
+          this.updateValue(value)
         }
       },
 
