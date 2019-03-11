@@ -248,7 +248,7 @@
         default: function (val) {
           if (typeof this.value === 'undefined') {
             // Vue select has to manage value
-            this.internalValue = val;
+            this.$data._value = val;
           }
           this.$emit('input', val);
         }
@@ -429,7 +429,7 @@
         search: '',
         open: false,
         pushedTags: [],
-        internalValue: [] // Internal value managed by Vue Select if no `value` prop is passed
+        _value: [] // Internal value managed by Vue Select if no `value` prop is passed
       }
     },
 
@@ -776,7 +776,7 @@
 
         if (typeof this.value === 'undefined') {
           // Vue select has to manage value internally
-          value = this.internalValue;
+          value = this.$data._value;
         }
 
         if (value) {
