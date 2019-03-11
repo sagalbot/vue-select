@@ -36,7 +36,7 @@ describe("Labels", () => {
     });
 
     expect(Select.vm.searchPlaceholder).toEqual("foo");
-    Select.vm.internalValue = "one";
+    Select.vm.$data._value = "one";
     expect(Select.vm.searchPlaceholder).not.toBeDefined();
   });
 });

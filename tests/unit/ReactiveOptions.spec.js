@@ -7,7 +7,7 @@ describe("Reset on options change", () => {
       propsData: { options: ["one"] }
     });
 
-    Select.vm.internalValue = 'one';
+    Select.vm.$data._value = 'one';
 
     Select.setProps({options: ["four", "five", "six"]});
     expect(Select.vm.selectedValue).toEqual(["one"]);
@@ -18,7 +18,7 @@ describe("Reset on options change", () => {
       propsData: { resetOnOptionsChange: true, options: ["one"] }
     });
 
-    Select.vm.internalValue = 'one';
+    Select.vm.$data._value = 'one';
 
     Select.setProps({options: ["four", "five", "six"]});
     expect(Select.vm.selectedValue).toEqual([]);

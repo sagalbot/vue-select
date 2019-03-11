@@ -3,7 +3,7 @@ import { selectWithProps } from "../helpers";
 describe("Removing values", () => {
   it("can remove the given tag when its close icon is clicked", () => {
     const Select = selectWithProps({ multiple: true });
-    Select.vm.internalValue = 'one';
+    Select.vm.$data._value = 'one';
 
     Select.find(".vs__deselect").trigger("click");
     expect(Select.emitted().input).toEqual([[[]]]);
@@ -28,7 +28,7 @@ describe("Removing values", () => {
       options: ["one", "two", "three"]
     });
 
-    Select.vm.internalValue = ["one", "two"];
+    Select.vm.$data._value = ["one", "two"];
 
     Select.find('.vs__search').trigger('keydown.backspace')
 
@@ -41,7 +41,7 @@ describe("Removing values", () => {
       options: ["one", "two", "three"]
     });
 
-    Select.vm.internalValue = 'one';
+    Select.vm.$data._value = 'one';
 
     Select.vm.maybeDeleteValue();
     expect(Select.vm.selectedValue).toEqual([]);
@@ -71,7 +71,7 @@ describe("Removing values", () => {
       const Select = selectWithProps({
         options: ["foo", "bar"],
       });
-      Select.vm.internalValue = 'foo';
+      Select.vm.$data._value = 'foo';
 
       expect(Select.vm.selectedValue).toEqual(["foo"]);
       Select.find("button.vs__clear").trigger("click");

@@ -74,7 +74,7 @@ describe("VS - Selecting Values", () => {
       }
     });
 
-    Select.vm.internalValue = [
+    Select.vm.$data._value = [
       { label: "This is Foo", value: "foo" },
       { label: "This is Bar", value: "bar" }
     ];
@@ -91,7 +91,7 @@ describe("VS - Selecting Values", () => {
       }
     });
 
-    Select.vm.internalValue = "foo";
+    Select.vm.$data._value = "foo";
 
     Select.vm.deselect("foo");
     expect(Select.vm.selectedValue).toEqual([]);
@@ -100,7 +100,7 @@ describe("VS - Selecting Values", () => {
   it("can deselect an option when multiple is false", () => {
     const Select = shallowMount(VueSelect);
 
-    Select.vm.internalValue = "foo";
+    Select.vm.$data._value = "foo";
 
     Select.vm.deselect("foo");
     expect(Select.vm.selectedValue).toEqual([]);
