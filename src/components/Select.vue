@@ -1029,7 +1029,7 @@
        */
       maybeDeleteValue() {
         if (!this.$refs.search.value.length && this.mutableValue && this.clearable) {
-          return this.multiple ? this.mutableValue.pop() : this.mutableValue = null
+          this.mutableValue = this.multiple ? this.mutableValue.slice(0, -1) : null
         }
       },
 
