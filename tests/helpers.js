@@ -28,15 +28,20 @@ export const selectWithProps = (propsData = {}) => {
 
 /**
  * Returns a Wrapper with a v-select component.
+ * @param props
  * @param options
  * @return {Wrapper<Vue>}
  */
-export const mountDefault = (options = {}) =>
-  shallowMount(VueSelect, {
-    propsData: { options: ["one", "two", "three"],
-      ...options
-    }
+export const mountDefault = (props = {}, options = {}) => {
+  return shallowMount(VueSelect, {
+    propsData: {
+      options: ['one', 'two', 'three'],
+      ...props,
+    },
+    ...options,
   });
+};
+
 
 /**
  * Returns a v-select component directly.
