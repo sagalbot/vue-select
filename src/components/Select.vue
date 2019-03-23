@@ -73,6 +73,9 @@
     border-radius: 4px;
     white-space: normal;
   }
+  .v-select .dropdown-toggle::after {
+    display: none;
+  }
   .v-select .vs__selected-options {
     display: flex;
     flex-basis: 100%;
@@ -205,6 +208,7 @@
     box-shadow: none;
     flex-grow: 1;
     width: 0;
+    height: inherit;
   }
   .v-select.unsearchable input[type="search"] {
     opacity: 0;
