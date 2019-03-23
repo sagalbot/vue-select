@@ -55,7 +55,7 @@
           v-for="(option, index) in filteredOptions"
           :key="index"
           class="vs__dropdown-option"
-          :class="{ active: isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer }"
+          :class="{ vs__active: isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer }"
           @mouseover="typeAheadPointer = index"
           @mousedown.prevent.stop="select(option)"
         >
