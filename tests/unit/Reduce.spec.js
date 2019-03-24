@@ -146,8 +146,8 @@ describe("When reduce prop is defined", () => {
       }
     });
 
-    expect(Select.vm.findOptionByIndexValue(1)).toEqual(optionToFind);
-    expect(Select.vm.findOptionByIndexValue(optionToFind)).toEqual(
+    expect(Select.vm.findOptionFromReducedValue(1)).toEqual(optionToFind);
+    expect(Select.vm.findOptionFromReducedValue(optionToFind)).toEqual(
       optionToFind
     );
   });

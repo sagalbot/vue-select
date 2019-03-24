@@ -452,9 +452,9 @@
 
       if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
         if (Array.isArray(this.value)) {
-          this.$data._value = this.value.map(value => this.findOptionByIndexValue(value));
+          this.$data._value = this.value.map(value => this.findOptionFromReducedValue(value));
         } else {
-          this.$data._value = this.findOptionByIndexValue(this.value);
+          this.$data._value = this.findOptionFromReducedValue(this.value);
         }
       }
 
@@ -577,7 +577,6 @@
        * @returns {boolean}
        */
       optionComparator(value, option) {
-        // This method will need to be cleaned/replaced when the `reducer` API is added
         if (typeof value !== 'object' && typeof option !== 'object') {
           // Comparing primitives
           if (value === option) {
@@ -607,13 +606,8 @@
        * @param value {Object}
        * @returns {*}
        */
-      findOptionByIndexValue(value) {
-        this.options.forEach(_option => {
-          if (JSON.stringify(this.reduce(_option)) === JSON.stringify(value)) {
-            value = _option
-          }
-        })
-        return value
+      findOptionFromReducedValue (value) {
+        return this.options.find(option => JSON.stringify(this.reduce(option)) === JSON.stringify(value)) || value;
       },
 
       /**
