@@ -200,13 +200,15 @@
       },
 
       /**
-       * Tells vue-select what key to use when generating option
-       * values when each `option` is an object.
-       * @type {String}
+       * When working with objects, the reduce
+       * prop allows you to transform a given
+       * object to only the information you
+       * want passed to a v-model binding
+       * or @input event.
        */
-      index: {
-        type: String,
-        default: null
+      reduce: {
+        type: Function,
+        default: option => option,
       },
 
       /**
@@ -225,10 +227,6 @@
       getOptionLabel: {
         type: Function,
         default(option) {
-          if( this.index ) {
-            option = this.findOptionByIndexValue(option)
-          }
-
           if (typeof option === 'object') {
             if (!option.hasOwnProperty(this.label)) {
               return console.warn(
@@ -450,7 +448,15 @@
      * attach any event listeners.
      */
     created() {
-      this.mutableLoading = this.loading
+      this.mutableLoading = this.loading;
+
+      if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
+        if (Array.isArray(this.value)) {
+          this.$data._value = this.value.map(value => this.findOptionByIndexValue(value));
+        } else {
+          this.$data._value = this.findOptionByIndexValue(this.value);
+        }
+      }
 
       this.$on('option:created', this.maybePushTag)
     },
@@ -467,17 +473,6 @@
           if (this.taggable && !this.optionExists(option)) {
             option = this.createOption(option)
           }
-
-          if (this.index) {
-            if (!option.hasOwnProperty(this.index)) {
-              return console.warn(
-                  `[vue-select warn]: Index key "option.${this.index}" does not` +
-                  ` exist in options object ${JSON.stringify(option)}.`
-              )
-            }
-            option = option[this.index]
-          }
-
           if (this.multiple) {
             option = this.selectedValue.concat(option)
           }
@@ -528,10 +523,19 @@
       },
 
       updateValue(value) {
-        if (typeof this.value === 'undefined') {
+        if (this.isTrackingValues) {
           // Vue select has to manage value
           this.$data._value = value;
         }
+
+        if( value !== null ) {
+          if( Array.isArray(value) ) {
+            value = value.map(val => this.reduce(val));
+          } else {
+            value = this.reduce(value)
+          }
+        }
+
         this.$emit('input', value);
       },
 
@@ -581,13 +585,13 @@
           }
         } else {
           // Comparing objects
-          if (this.index && value === option[this.index]) {
+          if (value === this.reduce(option)) {
             return true
           }
           if ((value[this.label] === option[this.label]) || (value[this.label] === option)) {
             return true
           }
-          if (this.index && value[this.index] === option[this.index]) {
+          if (this.reduce(value) === this.reduce(option)) {
             return true
           }
         }
@@ -597,7 +601,7 @@
 
       /**
        * Finds an option from this.options
-       * where option[this.index] matches
+       * where a reduced value matches
        * the passed in value.
        *
        * @param value {Object}
@@ -605,7 +609,7 @@
        */
       findOptionByIndexValue(value) {
         this.options.forEach(_option => {
-          if (JSON.stringify(_option[this.index]) === JSON.stringify(value)) {
+          if (JSON.stringify(this.reduce(_option)) === JSON.stringify(value)) {
             value = _option
           }
         })
@@ -788,10 +792,19 @@
 
     computed: {
 
+      /**
+       * Determine if the component needs to
+       * track the state of values internally.
+       * @return {boolean}
+       */
+      isTrackingValues () {
+        return typeof this.value === 'undefined' || this.$options.propsData.hasOwnProperty('reduce');
+      },
+
       selectedValue () {
         let value = this.value;
 
-        if (typeof this.value === 'undefined') {
+        if (this.isTrackingValues) {
           // Vue select has to manage value internally
           value = this.$data._value;
         }
