@@ -587,7 +587,7 @@
           if (value === this.reduce(option)) {
             return true
           }
-          if ((value[this.label] === option[this.label]) || (value[this.label] === option)) {
+          if ((this.getOptionLabel(value) === this.getOptionLabel(option)) || (this.getOptionLabel(value) === option)) {
             return true
           }
           if (this.reduce(value) === this.reduce(option)) {
@@ -689,7 +689,7 @@
        */
       optionExists(option) {
         return this.optionList.some(opt => {
-          if (typeof opt === 'object' && opt[this.label] === option) {
+          if (typeof opt === 'object' && this.getOptionLabel(opt) === option) {
             return true
           } else if (opt === option) {
             return true
