@@ -487,15 +487,10 @@
        * @param  {Object|String} option
        * @return {void}
        */
-      deselect(option) {
-        let value = null
-
-        if (this.multiple) {
-          value = this.selectedValue.filter(val => {
-            return ! this.optionComparator(val, option)
-          });
-        }
-        this.updateValue(value);
+      deselect (option) {
+        this.updateValue(this.selectedValue.filter(val => {
+          return !this.optionComparator(val, option);
+        }));
       },
 
       /**
@@ -522,17 +517,25 @@
         }
       },
 
-      updateValue(value) {
+      /**
+       * Accepts a selected value, updates local
+       * state when required, and triggers the
+       * input event.
+       *
+       * @emits input
+       * @param value
+       */
+      updateValue (value) {
         if (this.isTrackingValues) {
           // Vue select has to manage value
           this.$data._value = value;
         }
 
-        if( value !== null ) {
-          if( Array.isArray(value) ) {
+        if (value !== null) {
+          if (Array.isArray(value)) {
             value = value.map(val => this.reduce(val));
           } else {
-            value = this.reduce(value)
+            value = this.reduce(value);
           }
         }
 
@@ -611,41 +614,6 @@
       },
 
       /**
-       * If there is any text in the search input, remove it.
-       * Otherwise, blur the search input to close the dropdown.
-       * @return {void}
-       */
-      onEscape() {
-        if (!this.search.length) {
-          this.searchEl.blur()
-        } else {
-          this.search = ''
-        }
-      },
-
-      /**
-       * Close the dropdown on blur.
-       * @emits  {search:blur}
-       * @return {void}
-       */
-      onSearchBlur() {
-        if (this.mousedown && !this.searching) {
-          this.mousedown = false
-        } else {
-          if (this.clearSearchOnBlur) {
-            this.search = ''
-          }
-          this.closeSearchOptions()
-          return
-        }
-        // Fixed bug where no-options message could not be closed
-        if (this.search.length === 0 && this.options.length === 0){
-          this.closeSearchOptions()
-          return
-        }
-      },
-
-      /**
        * 'Private' function to close the search options
        * @emits  {search:blur}
        * @returns {void}
@@ -653,16 +621,6 @@
       closeSearchOptions(){
         this.open = false
         this.$emit('search:blur')
-      },
-
-      /**
-       * Open the dropdown on focus.
-       * @emits  {search:focus}
-       * @return {void}
-       */
-      onSearchFocus() {
-        this.open = true
-        this.$emit('search:focus')
       },
 
       /**
@@ -719,6 +677,51 @@
         if (this.pushTags) {
           this.pushedTags.push(option)
         }
+      },
+
+      /**
+       * If there is any text in the search input, remove it.
+       * Otherwise, blur the search input to close the dropdown.
+       * @return {void}
+       */
+      onEscape() {
+        if (!this.search.length) {
+          this.searchEl.blur()
+        } else {
+          this.search = ''
+        }
+      },
+
+      /**
+       * Close the dropdown on blur.
+       * @emits  {search:blur}
+       * @return {void}
+       */
+      onSearchBlur() {
+        if (this.mousedown && !this.searching) {
+          this.mousedown = false
+        } else {
+          if (this.clearSearchOnBlur) {
+            this.search = ''
+          }
+          this.closeSearchOptions()
+          return
+        }
+        // Fixed bug where no-options message could not be closed
+        if (this.search.length === 0 && this.options.length === 0){
+          this.closeSearchOptions()
+          return
+        }
+      },
+
+      /**
+       * Open the dropdown on focus.
+       * @emits  {search:focus}
+       * @return {void}
+       */
+      onSearchFocus() {
+        this.open = true
+        this.$emit('search:focus')
       },
 
       /**
@@ -795,6 +798,10 @@
         return typeof this.value === 'undefined' || this.$options.propsData.hasOwnProperty('reduce');
       },
 
+      /**
+       * The options that are currently selected.
+       * @return {Array}
+       */
       selectedValue () {
         let value = this.value;
 
@@ -810,6 +817,13 @@
         return [];
       },
 
+      /**
+       * The options available to be chosen
+       * from the dropdown, including any
+       * tags that have been pushed.
+       *
+       * @return {Array}
+       */
       optionList () {
         return this.options.concat(this.pushedTags);
       },
