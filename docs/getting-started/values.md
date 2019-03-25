@@ -1,53 +1,79 @@
-# Selecting Values
+## Getting / Setting
 
-The most common use case for `vue-select` is to have the chosen value synced with a parent component. `vue-select` takes advantage of the `v-model` syntax to sync values with a parent.
+### `v-model`
 
-```html
-<v-select v-model="selected"></v-select>
-```
-
-<CodePen url="Kqxbjw" height="250"/>
-
-If you don't require the `value` to be synced, you can also pass the prop directly:
+The most common use case for `vue-select` is to have the chosen value synced with a parent component. `vue-select` 
+takes advantage of the `v-model` syntax to sync values with a parent.
 
 ```html
-<v-select :value="selected"></v-select>
+<v-select v-model="selected" />
 ```
 
-This method allows you to pre-select a value(s), without syncing any changes to the parent component. This is also very useful when using a state management tool, like Vuex.
+### `value` prop & `input` event
+
+If you don't require the `value` to be synced, but you need to preselect a value, you can use the `value` prop. It will
+accept strings, numbers or objects. If you're using a `multiple` v-select, you'll want to pass an array. 
+
+```html
+<v-select :value="selected" />
+```
+
+The `value` prop is very useful when using a state management tool, like Vuex. `vue-select` will emit an `input` event 
+any time a value changes.
+
+```html
+<v-select :value="selected" @input="setSelected" />
+```
+
+```js
+methods: {
+  setSelected(value) {
+     //  do something with selected value  
+  }
+}
+```
+## Transforming Selections
+
+When the `options` array contains objects, `vue-select` returns the whole object as dropdown value upon selection.
+
+If you need to return a single key, or transform the data before it is synced, `vue-select` provides a `reduce` callback
+ that allows you to transform a selected option before it is passed to the `@input` event. Consider this data structure:
+ 
+ ```js
+ let options = [{code: 'CA', country: 'Canada'}, ...];
+ ```
+ 
+ If we want to display the `country`, but return the `code` to `v-model`, we can use the `reduce` prop to receive
+ only the data that's required.
+ 
+ ```html
+ <v-select :options="options" :reduce="country => country.code" label="country" />
+ ```
+  
+The `reduce` property also works well when you have a deeply nested value:
+ 
+ ```
+ {
+   country: 'canada',
+   meta: {
+     id: '1',
+     code: 'ca'
+   }
+ }
+ ```
+ 
+ ```html
+ <v-select :options="options" :reduce="country => country.value.id" label="country" />
+ ```
 
 ## Single/Multiple Selection
 
-By default, `vue-select` supports choosing a single value. If you need multiple values, use the `multiple` prop:
+By default, `vue-select` supports choosing a single value. If you need multiple values, use the `multiple` boolean prop,
+much the same way you would on a native `<select>` element. When `multiple` is true, `v-model` or `value` should be
+arrays.
+ 
 
 ```html
-<v-select multiple v-model="selected"></v-select>
+<v-select multiple v-model="selected" :options="['foo','bar']" />
 ```
-
-<CodePen url="opMGro" height="250"/>
-
-## Tagging
-
-To allow input that's not present within the options, set the `taggable` prop to true.
-If you want new tags to be pushed to the options list, set `push-tags` to true.
-
-<CodePen url="XVoWxm" height="350"/>
-
-## Return a Single Key from an Object
-
-When the `options` array contains objects, `vue-select` returns the whole object as dropdown value upon selection. You can specify your own `index` prop to return only the value contained in the specific property.
-
-For example, consider an object with `value` and `label` properties:
-
-```json
-{
-  value: "CA",
-  label: "Canada"
-}
-```
-
-If you wanted to return `CA` in the dropdown when `Canada` is selected, you'd use the `index` key:
-
-```html
-<v-select index="value" :options="countries"></v-select>
-```
+<v-select multiple :options="['foo','bar']" />

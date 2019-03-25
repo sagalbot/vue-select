@@ -1,4 +1,4 @@
-## AJAX Remote Option Loading
+# AJAX Remote Option Loading
 
 <CodePen url="POMeOX" height="400"/>
 

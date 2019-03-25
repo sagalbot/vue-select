@@ -87,7 +87,6 @@ module.exports = {
             ['digging-deeper/templating', 'Templating & Slots'],
             ['digging-deeper/vuex', 'Vuex'],
             ['digging-deeper/ajax', 'AJAX'],
-            ['digging-deeper/examples', 'Examples'],
           ],
         },
         {

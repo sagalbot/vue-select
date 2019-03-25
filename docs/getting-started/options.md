@@ -1,20 +1,29 @@
 # Dropdown Options
 
-`vue-select` accepts arrays of strings or objects to use as options through the `options` prop:
+## Options Prop
+
+`vue-select` accepts arrays of primitive values or objects to use as options through the `options` prop:
 
 ```html
+<!-- array of strings or numbers -->
 <v-select :options="['foo','bar']"></v-select>
-```
 
-When provided an array of objects, `vue-select` will display a single value of the object. By default, `vue-select` will look for a key named `label` on the object to use as display text.
-
-```html
+<!-- or, an array of objects -->
 <v-select :options="[{label: 'foo', value: 'Foo'}]"></v-select>
 ```
 
 ## Option Labels
 
-When the `options` array contains objects, `vue-select` looks for the `label` key to display by default. You can set your own label to match your source data using the `label` prop.
+#### Option Primitives (strings, numbers)
+
+When `options` contains strings or numbers, they'll be used as the label for the option within the
+component. No further configuration is necessary. 
+
+#### Option Objects
+
+When `options` is an array of objects, the component must generate a label to be shown as the options text. By default, 
+`vue-select` will attempt to render `option.label` as the option label. You can set your own label to match your 
+source data using the `label` prop.
 
 For example, consider an object with `countryCode` and `countryName` properties:
 
@@ -33,26 +42,13 @@ If you wanted to display `Canada` in the dropdown, you'd use the `countryName` k
 
 <CodePen url="aEjLPB" height="450"/>
 
-
-## Option Object Key
-
-When the `options` array contains objects, `vue-select` returns the whole object as dropdown value upon selection. You can specify your own `index` prop to return only the value contained in the specific property.
-
-For example, consider an object with `value` and `label` properties:
-
-```json
-{
-  value: "CA",
-  label: "Canada"
-}
-```
-
-If you wanted to return `CA` in the dropdown when `Canada` is selected, you'd use the `index` key:
-
-```html
-<v-select index="value" :options="countries"></v-select>
-```
-
 ## Null / Empty Options
 
 `vue-select` requires the `option` property to be an `array`. If you are using Vue in development mode, you will get warnings attempting to pass anything other than an `array` to the `options` prop. If you need a `null`/`empty` value, use an empty array `[]`.
+
+## Tagging
+
+To allow input that's not present within the options, set the `taggable` prop to true.
+If you want new tags to be pushed to the options list, set `push-tags` to true.
+
+<CodePen url="XVoWxm" height="350"/>
