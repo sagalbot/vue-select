@@ -8,5 +8,6 @@ test/unit/coverage
 package-lock.json
 docs/gitbook/_book
 docs/node_modules
+*.iml
 site
 dist
