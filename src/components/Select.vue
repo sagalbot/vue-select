@@ -383,7 +383,7 @@
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options" @mousedown.stop="">
-          <slot name="no-options">Sorry, no matching options.</slot>
+          <slot name="no-options">{{ emptyOptionsText }}</slot>
         </li>
       </ul>
     </transition>
@@ -744,6 +744,14 @@
       selectOnTab: {
         type: Boolean,
         default: false
+      },
+      /**
+       * Sets the text which appears when no items were found.
+       * @type {String}
+       */
+      emptyOptionsText: {
+        type: String,
+        default: "Sorry, no matching options."
       }
     },
 
