@@ -10,4 +10,3 @@ docs/gitbook/_book
 docs/node_modules
 *.iml
 site
-dist
