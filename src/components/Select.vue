@@ -211,7 +211,7 @@
     height: inherit;
   }
   .v-select.unsearchable input[type="search"] {
-    opacity: 0;
+    opacity: 1;
   }
   .v-select.unsearchable input[type="search"]:hover {
     cursor: pointer;
