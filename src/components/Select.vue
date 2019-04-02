@@ -541,7 +541,7 @@
 
       validate: {
         type: Function,
-        default: (val, field) => true,
+        default: val => true,
       },
 
       /**
@@ -833,9 +833,9 @@
 
     methods: {
 
-       isValid(val, field = 'label'){
+       isValid(val){
 
-        return !this.taggable || this.validate(val[field]);
+        return !this.taggable || this.validate(val);
            
       },
 
