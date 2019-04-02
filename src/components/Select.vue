@@ -558,7 +558,7 @@
             option = this.findOptionByIndexValue(option)
           }
 
-          if (typeof option === 'object') {
+          if (option && typeof option === 'object') {
             if (!option.hasOwnProperty(this.label)) {
               return console.warn(
                 `[vue-select warn]: Label key "option.${this.label}" does not` +
