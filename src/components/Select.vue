@@ -538,6 +538,12 @@
         default: null
       },
 
+
+      validate: {
+        type: Function,
+        default: val => val,
+      },
+
       /**
        * Callback to generate the label text. If {option}
        * is an object, returns option[this.label] by default.
@@ -810,7 +816,7 @@
        */
       multiple(val) {
         this.mutableValue = val ? [] : null
-      }
+      },
     },
 
     /**
@@ -826,6 +832,12 @@
     },
 
     methods: {
+
+       isValid(val){
+
+        return !this.taggable || this.validate(val);
+           
+      },
 
       /**
        * Select a given option.
@@ -1156,12 +1168,14 @@
         if (!this.filterable && !this.taggable) {
           return this.mutableOptions.slice()
         }
+          
         let options = this.search.length ? this.filter(this.mutableOptions, this.search, this) : this.mutableOptions;
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
-        return options
+        return options.filter(this.isValid);
       },
+
 
       /**
        * Check if there aren't any options selected.
@@ -1183,8 +1197,9 @@
        * @return {Array}
        */
       valueAsArray() {
+        
         if (this.multiple && this.mutableValue) {
-          return this.mutableValue
+          return this.mutableValue.filter(this.isValid)
         } else if (this.mutableValue) {
           return [].concat(this.mutableValue)
         }
