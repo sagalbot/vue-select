@@ -1168,7 +1168,9 @@
        * @return {Boolean}
        */
       isValueEmpty() {
-        if (this.mutableValue && this.mutableValue.toString()) {
+        const isValueZero = (this.mutableValue === 0);
+        const isValueFalse = (this.mutableValue === false);
+        if (this.mutableValue || (isValueZero || isValueFalse)) {
           if (typeof this.mutableValue === 'object') {
             return ! Object.keys(this.mutableValue).length
           }
@@ -1183,9 +1185,11 @@
        * @return {Array}
        */
       valueAsArray() {
-        if (this.multiple && (this.mutableValue && this.mutableValue.toString())) {
+        const isValueZero = (this.mutableValue === 0);
+        const isValueFalse = (this.mutableValue === false);
+        if (this.multiple && (this.mutableValue || (isValueZero || isValueFalse))) {
           return this.mutableValue
-        } else if (this.mutableValue && this.mutableValue.toString()) {
+        } else if (this.mutableValue || (isValueZero || isValueFalse)) {
           return [].concat(this.mutableValue)
         }
 
