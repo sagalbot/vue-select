@@ -894,13 +894,12 @@
        * @return {void}
        */
       onAfterSelect(option) {
+        if (this.clearSearchOnSelect) {
+            this.search = ''
+        }
         if (this.closeOnSelect) {
           this.open = !this.open
           this.$refs.search.blur()
-        }
-
-        if (this.clearSearchOnSelect) {
-          this.search = ''
         }
       },
 
@@ -994,6 +993,9 @@
         if (this.mousedown && !this.searching) {
           this.mousedown = false
         } else {
+          if(!!this.search) {
+            this.$emit('search:preblur')
+          }
           if (this.clearSearchOnBlur) {
             this.search = ''
           }
