@@ -2,9 +2,8 @@
 Install with yarn:
 ```bash
 yarn add vue-select
-```
-or, using NPM:
-```
+
+# or, using NPM
 npm install vue-select
 ```
 
@@ -23,7 +22,7 @@ The component itself does not include any CSS. You'll need to include it separat
 import 'vue-select/dist/vue-select.css';
 ```
 
-You can also import the scss yourself for complete control of the component styles:
+Alternatively, you can import the scss for complete control of the component styles:
 
 ```scss
 @import "vue-select/src/scss/vue-select.scss";

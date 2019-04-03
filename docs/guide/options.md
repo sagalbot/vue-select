@@ -1,5 +1,3 @@
-# Dropdown Options
-
 ## Options Prop
 
 `vue-select` accepts arrays of primitive values or objects to use as options through the `options` prop:
