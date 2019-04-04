@@ -1668,5 +1668,88 @@ describe('Select.vue', () => {
 			expect(buttonEl.disabled).toEqual(true);
 		})
 
+	})
+
+	describe('Texts customization', () => {
+
+		it('should use default text values if no texts given', (done) => {
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :options="['foo','bar','baz']"></v-select></div>`,
+			}).$mount()
+
+			const buttonClear = vm.$el.querySelector( 'button.clear' )
+			expect(buttonClear.getAttribute('title')).toEqual('Clear selection');
+
+			const spinner = vm.$el.querySelector( 'div.spinner' )
+			expect(spinner.textContent).toEqual('Loading...')
+
+			const input = vm.$el.querySelector( 'input.form-control' )
+			expect(input.getAttribute('aria-label')).toEqual('Search for options')
+
+			vm.$refs.select.search = 'xxx'
+			vm.$children[0].open = true
+			Vue.nextTick(() => {
+				const noOptions  = vm.$el.querySelector( 'li.no-options' )
+				expect(noOptions.textContent).toEqual('Sorry, no matching options.')
+				done()
+			})
+
+		})
+
+		it('should use text values if texts given', (done) => {
+			const vm = new Vue({
+				template: '<div><v-select ref="select" :options="options" :value="value"  :texts="texts"></v-select></div>',
+				data: {
+					options: ['foo','bar'],
+					value : 'foo',
+					texts: {
+						noResults : "Nothing Found", 
+						loading : "Loading",
+						searchOption : "Options",
+						clearSelection : "Remove"
+					}
+				}
+			}).$mount()
+
+			const buttonClear = vm.$el.querySelector( 'button.clear' )
+			expect(buttonClear.getAttribute('title')).toEqual('Remove');
+
+			const spinner = vm.$el.querySelector( 'div.spinner' )
+			expect(spinner.textContent).toEqual('Loading')
+
+			const input = vm.$el.querySelector( 'input.form-control' )
+			expect(input.getAttribute('aria-label')).toEqual('Options')
+
+			vm.$refs.select.search = 'xxx'
+			vm.$children[0].open = true
+			Vue.nextTick(() => {
+				const noOptions  = vm.$el.querySelector( 'li.no-options' )
+				expect(noOptions.textContent).toEqual('Nothing Found')
+				done()
+			})
+
+		})
+
+		it('should use default text values if keywords are missing in texts prop', () => {
+			const vm = new Vue({
+				template: '<div><v-select ref="select" :options="options" :value="value"  :texts="texts"></v-select></div>',
+				data: {
+					options: ['foo','bar'],
+					value : 'foo',
+					texts: {
+						clearSelection : "Remove"
+					}
+				}
+			}).$mount()
+
+			const buttonClear = vm.$el.querySelector( 'button.clear' )
+			expect(buttonClear.getAttribute('title')).toEqual('Remove');
+
+			const spinner = vm.$el.querySelector( 'div.spinner' )
+			expect(spinner.textContent).toEqual('Loading...')
+
+		})
+
 	});
+
 })

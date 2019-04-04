@@ -349,7 +349,7 @@
                 :id="inputId"
                 role="combobox"
                 :aria-expanded="dropdownOpen"
-                aria-label="Search for option"
+                :aria-label="textValues.searchOption"
         >
 
       </div>
@@ -360,7 +360,7 @@
           @click="clearSelection"
           type="button"
           class="clear"
-          title="Clear selection"
+          :title="this.textValues.clearSelection"
         >
           <span aria-hidden="true">&times;</span>
         </button>
@@ -368,7 +368,7 @@
         <i v-if="!noDrop" ref="openIndicator" role="presentation" class="open-indicator"></i>
 
         <slot name="spinner">
-          <div class="spinner" v-show="mutableLoading">Loading...</div>
+          <div class="spinner" v-show="mutableLoading">{{ textValues.loading }}</div>
         </slot>
       </div>
     </div>
@@ -383,7 +383,7 @@
           </a>
         </li>
         <li v-if="!filteredOptions.length" class="no-options" @mousedown.stop="">
-          <slot name="no-options">Sorry, no matching options.</slot>
+          <slot name="no-options">{{ textValues.noResults }}</slot>
         </li>
       </ul>
     </transition>
@@ -394,9 +394,10 @@
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
+  import text from '../mixins/text'
 
   export default {
-    mixins: [pointerScroll, typeAheadPointer, ajax],
+    mixins: [pointerScroll, typeAheadPointer, ajax, text],
 
     props: {
       /**
