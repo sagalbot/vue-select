@@ -156,23 +156,6 @@ getOptionLabel: {
 },
 
 /**
-* Callback to determine if the provided option should
-* match the current search text. Used to determine
-* if the option should be displayed.
-* @type   {Function}
-* @param  {Object || String} option
-* @param  {String} label
-* @param  {String} search
-* @return {Boolean}
-*/
-filterBy: {
-	type: Function,
-	default(option, label, search) {
-		return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
-	}
-},
-
-/**
  * An optional callback function that is called each time the selected
  * value(s) change. When integrating with Vuex, use this callback to trigger
  * an action, rather than using :value.sync to retreive the selected value.
@@ -216,13 +199,53 @@ pushTags: {
 
 /**
  * When true, existing options will be filtered
- * by the search text. Should not be used in conjunction
- * with taggable.
+ * by the search text.
  * @type {Boolean}
  */
 filterable: {
 	type: Boolean,
 	default: true
+},
+
+/**
+ * Callback to determine if the provided option should
+ * match the current search text. Used to determine
+ * if the option should be displayed.
+ * @type   {Function}
+ * @param  {Object || String} option
+ * @param  {String} label
+ * @param  {String} search
+ * @return {Boolean}
+ */
+filterBy: {
+	type: Function,
+	default(option, label, search) {
+		return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
+	}
+},
+
+/**
+ * Callback to filter results when search text
+ * is provided. Default implementation loops
+ * each option, and returns the result of
+ * this.filterBy.
+ * @type   {Function}
+ * @param  {Array} list of options
+ * @param  {String} search text
+ * @param  {Object} vSelect instance
+ * @return {Boolean}
+ */
+filter: {
+	"type": Function,
+	default(options, search) {
+		return options.filter((option) => {
+			let label = this.getOptionLabel(option)
+			if (typeof label === 'number') {
+				label = label.toString()
+			}
+			return this.filterBy(option, label, search)
+		});
+	}
 },
 
 /**
