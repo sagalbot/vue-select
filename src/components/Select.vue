@@ -1199,7 +1199,7 @@
       valueAsArray() {
         
         if (this.multiple && this.mutableValue) {
-          return this.mutableValue.filter(this.isValid)
+          return Array.isArray(this.mutableValue) ? this.mutableValue.filter(this.isValid) : this.mutableValue
         } else if (this.mutableValue) {
           return [].concat(this.mutableValue)
         }
