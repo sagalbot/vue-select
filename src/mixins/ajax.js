@@ -19,8 +19,13 @@ export default {
 
   watch: {
     /**
-     * If a callback & search text has been provided,
-     * invoke the onSearch callback.
+     * Anytime the search string changes, emit the
+     * 'search' event. The event is passed with two
+     * parameters: the search string, and a function
+     * that accepts a boolean parameter to toggle the
+     * loading state.
+     *
+     * @emits search
      */
     search () {
       this.$emit('search', this.search, this.toggleLoading);
