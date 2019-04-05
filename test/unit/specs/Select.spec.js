@@ -1387,6 +1387,41 @@ describe('Select.vue', () => {
 				})
 
 		})
+
+		it('can filter out user input that fails a specific test', (done) =>{
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :validate="validationMethod" taggable multiple></v-select></div>`,
+				methods:{
+					validationMethod(val){
+            return (val.label || val).length > 4;
+					},
+				}
+			}).$mount()
+			vm.$refs.select.search = 'one';
+			searchSubmit(vm)
+			Vue.nextTick(() => {
+				expect(vm.$refs.select.valueAsArray.length).toEqual(0);
+				expect(vm.$refs.select.filteredOptions.length).toEqual(0);
+				done()
+			})
+		})
+		it('can set user input that pasess a specific test when a validation function is in place', (done) =>{
+			const vm = new Vue({
+				template: `<div><v-select ref="select" :validate="validationMethod" taggable multiple></v-select></div>`,
+				methods:{
+					validationMethod(val){
+						
+            return (val.label || val).length > 4;
+					},
+				}
+			}).$mount()
+			vm.$refs.select.search = 'Hello World!';
+			searchSubmit(vm, false)
+			Vue.nextTick(() => {
+				expect(vm.$refs.select.valueAsArray[0]).toEqual('Hello World!');
+				done()
+			})
+		})
 	})
 
 	describe('Asynchronous Loading', () => {
