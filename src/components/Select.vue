@@ -311,7 +311,7 @@
 </style>
 
 <template>
-  <div :dir="dir" class="dropdown v-select" :class="dropdownClasses">
+  <div :dir="dir" :class="dropdownClasses">
     <div ref="toggle" @mousedown.prevent="toggleDropdown" class="dropdown-toggle">
 
       <div class="vs__selected-options" ref="selectedOptions">
@@ -1096,6 +1096,8 @@
        */
       dropdownClasses() {
         return {
+          'v-select': true,
+          dropdown: true,
           open: this.dropdownOpen,
           single: !this.multiple,
           searching: this.searching,
