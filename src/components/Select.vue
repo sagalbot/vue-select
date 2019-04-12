@@ -810,6 +810,31 @@
        */
       multiple(val) {
         this.mutableValue = val ? [] : null
+      },
+
+      /**
+       * Ensure that iOS closes the dropdown when
+       * touch events occur outside the element.
+       *
+       * @see https://github.com/sagalbot/vue-select/issues/738
+       * @param isOpen
+       */
+      open(isOpen) {
+        /**
+         * @param event {TouchEvent}
+         * @return {boolean}
+         */
+        const touchAway = event => {
+          if( isOpen && !this.$el.contains(event.target) ) {
+            this.$refs.search.blur();
+          }
+        };
+
+        if (isOpen) {
+          return document.addEventListener('touchend', touchAway);
+        } else {
+          return document.removeEventListener('touchend', touchAway);
+        }
       }
     },
 
