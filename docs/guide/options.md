@@ -4,10 +4,10 @@
 
 ```html
 <!-- array of strings or numbers -->
-<v-select :options="['foo','bar']"></v-select>
+<v-select :options="['Canada', 'United States']"></v-select>
 ```
 
-<v-select :options="['foo','bar']"></v-select>
+<v-select :options="['Canada', 'United States']"></v-select>
 
 ```html
 <!-- or, an array of objects -->
@@ -52,14 +52,3 @@ If you wanted to display `Canada` in the dropdown, you'd use the `countryName` k
 `vue-select` requires the `options` prop to be an `array`. If you are using Vue in development 
 mode, you will get warnings attempting to pass anything other than an `array` to the `options` prop. 
 If you need a `null`/`empty` value, use an empty array `[]`.
-
-## Tagging
-
-To allow input that's not present within the options, set the `taggable` prop to true.
-If you want new tags to be pushed to the options list, set `push-tags` to true.
-
-```html
-<v-select taggable multiple push-tags />
-```
-
-<v-select taggable multiple push-tags />

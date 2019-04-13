@@ -14,7 +14,7 @@ value: {
 
 An array of strings or objects to be used as dropdown choices.
 If you are using an array of objects, vue-select will look for
-a `label` key (ex. `[{label: 'This is Foo', value: 'foo'}]`). A
+a `label` key (ex. `[{label: 'Canada', value: 'CA'}]`). A
 custom label key can be set with the `label` prop.
 
 ```js

@@ -102,6 +102,25 @@ arrays.
  
 
 ```html
-<v-select multiple v-model="selected" :options="['foo','bar']" />
+<v-select multiple v-model="selected" :options="['Canada','United States']" />
 ```
 <v-select multiple :options="['foo','bar']" />
+
+## Tagging
+
+To allow input that's not present within the options, set the `taggable` prop to true.
+
+```html
+<v-select taggable multiple />
+```
+
+<v-select taggable multiple />
+
+If you want added tags to be pushed to the options array, set `push-tags` to true.
+
+```html
+<v-select taggable multiple />
+```
+
+<v-select taggable multiple push-tags />
+
