@@ -112,7 +112,7 @@ is true, `v-model` and `value` must be an array.
 ```html
 <v-select multiple v-model="selected" :options="['Canada','United States']" />
 ```
-<v-select multiple :options="['foo','bar']" />
+<v-select multiple :options="['Canada','United States']" />
 
 ## Tagging
 

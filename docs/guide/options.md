@@ -11,10 +11,10 @@
 
 ```html
 <!-- or, an array of objects -->
-<v-select :options="[{label: 'foo', value: 'Foo'}]"></v-select>
+<v-select :options="[{label: 'Canada', code: 'ca'}]"></v-select>
 ```
 
-<v-select :options="[{label: 'foo', value: 'Foo'}]"></v-select>
+<v-select :options="[{label: 'Canada', code: 'ca'}]"></v-select>
 
 ## Option Labels
 
