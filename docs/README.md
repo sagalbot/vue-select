@@ -7,14 +7,14 @@
 ![Maintainability Score](https://img.shields.io/codeclimate/maintainability/sagalbot/vue-select.svg?style=flat-square) 
 ![MIT License](https://img.shields.io/github/license/sagalbot/vue-select.svg?style=flat-square) 
 
-> Everything you wish the native `<select>` element could do, wrapped 
+> Everything you wish the HTML `<select>` element could do, wrapped 
 up into a zero dependency, highly extensible Vue component. 
 
 Vue Select is a feature rich select/dropdown/typeahead component. It provides a default
 template that fits the 80% use case for a select dropdown. Here it is by default:
 
-<div style="max-width:50%; margin: 0 auto; padding: 1rem 0;">
-  <v-select :options="['Option One','Option Two','Option Three']" />
+<div style="max-width:25rem; margin: 0 auto; padding: 1rem 0;">
+  <country-select />  
 </div>
 
 If you want to get a quick sense of what vue-select can do, check out

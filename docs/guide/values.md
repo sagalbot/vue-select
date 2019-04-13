@@ -60,21 +60,29 @@ methods: {
 ```
 ## Transforming Selections
 
-When the `options` array contains objects, vue-select returns the whole object as dropdown value upon selection.
+When the `options` array contains objects, vue-select returns the whole object as dropdown value 
+upon selection. This approach makes no assumptions about the data you need, and provides a lot of
+flexibility. However, there will be situations where maybe you just need to return a single key
+from an object.
 
-If you need to return a single key, or transform the data before it is synced, vue-select provides a `reduce` callback
- that allows you to transform a selected option before it is passed to the `@input` event. Consider this data structure:
+### Returning a single key with `reduce`  
+
+If you need to return a single key, or transform the selection before it is synced, vue-select 
+provides a `reduce` callback that allows you to transform a selected option before it is passed to 
+the `@input` event. Consider this data structure:
  
  ```js
- let options = [{code: 'CA', country: 'Canada'}, ...];
+ let options = [{code: 'CA', country: 'Canada'}];
  ```
  
- If we want to display the `country`, but return the `code` to `v-model`, we can use the `reduce` prop to receive
- only the data that's required.
+If we want to display the `country`, but return the `code` to `v-model`, we can use the `reduce` 
+prop to receive only the data that's required.
  
  ```html
  <v-select :options="options" :reduce="country => country.code" label="country" />
  ```
+
+### Deep Nested Values
  
 The `reduce` property also works well when you have a deeply nested value:
  
@@ -82,23 +90,23 @@ The `reduce` property also works well when you have a deeply nested value:
  {
    country: 'canada',
    meta: {
-     id: '1',
      code: 'ca'
+     provinces: [...],
    }
  }
  ```
  
  ```html
- <v-select :options="options" :reduce="country => country.value.id" label="country" />
+ <v-select :options="options" :reduce="country => country.meta.code" label="country" />
  ```
  
  <reducer-nested-value />
 
 ## Single/Multiple Selection
 
-By default, vue-select supports choosing a single value. If you need multiple values, use the `multiple` boolean prop,
-much the same way you would on a native `<select>` element. When `multiple` is true, `v-model` or `value` should be
-arrays.
+By default, vue-select supports choosing a single value. If you need multiple values, use the 
+`multiple` boolean prop, much the same way you would on an HTML `<select>` element. When `multiple` 
+is true, `v-model` and `value` must be an array.
  
 
 ```html
