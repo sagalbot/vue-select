@@ -39,7 +39,7 @@ $font-size: 1em;
 // Unsearchable
 .vs--unsearchable {
   .vs__search {
-    opacity: 0;
+    opacity: 1;
 
     &:hover {
       cursor: pointer;
