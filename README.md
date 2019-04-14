@@ -15,6 +15,15 @@ dependency, highly extensible Vue component.**
 - +95% Test Coverage
 - Zero dependencies
 
+## Documentation
+
+Complete documentation available at https://vue-select.org.
+
+- **[API Documentation](https://vue-select.org)**
+- **[Sandbox Demo](https://vue-select.org/sandbox.html)**
+- **[CodePen Template](http://codepen.io/sagalbot/pen/NpwrQO)**
+- **[GitHub Projects](https://github.com/sagalbot/vue-select/projects)**
+
 ## Install
 
 ```bash
