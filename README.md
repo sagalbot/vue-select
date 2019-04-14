@@ -1,6 +1,6 @@
 # vue-select [![Build Status](https://travis-ci.org/sagalbot/vue-select.svg?branch=master)](https://travis-ci.org/sagalbot/vue-select) [![Coverage Status](https://coveralls.io/repos/github/sagalbot/vue-select/badge.svg)](https://coveralls.io/github/sagalbot/vue-select) ![MIT License](https://img.shields.io/github/license/sagalbot/vue-select.svg?style=flat-square) ![Current Release](https://img.shields.io/github/release/sagalbot/vue-select.svg?style=flat-square)
 
-#### Everything you wish the HTML `<select>` element could do, wrapped up into a zero dependency, highly extensible Vue component. 
+### Everything you wish the HTML `<select>` element could do, wrapped up into a zero dependency, highly extensible Vue component. 
 
 - Tagging
 - Filtering / Searching
