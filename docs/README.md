@@ -34,5 +34,5 @@ If you want to get a quick sense of what vue-select can do, check out
 
 #### Resources
 - **[CodePen Template](http://codepen.io/sagalbot/pen/NpwrQO)**
-- **[Trello Roadmap](https://trello.com/b/vWvITNzS/vue-select)**
 - **[GitHub](https://github.com/sagalbot/vue-select)**
+- **[Projects](https://github.com/sagalbot/vue-select/projects)**
