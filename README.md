@@ -1,6 +1,13 @@
-# vue-select [![Build Status](https://travis-ci.org/sagalbot/vue-select.svg?branch=master)](https://travis-ci.org/sagalbot/vue-select) [![Coverage Status](https://coveralls.io/repos/github/sagalbot/vue-select/badge.svg)](https://coveralls.io/github/sagalbot/vue-select) ![MIT License](https://img.shields.io/github/license/sagalbot/vue-select.svg?style=flat-square) ![Current Release](https://img.shields.io/github/release/sagalbot/vue-select.svg?style=flat-square)
+# vue-select 
 
-### Everything you wish the HTML `<select>` element could do, wrapped up into a zero dependency, highly extensible Vue component. 
+![Current Release](https://img.shields.io/github/release/sagalbot/vue-select.svg?style=flat-square)
+             ![Bundle Size](https://img.shields.io/bundlephobia/min/vue-select.svg?style=flat-square) 
+             ![Monthly Downloads](https://img.shields.io/npm/dm/vue-select.svg?style=flat-square) 
+             ![Code Coverage](https://img.shields.io/coveralls/github/sagalbot/vue-select.svg?style=flat-square) 
+             ![Maintainability Score](https://img.shields.io/codeclimate/maintainability/sagalbot/vue-select.svg?style=flat-square) 
+             ![MIT License](https://img.shields.io/github/license/sagalbot/vue-select.svg?style=flat-square) 
+
+**Everything you wish the HTML `<select>` element could do, wrapped up into a zero dependency, highly extensible Vue component.** 
 
 - Tagging
 - Filtering / Searching
@@ -13,8 +20,6 @@
 - Tested with Bootstrap 3/4, Bulma, Foundation
 - +95% Test Coverage
 - Zero dependencies
-
-### https://vue-select.org
 
 ## Install
 
@@ -38,9 +43,12 @@ You may now use the component in your markup
 ```
 
 You can also include vue-select directly in the browser. Check out the 
-[full documentation](https://vue-select.org).
+[documentation for loading from CDN.](https://vue-select.org/guide/install.html#in-the-browser).
 
 ## Documentation
+
+Complete documentation available at https://vue-select.org.
+
 - **[Demo & Full API Documentation](https://vue-select.org)**
 - **[Sandbox](https://vue-select.org/sandbox.html)**
 - **[CodePen Template](http://codepen.io/sagalbot/pen/NpwrQO)**
