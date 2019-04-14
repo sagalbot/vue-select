@@ -78,6 +78,7 @@ module.exports = {
             ['guide/options', 'Dropdown Options'],
             ['guide/values', 'Selecting Values'],
             ['guide/localization', 'Localization'],
+            ['guide/upgrading', 'Upgrading 2.x to 3.x'],
           ],
         },
         {
