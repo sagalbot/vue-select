@@ -35,7 +35,7 @@ You may now use the component in your markup
 <v-select v-model="selected" :options="['Vue.js','React']"></v-select>
 ```
 
-## [Documentation](https://vue-select.org)
+## Documentation https://vue-select.org
 - **[Demo & Docs](https://vue-select.org)**
 - **[Sandbox](https://vue-select.org/sandbox.html)**
 - **[CodePen Template](http://codepen.io/sagalbot/pen/NpwrQO)**
