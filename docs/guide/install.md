@@ -43,8 +43,8 @@ global variable. You'll need to load Vue.js, vue-select JS & vue-select CSS.
 <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
 
 <!-- or point to a specific vue-select release -->
-<script src="https://unpkg.com/vue-select@2.6.0"></script>
-<link rel="stylesheet" href="https://unpkg.com/vue-select@2.6.0/dist/vue-select.css">
+<script src="https://unpkg.com/vue-select@3.0.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
 ```
 Then register the component in your javascript:
 
@@ -56,5 +56,5 @@ Vue.component('v-select', VueSelect.VueSelect);
 
 ## Vue Compatibility
 
-If you're on Vue `1.x`, use vue-select `1.x`. The `1.x` branch has not received updates
-since the 2.0 release.  
+- If you're on Vue `1.x`, use vue-select `1.x`. 
+- The `1.x` branch has not received updates since the 2.0 release.  

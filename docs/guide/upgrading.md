@@ -1,6 +1,28 @@
-## Removed Function Callbacks
+## `index` prop replaced with `reduce`
 
-Three function callbacks have been removed in favor of using events. 
+- v2.x provided the `index` `{String}` prop to return a single key from a selected object
+- v3.x removes the `index` prop, replacing it with the `reduce` `{Function}` prop. 
+
+Using a function instead of a string provides a whole lot more flexibility, allowing for things like
+ deeply nested values, and really cleaned up the code internally.
+ 
+```js
+const options = [{country: 'Canada', code: 'CA'},];
+```
+ 
+```html
+<!-- v2: using index --->
+<v-select :options="options" label="country" index="code"  />
+
+<!-- v3: using reduce --->
+<v-select :options="options" label="country" :reduce="country => country.code" />
+```
+
+View the full [documentation for `reduce`](values.md#returning-a-single-key-with-reduce).
+
+## Events instead of Callbacks
+
+Three function callbacks have been removed in favor of using events.
 
 - `onChange`
 - `onInput`
