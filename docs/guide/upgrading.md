@@ -69,6 +69,13 @@ has always provided the same parameters and can be used in it's place.
 <v-select @search="doSomeAjax" />
 ```
 
+### `onSearch` with null search string
+
+The `onSearch` callback is now fired anytime the search string changes. In v2.x, the component
+would first check if the search string was empty, and only run the callback if it had at least one
+character. This was a design mistake, as it should be the consumers decision if a search should be
+run on an empty string. 
+
 ## Separated CSS
 
 CSS was removed from the JS bundle in favor of a separate CSS file to support SSR and easier
