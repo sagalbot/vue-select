@@ -1,0 +1,130 @@
+import { selectWithProps } from "../helpers";
+
+describe("Toggling Dropdown", () => {
+  it("should not open the dropdown when the el is clicked but the component is disabled", () => {
+    const Select = selectWithProps({ disabled: true });
+    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    expect(Select.vm.open).toEqual(false);
+  });
+
+  it("should open the dropdown when the el is clicked", () => {
+    const Select = selectWithProps({
+      value: [{ label: "one" }],
+      options: [{ label: "one" }]
+    });
+
+    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    expect(Select.vm.open).toEqual(true);
+  });
+
+  it("should open the dropdown when the selected tag is clicked", () => {
+    const Select = selectWithProps({
+      value: [{ label: "one" }],
+      options: [{ label: "one" }]
+    });
+
+    const selectedTag = Select.find(".vs__selected").element;
+
+    Select.vm.toggleDropdown({ target: selectedTag });
+    expect(Select.vm.open).toEqual(true);
+  });
+
+  it("can close the dropdown when the el is clicked", () => {
+    const Select = selectWithProps();
+    const spy = jest.spyOn(Select.vm.$refs.search, "blur");
+
+    Select.vm.open = true;
+    Select.vm.toggleDropdown({ target: Select.vm.$el });
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it("closes the dropdown when an option is selected, multiple is true, and closeOnSelect option is true", () => {
+    const Select = selectWithProps({
+      value: [],
+      options: ["one", "two", "three"],
+      multiple: true
+    });
+
+    Select.vm.open = true;
+    Select.vm.select("one");
+
+    expect(Select.vm.open).toEqual(false);
+  });
+
+  it("does not close the dropdown when the el is clicked, multiple is true, and closeOnSelect option is false", () => {
+    const Select = selectWithProps({
+      value: [],
+      options: ["one", "two", "three"],
+      multiple: true,
+      closeOnSelect: false
+    });
+
+    Select.vm.open = true;
+    Select.vm.select("one");
+
+    expect(Select.vm.open).toEqual(true);
+  });
+
+  it("should close the dropdown on search blur", () => {
+    const Select = selectWithProps({
+      options: [{ label: "one" }]
+    });
+
+    Select.vm.open = true;
+    Select.find({ ref: "search" }).trigger("blur");
+
+    expect(Select.vm.open).toEqual(false);
+  });
+
+  it("will close the dropdown and emit the search:blur event from onSearchBlur", () => {
+    const Select = selectWithProps();
+    const spy = jest.spyOn(Select.vm, "$emit");
+
+    Select.vm.open = true;
+    Select.vm.onSearchBlur();
+
+    expect(Select.vm.open).toEqual(false);
+    expect(spy).toHaveBeenCalledWith("search:blur");
+  });
+
+  it("will open the dropdown and emit the search:focus event from onSearchFocus", () => {
+    const Select = selectWithProps();
+    const spy = jest.spyOn(Select.vm, "$emit");
+
+    Select.vm.onSearchFocus();
+
+    expect(Select.vm.open).toEqual(true);
+    expect(spy).toHaveBeenCalledWith("search:focus");
+  });
+
+  it("will close the dropdown on escape, if search is empty", () => {
+    const Select = selectWithProps();
+    const spy = jest.spyOn(Select.vm.$refs.search, "blur");
+
+    Select.vm.open = true;
+    Select.vm.onEscape();
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it("should remove existing search text on escape keyup", () => {
+    const Select = selectWithProps({
+      value: [{ label: "one" }],
+      options: [{ label: "one" }]
+    });
+
+    Select.vm.search = "foo";
+    Select.find('.vs__search').trigger('keyup.esc')
+    expect(Select.vm.search).toEqual("");
+  });
+
+  it("should have an open class when dropdown is active", () => {
+    const Select = selectWithProps();
+
+    expect(Select.vm.stateClasses['vs--open']).toEqual(false);
+
+    Select.vm.open = true;
+    expect(Select.vm.stateClasses['vs--open']).toEqual(true);
+  });
+});
