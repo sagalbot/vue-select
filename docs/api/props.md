@@ -144,15 +144,18 @@ label: {
 },
 ```
 
-## index
+## reduce
 
-Tells vue-select what key to use when generating option
-values when each `option` is an object.
+When working with objects, the reduce
+prop allows you to transform a given
+object to only the information you
+want passed to a v-model binding
+or @input event.
 
 ```js
-index: {
-	type: String,
-	default: null
+reduce: {
+  type: Function,
+  default: option => option,
 },
 ```
 
@@ -168,24 +171,20 @@ display, you should use the `option` and
 
 ```js
 getOptionLabel: {
-	type: Function,
-	default(option) {
-		if (this.index) {
-			option = this.findOptionByIndexValue(option);
-		}
-
-		if (typeof option === "object") {
-			if (!option.hasOwnProperty(this.label)) {
-				return console.warn(
-					`[vue-select warn]: Label key "option.${this.label}" does not` +
-						` exist in options object ${JSON.stringify(option)}.\n` +
-						"http://sagalbot.github.io/vue-select/#ex-labels"
-				);
-			}
-			return option[this.label];
-		}
-		return option;
-	}
+  type: Function,
+  default(option) {
+    if (typeof option === 'object') {
+      if (!option.hasOwnProperty(this.label)) {
+        return console.warn(
+          `[vue-select warn]: Label key "option.${this.label}" does not` +
+          ` exist in options object ${JSON.stringify(option)}.\n` +
+          'http://sagalbot.github.io/vue-select/#ex-labels'
+        )
+      }
+      return option[this.label]
+    }
+    return option;
+  }
 },
 ```
 
@@ -294,14 +293,15 @@ User defined function for adding Options
 
 ```js
 createOption: {
-	type: Function,
-	default(newOption) {
-		if (typeof this.optionList[0] === "object") {
-			newOption = { [this.label]: newOption };
-		}
-		this.$emit("option:created", newOption);
-		return newOption;
-	}
+  type: Function,
+  default(newOption) {
+    if (typeof this.optionList[0] === 'object') {
+      newOption = {[this.label]: newOption}
+    }
+
+    this.$emit('option:created', newOption)
+    return newOption
+  }
 },
 ```
 
