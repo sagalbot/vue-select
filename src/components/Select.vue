@@ -764,6 +764,9 @@
           case 8:
             //  delete
             return this.maybeDeleteValue();
+          case 9:
+            //  tab
+            return this.onTab();
         }
       },
 
@@ -789,9 +792,6 @@
             //  enter.prevent
             e.preventDefault();
             return this.typeAheadSelect();
-          case 9:
-            //  tab
-            return this.onTab();
         }
       }
     },
