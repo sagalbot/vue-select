@@ -1,0 +1,15 @@
+# Global settings applied to the whole site.
+#
+# “publish” is the directory to publish (relative to root of your repo),
+# “command” is your build command,
+[build]
+  publish = "docs/.vuepress/dist"
+  command = "yarn build:docs"
+
+# Deploy Preview context
+#
+# All deploys resulting from a pull/merge request will
+# inherit these settings.
+[context.deploy-preview]
+  publish = "docs/.vuepress/dist"
+  command = "yarn add --dev webpack@~4.28 && yarn && yarn build:preview"
