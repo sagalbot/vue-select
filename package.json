@@ -59,7 +59,7 @@
     "vue-server-renderer": "^2.6.10",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.10",
-    "vuepress": "^0.14.10",
+    "vuepress": "^1.0.0-alpha.47",
     "vuex": "^3.1.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
