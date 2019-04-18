@@ -1,0 +1,54 @@
+/**
+    Dropdown Toggle
+
+    The dropdown toggle is the primary wrapper of the component. It
+    has two direct descendants: .vs__selected-options, and .vs__actions.
+
+    .vs__selected-options holds the .vs__selected's as well as the
+    main search input.
+
+    .vs__actions holds the clear button and dropdown toggle.
+ */
+
+$border-width: $vs-border-width;
+$border-style: $vs-border-style;
+$border-color: $vs-border-color;
+$border-radius: $vs-border-radius;
+
+.vs__dropdown-toggle {
+  appearance: none;
+  display: flex;
+  padding: 0 0 4px 0;
+  background: none;
+  border: $border-width $border-style $border-color;
+  border-radius: $border-radius;
+  white-space: normal;
+}
+
+.vs__selected-options {
+  display: flex;
+  flex-basis: 100%;
+  flex-grow: 1;
+  flex-wrap: wrap;
+  padding: 0 2px;
+  position: relative;
+}
+
+.vs__actions {
+  display: flex;
+  align-items: center;
+  padding: 4px 6px 0 3px;
+}
+
+/* Dropdown Toggle States */
+.vs--searchable .vs__dropdown-toggle {
+  cursor: text;
+}
+.vs--unsearchable .vs__dropdown-toggle {
+  cursor: pointer;
+}
+.vs--open .vs__dropdown-toggle {
+  border-bottom-color: transparent;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}

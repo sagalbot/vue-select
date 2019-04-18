@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   data() {
     return {
       typeAheadPointer: -1
