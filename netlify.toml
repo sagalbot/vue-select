@@ -12,4 +12,4 @@
 # inherit these settings.
 [context.deploy-preview]
   publish = "docs/.vuepress/dist"
-  command = "yarn add --dev webpack@~4.28 && yarn && yarn build:preview"
+  command = "yarn && yarn build:preview"

@@ -75,6 +75,10 @@ module.exports = {
         buttonText: 'Refresh',
       },
     },
+    '@vuepress/plugin-register-components': {},
+    '@vuepress/plugin-active-header-links': {},
+    '@vuepress/plugin-search': {},
+    '@vuepress/plugin-nprogress': {},
   },
   themeConfig: {
     repo: 'sagalbot/vue-select',
