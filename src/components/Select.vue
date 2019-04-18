@@ -58,6 +58,7 @@
           :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer }"
           @mouseover="typeAheadPointer = index"
           @mousedown.prevent.stop="select(option)"
+          @click.prevent.stop="select(option)"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
