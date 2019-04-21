@@ -548,6 +548,7 @@
        * @return {void}
        */
       toggleDropdown (e) {
+        if(noDrop) return;
         const target = e.target;
         const toggleTargets = [
           this.$el,
