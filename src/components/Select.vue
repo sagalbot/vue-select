@@ -548,23 +548,27 @@
        * @return {void}
        */
       toggleDropdown (e) {
-        const target = e.target;
-        const toggleTargets = [
-          this.$el,
-          this.searchEl,
-          this.$refs.toggle.$el,
-          this.$refs.openIndicator.$el,
-          // the line below is a bit gross, but required to support IE11 without adding polyfills
-          ...Array.prototype.slice.call(this.$refs.openIndicator.$el.childNodes)
-        ];
+        if(this.noDrop) {
+          this.searchEl.focus();
+        } else {
+          const target = e.target;
+          const toggleTargets = [
+            this.$el,
+            this.searchEl,
+            this.$refs.toggle.$el,
+            this.$refs.openIndicator.$el,
+            // the line below is a bit gross, but required to support IE11 without adding polyfills
+            ...Array.prototype.slice.call(this.$refs.openIndicator.$el.childNodes)
+          ];
 
-        if (toggleTargets.indexOf(target) > -1 || target.classList.contains('vs__selected')) {
-          if (this.open) {
-            this.searchEl.blur(); // dropdown will close on blur
-          } else {
-            if (!this.disabled) {
-              this.open = true;
-              this.searchEl.focus();
+          if (toggleTargets.indexOf(target) > -1 || target.classList.contains('vs__selected')) {
+            if (this.open) {
+              this.searchEl.blur(); // dropdown will close on blur
+            } else {
+              if (!this.disabled) {
+                this.open = true;
+                this.searchEl.focus();
+              }
             }
           }
         }
