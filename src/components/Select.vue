@@ -767,6 +767,10 @@
           case 9:
             //  tab
             return this.onTab();
+          case 13:
+            //  enter.prevent
+            e.preventDefault();
+            return this.typeAheadSelect();
         }
       },
 
