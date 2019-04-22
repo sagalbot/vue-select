@@ -102,7 +102,7 @@ module.exports = {
           collapsable: false,
           children: [
             ['guide/components', 'Child Components'],
-            ['guide/styling', 'Styling'],
+            ['guide/css', 'CSS & Selectors'],
             ['guide/slots', 'Slots'],
           ],
         },
