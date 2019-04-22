@@ -69,10 +69,7 @@ module.exports = {
     },
     '@vuepress/pwa': {
       serviceWorker: true,
-      updatePopup: {
-        message: 'New content is available.',
-        buttonText: 'Refresh',
-      },
+      updatePopup: true,
     },
     '@vuepress/plugin-register-components': {},
     '@vuepress/plugin-active-header-links': {},
@@ -98,6 +95,14 @@ module.exports = {
             ['guide/values', 'Selecting Values'],
             ['guide/localization', 'Localization'],
             ['guide/upgrading', 'Upgrading 2.x to 3.x'],
+          ],
+        },
+        {
+          title: 'Templating & Styling',
+          collapsable: false,
+          children: [
+            ['guide/components', 'Child Components'],
+            ['guide/styling', 'Styling'],
           ],
         },
         {
