@@ -68,7 +68,7 @@ module.exports = {
       ga: isDeployPreview ? '' : 'UA-12818324-8',
     },
     '@vuepress/pwa': {
-      serviceWorker: true,
+      serviceWorker: false,
       updatePopup: true,
     },
     '@vuepress/plugin-register-components': {},
