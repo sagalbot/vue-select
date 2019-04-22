@@ -10,7 +10,7 @@ describe('Components API', () => {
       },
     });
 
-    const Select = selectWithProps({components: (def) => ({...def, Deselect})});
+    const Select = selectWithProps({components: {Deselect}});
 
     expect(Select.contains(Deselect)).toBeTruthy();
   });
@@ -22,7 +22,7 @@ describe('Components API', () => {
       },
     });
 
-    const Select = selectWithProps({components: (def) => ({...def, OpenIndicator})});
+    const Select = selectWithProps({components: {OpenIndicator}});
 
     expect(Select.contains(OpenIndicator)).toBeTruthy();
   });
