@@ -2,7 +2,7 @@
   <div>
     <v-select
         :options="['Canada', 'United States']"
-        :components="defaults => ({...defaults, Deselect})"
+        :components="{Deselect}"
     />
   </div>
 </template>

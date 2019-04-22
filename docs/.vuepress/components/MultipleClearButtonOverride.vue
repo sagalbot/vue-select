@@ -4,7 +4,7 @@
         multiple
         v-model="selected"
         :options="['Canada', 'United States']"
-        :components="defaults => ({...defaults, Deselect})"
+        :components="{Deselect}"
     />
   </div>
 </template>

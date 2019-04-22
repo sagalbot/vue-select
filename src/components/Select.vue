@@ -77,11 +77,10 @@
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
-  import Deselect from './Deselect'
-  import OpenIndicator from './OpenIndicator'
+  import childComponents from './childComponents';
 
   export default {
-    components: {Deselect, OpenIndicator},
+    components: {...childComponents},
 
     mixins: [pointerScroll, typeAheadPointer, ajax],
 
@@ -94,9 +93,16 @@
        */
       value: {},
 
+      /**
+       * An object with any custom components that you'd like to overwrite
+       * the default implementation of in your app. The keys in this object
+       * will be merged with the defaults.
+       * @see https://vue-select.org/guide/components.html
+       * @type {Function}
+       */
       components: {
-        type: Function,
-        default: (defaults) => defaults,
+        type: Object,
+        default: () => ({}),
       },
 
       /**
@@ -450,10 +456,6 @@
       },
     },
 
-    /**
-     * Clone props into mutable values,
-     * attach any event listeners.
-     */
     created() {
       this.mutableLoading = this.loading;
 
@@ -905,10 +907,10 @@
        * @return {Object}
        */
       childComponents () {
-        return this.components({
-          OpenIndicator,
-          Deselect,
-        });
+        return {
+          ...childComponents,
+          ...this.components
+        };
       },
 
       /**

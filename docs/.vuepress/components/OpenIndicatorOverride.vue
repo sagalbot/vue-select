@@ -4,7 +4,7 @@
         multiple
         v-model="selected"
         :options="['Canada', 'United States']"
-        :components="defaults => ({...defaults, OpenIndicator})"
+        :components="{OpenIndicator}"
     />
   </div>
 </template>
