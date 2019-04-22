@@ -103,13 +103,13 @@ module.exports = {
           children: [
             ['guide/components', 'Child Components'],
             ['guide/styling', 'Styling'],
+            ['guide/slots', 'Slots'],
           ],
         },
         {
           title: 'Digging Deeper',
           collapsable: false,
           children: [
-            ['guide/templating', 'Templating'],
             ['guide/vuex', 'Vuex'],
             ['guide/ajax', 'AJAX'],
           ],

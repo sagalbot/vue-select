@@ -8,7 +8,9 @@ will call the function with a single parameter: an object containing all of the 
 You can override the value of any of these keys with your own components. Just be sure that the 
 object you return contains all the necessary keys.
 
-For example, you may wish to roll your own deselect button. `Deselect` is used within tags on 
+## Deselect
+
+You may wish to roll your own deselect button. `Deselect` is used within tags on 
 `multiple` selects, and serves as the clear button for single selects. Maybe you just want to use
 a simple `<button>Clear</button>` instead.
 
@@ -28,4 +30,30 @@ computed: {
 }
 ```
 
-<ChildComponentExample />
+<ClearButtonOverride />
+
+The same approach applies for `multiple` selects:
+
+<MultipleClearButtonOverride />
+
+## OpenIndicator
+
+The `OpenIndicator` component is the 'caret' used within the component that adjusts orientation
+based on whether the dropdown is open or closed.
+
+```html
+<v-select :components="defaults => ({...defaults, OpenIndicator})" />
+```
+```js
+computed: {
+  OpenIndicator () {
+    return Vue.component('OpenIndicator', {
+      render (createElement) {
+        return createElement('button', '🤘🏻');
+      },
+    });
+  },
+},
+```
+
+<OpenIndicatorOverride />

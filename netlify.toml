@@ -13,3 +13,10 @@
 [context.deploy-preview]
   publish = "docs/.vuepress/dist"
   command = "yarn && yarn build:preview"
+
+
+# Redirects
+# @see https://www.netlify.com/docs/netlify-toml-reference/
+[[redirects]]
+  from = "/guide/templating"
+  to = "/guide/slots"
