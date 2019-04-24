@@ -422,6 +422,13 @@
 
     watch: {
       /**
+       * Set value when value prop change
+       */
+      value(val) {
+        this.setValue(val);
+      },
+
+      /**
        * Maybe reset the value
        * when options change.
        * @return {[type]} [description]
@@ -450,18 +457,29 @@
     created() {
       this.mutableLoading = this.loading;
 
-      if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
-        if (Array.isArray(this.value)) {
-          this.$data._value = this.value.map(value => this.findOptionFromReducedValue(value));
-        } else {
-          this.$data._value = this.findOptionFromReducedValue(this.value);
-        }
-      }
-
+      this.setValue(this.value);
+      
       this.$on('option:created', this.maybePushTag)
     },
 
     methods: {
+      /**
+       * Set value
+       * @param {Object||String||null}
+       */
+      setValue(val) {
+        if (val === null) {
+          this.$data._value = null;
+          return;
+        }
+        if (this.$options.propsData.hasOwnProperty('reduce') && val) {
+          if (Array.isArray(val)) {
+            this.$data._value = val.map(value => this.findOptionFromReducedValue(value));
+          } else {
+            this.$data._value = this.findOptionFromReducedValue(val);
+          }
+        }
+      },
 
       /**
        * Select a given option.
