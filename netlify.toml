@@ -17,7 +17,8 @@
 # Branch Deploy context: all deploys that are not from a pull/merge request or
 # from the Production branch will inherit these settings.
 [context.branch-deploy]
-  command = "rm -rf node_modules && yarn && yarn build:docs"
+  base = "/"
+  command = "ls -la package-lock.json && yarn build:docs"
 
 # Redirects
 # @see https://www.netlify.com/docs/netlify-toml-reference/
