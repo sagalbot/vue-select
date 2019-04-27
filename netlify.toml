@@ -4,7 +4,7 @@
 # “command” is your build command,
 [build]
   publish = "docs/.vuepress/dist"
-  command = "yarn build:docs"
+  command = "rm -rf node_modules && rm -rf package-lock.json && yarn && yarn build:docs"
 
 # Deploy Preview context
 #
@@ -12,13 +12,13 @@
 # inherit these settings.
 [context.deploy-preview]
   publish = "docs/.vuepress/dist"
-  command = "yarn && yarn build:preview"
+  command = "rm -rf node_modules && rm -rf package-lock.json && yarn && yarn build:preview"
 
 # Branch Deploy context: all deploys that are not from a pull/merge request or
 # from the Production branch will inherit these settings.
 [context.branch-deploy]
   base = "/"
-  command = "ls -la package-lock.json && yarn build:docs"
+  command = "rm -rf node_modules && rm -rf package-lock.json && yarn && yarn build:preview"
 
 # Redirects
 # @see https://www.netlify.com/docs/netlify-toml-reference/
