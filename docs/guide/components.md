@@ -8,9 +8,7 @@ Your object will be merged with the object that is exported below:
 
 You can override the value of any of these keys with your own components.
 
-## Available Components
-
-### Deselect
+## Deselect <Badge text="v3.1.0+" />
 
 You may wish to roll your own deselect button. `Deselect` is used within tags on 
 `multiple` selects, and serves as the clear button for single selects. Maybe you just want to use
@@ -38,7 +36,7 @@ The same approach applies for `multiple` selects:
 
 <MultipleClearButtonOverride />
 
-### OpenIndicator
+## OpenIndicator  <Badge text="v3.1.0+" />
 
 The `OpenIndicator` component is the 'caret' used within the component that adjusts orientation
 based on whether the dropdown is open or closed.
