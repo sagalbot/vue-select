@@ -40,8 +40,8 @@
           <component :is="childComponents.Deselect" />
         </button>
 
-        <slot name="open-indicator-icon">
-          <component :is="childComponents.OpenIndicator" v-bind="scope.openIndicator.attributes"/>
+        <slot name="open-indicator-icon" v-bind="scope.openIndicator">
+          <component :is="childComponents.OpenIndicator" v-if="!noDrop" v-bind="scope.openIndicator.attributes"/>
         </slot>
 
         <slot name="spinner" v-bind="scope.spinner">
@@ -562,10 +562,15 @@
           this.$el,
           this.searchEl,
           this.$refs.toggle.$el,
-          this.$refs.openIndicator.$el,
-          // the line below is a bit gross, but required to support IE11 without adding polyfills
-          ...Array.prototype.slice.call(this.$refs.openIndicator.$el.childNodes)
         ];
+
+        if (typeof this.$refs.openIndicator !== 'undefined') {
+          toggleTargets.push(
+            this.$refs.openIndicator.$el,
+            // the line below is a bit gross, but required to support IE11 without adding polyfills
+            ...Array.prototype.slice.call(this.$refs.openIndicator.$el.childNodes),
+          );
+        }
 
         if (toggleTargets.indexOf(target) > -1 || target.classList.contains('vs__selected')) {
           if (this.open) {
@@ -890,7 +895,6 @@
           },
           openIndicator: {
             attributes: {
-              'v-if': !this.noDrop,
               'ref': 'openIndicator',
               'role': 'presentation',
               'class': 'vs__open-indicator',
@@ -921,8 +925,8 @@
         return {
           'vs--open': this.dropdownOpen,
           'vs--single': !this.multiple,
-          'vs--searching': this.searching,
-          'vs--searchable': this.searchable,
+          'vs--searching': this.searching && !this.noDrop,
+          'vs--searchable': this.searchable && !this.noDrop,
           'vs--unsearchable': !this.searchable,
           'vs--loading': this.mutableLoading,
           'vs--disabled': this.disabled
