@@ -19,15 +19,13 @@ a simple `<button>Clear</button>` instead.
 ``` 
 
 ```js
-computed: {
-  Deselect() {
-    return Vue.component('Deselect', {
-      render (createElement) {
-        return createElement('button', 'Clear')
-      }
-    })
-  }
-}
+export default {
+  data: () => ({
+    Deselect: {
+      render: createElement => createElement('button', 'Clear'),
+    },
+  }),
+};
 ```
 
 <ClearButtonOverride />
@@ -45,20 +43,19 @@ based on whether the dropdown is open or closed.
 <v-select :components="{OpenIndicator}" />
 ```
 ```js
-computed: {
-  OpenIndicator () {
-    return Vue.component('OpenIndicator', {
-      render (createElement) {
-        return createElement('button', '🤘🏻');
-      },
-    });
-  },
-},
+export default {
+  data: () => ({
+    selected: ['Canada'],
+    OpenIndicator: {
+      render: createElement => createElement('span', {class: {'toggle': true}}),
+    },
+  }),
+};
 ```
 
 <OpenIndicatorOverride />
 
-## Setting at Registration
+## Setting Globally at Registration
 
 If you want to all instances of Vue Select to use your custom components throughout your app, while
 only having to set the implementation once, you can do so when registering Vue Select as a component.
@@ -67,21 +64,15 @@ only having to set the implementation once, you can do so when registering Vue S
 import Vue from 'vue';
 import vSelect from 'vue-select';
 
-/**
-* Create custom components to override defaults.
-* @type {{OpenIndicator: *, Deselect: *}}
-*/
-const components = {
-  Deselect: Vue.component('Deselect', {
-    render: (createElement) => createElement('button', '❌'),
-  }),
-  OpenIndicator: Vue.component('OpenIndicator', {
-    render: (createElement) => createElement('span', '🔽'),
-  }),
-};
-
 // Set the components prop default to return our fresh components 
-vSelect.props.components.default = () => components;
+vSelect.props.components.default = () => ({
+  Deselect: {
+    render: createElement => createElement('button', '❌'),
+  },
+  OpenIndicator: {
+    render: createElement => createElement('span', '🔽'),
+  },
+});
 
 // Register the component
 Vue.component(vSelect)

@@ -1,25 +1,21 @@
 <template>
-  <custom-select :options="['Vue.js', 'React', 'Angular']" />
+  <v-select
+          :options="['Vue.js', 'React', 'Angular']"
+          :components="components"
+  />
 </template>
 
 <script>
-import Vue from 'vue';
-import vSelect from '../../../src/components/Select';
-
-const components = {
-  Deselect: Vue.component('Deselect', {
-    render: (createElement) => createElement('button', '❌'),
-  }),
-  OpenIndicator: Vue.component('OpenIndicator', {
-    render: (createElement) => createElement('span', '🔽'),
+export default {
+  data: () => ({
+    components: {
+      Deselect: {
+        render: createElement => createElement('button', '❌'),
+      },
+      OpenIndicator: {
+        render: createElement => createElement('span', '🔽'),
+      },
+    },
   }),
 };
-
-const mySelect = {...vSelect};
-
-mySelect.props.components.default = () => components;
-
-export default {
-  components: {'custom-select': mySelect}
-}
 </script>

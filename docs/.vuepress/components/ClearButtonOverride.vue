@@ -1,24 +1,18 @@
 <template>
   <div>
     <v-select
-        :options="['Canada', 'United States']"
-        :components="{Deselect}"
+            :options="['Canada', 'United States']"
+            :components="{Deselect}"
     />
   </div>
 </template>
 
 <script>
-import Vue from 'vue';
-
 export default {
-  computed: {
-    Deselect () {
-      return Vue.component('Deselect', {
-        render (createElement) {
-          return createElement('button', 'Clear');
-        },
-      });
+  data: () => ({
+    Deselect: {
+      render: createElement => createElement('button', 'Clear'),
     },
-  },
+  }),
 };
 </script>
