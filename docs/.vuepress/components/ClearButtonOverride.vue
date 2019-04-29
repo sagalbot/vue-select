@@ -11,7 +11,7 @@
 export default {
   data: () => ({
     Deselect: {
-      render: createElement => createElement('button', 'Clear'),
+      render: createElement => createElement('span', '❌'),
     },
   }),
 };

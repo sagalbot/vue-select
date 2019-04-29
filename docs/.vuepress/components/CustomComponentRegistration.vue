@@ -1,20 +1,18 @@
 <template>
   <v-select
           :options="['Vue.js', 'React', 'Angular']"
-          :components="components"
+          :components="{Deselect, OpenIndicator}"
   />
 </template>
 
 <script>
 export default {
   data: () => ({
-    components: {
-      Deselect: {
-        render: createElement => createElement('button', '❌'),
-      },
-      OpenIndicator: {
-        render: createElement => createElement('span', '🔽'),
-      },
+    Deselect: {
+      render: createElement => createElement('span', '❌'),
+    },
+    OpenIndicator: {
+      render: createElement => createElement('span', '🔽'),
     },
   }),
 };

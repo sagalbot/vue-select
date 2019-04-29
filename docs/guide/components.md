@@ -22,15 +22,13 @@ a simple `<button>Clear</button>` instead.
 export default {
   data: () => ({
     Deselect: {
-      render: createElement => createElement('button', 'Clear'),
+      render: createElement => createElement('span', '❌'),
     },
   }),
 };
 ```
 
-<ClientOnly>
   <ClearButtonOverride />
-</ClientOnly>
 
 The same approach applies for `multiple` selects:
 
@@ -55,9 +53,7 @@ export default {
 };
 ```
 
-<ClientOnly>
-  <OpenIndicatorOverride />
-</ClientOnly>
+<OpenIndicatorOverride />
 
 ## Setting Globally at Registration
 
@@ -71,7 +67,7 @@ import vSelect from 'vue-select';
 // Set the components prop default to return our fresh components 
 vSelect.props.components.default = () => ({
   Deselect: {
-    render: createElement => createElement('button', '❌'),
+    render: createElement => createElement('span', '❌'),
   },
   OpenIndicator: {
     render: createElement => createElement('span', '🔽'),
@@ -82,7 +78,5 @@ vSelect.props.components.default = () => ({
 Vue.component(vSelect)
 ```
 
-<ClientOnly>
-  <CustomComponentRegistration />
-</ClientOnly>
+<CustomComponentRegistration />
 
