@@ -28,7 +28,9 @@ export default {
 };
 ```
 
-<ClearButtonOverride />
+<ClientOnly>
+  <ClearButtonOverride />
+</ClientOnly>
 
 The same approach applies for `multiple` selects:
 
@@ -53,7 +55,9 @@ export default {
 };
 ```
 
-<OpenIndicatorOverride />
+<ClientOnly>
+  <OpenIndicatorOverride />
+</ClientOnly>
 
 ## Setting Globally at Registration
 
@@ -78,6 +82,7 @@ vSelect.props.components.default = () => ({
 Vue.component(vSelect)
 ```
 
-<CustomComponentRegistration />
-
+<ClientOnly>
+  <CustomComponentRegistration />
+</ClientOnly>
 
