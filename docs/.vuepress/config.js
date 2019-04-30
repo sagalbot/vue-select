@@ -93,7 +93,6 @@ module.exports = {
             ['guide/install', 'Installation'],
             ['guide/options', 'Dropdown Options'],
             ['guide/values', 'Selecting Values'],
-            ['guide/localization', 'Localization'],
             ['guide/upgrading', 'Upgrading 2.x to 3.x'],
           ],
         },
@@ -104,6 +103,14 @@ module.exports = {
             ['guide/components', 'Child Components'],
             ['guide/css', 'CSS & Selectors'],
             ['guide/slots', 'Slots'],
+          ],
+        },
+        {
+          title: 'Accessibility',
+          collapsable: false,
+          children: [
+            ['guide/accessibility', 'WAI-ARIA Spec'],
+            ['guide/localization', 'Localization'],
           ],
         },
         {
