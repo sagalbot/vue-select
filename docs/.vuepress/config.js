@@ -117,6 +117,7 @@ module.exports = {
           title: 'Digging Deeper',
           collapsable: false,
           children: [
+            ['guide/validation', 'Validation'],
             ['guide/vuex', 'Vuex'],
             ['guide/ajax', 'AJAX'],
           ],
