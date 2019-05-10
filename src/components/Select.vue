@@ -37,7 +37,9 @@
           class="vs__clear"
           title="Clear selection"
         >
-          <component :is="childComponents.Deselect" />
+          <slot name="clear-button">
+            <component :is="childComponents.Deselect" />
+          </slot>
         </button>
 
         <slot name="open-indicator" v-bind="scope.openIndicator">
