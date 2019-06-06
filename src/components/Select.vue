@@ -434,6 +434,12 @@
     },
 
     watch: {
+      /** 
+      * Update once value changed 
+      */
+      value(){
+        this.updateValue(this.findOptionFromReducedValue(this.value) || {})
+      },
       /**
        * Maybe reset the value
        * when options change.
