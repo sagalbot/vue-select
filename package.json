@@ -4,7 +4,7 @@
   "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
   "author": "Jeff Sagal <sagalbot@gmail.com>",
   "private": false,
-  "main": "dist/vue-select.js",
+  "main": "src/index.js",
   "license": "MIT",
   "scripts": {
     "serve": "webpack-dev-server --config build/webpack.dev.conf.js --hot --progress -d",
