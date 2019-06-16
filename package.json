@@ -1,6 +1,6 @@
 {
   "name": "vue-select-advanced",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
   "author": "Jeff Sagal <sagalbot@gmail.com>",
   "private": false,
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sagalbot/vue-select.git"
+    "url": "https://github.com/huypn/vue-select-advanced.git"
   },
   "peerDependencies": {
     "vue": "2.x"
