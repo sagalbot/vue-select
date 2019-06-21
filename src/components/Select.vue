@@ -13,7 +13,7 @@
               :deselect="deselect"
               :multiple="multiple"
               :disabled="disabled">
-          <span class="vs__selected" v-bind:key="option.index">
+          <span class="vs__selected" v-bind:key="option.index" :ref-value="option.value">
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
@@ -422,6 +422,17 @@
         type: String,
         default: '[type=search]'
       }
+      
+      /**
+       * Only for multiple select
+       * When true, deselect selected option at click
+       * @type {Boolean}
+       * @default {false}
+       */
+      toggleableOptions: {
+        type: Boolean,
+        default: false
+      }
     },
 
     data() {
@@ -486,6 +497,10 @@
             option = this.selectedValue.concat(option)
           }
           this.updateValue(option);
+        } else {
+          if (this.multiple && this.toggleableOptions){
+            this.deselect(option);
+          }
         }
 
         this.onAfterSelect(option)
