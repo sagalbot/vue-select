@@ -64,6 +64,7 @@
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
           </slot>
+          <span v-if="taggable && !optionExists(option)" class="vs__new-option-label">{{ newOptionLabel }}</span>
         </li>
         <li v-if="!filteredOptions.length" class="vs__no-options" @mousedown.stop="">
           <slot name="no-options">Sorry, no matching options.</slot>
@@ -421,7 +422,17 @@
       searchInputQuerySelector: {
         type: String,
         default: '[type=search]'
-      }
+      },
+
+      /**
+       * Sets the text that displays next to a new item in the dropdown when taggable is true
+       * @type {String}
+       * @default 'New'
+       */
+      newOptionLabel: {
+          type: String,
+          default: 'New'
+      },
     },
 
     data() {

@@ -35,3 +35,9 @@ $max-height: $vs-dropdown-max-height;
 .vs__no-options {
   text-align: center;
 }
+
+.vs__new-option-label {
+  opacity: .5;
+  position: absolute;
+  right: 1em;
+}
