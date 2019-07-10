@@ -17,7 +17,14 @@
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
-            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" aria-label="Deselect option">
+            <button v-if="multiple"
+              :disabled="disabled"
+              @click="deselect(option)"
+              type="button"
+              class="vs__deselect"
+              aria-label="Deselect option"
+              ref="deselectButtons"
+            >
               <component :is="childComponents.Deselect" />
             </button>
           </span>
@@ -572,7 +579,14 @@
           );
         }
 
-        if (toggleTargets.indexOf(target) > -1 || target.classList.contains('vs__selected')) {
+        let deselectClicked = false;
+        if(typeof this.$refs.deselectButtons !== 'undefined') {
+          deselectClicked = this.$refs.deselectButtons.some((btnRef) => {
+            return btnRef.contains(target);
+          });
+        }
+
+        if (toggleTargets.indexOf(target) > -1 || (!deselectClicked && this.$refs.selectedOptions.contains(target))) {
           if (this.open) {
             this.searchEl.blur(); // dropdown will close on blur
           } else {
