@@ -13,7 +13,7 @@
               :deselect="deselect"
               :multiple="multiple"
               :disabled="disabled">
-          <span class="vs__selected" v-bind:key="option.index">
+          <span class="vs__selected">
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
@@ -55,7 +55,6 @@
         <li
           role="option"
           v-for="(option, index) in filteredOptions"
-          :key="index"
           class="vs__dropdown-option"
           :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer }"
           @mouseover="typeAheadPointer = index"
