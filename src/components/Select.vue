@@ -445,8 +445,18 @@
           this.clearSelection()
         }
 
-        if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
-          this.setValueFromOptions()
+        if (this.value && this.isTrackingValues) {
+          this.setInternalValueFromOptions(this.value)
+        }
+      },
+
+      /**
+       * Make sure to update internal
+       * value if prop changes outside
+       */
+      value(val) {
+        if (this.isTrackingValues) {
+          this.setInternalValueFromOptions(val)
         }
       },
 
@@ -458,14 +468,14 @@
        */
       multiple() {
         this.clearSelection()
-      },
+      }
     },
 
     created() {
       this.mutableLoading = this.loading;
 
-      if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
-        this.setValueFromOptions()
+      if (this.value && this.isTrackingValues) {
+        this.setInternalValueFromOptions(this.value)
       }
 
       this.$on('option:created', this.maybePushTag)
@@ -475,13 +485,14 @@
       /**
        * Make sure tracked value is
        * one option if possible.
+       * @param  {Object|String} value
        * @return {void}
        */
-      setValueFromOptions() {
-        if (Array.isArray(this.value)) {
-          this.$data._value = this.value.map(value => this.findOptionFromReducedValue(value));
+      setInternalValueFromOptions(value) {
+        if (Array.isArray(value)) {
+          this.$data._value = value.map(val => this.findOptionFromReducedValue(val));
         } else {
-          this.$data._value = this.findOptionFromReducedValue(this.value);
+          this.$data._value = this.findOptionFromReducedValue(value);
         }
       },
 
