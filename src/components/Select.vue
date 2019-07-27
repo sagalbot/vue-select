@@ -437,11 +437,17 @@
       /**
        * Maybe reset the value
        * when options change.
+       * Make sure selected option
+       * is correct.
        * @return {[type]} [description]
        */
       options(val) {
         if (!this.taggable && this.resetOnOptionsChange) {
           this.clearSelection()
+        }
+
+        if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
+          this.setValueFromOptions()
         }
       },
 
@@ -460,17 +466,25 @@
       this.mutableLoading = this.loading;
 
       if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
-        if (Array.isArray(this.value)) {
-          this.$data._value = this.value.map(value => this.findOptionFromReducedValue(value));
-        } else {
-          this.$data._value = this.findOptionFromReducedValue(this.value);
-        }
+        this.setValueFromOptions()
       }
 
       this.$on('option:created', this.maybePushTag)
     },
 
     methods: {
+      /**
+       * Make sure tracked value is
+       * one option if possible.
+       * @return {void}
+       */
+      setValueFromOptions() {
+        if (Array.isArray(this.value)) {
+          this.$data._value = this.value.map(value => this.findOptionFromReducedValue(value));
+        } else {
+          this.$data._value = this.findOptionFromReducedValue(this.value);
+        }
+      },
 
       /**
        * Select a given option.
