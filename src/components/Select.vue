@@ -18,7 +18,7 @@
               {{ getOptionLabel(option) }}
             </slot>
             <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" aria-label="Deselect option">
-              <deselect />
+              <component :is="childComponents.Deselect" />
             </button>
           </span>
         </slot>
@@ -37,10 +37,12 @@
           class="vs__clear"
           title="Clear selection"
         >
-          <deselect />
+          <component :is="childComponents.Deselect" />
         </button>
 
-        <open-indicator v-if="!noDrop" ref="openIndicator" role="presentation" class="vs__open-indicator" />
+        <slot name="open-indicator" v-bind="scope.openIndicator">
+          <component :is="childComponents.OpenIndicator" v-if="!noDrop" v-bind="scope.openIndicator.attributes"/>
+        </slot>
 
         <slot name="spinner" v-bind="scope.spinner">
           <div class="vs__spinner" v-show="mutableLoading">Loading...</div>
@@ -75,11 +77,10 @@
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
-  import Deselect from './Deselect'
-  import OpenIndicator from './OpenIndicator'
+  import childComponents from './childComponents';
 
   export default {
-    components: {Deselect, OpenIndicator},
+    components: {...childComponents},
 
     mixins: [pointerScroll, typeAheadPointer, ajax],
 
@@ -91,6 +92,18 @@
        * @type {Object||String||null}
        */
       value: {},
+
+      /**
+       * An object with any custom components that you'd like to overwrite
+       * the default implementation of in your app. The keys in this object
+       * will be merged with the defaults.
+       * @see https://vue-select.org/guide/components.html
+       * @type {Function}
+       */
+      components: {
+        type: Object,
+        default: () => ({}),
+      },
 
       /**
        * An array of strings or objects to be used as dropdown choices.
@@ -443,10 +456,6 @@
       },
     },
 
-    /**
-     * Clone props into mutable values,
-     * attach any event listeners.
-     */
     created() {
       this.mutableLoading = this.loading;
 
@@ -548,17 +557,22 @@
        * @return {void}
        */
       toggleDropdown (e) {
+        const target = e.target;
         const toggleTargets = [
           this.$el,
           this.searchEl,
           this.$refs.toggle.$el,
-          this.$refs.openIndicator.$el,
-          ...Array.from(this.$refs.openIndicator.$el.children),
         ];
-        
-        const target = e.target;
 
-        if (toggleTargets.includes(target) || target.classList.contains('vs__selected')) {
+        if (typeof this.$refs.openIndicator !== 'undefined') {
+          toggleTargets.push(
+            this.$refs.openIndicator.$el,
+            // the line below is a bit gross, but required to support IE11 without adding polyfills
+            ...Array.prototype.slice.call(this.$refs.openIndicator.$el.childNodes),
+          );
+        }
+
+        if (toggleTargets.indexOf(target) > -1 || target.classList.contains('vs__selected')) {
           if (this.open) {
             this.searchEl.blur(); // dropdown will close on blur
           } else {
@@ -767,6 +781,9 @@
           case 8:
             //  delete
             return this.maybeDeleteValue();
+          case 9:
+            //  tab
+            return this.onTab();
         }
       },
 
@@ -792,9 +809,6 @@
             //  enter.prevent
             e.preventDefault();
             return this.typeAheadSelect();
-          case 9:
-            //  tab
-            return this.onTab();
         }
       }
     },
@@ -881,7 +895,28 @@
           },
           spinner: {
             loading: this.mutableLoading
-          }
+          },
+          openIndicator: {
+            attributes: {
+              'ref': 'openIndicator',
+              'role': 'presentation',
+              'class': 'vs__open-indicator',
+            },
+          },
+        };
+      },
+
+      /**
+       * Returns an object containing the child components
+       * that will be used throughout the component. The
+       * `component` prop can be used to overwrite the defaults.
+       *
+       * @return {Object}
+       */
+      childComponents () {
+        return {
+          ...childComponents,
+          ...this.components
         };
       },
 
@@ -893,8 +928,8 @@
         return {
           'vs--open': this.dropdownOpen,
           'vs--single': !this.multiple,
-          'vs--searching': this.searching,
-          'vs--searchable': this.searchable,
+          'vs--searching': this.searching && !this.noDrop,
+          'vs--searchable': this.searchable && !this.noDrop,
           'vs--unsearchable': !this.searchable,
           'vs--loading': this.mutableLoading,
           'vs--disabled': this.disabled

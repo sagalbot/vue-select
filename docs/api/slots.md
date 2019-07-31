@@ -1,5 +1,5 @@
 ::: tip
-VueSelect leverages scoped slots to allow for total customization of the presentation layer.
+Vue Select leverages scoped slots to allow for total customization of the presentation layer.
 Slots can be used to change the look and feel of the UI, or to simply swap out text.
 :::
 

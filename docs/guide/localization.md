@@ -1,12 +1,16 @@
-## RTL
+## Right to Left
 
-vue-select supports RTL using the standard HTML API using the `dir` attribute.
+Vue Select supports RTL using the standard HTML API using the `dir` prop.
 
 ```html
 <v-select dir="rtl"></v-select>
 ```
 
-The `dir` attribute accepts the same values as the [HTML spec](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir): `rtl`,`ltr`, and `auto`.
+The `dir` prop accepts the same values as the [HTML spec](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir): 
+
+  - `rtl`
+  - `ltr`
+  - `auto`
 
 ## Component Text
 

@@ -1,4 +1,5 @@
 import { selectWithProps } from "../helpers";
+import OpenIndicator from "../../src/components/OpenIndicator";
 
 describe("Toggling Dropdown", () => {
   it("should not open the dropdown when the el is clicked but the component is disabled", () => {
@@ -127,4 +128,40 @@ describe("Toggling Dropdown", () => {
     Select.vm.open = true;
     expect(Select.vm.stateClasses['vs--open']).toEqual(true);
   });
+
+  it("should not display the dropdown if noDrop is true", () => {
+    const Select = selectWithProps({
+      noDrop: true,
+    });
+
+    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    expect(Select.vm.open).toEqual(true);
+    expect(Select.contains('.vs__dropdown-menu')).toBeFalsy();
+    expect(Select.vm.stateClasses['vs--open']).toBeFalsy();
+  });
+
+  it("should hide the open indicator if noDrop is true", () => {
+    const Select = selectWithProps({
+      noDrop: true,
+    });
+    expect(Select.contains(OpenIndicator)).toBeFalsy();
+  });
+
+  it("should not add the searchable state class when noDrop is true", () => {
+    const Select = selectWithProps({
+      noDrop: true,
+    });
+    expect(Select.classes('vs--searchable')).toBeFalsy();
+  });
+
+  it("should not add the searching state class when noDrop is true", () => {
+    const Select = selectWithProps({
+      noDrop: true,
+    });
+
+    Select.vm.search = 'Canada';
+
+    expect(Select.classes('vs--searching')).toBeFalsy();
+  });
+
 });
