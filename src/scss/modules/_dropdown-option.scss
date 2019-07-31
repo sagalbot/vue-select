@@ -16,3 +16,12 @@
   background: $vs-state-active-bg;
   color: $vs-state-active-color;
 }
+
+.vs__dropdown-option--disabled {
+  background: inherit;
+  color: $vs-state-disabled-color;
+
+  &:hover {
+    cursor: inherit;
+  }
+}
