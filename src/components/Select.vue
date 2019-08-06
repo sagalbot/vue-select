@@ -434,6 +434,12 @@
     },
 
     watch: {
+      value(newVal){
+        const option = this.findOptionFromReducedValue(newVal)
+        if(option){
+          this.updateValue(option)
+        }
+      },
       /**
        * Maybe reset the value
        * when options change.
