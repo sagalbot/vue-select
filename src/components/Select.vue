@@ -882,7 +882,7 @@
               'ref': 'search',
               'role': 'combobox',
               'type': 'search',
-              'autocomplete': 'off',
+              'autocomplete': 'nope',
               'value': this.search,
             },
             events: {
