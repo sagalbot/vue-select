@@ -459,7 +459,7 @@
     created() {
       this.mutableLoading = this.loading;
 
-      if (this.$options.propsData.hasOwnProperty('reduce') && this.value) {
+      if (this.$options.propsData.hasOwnProperty('reduce') && this.value !== null) {
         if (Array.isArray(this.value)) {
           this.$data._value = this.value.map(value => this.findOptionFromReducedValue(value));
         } else {
@@ -833,7 +833,7 @@
           value = this.$data._value;
         }
 
-        if (value) {
+        if (value !== null) {
           return [].concat(value);
         }
 
