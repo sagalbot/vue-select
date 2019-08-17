@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sagalbot/vue-select.git"
+    "url": "git+https://github.com/bnku/vue-select.git"
   },
   "peerDependencies": {
     "vue": "2.x"
