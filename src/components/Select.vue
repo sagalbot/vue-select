@@ -561,7 +561,7 @@
         const toggleTargets = [
           this.$el,
           this.searchEl,
-          this.$refs.toggle.$el,
+          this.$refs.toggle,
         ];
 
         if (typeof this.$refs.openIndicator !== 'undefined') {
