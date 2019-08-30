@@ -7,35 +7,46 @@ export default {
 
   watch: {
     filteredOptions() {
-      this.typeAheadPointer = 0
+      for (let i = 0; i < this.filteredOptions.length; i++) {
+        if (this.selectable(this.filteredOptions[i])) {
+          this.typeAheadPointer = i;
+          break;
+        }
+      }
     }
   },
 
   methods: {
     /**
      * Move the typeAheadPointer visually up the list by
-     * subtracting the current index by one.
+     * setting it to the previous selectable option.
      * @return {void}
      */
     typeAheadUp() {
-      if (this.typeAheadPointer > 0) {
-        this.typeAheadPointer--
-        if( this.maybeAdjustScroll ) {
-          this.maybeAdjustScroll()
+      for (let i = this.typeAheadPointer - 1; i >= 0; i--) {
+        if (this.selectable(this.filteredOptions[i])) {
+          this.typeAheadPointer = i;
+          if( this.maybeAdjustScroll ) {
+            this.maybeAdjustScroll()
+          }
+          break;
         }
       }
     },
 
     /**
      * Move the typeAheadPointer visually down the list by
-     * adding the current index by one.
+     * setting it to the next selectable option.
      * @return {void}
      */
     typeAheadDown() {
-      if (this.typeAheadPointer < this.filteredOptions.length - 1) {
-        this.typeAheadPointer++
-        if( this.maybeAdjustScroll ) {
-          this.maybeAdjustScroll()
+      for (let i = this.typeAheadPointer + 1; i < this.filteredOptions.length; i++) {
+        if (this.selectable(this.filteredOptions[i])) {
+          this.typeAheadPointer = i;
+          if( this.maybeAdjustScroll ) {
+            this.maybeAdjustScroll()
+          }
+          break;
         }
       }
     },
