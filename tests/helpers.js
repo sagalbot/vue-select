@@ -13,7 +13,7 @@ export const searchSubmit = (Wrapper, searchText = false) => {
   if (searchText) {
     Wrapper.vm.search = searchText;
   }
-  Wrapper.find({ ref: "search" }).trigger("keyup.enter")
+  Wrapper.find({ ref: "search" }).trigger("keydown.enter")
 };
 
 /**

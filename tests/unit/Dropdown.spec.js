@@ -109,14 +109,14 @@ describe("Toggling Dropdown", () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it("should remove existing search text on escape keyup", () => {
+  it("should remove existing search text on escape keydown", () => {
     const Select = selectWithProps({
       value: [{ label: "one" }],
       options: [{ label: "one" }]
     });
 
     Select.vm.search = "foo";
-    Select.find('.vs__search').trigger('keyup.esc')
+    Select.find('.vs__search').trigger('keydown.esc')
     expect(Select.vm.search).toEqual("");
   });
 
