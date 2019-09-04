@@ -8,6 +8,7 @@
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
+              :key="getOptionKey(option)"
               name="selected-option-container"
               :option="normalizeOptionForSlot(option)"
               :deselect="deselect"
@@ -55,6 +56,7 @@
         <li
           role="option"
           v-for="(option, index) in filteredOptions"
+          :key="getOptionKey(option)"
           class="vs__dropdown-option"
           :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer }"
           @mouseover="typeAheadPointer = index"
@@ -250,6 +252,39 @@
             return option[this.label]
           }
           return option;
+        }
+      },
+
+      /**
+       * Callback to get an option key. If {option}
+       * is an object and has an {id}, returns {option.id}
+       * by default, otherwise tries to serialize {option}
+       * to JSON.
+       *
+       * The key must be unique for an option.
+       *
+       * @type {Function}
+       * @param  {Object || String} option
+       * @return {String}
+       */
+      getOptionKey: {
+        type: Function,
+        default(option) {
+          if (typeof option === 'object' && option.id) {
+            return option.id
+          } else {
+            try {
+              return JSON.stringify(option)
+            } catch(e) {
+              return console.warn(
+                `[vue-select warn]: Could not stringify option ` +
+                `to generate unique key. Please provide'getOptionKey' prop ` +
+                `to return a unique key for each option.\n` +
+                'http://sagalbot.github.io/vue-select/#ex-keys'
+              )
+              return null
+            }
+          }
         }
       },
 
