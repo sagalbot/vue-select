@@ -178,12 +178,44 @@ getOptionLabel: {
         return console.warn(
           `[vue-select warn]: Label key "option.${this.label}" does not` +
           ` exist in options object ${JSON.stringify(option)}.\n` +
-          'http://sagalbot.github.io/vue-select/#ex-labels'
+          'https://vue-select.org/api/props.html#getoptionlabel'
         )
       }
       return option[this.label]
     }
     return option;
+  }
+},
+```
+
+## getOptionKey
+
+Callback to get an option key. If `option`
+is an object and has an `id`, returns `option.id`
+by default, otherwise tries to serialize `option`
+to JSON.
+
+The key must be unique for an option.
+
+```js
+getOptionKey: {
+  type: Function,
+  default(option) {
+    if (typeof option === 'object' && option.id) {
+      return option.id
+    } else {
+      try {
+        return JSON.stringify(option)
+      } catch(e) {
+        return console.warn(
+          `[vue-select warn]: Could not stringify option ` +
+          `to generate unique key. Please provide 'getOptionKey' prop ` +
+          `to return a unique key for each option.\n` +
+          'https://vue-select.org/api/props.html#getoptionkey'
+        )
+        return null
+      }
+    }
   }
 },
 ```

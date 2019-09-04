@@ -246,7 +246,7 @@
               return console.warn(
                 `[vue-select warn]: Label key "option.${this.label}" does not` +
                 ` exist in options object ${JSON.stringify(option)}.\n` +
-                'http://sagalbot.github.io/vue-select/#ex-labels'
+                'https://vue-select.org/api/props.html#getoptionlabel'
               )
             }
             return option[this.label]
@@ -280,7 +280,7 @@
                 `[vue-select warn]: Could not stringify option ` +
                 `to generate unique key. Please provide'getOptionKey' prop ` +
                 `to return a unique key for each option.\n` +
-                'http://sagalbot.github.io/vue-select/#ex-keys'
+                'https://vue-select.org/api/props.html#getoptionkey'
               )
               return null
             }
