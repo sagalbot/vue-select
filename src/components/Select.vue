@@ -8,13 +8,12 @@
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
-              :key="getOptionKey(option)"
               name="selected-option-container"
               :option="normalizeOptionForSlot(option)"
               :deselect="deselect"
               :multiple="multiple"
               :disabled="disabled">
-          <span class="vs__selected">
+          <span :key="getOptionKey(option)" class="vs__selected">
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
