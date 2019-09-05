@@ -21,7 +21,7 @@ describe("Labels", () => {
     Select.vm.open = true;
     expect(spy).toHaveBeenCalledWith(
       '[vue-select warn]: Label key "option.label" does not exist in options object {}.' +
-        "\nhttp://sagalbot.github.io/vue-select/#ex-labels"
+        "\nhttps://vue-select.org/api/props.html#getoptionlabel"
     );
   });
 
