@@ -309,6 +309,19 @@
       },
 
       /**
+       * Callback to determine if the search text is exist in options with taggable.
+       * @type  {Function}
+       * @param {String} label
+       * @param {String} search
+       */
+      comparea: {
+        type: Function,
+        default(label, search) {
+          return label === search
+        }
+      },
+
+      /**
        * Set the tabindex for the input field.
        * @type {Number}
        */
@@ -728,10 +741,10 @@
        */
       optionExists(option) {
         return this.optionList.some(opt => {
-          if (typeof opt === 'object' && this.getOptionLabel(opt) === option) {
-            return true
+          if (typeof option === 'string') {
+            return this.comparea(this.getOptionLabel(opt), option)
           } else if (opt === option) {
-            return true
+            return opt === option
           }
           return false
         })
