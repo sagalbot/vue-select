@@ -454,6 +454,15 @@
       searchInputQuerySelector: {
         type: String,
         default: '[type=search]'
+      },
+
+      /**
+       * Override keyCodes that triggers selection.
+       * Defaults to 13 (Enter.)
+       */
+      selectOnCustom: {
+        type: Array,
+        default: () => [13],
       }
     },
 
@@ -848,22 +857,30 @@
        * @return {Function}
        */
       onSearchKeyUp (e) {
-        switch (e.keyCode) {
-          case 27:
-            //  esc
-            return this.onEscape();
-          case 38:
-            //  up.prevent
-            e.preventDefault();
-            return this.typeAheadUp();
-          case 40:
-            //  down.prevent
-            e.preventDefault();
-            return this.typeAheadDown();
-          case 13:
-            //  enter.prevent
+        let codes = this.selectOnCustom;
+        if (!Array.isArray(codes)) {
+          codes = [codes];
+        }
+
+        if (codes.includes(e.keyCode)) {
+            //  prevent default and trigger select
             e.preventDefault();
             return this.typeAheadSelect();
+        } else {
+          switch (e.keyCode) {
+            case 27:
+              //  esc
+              return this.onEscape();
+            case 38:
+              //  up.prevent
+              e.preventDefault();
+              return this.typeAheadUp();
+            case 40:
+              //  down.prevent
+              e.preventDefault();
+              return this.typeAheadDown();
+            case 13:
+          }
         }
       }
     },

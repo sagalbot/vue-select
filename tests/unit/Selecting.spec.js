@@ -63,6 +63,20 @@ describe("VS - Selecting Values", () => {
     expect(spy).toHaveBeenCalledWith();
   });
 
+  it("can select an option on space", () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: {
+        selectOnCustom: [32]
+      }
+    });
+
+    const spy = jest.spyOn(Select.vm, "typeAheadSelect");
+
+    Select.find({ ref: "search" }).trigger("keyup.space");
+
+    expect(spy).toHaveBeenCalledWith();
+  });
+
   it("can deselect a pre-selected object", () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
