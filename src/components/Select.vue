@@ -485,14 +485,13 @@
        * when options change.
        * Make sure selected option
        * is correct.
-       * @return {[type]} [description]
        */
       options(val) {
         if (!this.taggable && this.resetOnOptionsChange) {
           this.clearSelection()
         }
 
-        if (this.value && this.isTrackingValues) {
+        if (this.resetOnOptionsChange && this.isTrackingValues) {
           this.setInternalValueFromOptions(this.value)
         }
       },

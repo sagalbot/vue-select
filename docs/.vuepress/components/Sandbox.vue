@@ -118,7 +118,8 @@
         </div>
 
         <div class="example">
-          <v-select v-bind="configuration" :options="['cat', 'dog', 'bear']" placeholder="string options, option slots">
+          <v-select v-bind="configuration" :options="['cat', 'dog', 'bear']"
+                    placeholder="string options, option slots">
             <template slot="selected-option" slot-scope="{ label }">
               {{ label }}
             </template>
@@ -129,11 +130,13 @@
         </div>
 
         <div class="example">
-          <v-select v-bind="configuration" :options="[1,5,10]" placeholder="options=[1,5,10]"></v-select>
+          <v-select v-bind="configuration" :options="[1,5,10]"
+                    placeholder="options=[1,5,10]"></v-select>
         </div>
 
         <div class="example">
-          <v-select v-bind="configuration" label="title" :options="optionDataSets.books" :filter="fuseSearch"
+          <v-select v-bind="configuration" label="title" :options="optionDataSets.books"
+                    :filter="fuseSearch"
                     placeholder="advanced filtering w/ fuse.js + scoped slots">
             <template slot="option" slot-scope="option">
               <strong>{{ option.title }}</strong><br>
@@ -204,6 +207,9 @@ export default {
     };
   },
   methods: {
+    swap () {
+      this.configuration.options = [];
+    },
     search (search, loading) {
       loading(true);
       this.getRepositories(search, loading, this);
@@ -241,8 +247,7 @@ export default {
     display: grid;
     grid-template-columns: auto 75%;
     grid-template-rows: auto;
-    grid-template-areas:
-            "sidebar component"
+    grid-template-areas: "sidebar component"
   }
 
   #config {

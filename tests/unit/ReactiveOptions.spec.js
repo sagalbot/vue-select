@@ -26,7 +26,7 @@ describe("Reset on options change", () => {
 
   it("should return correct selected value when the options property changes and a new option matches", () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { value: "one", options: [], reduce(option) { return option.value } }
+      propsData: { value: "one", options: [], reduce: option => option.value }
     });
 
     Select.setProps({options: [{ label: "oneLabel", value: "one" }]});
