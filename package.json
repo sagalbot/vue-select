@@ -11,6 +11,7 @@
   "private": false,
   "main": "dist/vue-select.js",
   "license": "MIT",
+  "prepare": "npm run build",
   "scripts": {
     "serve": "webpack-dev-server --config build/webpack.dev.conf.js --hot --progress -d",
     "serve:docs": "cd docs && yarn serve",
