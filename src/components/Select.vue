@@ -17,7 +17,7 @@
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
-            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" aria-label="Deselect option">
+            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" aria-label="Deselect option" ref="deselectButtons">
               <component :is="childComponents.Deselect" />
             </button>
           </span>
@@ -36,6 +36,7 @@
           type="button"
           class="vs__clear"
           title="Clear selection"
+          ref="clearButton"
         >
           <component :is="childComponents.Deselect" />
         </button>
@@ -652,33 +653,23 @@
        * @param  {Event} e
        * @return {void}
        */
-      toggleDropdown (e) {
-        const target = e.target;
-        const toggleTargets = [
-          this.$el,
-          this.searchEl,
-          this.$refs.toggle,
-          this.$refs.actions,
-          this.$refs.selectedOptions,
+      toggleDropdown ({target}) {
+        //  don't react to click on deselect/clear buttons,
+        //  they dropdown state will be set in their click handlers
+        const ignoredButtons = [
+          ...(this.$refs['deselectButtons'] || []),
+          ...([this.$refs['clearButton']] || [])
         ];
 
-        if (typeof this.$refs.openIndicator !== 'undefined') {
-          toggleTargets.push(
-            this.$refs.openIndicator.$el,
-            // the line below is a bit gross, but required to support IE11 without adding polyfills
-            ...Array.prototype.slice.call(this.$refs.openIndicator.$el.childNodes),
-          );
+        if (ignoredButtons.some(ref => ref.contains(target) || ref === target)) {
+          return;
         }
 
-        if (toggleTargets.indexOf(target) > -1 || target.classList.contains('vs__selected')) {
-          if (this.open) {
-            this.searchEl.blur(); // dropdown will close on blur
-          } else {
-            if (!this.disabled) {
-              this.open = true;
-              this.searchEl.focus();
-            }
-          }
+        if (this.open) {
+          this.searchEl.blur();
+        } else if (!this.disabled) {
+          this.open = true;
+          this.searchEl.focus();
         }
       },
 
