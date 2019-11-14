@@ -1,0 +1,16 @@
+build
+coverage
+dev
+docs
+public
+tests
+
+.github
+.netlify
+.babelrc
+.travis.yml
+.gitignore
+CONTRIBUTING.md
+LICENSE.md
+netlify.toml
+postcss.config.js
