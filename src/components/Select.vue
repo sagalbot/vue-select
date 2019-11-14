@@ -229,10 +229,11 @@
       },
 
       /**
-       * Decides wether an option is selectable or not. Not selectable options
+       * Decides whether an option is selectable or not. Not selectable options
        * are displayed but disabled and cannot be selected.
        *
        * @type {Function}
+       * @since 3.3.0
        * @param {Object|String} option
        * @return {Boolean}
        */
