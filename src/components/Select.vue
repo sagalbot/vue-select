@@ -513,8 +513,10 @@
        * is correct.
        * @return {[type]} [description]
        */
-      options(val) {
-        if (!this.taggable && this.resetOnOptionsChange) {
+      options(val, oldVal) {
+        const hasChanged = JSON.stringify(val) !== JSON.stringify(oldVal);
+
+        if (!this.taggable && this.resetOnOptionsChange && hasChanged) {
           this.clearSelection()
         }
 

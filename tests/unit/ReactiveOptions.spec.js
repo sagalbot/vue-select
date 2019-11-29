@@ -24,6 +24,17 @@ describe("Reset on options change", () => {
     expect(Select.vm.selectedValue).toEqual([]);
   });
 
+  it("should not reset the selected value when the options property changes to the same object", () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: { resetOnOptionsChange: true, options: ["one"] }
+    });
+
+    Select.vm.$data._value = 'one';
+
+    Select.setProps({options: ["one"]});
+    expect(Select.vm.selectedValue).toEqual(["one"]);
+  });
+
   it("should return correct selected value when the options property changes and a new option matches", () => {
     const Select = shallowMount(VueSelect, {
       propsData: { value: "one", options: [], reduce(option) { return option.value } }
