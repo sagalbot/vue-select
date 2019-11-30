@@ -522,9 +522,7 @@
         let shouldReset = () => typeof this.resetOnOptionsChange === 'function'
           ? this.resetOnOptionsChange(newOptions, oldOptions, this.selectedValue)
           : this.resetOnOptionsChange;
-
-        debugger;
-
+        
         if (!this.taggable && shouldReset()) {
           this.clearSelection();
         }
