@@ -409,12 +409,17 @@
       },
 
       /**
-       * When false, updating the options will not reset the select value
-       * @type {Boolean}
+       * When false, updating the options will not reset the selected value. Accepts
+       * a `boolean` or `function` that returns a `boolean`. If defined as a function,
+       * it will receive the params listed below.
+       * @type {Boolean|Function}
+       * @param {Array} newOptions
+       * @param {Array} oldOptions
+       * @param {Array} selectedValue
        */
       resetOnOptionsChange: {
-        type: Boolean,
-        default: false
+        default: false,
+        validator: (value) => ['function', 'boolean'].includes(typeof value)
       },
 
       /**
@@ -513,13 +518,19 @@
        * is correct.
        * @return {[type]} [description]
        */
-      options(val) {
-        if (!this.taggable && this.resetOnOptionsChange) {
-          this.clearSelection()
+      options (newOptions, oldOptions) {
+        let shouldReset = () => typeof this.resetOnOptionsChange === 'function'
+          ? this.resetOnOptionsChange(newOptions, oldOptions, this.selectedValue)
+          : this.resetOnOptionsChange;
+
+        debugger;
+
+        if (!this.taggable && shouldReset()) {
+          this.clearSelection();
         }
 
         if (this.value && this.isTrackingValues) {
-          this.setInternalValueFromOptions(this.value)
+          this.setInternalValueFromOptions(this.value);
         }
       },
 
