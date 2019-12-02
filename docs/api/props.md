@@ -339,12 +339,20 @@ createOption: {
 
 ## resetOnOptionsChange
 
-When false, updating the options will not reset the select value
+When false, updating the options will not reset the selected value. Accepts
+a `boolean` or `function` that returns a `boolean`. If defined as a function,
+it will receive the params listed below.
 
 ```js
+/**
+* @type {Boolean|Function}
+* @param {Array} newOptions
+* @param {Array} oldOptions
+* @param {Array} selectedValue
+*/
 resetOnOptionsChange: {
-	type: Boolean,
-	default: false
+    default: false,
+    validator: (value) => ['function', 'boolean'].includes(typeof value)
 },
 ```
 
