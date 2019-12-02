@@ -339,9 +339,11 @@ createOption: {
 
 ## resetOnOptionsChange
 
-When false, updating the options will not reset the selected value. Accepts
-a `boolean` or `function` that returns a `boolean`. If defined as a function,
-it will receive the params listed below.
+When false, updating the options will not reset the selected value.
+ 
+Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`. 
+
+If defined as a function, it will receive the params listed below. 
 
 ```js
 /**

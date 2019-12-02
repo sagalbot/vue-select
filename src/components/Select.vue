@@ -412,6 +412,9 @@
        * When false, updating the options will not reset the selected value. Accepts
        * a `boolean` or `function` that returns a `boolean`. If defined as a function,
        * it will receive the params listed below.
+       *
+       * @since 3.4 - Type changed to {Boolean|Function}
+       *
        * @type {Boolean|Function}
        * @param {Array} newOptions
        * @param {Array} oldOptions
@@ -522,7 +525,7 @@
         let shouldReset = () => typeof this.resetOnOptionsChange === 'function'
           ? this.resetOnOptionsChange(newOptions, oldOptions, this.selectedValue)
           : this.resetOnOptionsChange;
-        
+
         if (!this.taggable && shouldReset()) {
           this.clearSelection();
         }
