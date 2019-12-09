@@ -169,6 +169,15 @@
       },
 
       /**
+       * Equivalent to the `name` attribute on an `<input>`.
+       * @type {String}
+       */
+      name: {
+        type: String,
+        default: ''
+      },
+
+      /**
        * Sets a Vue transition property on the `.vs__dropdown-menu`.
        * @type {String}
        */
@@ -970,6 +979,7 @@
             attributes: {
               'disabled': this.disabled,
               'placeholder': this.searchPlaceholder,
+              'name': this.searchName,
               'tabindex': this.tabindex,
               'readonly': !this.searchable,
               'id': this.inputId,
@@ -1067,6 +1077,16 @@
       searchPlaceholder() {
         if (this.isValueEmpty && this.placeholder) {
           return this.placeholder;
+        }
+      },
+
+      /**
+       * Return the name string if it's set
+       * @return {String} Name text
+       */
+      searchName() {
+        if (this.name) {
+          return this.name;
         }
       },
 
