@@ -845,6 +845,9 @@
        * @return {void}
        */
       onSearchFocus() {
+        if (this.searchable && this.typeAheadPointer !== undefined) {
+          this.typeAheadPointer = -1;
+        }
         this.open = true
         this.$emit('search:focus')
       },
@@ -978,7 +981,7 @@
               'ref': 'search',
               'role': 'combobox',
               'type': 'search',
-              'autocomplete': 'off',
+              'autocomplete': 'nope',
               'value': this.search,
             },
             events: {
