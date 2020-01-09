@@ -5,10 +5,10 @@ describe('Custom Keydown Handlers', () => {
   it('can use the map-keydown prop to trigger custom behaviour', () => {
     const onKeyDown = jest.fn();
     const Select = mountDefault({
-      mapKeydown: (defaults, vm) => ({...defaults, 32: onKeyDown}),
+      mapKeydown: (defaults, vm) => ({ ...defaults, 32: onKeyDown }),
     });
 
-    Select.find({ref: 'search'}).trigger('keydown.space');
+    Select.find({ ref: 'search' }).trigger('keydown.space');
 
     expect(onKeyDown.mock.calls.length).toBe(1);
   });
@@ -20,7 +20,7 @@ describe('Custom Keydown Handlers', () => {
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect');
 
-    Select.find({ref: 'search'}).trigger('keydown.space');
+    Select.find({ ref: 'search' }).trigger('keydown.space');
 
     expect(spy).toHaveBeenCalledTimes(1);
   });
@@ -28,16 +28,16 @@ describe('Custom Keydown Handlers', () => {
   it('even works when combining selectOnKeyCodes with map-keydown', () => {
     const onKeyDown = jest.fn();
     const Select = mountDefault({
-      mapKeydown: (defaults, vm) => ({...defaults, 32: onKeyDown}),
+      mapKeydown: (defaults, vm) => ({ ...defaults, 32: onKeyDown }),
       selectOnKeyCodes: [9],
     });
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect');
 
-    Select.find({ref: 'search'}).trigger('keydown.space');
+    Select.find({ ref: 'search' }).trigger('keydown.space');
     expect(onKeyDown.mock.calls.length).toBe(1);
 
-    Select.find({ref: 'search'}).trigger('keydown.tab');
+    Select.find({ ref: 'search' }).trigger('keydown.tab');
     expect(spy).toHaveBeenCalledTimes(1);
   });
 
@@ -47,28 +47,38 @@ describe('Custom Keydown Handlers', () => {
       const Select = mountDefault();
       const spy = jest.spyOn(Select.vm, 'typeAheadSelect');
 
-      Select.find({ref: 'search'}).trigger('compositionstart');
-      Select.find({ref: 'search'}).trigger('keydown.enter');
+      Select.find({ ref: 'search' }).trigger('compositionstart');
+      Select.find({ ref: 'search' }).trigger('keydown.enter');
       expect(spy).toHaveBeenCalledTimes(0);
 
-      Select.find({ref: 'search'}).trigger('compositionend');
-      Select.find({ref: 'search'}).trigger('keydown.enter');
+      Select.find({ ref: 'search' }).trigger('compositionend');
+      Select.find({ ref: 'search' }).trigger('keydown.enter');
       expect(spy).toHaveBeenCalledTimes(1);
     });
 
     it('will not select a value with tab if the user is composing', () => {
-      const Select = mountDefault({selectOnTab: true});
+      const Select = mountDefault({ selectOnTab: true });
       const spy = jest.spyOn(Select.vm, 'typeAheadSelect');
 
-      Select.find({ref: 'search'}).trigger('compositionstart');
-      Select.find({ref: 'search'}).trigger('keydown.tab');
+      Select.find({ ref: 'search' }).trigger('compositionstart');
+      Select.find({ ref: 'search' }).trigger('keydown.tab');
       expect(spy).toHaveBeenCalledTimes(0);
 
-      Select.find({ref: 'search'}).trigger('compositionend');
-      Select.find({ref: 'search'}).trigger('keydown.tab');
+      Select.find({ ref: 'search' }).trigger('compositionend');
+      Select.find({ ref: 'search' }).trigger('keydown.tab');
       expect(spy).toHaveBeenCalledTimes(1);
     });
 
+    it('will not emit input event if value has not changed with backspace', () => {
+      const Select = mountDefault();
+      Select.vm.$data._value = 'one';
+      Select.find({ ref: 'search' }).trigger('keydown.backspace');
+      expect(Select.emitted().input.length).toBe(1);
+
+      Select.find({ ref: 'search' }).trigger('keydown.backspace');
+      Select.find({ ref: 'search' }).trigger('keydown.backspace');
+      expect(Select.emitted().input.length).toBe(1);
+    });
   });
 
 });
