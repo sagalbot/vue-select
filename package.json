@@ -102,5 +102,8 @@
       "html",
       "text-summary"
     ]
+  },
+  "dependencies": {
+    "fuse.js": "^3.4.6"
   }
 }
