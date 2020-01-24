@@ -907,7 +907,18 @@
         if (typeof handlers[e.keyCode] === 'function') {
           return handlers[e.keyCode](e);
         }
-      }
+      },
+
+      /**
+       * Search <input> KeyUp handler.
+       * @param e {KeyboardEvent}
+       */
+      onSearchKeyUp (e) {
+        if (e.keyCode == 27) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      },
     },
 
     computed: {
@@ -985,6 +996,7 @@
               'compositionstart': () => this.isComposing = true,
               'compositionend': () => this.isComposing = false,
               'keydown': this.onSearchKeyDown,
+              'keyup': this.onSearchKeyUp,
               'blur': this.onSearchBlur,
               'focus': this.onSearchFocus,
               'input': (e) => this.search = e.target.value,
