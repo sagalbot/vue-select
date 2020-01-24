@@ -164,4 +164,24 @@ describe("Toggling Dropdown", () => {
     expect(Select.classes('vs--searching')).toBeFalsy();
   });
 
+  it("should not display the dropdown if openOnlyOnSearch is true and no search is active", () => {
+    const Select = selectWithProps({
+      openOnlyOnSearch: true
+    });
+
+    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    expect(Select.vm.open).toEqual(true);
+    expect(Select.contains('.vs__dropdown-menu')).toBeFalsy();
+    expect(Select.vm.stateClasses['vs--open']).toBeFalsy();
+  });
+
+  it("should display the dropdown if openOnlyOnSearch is true and a search is active", () => {
+    const Select = selectWithProps({
+      openOnlyOnSearch: true
+    });
+
+    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    Select.vm.search = "foo";
+    expect(Select.vm.stateClasses['vs--open']).toEqual(true);
+  });
 });

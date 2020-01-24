@@ -12,7 +12,8 @@
   }
 }
 
-.vs__dropdown-option--highlight {
+.vs__dropdown-option--highlight,
+.vs__dropdown-option--simpleHover:hover {
   background: $vs-state-active-bg;
   color: $vs-state-active-color;
 }
