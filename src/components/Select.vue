@@ -52,7 +52,7 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
+      <ul ref="dropdownMenu" v-if="dropdownOpen" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
         <li
           role="option"
           v-for="(option, index) in filteredOptions"
@@ -79,6 +79,7 @@
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
   import childComponents from './childComponents';
+  import appendToBody from '../directives/appendToBody';
 
   /**
    * @name VueSelect
@@ -87,6 +88,8 @@
     components: {...childComponents},
 
     mixins: [pointerScroll, typeAheadPointer, ajax],
+
+    directives: {appendToBody},
 
     props: {
       /**
@@ -500,6 +503,26 @@
          * @return {Object}
          */
         default: (map, vm) => map,
+      },
+
+      /**
+       * Append the dropdown element to the end of the body
+       * and size/position it dynamically. Use it if you have
+       * overflow issues.
+       * @type {Boolean}
+       */
+      appendToBody: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
+       * Focus the input when the component is mounted.
+       * @type {Boolean}
+       */
+      autoFocus: {
+        type: Boolean,
+        default: false
       }
     },
 
@@ -564,6 +587,14 @@
       }
 
       this.$on('option:created', this.maybePushTag)
+    },
+
+    mounted() {
+      if (this.autoFocus) {
+        this.$nextTick(() => {
+          this.searchEl.focus();
+        });
+      }
     },
 
     methods: {
