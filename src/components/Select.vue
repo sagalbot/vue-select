@@ -526,6 +526,7 @@
         default: false
       },
 
+      /**
        * Append the dropdown element to the end of the body
        * and size/position it dynamically. Use it if you have
        * overflow issues.
