@@ -4,8 +4,8 @@ export default {
             let rect = vnode.context.$refs.toggle.getBoundingClientRect();
 
             el.style.width = rect.width + 'px';
-            el.style.top = (rect.top + rect.height) + 'px';
-            el.style.left = rect.left + 'px';
+            el.style.top = (window.scrollY + rect.top + rect.height) + 'px';
+            el.style.left = (window.scrollX + rect.left) + 'px';
             el.style.zIndex = 1000000;
             document.body.appendChild(el);
         }
