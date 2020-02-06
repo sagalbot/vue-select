@@ -100,4 +100,31 @@ describe("Reset on options change", () => {
     Select.setProps({options: [{ label: "oneLabel", value: "one" }]});
     expect(Select.vm.selectedValue).toEqual([{ label: "oneLabel", value: "one" }]);
   });
+
+  it('default behavior when blur search field is to clean it.', () => {
+    const Select = mountDefault({});
+    let clearSearchOnBlur = jest.spyOn(Select.vm, 'clearSearchOnBlur');
+    Select.find({ ref: "search" }).trigger("click");
+    Select.setData({ search: "one" });
+    Select.find({ ref: "search" }).trigger("blur");
+
+    expect(clearSearchOnBlur).toHaveBeenCalledTimes(1);
+    expect(clearSearchOnBlur).toHaveBeenCalledWith({
+      clearSearchOnSelect: true,
+      multiple: false
+    });
+    expect(Select.vm.search).toBe('');
+  });
+
+  it('control behavior when blur search field.', () => {
+    let clearSearchOnBlur = jest.fn(() => false);
+    const Select = mountDefault({clearSearchOnBlur});
+
+    Select.find({ ref: "search" }).trigger("click");
+    Select.setData({ search: "one" });
+    Select.find({ ref: "search" }).trigger("blur");
+
+    expect(clearSearchOnBlur).toHaveBeenCalledTimes(1);
+    expect(Select.vm.search).toBe('one');
+  });
 });
