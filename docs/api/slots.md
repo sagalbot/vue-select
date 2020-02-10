@@ -50,6 +50,12 @@ Slots can be used to change the look and feel of the UI, or to simply swap out t
 </slot>
 ```
 
+### `no-options`
+
+```html
+<slot name="no-options">Sorry, no matching options.</slot>
+```
+
 ## Dropdown
 
 ### `option`
