@@ -520,7 +520,7 @@
        * Focus the input when the component is mounted.
        * @type {Boolean}
        */
-      autoFocus: {
+      autofocus: {
         type: Boolean,
         default: false
       }
@@ -590,7 +590,7 @@
     },
 
     mounted() {
-      if (this.autoFocus) {
+      if (this.autofocus) {
         this.$nextTick(() => {
           this.searchEl.focus();
         });
