@@ -164,4 +164,28 @@ describe("Toggling Dropdown", () => {
     expect(Select.classes('vs--searching')).toBeFalsy();
   });
 
+  it("should render the dropdown when dropRenderingMode is 'v-show' even if it is closed", () => {
+    const Select = selectWithProps({
+      dropRenderingMode: 'v-show',
+    });
+
+    expect(Select.vm.$refs.dropdownMenu).toBeDefined();
+  });
+
+  it("should hide the dropdown when it is closed and dropRenderingMode is 'v-show'", () => {
+    const Select = selectWithProps({
+      dropRenderingMode: 'v-show',
+    });
+
+    const display = getComputedStyle(Select.vm.$refs.dropdownMenu).display;
+    expect(display).toStrictEqual('none');
+  });
+
+  it("should NOT render the dropdown when it is closed and dropRenderingMode is 'v-if'", () => {
+    const Select = selectWithProps({
+      dropRenderingMode: 'v-if',
+    });
+
+    expect(Select.vm.$refs.dropdownMenu).toBeUndefined();
+  });
 });

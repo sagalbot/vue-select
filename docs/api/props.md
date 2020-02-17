@@ -369,6 +369,20 @@ noDrop: {
 },
 ```
 
+## dropRenderingMode
+
+Determines rendering mode for the dropdown ('v-if' or 'v-show').
+
+```js
+dropRenderingMode: {
+	type: String,
+	default: 'v-if',
+	validator(value) {
+		return value === 'v-if' || value === 'v-show';
+	}
+},
+```
+
 ## inputId
 
 Sets the id of the input element.
