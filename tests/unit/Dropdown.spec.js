@@ -136,7 +136,9 @@ describe("Toggling Dropdown", () => {
 
     Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
     expect(Select.vm.open).toEqual(true);
-    expect(Select.contains('.vs__dropdown-menu')).toBeFalsy();
+    expect(Select.contains('.vs__dropdown-menu').hasStyle('display', 'none')).toEqual(true);
+    expect(Select.contains('.vs__dropdown-option')).toBeFalsy();
+    expect(Select.contains('.vs__no-options')).toBeFalsy();
     expect(Select.vm.stateClasses['vs--open']).toBeFalsy();
   });
 
