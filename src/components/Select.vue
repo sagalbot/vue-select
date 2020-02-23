@@ -1085,7 +1085,8 @@
           return optionList;
         }
 
-        let options = this.search.length ? this.filter(optionList, this.search, this) : optionList;
+        let options = this.filter(optionList, this.search, this);
+
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }

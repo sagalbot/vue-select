@@ -1,6 +1,9 @@
 import vSelect from '../../src/components/Select';
 
 export default ({Vue, options, router, siteData}) => {
+  // Vue.config.performance = true;
+  Vue.config.devtools = true;
+
   Vue.component('v-select', vSelect);
 
   /**

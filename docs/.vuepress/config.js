@@ -122,6 +122,7 @@ module.exports = {
             ['guide/vuex', 'Vuex'],
             ['guide/ajax', 'AJAX'],
             ['guide/loops', 'Using in Loops'],
+            ['guide/bigdata', 'Large Datasets'],
           ],
         },
         {

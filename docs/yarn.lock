@@ -1161,6 +1161,11 @@ agentkeepalive@^2.2.0:
   resolved "https://registry.yarnpkg.com/agentkeepalive/-/agentkeepalive-2.2.0.tgz#c5d1bd4b129008f1163f236f86e5faea2026e2ef"
   integrity sha1-xdG9SxKQCPEWPyNvhuX66iAm4u8=
 
+airport-data@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/airport-data/-/airport-data-1.0.1.tgz#41c743c48fc5b37765a1bd3cf0617c1de8151316"
+  integrity sha1-QcdDxI/Fs3dlob088GF8HegVExY=
+
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
