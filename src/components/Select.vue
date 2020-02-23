@@ -826,6 +826,9 @@
         if (this.mousedown && !this.searching) {
           this.mousedown = false
         } else {
+          if (this.taggable && this.search.length) {
+            this.select(this.search)
+          }
           if (this.clearSearchOnBlur) {
             this.search = ''
           }

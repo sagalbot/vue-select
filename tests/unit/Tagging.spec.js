@@ -235,4 +235,15 @@ describe("When Tagging Is Enabled", () => {
     expect(Select.vm.selectedValue).toEqual([{ label: "one" }]);
     expect(Select.vm.search).toEqual("");
   });
+
+  it("should select the current search text on focus lost", () => {
+    const Select = selectWithProps({
+      taggable: true
+    });
+
+    Select.vm.open = true;
+    Select.vm.search = "a tag";
+    Select.vm.onSearchBlur();
+    expect(Select.vm.selectedValue).toEqual(["a tag"]);
+  });
 });
