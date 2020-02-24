@@ -7,21 +7,24 @@
     <div ref="toggle" @mousedown.prevent="toggleDropdown" class="vs__dropdown-toggle">
 
       <div class="vs__selected-options" ref="selectedOptions">
-        <slot v-for="option in selectedValue"
-              name="selected-option-container"
-              :option="normalizeOptionForSlot(option)"
-              :deselect="deselect"
-              :multiple="multiple"
-              :disabled="disabled">
-          <span :key="getOptionKey(option)" class="vs__selected">
-            <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
-              {{ getOptionLabel(option) }}
-            </slot>
-            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" aria-label="Deselect option" ref="deselectButtons">
-              <component :is="childComponents.Deselect" />
-            </button>
-          </span>
-        </slot>
+        <span class="vs__selected" v-if="customFieldLabel">{{ customFieldLabel }}</span>
+        <template v-else>
+          <slot v-for="option in selectedValue"
+                name="selected-option-container"
+                :option="normalizeOptionForSlot(option)"
+                :deselect="deselect"
+                :multiple="multiple"
+                :disabled="disabled">
+            <span :key="getOptionKey(option)" class="vs__selected">
+              <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
+                {{ getOptionLabel(option) }}
+              </slot>
+              <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" aria-label="Deselect option" ref="deselectButtons">
+                <component :is="childComponents.Deselect" />
+              </button>
+            </span>
+          </slot>
+        </template>
 
         <slot name="search" v-bind="scope.search">
           <input class="vs__search" v-bind="scope.search.attributes" v-on="scope.search.events">
@@ -93,7 +96,7 @@
        * Contains the currently selected value. Very similar to a
        * `value` attribute on an <input>. You can listen for changes
        * using 'change' event using v-on
-       * @type {Object||String||null}
+       * @type {Object||Array||String||null}
        */
       value: {},
 
@@ -175,6 +178,15 @@
       transition: {
         type: String,
         default: 'vs__fade'
+      },
+
+      /**
+       * Optional custom field value to display in case of long or numerous values.
+       * @type {String}
+       */
+      customFieldLabel: {
+        type: String,
+        default: ''
       },
 
       /**
@@ -1036,7 +1048,7 @@
       stateClasses() {
         return {
           'vs--open': this.dropdownOpen,
-          'vs--single': !this.multiple,
+          'vs--single': !this.multiple || this.customFieldLabel,
           'vs--searching': this.searching && !this.noDrop,
           'vs--searchable': this.searchable && !this.noDrop,
           'vs--unsearchable': !this.searchable,

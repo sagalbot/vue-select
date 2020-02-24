@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import VueSelect from "../../src/components/Select";
 import { shallowMount } from "@vue/test-utils";
 import { selectWithProps } from "../helpers";
@@ -13,7 +14,7 @@ describe("Labels", () => {
   });
 
   it("will console.warn when options contain objects without a valid label key", () => {
-    const spy = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const spy = jest.spyOn(console, "warn").mockImplementation(() => { });
     const Select = selectWithProps({
       options: [{}]
     });
@@ -21,7 +22,7 @@ describe("Labels", () => {
     Select.vm.open = true;
     expect(spy).toHaveBeenCalledWith(
       '[vue-select warn]: Label key "option.label" does not exist in options object {}.' +
-        "\nhttps://vue-select.org/api/props.html#getoptionlabel"
+      "\nhttps://vue-select.org/api/props.html#getoptionlabel"
     );
   });
 
@@ -38,5 +39,19 @@ describe("Labels", () => {
     expect(Select.vm.searchPlaceholder).toEqual("foo");
     Select.vm.$data._value = "one";
     expect(Select.vm.searchPlaceholder).not.toBeDefined();
+  });
+
+  it("should display a custom placeholder instead of selected values", async () => {
+    const customFieldLabel = "2 selected"
+    const Select = shallowMount(VueSelect, {
+      propsData: {
+        customFieldLabel,
+        options: ["one", "two", "three"]
+      }
+    });
+
+    Select.vm.$data._value = ["one", "three"];
+    await Vue.nextTick()
+    expect(Select.find(".vs__selected").text()).toEqual(customFieldLabel);
   });
 });

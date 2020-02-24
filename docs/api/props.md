@@ -48,6 +48,17 @@ clearable: {
 },
 ```
 
+## customFieldLabel
+
+Custom field value to display in case of long or numerous values. Useful when you want to display the dropdown inline and can't have it wrap multiple lines.
+
+```js
+customFieldLabel: {
+	type: String,
+	default: ''
+},
+```
+
 ## maxHeight
 
 ::: warning Deprecated in `v2.x` & Removed in `v3.0`
@@ -340,10 +351,10 @@ createOption: {
 ## resetOnOptionsChange
 
 When false, updating the options will not reset the selected value.
- 
-Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`. 
 
-If defined as a function, it will receive the params listed below. 
+Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`.
+
+If defined as a function, it will receive the params listed below.
 
 ```js
 /**
