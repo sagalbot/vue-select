@@ -52,14 +52,14 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
+      <ul ref="dropdownMenu" v-if="dropdownOpen" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
         <li
           role="option"
           v-for="(option, index) in filteredOptions"
           :key="getOptionKey(option)"
           class="vs__dropdown-option"
-          :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer, 'vs__dropdown-option--disabled': !selectable(option) }"
-          @mouseover="selectable(option) ? typeAheadPointer = index : null"
+          :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer, 'vs__dropdown-option--disabled': !selectable(option), 'vs__dropdown-option--simpleHover': !preselectOnHover }"
+          @mouseover="preselectOnHover && selectable(option) ? typeAheadPointer = index : null"
           @mousedown.prevent.stop="selectable(option) ? select(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
@@ -79,6 +79,7 @@
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
   import childComponents from './childComponents';
+  import appendToBody from '../directives/appendToBody';
 
   /**
    * @name VueSelect
@@ -87,6 +88,8 @@
     components: {...childComponents},
 
     mixins: [pointerScroll, typeAheadPointer, ajax],
+
+    directives: {appendToBody},
 
     props: {
       /**
@@ -511,6 +514,46 @@
          * @return {Object}
          */
         default: (map, vm) => map,
+      },
+
+      /**
+       * Disable pre-selection of the option on hover and
+       * enable a simpler, native CSS hover effect. Greatly
+       * improve performances for big options lists.
+       * @type {Boolean}
+       */
+      preselectOnHover: {
+        type: Boolean,
+        default: true
+      },
+
+      /**
+       * Open the drop-down only when searching a few
+       * keystrokes. Useful for big options lists.
+       * @type {Boolean}
+       */
+      openOnlyOnSearch: {
+        type: Boolean,
+        default: false
+      },
+
+       * Append the dropdown element to the end of the body
+       * and size/position it dynamically. Use it if you have
+       * overflow issues.
+       * @type {Boolean}
+       */
+      appendToBody: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
+       * Focus the input when the component is mounted.
+       * @type {Boolean}
+       */
+      autoFocus: {
+        type: Boolean,
+        default: false
       }
     },
 
@@ -575,6 +618,14 @@
       }
 
       this.$on('option:created', this.maybePushTag)
+    },
+
+    mounted() {
+      if (this.autoFocus) {
+        this.$nextTick(() => {
+          this.searchEl.focus();
+        });
+      }
     },
 
     methods: {
@@ -919,7 +970,18 @@
         if (typeof handlers[e.keyCode] === 'function') {
           return handlers[e.keyCode](e);
         }
-      }
+      },
+
+      /**
+       * Search <input> KeyUp handler.
+       * @param e {KeyboardEvent}
+       */
+      onSearchKeyUp (e) {
+        if (e.keyCode == 27) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      },
     },
 
     computed: {
@@ -997,6 +1059,7 @@
               'compositionstart': () => this.isComposing = true,
               'compositionend': () => this.isComposing = false,
               'keydown': this.onSearchKeyDown,
+              'keyup': this.onSearchKeyUp,
               'blur': this.onSearchBlur,
               'focus': this.onSearchFocus,
               'input': (e) => this.search = e.target.value,
@@ -1060,7 +1123,7 @@
        * @return {Boolean} True if open
        */
       dropdownOpen() {
-        return this.noDrop ? false : this.open && !this.mutableLoading
+        return this.noDrop ? false : (this.open && !this.mutableLoading && (!this.openOnlyOnSearch || this.searching))
       },
 
       /**
