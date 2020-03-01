@@ -117,11 +117,13 @@
     "files": [
       {
         "path": "./dist/vue-select.js",
+        "compression": "none",
         "maxSize": "21 KB"
       },
       {
         "path": "./dist/vue-select.css",
-        "maxSize": "8 KB"
+        "compression": "none",
+        "maxSize": "6 KB"
       }
     ]
   }
