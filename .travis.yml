@@ -10,8 +10,6 @@ jobs:
     - stage: release
       node_js: lts/*
       deploy:
-        provider: script
         skip_cleanup: true
-        script:
-          - yarn build
-          - npx semantic-release
+        provider: script
+        script: yarn build && npx semantic-release
