@@ -1,8 +1,7 @@
-name: Test & Build
+name: Test
 on: [pull_request]
 jobs:
   test:
-    name: Test and Build
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1
@@ -15,7 +14,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Test with Coverage
-        run: yarn test --coverage --coverageReporters=text-lcov
+        run: yarn test --coverage --coverageReporters=lcov
 
       - name: Report Coverage
         uses: coverallsapp/github-action@master

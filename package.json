@@ -105,28 +105,12 @@
       "!**/node_modules/**"
     ],
     "coverageReporters": [
-      "html",
-      "text-summary"
+      "text"
     ]
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "bundlewatch": {
-    "trackBranches": [
-      "master"
-    ],
-    "files": [
-      {
-        "path": "./dist/vue-select.js",
-        "maxSize": "25 KB"
-      },
-      {
-        "path": "./dist/vue-select.css",
-        "maxSize": "8 KB"
-      }
-    ]
   }
 }
