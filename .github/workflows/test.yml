@@ -1,7 +1,8 @@
 name: Test & Build
 on: [pull_request]
 jobs:
-  install:
+  test:
+    name: Test and Build
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -12,13 +13,7 @@ jobs:
           node-version: 12
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-  test:
-    needs: install
-    steps:
       - name: Test with Coverage
         run: yarn test --coverage --coverageReporters=text-lcov | coveralls
-  bundlewatch:
-    needs: install
-    steps:
       - name: Build & Bundlewatch
         run: yarn build && bundlewatch --max-size 20kb ./dist/!(*.map)
