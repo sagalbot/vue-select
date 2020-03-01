@@ -28,7 +28,17 @@ export default {
      * @emits search
      */
     search () {
-      this.$emit('search', this.search, this.toggleLoading);
+      const search = this.search;
+      const toggleLoading = this.toggleLoading;
+      /**
+       * Triggered anytime the search text has been altered in any way,
+       * including being set to an empty string. Your listener should
+       * account for empty search strings.
+       *
+       * @param {String} search - the current search text
+       * @param {Function} toggleLoading - accepts true/false to toggle loading state
+       */
+      this.$emit('search', search, toggleLoading);
     },
 
     /**

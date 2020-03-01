@@ -1,6 +1,6 @@
 <template>
   <ParentLayout>
-    <CodeFund slot="sidebar-top"/>
+    <CodeFund slot="sidebar-top" />
   </ParentLayout>
 </template>
 
@@ -11,7 +11,7 @@ import CodeFund from '../components/CodeFund.vue'
 export default {
   components: {
     ParentLayout,
-    CodeFund
+    CodeFund,
   }
 }
 </script>
@@ -23,5 +23,7 @@ export default {
   }
   #codefund + .sidebar-links {
     padding-top: 1rem;
+    border-bottom: none;
+    padding-bottom: 0.75rem;
   }
 </style>

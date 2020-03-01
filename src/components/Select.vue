@@ -74,7 +74,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
   import pointerScroll from '../mixins/pointerScroll'
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
@@ -90,10 +90,8 @@
 
     props: {
       /**
-       * Contains the currently selected value. Very similar to a
-       * `value` attribute on an <input>. You can listen for changes
-       * using 'change' event using v-on
-       * @type {Object||String||null}
+       * Contains the currently selected value.
+       * @see https://vue-select.org/guide/values.html
        */
       value: {},
 
@@ -101,8 +99,8 @@
        * An object with any custom components that you'd like to overwrite
        * the default implementation of in your app. The keys in this object
        * will be merged with the defaults.
+       * @since 3.1.0
        * @see https://vue-select.org/guide/components.html
-       * @type {Function}
        */
       components: {
         type: Object,
@@ -209,7 +207,8 @@
       /**
        * Value of the 'autocomplete' field of the input
        * element.
-       * @type {String}
+       *
+       * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete
        */
       autocomplete: {
         type: String,
@@ -220,8 +219,11 @@
        * When working with objects, the reduce
        * prop allows you to transform a given
        * object to only the information you
-       * want passed to a v-model binding
-       * or @input event.
+       * want passed to a `v-model` binding
+       * or `@input` event.
+       *
+       * @param {mixed} option
+       * @return {mixed} option
        */
       reduce: {
         type: Function,
@@ -232,13 +234,14 @@
        * Decides whether an option is selectable or not. Not selectable options
        * are displayed but disabled and cannot be selected.
        *
-       * @type {Function}
        * @since 3.3.0
-       * @param {Object|String} option
-       * @return {Boolean}
        */
       selectable: {
         type: Function,
+        /**
+         * @param {Object|String} option
+         * @return {Boolean}
+         */
         default: option => true,
       },
 
@@ -328,7 +331,7 @@
 
       /**
        * Set the tabindex for the input field.
-       * @type {Number}
+       * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex
        */
       tabindex: {
         type: Number,
@@ -360,10 +363,10 @@
        * Callback to determine if the provided option should
        * match the current search text. Used to determine
        * if the option should be displayed.
-       * @type   {Function}
-       * @param  {Object || String} option
-       * @param  {String} label
-       * @param  {String} search
+       * @type  {Function}
+       * @param {Object|String} option
+       * @param {String} label
+       * @param {String} search
        * @return {Boolean}
        */
       filterBy: {
@@ -379,9 +382,9 @@
        * each option, and returns the result of
        * this.filterBy.
        * @type   {Function}
-       * @param  {Array} list of options
-       * @param  {String} search text
-       * @param  {Object} vSelect instance
+       * @param {Array} options list of options
+       * @param {String} search search text
+       * @param {Object} vm vSelect instance
        * @return {Boolean}
        */
       filter: {
@@ -399,10 +402,12 @@
 
       /**
        * User defined function for adding Options
-       * @type {Function}
        */
       createOption: {
         type: Function,
+        /**
+         * @param {Object|String}
+         */
         default (option) {
           return (typeof this.optionList[0] === 'object') ? {[this.label]: option} : option;
         },
@@ -438,7 +443,6 @@
 
       /**
        * Disable the dropdown entirely.
-       * @type {Boolean}
        */
       noDrop: {
         type: Boolean,
@@ -447,18 +451,15 @@
 
       /**
        * Sets the id of the input element.
-       * @type {String}
-       * @default {null}
        */
       inputId: {
-        type: String
+        type: String,
+        default: null,
       },
 
       /**
        * Sets RTL support. Accepts 'ltr', 'rtl', 'auto'.
        * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir
-       * @type {String}
-       * @default 'auto'
        */
       dir: {
         type: String,
@@ -594,13 +595,19 @@
 
       /**
        * Select a given option.
-       * @param  {Object|String} option
+       * @emits option:created
+       * @param {Object|String} option
        * @return {void}
        */
       select(option) {
         if (!this.isOptionSelected(option)) {
           if (this.taggable && !this.optionExists(option)) {
             option = this.createOption(option);
+
+            /**
+             * Triggered when taggable is true and a new option has been created.
+             * @param {Object|String} option - freshly created option
+             */
             this.$emit('option:created', option);
           }
           if (this.multiple) {
@@ -669,6 +676,14 @@
           }
         }
 
+        /**
+         * Triggered any time the selected value changes.
+         * This event, along with the `value` prop, enable
+         * the v-model syntax for the component.
+         *
+         * @event input
+         * @param {Object|String} value - selected option
+         */
         this.$emit('input', value);
       },
 
@@ -755,7 +770,12 @@
        * @returns {void}
        */
       closeSearchOptions(){
-        this.open = false
+        this.open = false;
+
+        /**
+         * Triggered when the text input loses focus.
+         * The dropdown will close immediately before this event is triggered.
+         */
         this.$emit('search:blur')
       },
 
@@ -853,11 +873,16 @@
 
       /**
        * Open the dropdown on focus.
-       * @emits  {search:focus}
+       * @emits {search:focus}
        * @return {void}
        */
       onSearchFocus() {
-        this.open = true
+        this.open = true;
+
+        /**
+         * Triggered when the text input gains focus.
+         * The dropdown will open immediately before this event is triggered.
+         */
         this.$emit('search:focus')
       },
 

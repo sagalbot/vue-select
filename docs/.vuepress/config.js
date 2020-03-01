@@ -1,9 +1,22 @@
+const path = require('path');
+
 const isDeployPreview = process.env.hasOwnProperty('DEPLOY_PREVIEW');
 
 const meta = {
   title: 'Vue Select | VueJS Select2/Chosen Component',
   description: 'Everything you wish the HTML select element could do, wrapped up into a lightweight, extensible Vue component.',
   url: 'https://vue-select.org',
+};
+
+const pluginConfig = {
+  analytics: {ga: isDeployPreview ? '' : 'UA-12818324-8'},
+  pwa: {
+    serviceWorker: false,
+    updatePopup: true,
+  },
+  vuesource: {
+    src: path.resolve(__dirname, '../../src/components/Select.vue')
+  },
 };
 
 let head = [
@@ -63,19 +76,20 @@ module.exports = {
   title: 'Vue Select',
   description: meta.description,
   head,
-  plugins: {
-    '@vuepress/google-analytics': {
-      ga: isDeployPreview ? '' : 'UA-12818324-8',
-    },
-    '@vuepress/pwa': {
-      serviceWorker: false,
-      updatePopup: true,
-    },
-    '@vuepress/plugin-register-components': {},
-    '@vuepress/plugin-active-header-links': {},
-    '@vuepress/plugin-search': {},
-    '@vuepress/plugin-nprogress': {},
-  },
+  plugins: [
+    [require('@vuesource/vuepress'), pluginConfig.vuesource],
+    ['@vuepress/google-analytics', pluginConfig.analytics],
+    ['@vuepress/pwa', pluginConfig.pwa],
+    '@vuepress/plugin-register-components',
+    '@vuepress/plugin-active-header-links',
+    '@vuepress/plugin-search',
+    '@vuepress/plugin-nprogress',
+  ],
+  extraWatchFiles: [
+    '.vuepress/generateApiDocs/**/*.js',
+    '../src/**.*.js',
+    '../src/**.*.vue',
+  ],
   themeConfig: {
     repo: 'sagalbot/vue-select',
     editLinks: true,
@@ -136,8 +150,9 @@ module.exports = {
           collapsable: false,
           children: [
             ['api/props', 'Props'],
-            ['api/slots', 'Slots'],
             ['api/events', 'Events'],
+            ['api/slots', 'Slots'],
+            ['api/methods', 'Methods'],
           ],
         },
       ],

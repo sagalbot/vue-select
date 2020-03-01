@@ -1,0 +1,5 @@
+---
+api: methods
+---
+
+<ApiMethods />

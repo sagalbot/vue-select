@@ -1,3 +1,7 @@
+# Upgrading 2.x to 3.x
+
+---
+
 ## `index` prop replaced with `reduce`
 
 - v2.x provided the `index` `{String}` prop to return a single key from a selected object
