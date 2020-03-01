@@ -5,15 +5,22 @@ jobs:
     name: Test and Build
     runs-on: ubuntu-18.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v1
+
+      - uses: actions/setup-node@v1
         with:
           node-version: 12
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+
       - name: Test with Coverage
-        run: yarn test --coverage --coverageReporters=text-lcov | coveralls
-      - name: Build & Bundlewatch
+        run: yarn test --coverage --coverageReporters=text-lcov
+
+      - name: Report Coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bundlewatch
         run: yarn build && bundlewatch --max-size 20kb ./dist/!(*.map)
