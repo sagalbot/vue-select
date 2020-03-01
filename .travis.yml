@@ -1,12 +1,9 @@
 language: node_js
-node_js:
-  - "10"
-
 cache: yarn
-
 jobs:
   include:
     - stage: test
+      node_js: lts/*
       script:
         - yarn test --coverage --coverageReporters=text-lcov | coveralls
         - yarn build && bundlewatch --max-size 20kb ./dist/!(*.map)
