@@ -153,7 +153,7 @@ describe("When Tagging Is Enabled", () => {
     expect(Select.vm.selectedValue).toEqual([two]);
   });
 
-  it("should select an existing option if the search string matches an objects label from options", () => {
+  it("should select an existing option if the search string matches an objects label from options", async () => {
     let two = { label: "two" };
     const Select = selectWithProps({
       taggable: true,
@@ -161,12 +161,13 @@ describe("When Tagging Is Enabled", () => {
     });
 
     Select.vm.search = "two";
+    await Select.vm.$nextTick();
 
     searchSubmit(Select);
     expect(Select.vm.selectedValue).toEqual([two]);
   });
 
-  it("should select an existing option if the search string matches an objects label from options when filter-options is false", () => {
+  it("should select an existing option if the search string matches an objects label from options when filter-options is false", async () => {
     let two = { label: "two" };
     const Select = selectWithProps({
       taggable: true,
@@ -175,6 +176,7 @@ describe("When Tagging Is Enabled", () => {
     });
 
     Select.vm.search = "two";
+    await Select.vm.$nextTick();
 
     searchSubmit(Select);
     expect(Select.vm.selectedValue).toEqual([two]);

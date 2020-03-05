@@ -31,20 +31,21 @@ describe("Reset on options change", () => {
       expect(spy.mock.calls[3][0]).toContain('Invalid prop: custom validator check failed for prop "resetOnOptionsChange"')
     });
 
-    it('should receive the new options, old options, and current value', () => {
+    it('should receive the new options, old options, and current value', async () => {
       let resetOnOptionsChange = jest.fn(option => option);
       const Select = mountDefault(
         {resetOnOptionsChange, options: ['bear'], value: 'selected'},
       );
 
       Select.setProps({options: ['lake', 'kite']});
+      await Select.vm.$nextTick();
 
       expect(resetOnOptionsChange).toHaveBeenCalledTimes(1);
       expect(resetOnOptionsChange)
         .toHaveBeenCalledWith(['lake', 'kite'], ['bear'], ['selected']);
     });
 
-    it('should allow resetOnOptionsChange to be a function that returns true', () => {
+    it('should allow resetOnOptionsChange to be a function that returns true', async () => {
       let resetOnOptionsChange = () => true;
       const Select = shallowMount(VueSelect, {
         propsData: {resetOnOptionsChange, options: ['one'], value: 'one'},
@@ -52,6 +53,8 @@ describe("Reset on options change", () => {
       const spy = jest.spyOn(Select.vm, 'clearSelection');
 
       Select.setProps({options: ['one', 'two']});
+      await Select.vm.$nextTick();
+
       expect(spy).toHaveBeenCalledTimes(1);
     });
 
@@ -74,14 +77,18 @@ describe("Reset on options change", () => {
       const spy = jest.spyOn(Select.vm, 'clearSelection');
 
       Select.setProps({options: ['one', 'two']});
+      await Select.vm.$nextTick();
+
       expect(Select.vm.selectedValue).toEqual(['one']);
 
       Select.setProps({options: ['two']});
+      await Select.vm.$nextTick();
+
       expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
-  it("should reset the selected value when the options property changes", () => {
+  it("should reset the selected value when the options property changes", async () => {
     const Select = shallowMount(VueSelect, {
       propsData: { resetOnOptionsChange: true, options: ["one"] }
     });
@@ -89,15 +96,46 @@ describe("Reset on options change", () => {
     Select.vm.$data._value = 'one';
 
     Select.setProps({options: ["four", "five", "six"]});
+    await Select.vm.$nextTick();
+
     expect(Select.vm.selectedValue).toEqual([]);
   });
 
-  it("should return correct selected value when the options property changes and a new option matches", () => {
+  it("should return correct selected value when the options property changes and a new option matches", async () => {
     const Select = shallowMount(VueSelect, {
       propsData: { value: "one", options: [], reduce(option) { return option.value } }
     });
 
     Select.setProps({options: [{ label: "oneLabel", value: "one" }]});
+    await Select.vm.$nextTick();
+
     expect(Select.vm.selectedValue).toEqual([{ label: "oneLabel", value: "one" }]);
+  });
+
+  it('clearSearchOnBlur returns false when multiple is true', () => {
+    const Select = mountDefault({});
+    let clearSearchOnBlur = jest.spyOn(Select.vm, 'clearSearchOnBlur');
+    Select.find({ref: 'search'}).trigger('click');
+    Select.setData({search: 'one'});
+    Select.find({ref: 'search'}).trigger('blur');
+
+    expect(clearSearchOnBlur).toHaveBeenCalledTimes(1);
+    expect(clearSearchOnBlur).toHaveBeenCalledWith({
+      clearSearchOnSelect: true,
+      multiple: false,
+    });
+    expect(Select.vm.search).toBe('');
+  });
+
+  it('clearSearchOnBlur accepts a function', () => {
+    let clearSearchOnBlur = jest.fn(() => false);
+    const Select = mountDefault({clearSearchOnBlur});
+
+    Select.find({ref: 'search'}).trigger('click');
+    Select.setData({search: 'one'});
+    Select.find({ref: 'search'}).trigger('blur');
+
+    expect(clearSearchOnBlur).toHaveBeenCalledTimes(1);
+    expect(Select.vm.search).toBe('one');
   });
 });

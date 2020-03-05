@@ -12,13 +12,15 @@ describe("Labels", () => {
     expect(Select.find(".vs__selected").text()).toBe("Foo");
   });
 
-  it("will console.warn when options contain objects without a valid label key", () => {
+  it("will console.warn when options contain objects without a valid label key", async () => {
     const spy = jest.spyOn(console, "warn").mockImplementation(() => {});
     const Select = selectWithProps({
       options: [{}]
     });
 
     Select.vm.open = true;
+    await Select.vm.$nextTick();
+
     expect(spy).toHaveBeenCalledWith(
       '[vue-select warn]: Label key "option.label" does not exist in options object {}.' +
         "\nhttps://vue-select.org/api/props.html#getoptionlabel"

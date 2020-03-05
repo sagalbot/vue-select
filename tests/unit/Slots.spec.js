@@ -42,7 +42,7 @@ describe('Scoped Slots', () => {
   });
 
   it('receives an option object to the option slot in the dropdown menu',
-    () => {
+    async () => {
       const Select = mountDefault(
         {value: 'one'},
         {
@@ -52,6 +52,7 @@ describe('Scoped Slots', () => {
         });
 
       Select.vm.open = true;
+      await Select.vm.$nextTick();
 
       expect(Select.find({ref: 'dropdownMenu'}).text()).toEqual('onetwothree');
     });

@@ -1,6 +1,6 @@
 {
   "name": "vue-select",
-  "version": "3.4.0",
+  "version": "3.5.1",
   "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
   "author": "Jeff Sagal <sagalbot@gmail.com>",
   "homepage": "https://vue-select.org",
@@ -18,7 +18,9 @@
     "build": "cross-env NODE_ENV=production webpack --config build/webpack.prod.conf.js --progress",
     "build:docs": "cd docs && yarn build",
     "build:preview": "cd docs && yarn build",
-    "test": "jest"
+    "test": "jest",
+    "semantic-release": "semantic-release",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -35,16 +37,19 @@
     "@babel/plugin-transform-runtime": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/runtime": "^7.4.2",
-    "@vue/test-utils": "^1.0.0-beta.29",
+    "@semantic-release/git": "^9.0.0",
+    "@vue/test-utils": "^1.0.0-beta.31",
     "autoprefixer": "^9.4.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^8.0.5",
     "bundlewatch": "^0.2.5",
     "chokidar": "^2.1.5",
+    "commitizen": "^4.0.3",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.0",
     "cssnano": "^4.1.10",
+    "cz-conventional-changelog": "3.1.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.1.0",
@@ -55,6 +60,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-scss": "^2.0.0",
     "sass-loader": "^7.1.0",
+    "semantic-release": "^17.0.4",
     "terser-webpack-plugin": "^1.2.3",
     "url-loader": "^1.1.2",
     "vue": "^2.6.10",
@@ -99,8 +105,26 @@
       "!**/node_modules/**"
     ],
     "coverageReporters": [
-      "html",
-      "text-summary"
+      "text"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "bundlewatch": {
+    "files": [
+      {
+        "path": "./dist/vue-select.js",
+        "compression": "none",
+        "maxSize": "21 KB"
+      },
+      {
+        "path": "./dist/vue-select.css",
+        "compression": "none",
+        "maxSize": "6 KB"
+      }
     ]
   }
 }

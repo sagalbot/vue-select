@@ -431,6 +431,17 @@
       },
 
       /**
+       * If search text should clear on blur
+       * @return {Boolean} True when single and clearSearchOnSelect
+       */
+      clearSearchOnBlur: {
+        type: Function,
+        default: function ({ clearSearchOnSelect, multiple }) {
+          return clearSearchOnSelect && !multiple
+        }
+      },
+
+      /**
        * Disable the dropdown entirely.
        * @type {Boolean}
        */
@@ -832,7 +843,8 @@
         if (this.mousedown && !this.searching) {
           this.mousedown = false
         } else {
-          if (this.clearSearchOnBlur) {
+          const { clearSearchOnSelect, multiple } = this;
+          if (this.clearSearchOnBlur({ clearSearchOnSelect, multiple })) {
             this.search = ''
           }
           this.closeSearchOptions()
@@ -1038,14 +1050,6 @@
           'vs--loading': this.mutableLoading,
           'vs--disabled': this.disabled
         }
-      },
-
-      /**
-       * If search text should clear on blur
-       * @return {Boolean} True when single and clearSearchOnSelect
-       */
-      clearSearchOnBlur() {
-        return this.clearSearchOnSelect && !this.multiple
       },
 
       /**
