@@ -70,8 +70,8 @@
               {{ getOptionLabel(option) }}
             </slot>
           </li>
-          <li v-if="!filteredOptions.length" class="vs__no-options" @mousedown.stop="">
-            <slot name="no-options">Sorry, no matching options.</slot>
+          <li v-if="filteredOptions.length === 0" class="vs__no-options" @mousedown.stop="">
+            <slot name="no-options" v-bind="scope.noOptions">Sorry, no matching options.</slot>
           </li>
         </template>
       </ul>
@@ -1012,6 +1012,10 @@
           },
           spinner: {
             loading: this.mutableLoading
+          },
+          noOptions: {
+            search: this.search,
+            searching: this.searching,
           },
           openIndicator: {
             attributes: {
