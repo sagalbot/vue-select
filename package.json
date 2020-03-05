@@ -38,6 +38,7 @@
     "@babel/preset-env": "^7.4.2",
     "@babel/runtime": "^7.4.2",
     "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.0.4",
     "@vue/test-utils": "^1.0.0-beta.31",
     "autoprefixer": "^9.4.7",
     "babel-core": "^7.0.0-bridge.0",
