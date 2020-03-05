@@ -69,10 +69,10 @@
               {{ getOptionLabel(option) }}
             </slot>
           </li>
+          <li v-if="!filteredOptions.length" class="vs__no-options" @mousedown.stop="">
+            <slot name="no-options">Sorry, no matching options.</slot>
+          </li>
         </template>
-        <li v-if="!filteredOptions.length" class="vs__no-options" @mousedown.stop="">
-          <slot name="no-options">Sorry, no matching options.</slot>
-        </li>
       </ul>
     </transition>
   </div>
@@ -83,7 +83,7 @@
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
   import childComponents from './childComponents';
-  import { uniqueId } from 'lodash';
+  import uniqueId from '../utility/uniqueId';
 
   /**
    * @name VueSelect
