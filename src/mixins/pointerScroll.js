@@ -30,7 +30,7 @@ export default {
      */
     pixelsToPointerTop() {
       let pixelsToPointerTop = 0;
-      if (this.$refs.dropdownMenu) {
+      if (this.$refs.dropdownMenu && this.dropdownOpen) {
         for (let i = 0; i < this.typeAheadPointer; i++) {
           pixelsToPointerTop += this.$refs.dropdownMenu.children[i]
             .offsetHeight;
