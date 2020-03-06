@@ -55,6 +55,7 @@
     <transition :name="transition">
       <ul ref="dropdownMenu" v-show="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
         <template v-if="dropdownOpen">
+          <slot name="list-header" @mousedown.stop></slot>
           <li
             role="option"
             v-for="(option, index) in filteredOptions"
@@ -70,9 +71,10 @@
               {{ getOptionLabel(option) }}
             </slot>
           </li>
-          <li v-if="filteredOptions.length === 0" class="vs__no-options" @mousedown.stop="">
+          <li v-if="filteredOptions.length === 0" class="vs__no-options" @mousedown.stop>
             <slot name="no-options" v-bind="scope.noOptions">Sorry, no matching options.</slot>
           </li>
+          <slot name="list-footer" @mousedown.stop></slot>
         </template>
       </ul>
     </transition>
@@ -984,6 +986,12 @@
        * @returns {Object}
        */
       scope () {
+        const listSlot = {
+          search: this.search,
+          loading: this.loading,
+          searching: this.searching,
+          filteredOptions: this.filteredOptions
+        };
         return {
           search: {
             attributes: {
@@ -1015,6 +1023,7 @@
           },
           noOptions: {
             search: this.search,
+            loading: this.loading,
             searching: this.searching,
           },
           openIndicator: {
@@ -1024,6 +1033,8 @@
               'class': 'vs__open-indicator',
             },
           },
+          listHeader: listSlot,
+          listFooter: listSlot
         };
       },
 
