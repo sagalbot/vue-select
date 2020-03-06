@@ -4,7 +4,7 @@
 
 <template>
   <div :dir="dir" class="v-select" :class="stateClasses">
-    <div ref="toggle" @mousedown.prevent="toggleDropdown" class="vs__dropdown-toggle">
+    <div ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle">
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
@@ -499,6 +499,16 @@
       },
 
       /**
+       * Enables/disables allowing the mouse to send events to the search input field without closing the dropdown menu
+       * @type {Boolean}
+       */
+      enableMouseSearchInput: {
+        type: Boolean,
+        default: false
+      },
+
+
+      /**
        * Used to modify the default keydown events map
        * for the search input. Can be used to implement
        * custom behaviour for key presses.
@@ -674,10 +684,10 @@
 
       /**
        * Toggle the visibility of the dropdown menu.
-       * @param  {Event} e
+       * @param  {Event} event
        * @return {void}
        */
-      toggleDropdown ({target}) {
+      toggleDropdown (event) {
         //  don't react to click on deselect/clear buttons,
         //  they dropdown state will be set in their click handlers
         const ignoredButtons = [
@@ -685,11 +695,14 @@
           ...([this.$refs['clearButton']] || [])
         ];
 
-        if (ignoredButtons.some(ref => ref.contains(target) || ref === target)) {
+        if (ignoredButtons.some(ref => ref.contains(event.currentTarget) || ref === event.currentTarget)) {
           return;
         }
 
-        if (this.open) {
+        if (!this.enableMouseSearchInput || event.target !== this.$refs.search) {
+          event.preventDefault()
+        }
+        if (this.open && (!this.enableMouseSearchInput || (this.enableMouseSearchInput && event.target !== this.$refs.search))) {
           this.searchEl.blur();
         } else if (!this.disabled) {
           this.open = true;

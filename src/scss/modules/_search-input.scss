@@ -34,6 +34,7 @@ $font-size: 1em;
   width: 0;
   max-width: 100%;
   flex-grow: 1;
+  z-index: 1;
 }
 
 .vs__search::placeholder {
