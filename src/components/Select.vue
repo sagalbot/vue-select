@@ -3,9 +3,21 @@
 </style>
 
 <template>
-  <div :dir="dir" class="v-select" :class="stateClasses">
-    <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown.prevent="toggleDropdown" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
-
+  <button
+    type="button"
+    ref="toggle"
+    :dir="dir"
+    role="combobox"
+    :id="`vs${uid}__combobox`"
+    :tabindex="tabindex"
+    :aria-expanded="dropdownOpen.toString()"
+    :aria-owns="`vs${uid}__listbox`"
+    aria-label="Search for option"
+    class="v-select vs__dropdown-toggle"
+    :class="stateClasses"
+    @keydown="keypressWhileToggleIsFocused"
+    @mousedown.prevent="maybeToggleDropdown"
+  >
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
               name="selected-option-container"
@@ -50,8 +62,6 @@
           <div class="vs__spinner" v-show="mutableLoading">Loading...</div>
         </slot>
       </div>
-    </div>
-
     <transition :name="transition">
       <ul ref="dropdownMenu" v-show="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
         <template v-if="dropdownOpen">
@@ -76,7 +86,8 @@
         </template>
       </ul>
     </transition>
-  </div>
+  </button>
+
 </template>
 
 <script type="text/babel">
@@ -526,6 +537,7 @@
         search: '',
         open: false,
         isComposing: false,
+        shouldDisplaySearch: true,
         pushedTags: [],
         _value: [] // Internal value managed by Vue Select if no `value` prop is passed
       }
@@ -684,7 +696,7 @@
        * @param  {Event} e
        * @return {void}
        */
-      toggleDropdown ({target}) {
+      maybeToggleDropdown ({target}) {
         //  don't react to click on deselect/clear buttons,
         //  they dropdown state will be set in their click handlers
         const ignoredButtons = [
@@ -696,7 +708,11 @@
           return;
         }
 
-        if (this.open) {
+        this.toggleDropdown(true);
+      },
+
+      toggleDropdown(toggle = true) {
+        if (this.open || ! toggle) {
           this.searchEl.blur();
         } else if (!this.disabled) {
           this.open = true;
@@ -848,7 +864,8 @@
           if (this.clearSearchOnBlur({ clearSearchOnSelect, multiple })) {
             this.search = ''
           }
-          this.closeSearchOptions()
+          this.closeSearchOptions();
+          this.$refs.toggle.focus();
           return
         }
         // Fixed bug where no-options message could not be closed
@@ -926,6 +943,31 @@
         if (typeof handlers[e.keyCode] === 'function') {
           return handlers[e.keyCode](e);
         }
+      },
+
+      /**
+       * @param e {KeyboardEvent}
+       */
+      keypressWhileToggleIsFocused(e) {
+        // if( e.target === this.searchEl ) {
+        //   return;
+        // }
+        //
+        // if( 'Tab' === e.code ) {
+        //   e.preventDefault();
+        //   return
+        // }
+        //
+        // if( ['Space', 'Return'].includes(e.code) ) {
+        //   return this.toggleDropdown();
+        // }
+        //
+        // if( ['ShiftLeft', 'ShiftRight'].includes(e.code)) {
+        //   e.preventDefault();
+        //   return;
+        // }
+        //
+        // return this.toggleDropdown()
       }
     },
 
@@ -989,7 +1031,7 @@
             attributes: {
               'disabled': this.disabled,
               'placeholder': this.searchPlaceholder,
-              'tabindex': this.tabindex,
+              'tabindex': '-1',
               'readonly': !this.searchable,
               'id': this.inputId,
               'aria-autocomplete': 'list',
@@ -1122,6 +1164,10 @@
        */
       showClearButton() {
         return !this.multiple && this.clearable && !this.open && !this.isValueEmpty
+      },
+
+      buttonIsFocused() {
+        return this.$el === this.$root.$el.querySelector(':focus');
       }
     },
 

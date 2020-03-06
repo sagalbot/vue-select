@@ -1,10 +1,25 @@
-import { selectWithProps } from "../helpers";
+import { mountDefault, selectWithProps } from '../helpers';
 import OpenIndicator from "../../src/components/OpenIndicator";
 
 describe("Toggling Dropdown", () => {
+  describe('focusing on the button wrapper', () => {
+    test('when the search is focused buttonIsFocused is false', () => {
+      const Select = mountDefault();
+      Select.vm.$refs.search.focus();
+      expect(Select.vm.buttonIsFocused).toBeFalsy();
+    })
+
+    test('when the button is focused, buttonIsFocused is true', async () => {
+      const Select = mountDefault();
+      Select.vm.$refs.toggle.focus();
+      await Select.vm.$nextTick();
+      expect(Select.vm.buttonIsFocused).toBeTruthy();
+    })
+  });
+
   it("should not open the dropdown when the el is clicked but the component is disabled", () => {
     const Select = selectWithProps({ disabled: true });
-    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    Select.vm.maybeToggleDropdown({ target: Select.vm.$refs.search });
     expect(Select.vm.open).toEqual(false);
   });
 
@@ -14,7 +29,7 @@ describe("Toggling Dropdown", () => {
       options: [{ label: "one" }]
     });
 
-    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    Select.vm.maybeToggleDropdown({ target: Select.vm.$refs.search });
     expect(Select.vm.open).toEqual(true);
   });
 
@@ -26,7 +41,7 @@ describe("Toggling Dropdown", () => {
 
     const selectedTag = Select.find(".vs__selected").element;
 
-    Select.vm.toggleDropdown({ target: selectedTag });
+    Select.vm.maybeToggleDropdown({ target: selectedTag });
     expect(Select.vm.open).toEqual(true);
   });
 
@@ -35,7 +50,7 @@ describe("Toggling Dropdown", () => {
     const spy = jest.spyOn(Select.vm.$refs.search, "blur");
 
     Select.vm.open = true;
-    Select.vm.toggleDropdown({ target: Select.vm.$el });
+    Select.vm.maybeToggleDropdown({ target: Select.vm.$el });
 
     expect(spy).toHaveBeenCalled();
   });
@@ -133,7 +148,8 @@ describe("Toggling Dropdown", () => {
     const Select = selectWithProps({
       noDrop: true,
     });
-    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+
+    Select.vm.maybeToggleDropdown({ target: Select.vm.$refs.search });
     expect(Select.vm.open).toEqual(true);
     await Select.vm.$nextTick();
 
