@@ -41,42 +41,61 @@ export function getOffset (element) {
 
 /**
  * Positioning the dropdown list.
+ * @param {HTMLElement} dropdownElement element for positioning.
  * @param {HTMLElement} baseElement element to positioning relative of
- * @param {HTMLElement} targetElement element for positioning.
  * @param {string}      [aboveCssClass='above'] CSS class to apply
  * if target element should be positioning above the base element.
  */
-export function positionDropdown (baseElement, targetElement, aboveCssClass = 'above') {
+export function positionDropdown (dropdownElement, baseElement, aboveCssClass = 'above') {
   const offset = baseElement && this.getOffset(baseElement)
 
-  if (baseElement && targetElement) {
-    const targetHeight = targetElement.offsetHeight
+  if (baseElement && dropdownElement) {
+    const targetHeight = dropdownElement.offsetHeight
 
     // move it to the <body> to avoid glitches in IE
-    document.body.appendChild(targetElement)
+    if (dropdownElement.parentElement !== document.body) {
+      document.body.appendChild(dropdownElement)
+    }
 
-    targetElement.style.minWidth = `${baseElement.offsetWidth}px`
-    targetElement.style.left = `${offset.left}px`
+    dropdownElement.style.minWidth = `${baseElement.offsetWidth}px`
+    dropdownElement.style.left = `${offset.left}px`
 
     if (offset.maxHeight < targetHeight && offset.top > targetHeight / 2) {
       let top = offset.top - targetHeight + 1
 
       if (top < 0) {
         top = 0
-        targetElement.style.maxHeight = `${offset.top}px`
+        dropdownElement.style.maxHeight = `${offset.top}px`
       }
-      targetElement.style.top = `${top}px`
+      dropdownElement.style.top = `${top}px`
       baseElement.classList.add(aboveCssClass)
-      targetElement.classList.add(aboveCssClass)
+      dropdownElement.classList.add(aboveCssClass)
     } else {
       if (offset.maxHeight < targetHeight) {
-        targetElement.style.maxHeight = `${offset.maxHeight}px`
+        dropdownElement.style.maxHeight = `${offset.maxHeight}px`
       }
-      targetElement.style.top = `${offset.top + baseElement.offsetHeight - 1}px`
+      dropdownElement.style.top = `${offset.top + baseElement.offsetHeight - 1}px`
       baseElement.classList.remove(aboveCssClass)
-      targetElement.classList.remove(aboveCssClass)
+      dropdownElement.classList.remove(aboveCssClass)
     }
   }
+}
+
+/**
+ * Reset changes made by positionDropdown.
+ * @param {HTMLElement} dropdownElement element for positioning.
+ * @param {HTMLElement} baseElement element to positioning relative of
+ * @param {string}      [aboveCssClass='above'] CSS class to apply
+ * if target element should be positioning above the base element.
+ */
+export function resetDropdown(dropdownElement, targetElement, aboveCssClass = 'above') {
+  targetElement.parentElement.appendChild(dropdownElement)
+  dropdownElement.classList.remove(aboveCssClass)
+  targetElement.classList.remove(aboveCssClass)
+  dropdownElement.style.top = '';
+  dropdownElement.style.left = '';
+  dropdownElement.style.minWidth = '';
+  dropdownElement.style.maxHeight = '';
 }
 
 /**

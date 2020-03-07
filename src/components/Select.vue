@@ -599,28 +599,26 @@
      * Set onscroll listener.
      */
     mounted () {
-      if (this.dropdownOverlay) {
-        const elements = dom.getScrollableElements(this.$el)
+      const elements = dom.getScrollableElements(this.$el)
 
-        if (!this.scrollHandler && elements.length) {
-          this.scrollHandler = () => {
-            if (this.open) {
-              // on scroll close the dropdown
-              this.open = false
-              this.searchEl.blur()
-            }
+      if (!this.scrollHandler && elements.length) {
+        this.scrollHandler = () => {
+          if (this.open && this.dropdownOverlay) {
+            // on scroll close the dropdown
+            this.open = false
+            this.searchEl.blur()
           }
-          if (typeof window === 'object') {
-            window.document.addEventListener('scroll', this.scrollHandler)
-          }
-
-          elements.forEach((el) => {
-            // set handler on scroll event to close the dropdown
-            el.addEventListener('scroll', this.scrollHandler)
-          })
-          // save element and handler to remove event on the component destroy
-          this.subscribedElements = elements
         }
+        if (typeof window === 'object') {
+          window.document.addEventListener('scroll', this.scrollHandler)
+        }
+
+        elements.forEach((el) => {
+          // set handler on scroll event to close the dropdown
+          el.addEventListener('scroll', this.scrollHandler)
+        })
+        // save element and handler to remove event on the component destroy
+        this.subscribedElements = elements
       }
     },
 
@@ -763,10 +761,15 @@
        * Positioning the dropdown list on a screen.
        */
       positionDropdown () {
+        if (!this.$refs.dropdownMenu) {
+          return
+        }
         if (this.dropdownOverlay) {
           this.$nextTick(() => {
-            dom.positionDropdown(this.$refs.toggle, this.$refs.dropdownMenu)
+            dom.positionDropdown(this.$refs.dropdownMenu, this.$refs.toggle)
           })
+        } else if (this.$refs.dropdownMenu.parentElement === document.body) {
+          dom.resetDropdown(this.$refs.dropdownMenu, this.$refs.toggle)
         }
       },
 

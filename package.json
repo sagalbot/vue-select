@@ -64,7 +64,7 @@
     "semantic-release": "^17.0.4",
     "terser-webpack-plugin": "^1.2.3",
     "url-loader": "^1.1.2",
-    "vue": "^2.6.10",
+    "vue": "^2.6.11",
     "vue-html-loader": "^1.2.4",
     "vue-jest": "^3.0.4",
     "vue-loader": "^15.7.0",
