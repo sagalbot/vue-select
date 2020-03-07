@@ -1,71 +1,70 @@
-var path = require('path')
-var config = require('../config')
-var utils = require('./utils')
-var projectRoot = path.resolve(__dirname, '../')
+const path = require('path');
+const webpack = require('webpack');
+const VueLoaderPlugin = require('vue-loader').VueLoaderPlugin;
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const env = process.env.NODE_ENV === 'production'
+  ? 'production'
+  : 'development';
+
+const devtool = env === 'production' ? 'source-map' : 'eval-source-map';
+
+const extractOrInjectStyles = env !== 'production'
+  ? 'vue-style-loader'
+  : MiniCssExtractPlugin.loader;
 
 module.exports = {
-  entry: {
-    app: utils.shouldServeHomepage() ? './docs/homepage/home.js' : './dev/dev.js',
-  },
+  mode: env,
   output: {
-    path: config.build.assetsRoot,
-    publicPath: config.build.assetsPublicPath,
-    filename: '[name].js'
+    path: path.resolve(__dirname, '../dist'),
+    publicPath: '/',
+    filename: '[name].js',
   },
+  devtool,
   resolve: {
-    extensions: ['', '.js', '.vue'],
-    fallback: [path.join(__dirname, '../node_modules')],
+    extensions: ['.js', '.vue'],
     alias: {
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../docs/assets'),
       'mixins': path.resolve(__dirname, '../src/mixins'),
       'components': path.resolve(__dirname, '../src/components'),
-      'docs': path.resolve(__dirname, '../docs'),
-      'vue$': 'vue/dist/vue.common.js',
-    }
-  },
-  resolveLoader: {
-    fallback: [path.join(__dirname, '../node_modules')]
+      'vue$': 'vue/dist/vue.esm.js',
+    },
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: projectRoot,
-        exclude: /node_modules/
+        include: path.resolve(__dirname, '../'),
+        exclude: /node_modules/,
       },
       {
-        test: /\.json$/,
-        loader: 'json-loader'
+        test: /\.s?css$/,
+        use: [
+          extractOrInjectStyles,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader',
+        ],
       },
-      {
-        test: /\.html$/,
-        loader: 'vue-html-loader'
-      },
-      {
-        test: /\.(png|jpe?g|gif)(\?.*)?$/,
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: utils.assetsPath('img/[name].[hash:7].[ext]')
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf|svg)(\?.*)?$/,
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
-        }
-      }
-    ]
+    ],
   },
-  vue: {
-    loaders: utils.cssLoaders()
-  }
-}
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': env,
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'vue-select.css',
+    }),
+    new VueLoaderPlugin(),
+  ],
+  stats: {
+    children: false,
+    modules: false,
+  },
+};
