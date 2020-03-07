@@ -51,4 +51,13 @@ $border-radius: $vs-border-radius;
   border-bottom-color: transparent;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+
+  &.above {
+    border-bottom-color: $border-color;
+    border-top-color: transparent;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
 }

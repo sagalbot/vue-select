@@ -47,6 +47,13 @@
         </label>
       </div>
 
+      <div class="list-item">
+        <label for="overlay">
+          <input id="overlay" type="checkbox" v-model="configuration.dropdownOverlay">
+          <code>:dropdownOverlay="{{ configuration.dropdownOverlay ? 'true' : 'false' }}"</code>
+        </label>
+      </div>
+
       <h5 class="list-item">Tagging</h5>
 
       <div class="list-item">
@@ -180,6 +187,7 @@ const defaultConfig = () => ({
   disabled: false,
   selectOntab: false,
   placeholder: 'Select a Country...',
+  dropdownOverlay: false
 });
 
 export default {

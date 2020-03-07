@@ -353,10 +353,10 @@ createOption: {
 ## resetOnOptionsChange
 
 When false, updating the options will not reset the selected value.
- 
-Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`. 
 
-If defined as a function, it will receive the params listed below. 
+Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`.
+
+If defined as a function, it will receive the params listed below.
 
 ```js
 /**
@@ -412,3 +412,15 @@ selectOnTab: {
 	type: Boolean,
 	default: false
 }
+```
+
+## dropdownOverlay
+
+When true, position the dropdown as overlay as child of body element.
+
+```js
+dropdownOverlay: {
+	type: Boolean,
+	default: false
+}
+```

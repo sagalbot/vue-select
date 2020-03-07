@@ -53,7 +53,7 @@
     </div>
 
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-show="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
+      <ul ref="dropdownMenu" v-show="dropdownOpen" :id="`vs${uid}__listbox`" :class="`vs__dropdown-menu${dropdownOverlay ? ' overlay' : ''}`" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
         <template v-if="dropdownOpen">
           <li
             role="option"
@@ -85,6 +85,7 @@
   import ajax from '../mixins/ajax'
   import childComponents from './childComponents';
   import uniqueId from '../utility/uniqueId';
+  import * as dom from '../utility/dom';
 
   /**
    * @name VueSelect
@@ -517,6 +518,16 @@
          * @return {Object}
          */
         default: (map, vm) => map,
+      },
+
+      /**
+       * When true, position the dropdown as overlay as child of body element.
+       * @type {Boolean}
+       * @default false
+       */
+      dropdownOverlay: {
+        type: Boolean,
+        default: false
       }
     },
 
@@ -582,6 +593,48 @@
       }
 
       this.$on('option:created', this.maybePushTag)
+    },
+
+    /**
+     * Set onscroll listener.
+     */
+    mounted () {
+      const elements = dom.getScrollableElements(this.$el)
+
+      if (!this.scrollHandler && elements.length) {
+        this.scrollHandler = () => {
+          if (this.open && this.dropdownOverlay) {
+            // on scroll close the dropdown
+            this.open = false
+            this.searchEl.blur()
+          }
+        }
+        if (typeof window === 'object') {
+          window.document.addEventListener('scroll', this.scrollHandler)
+        }
+
+        elements.forEach((el) => {
+          // set handler on scroll event to close the dropdown
+          el.addEventListener('scroll', this.scrollHandler)
+        })
+        // save element and handler to remove event on the component destroy
+        this.subscribedElements = elements
+      }
+    },
+
+    /**
+     * Before destroy lifecycle event handler.
+     * Remove scroll event handlers.
+     */
+    beforeDestroy () {
+      if (this.scrollHandler) {
+        if (typeof window === 'object') {
+          window.document.removeEventListener('scroll', this.scrollHandler)
+        }
+        this.subscribedElements.forEach((el) => {
+          el.removeEventListener('scroll', this.scrollHandler)
+        })
+      }
     },
 
     methods: {
@@ -705,6 +758,22 @@
       },
 
       /**
+       * Positioning the dropdown list on a screen.
+       */
+      positionDropdown () {
+        if (!this.$refs.dropdownMenu) {
+          return
+        }
+        if (this.dropdownOverlay) {
+          this.$nextTick(() => {
+            dom.positionDropdown(this.$refs.dropdownMenu, this.$refs.toggle)
+          })
+        } else if (this.$refs.dropdownMenu.parentElement === document.body) {
+          dom.resetDropdown(this.$refs.dropdownMenu, this.$refs.toggle)
+        }
+      },
+
+      /**
        * Check if the given option is currently selected.
        * @param  {Object|String}  option
        * @return {Boolean}        True when selected | False otherwise
@@ -741,7 +810,7 @@
           }
         }
 
-        return false;
+        return false
       },
 
       /**
@@ -761,7 +830,7 @@
        * @emits  {search:blur}
        * @returns {void}
        */
-      closeSearchOptions(){
+      closeSearchOptions() {
         this.open = false
         this.$emit('search:blur')
       },
@@ -866,6 +935,7 @@
       onSearchFocus() {
         this.open = true
         this.$emit('search:focus')
+        this.positionDropdown()
       },
 
       /**
@@ -1105,6 +1175,8 @@
         if (this.taggable && this.search.length && !this.optionExists(this.search)) {
           options.unshift(this.search)
         }
+        this.positionDropdown()
+
         return options
       },
 

@@ -23,6 +23,7 @@ $max-height: $vs-dropdown-max-height;
   max-height: $max-height;
   min-width: $min-width;
   overflow-y: auto;
+  box-sizing: border-box;
   box-shadow: $box-shadow;
   border: $border-width $border-style $border-color;
   border-top-style: none;
@@ -30,6 +31,18 @@ $max-height: $vs-dropdown-max-height;
   text-align: left;
   list-style: none;
   background: $bg-color;
+
+  &.overlay {
+    position: fixed;
+    width: auto;
+  }
+
+  &.above {
+    border-top-style: $border-style;
+    border-bottom-style: none;
+    border-radius: $border-radius $border-radius 0 0;
+    box-shadow: none;
+  }
 }
 
 .vs__no-options {
