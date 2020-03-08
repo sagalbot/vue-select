@@ -42,7 +42,7 @@ describe('Scoped Slots', () => {
   });
 
   it('receives an option object to the option slot in the dropdown menu',
-    () => {
+    async () => {
       const Select = mountDefault(
         {value: 'one'},
         {
@@ -52,7 +52,24 @@ describe('Scoped Slots', () => {
         });
 
       Select.vm.open = true;
+      await Select.vm.$nextTick();
 
       expect(Select.find({ref: 'dropdownMenu'}).text()).toEqual('onetwothree');
     });
+
+  it('noOptions slot receives the current search text', async () => {
+    const noOptions = jest.fn();
+    const Select = mountDefault({}, {
+      scopedSlots: {'no-options': noOptions},
+    });
+
+    Select.vm.search = 'something not there';
+    Select.vm.open = true;
+    await Select.vm.$nextTick();
+
+    expect(noOptions).toHaveBeenCalledWith({
+      search: 'something not there',
+      searching: true,
+    })
+  });
 });

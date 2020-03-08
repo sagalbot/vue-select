@@ -13,10 +13,11 @@ describe("Asynchronous Loading", () => {
     expect(Select.vm.mutableLoading).toEqual(true);
   });
 
-  it("should trigger the search event when the search text changes", () => {
+  it("should trigger the search event when the search text changes", async () => {
     const Select = selectWithProps();
 
     Select.vm.search = "foo";
+    await Select.vm.$nextTick();
 
     const events = Select.emitted("search");
 
@@ -24,11 +25,13 @@ describe("Asynchronous Loading", () => {
     expect(events.length).toEqual(1);
   });
 
-  it("should trigger the search event if the search text is empty", () => {
+  it("should trigger the search event if the search text is empty", async () => {
     const Select = selectWithProps();
 
     Select.vm.search = "foo";
+    await Select.vm.$nextTick();
     Select.vm.search = "";
+    await Select.vm.$nextTick();
 
     const events = Select.emitted("search");
 
@@ -36,7 +39,7 @@ describe("Asynchronous Loading", () => {
     expect(events.length).toEqual(2);
   });
 
-  it("can set loading to false from the @search event callback", () => {
+  it("can set loading to false from the @search event callback", async () => {
     const Select = shallowMount(vSelect, {
       listeners: {
         search: (search, loading) => {
@@ -47,13 +50,16 @@ describe("Asynchronous Loading", () => {
 
     Select.vm.mutableLoading = true;
     Select.vm.search = 'foo';
+    await Select.vm.$nextTick();
 
     expect(Select.vm.mutableLoading).toEqual(false);
   });
 
-  it("will sync mutable loading with the loading prop", () => {
+  it('will sync mutable loading with the loading prop', async () => {
     const Select = selectWithProps({ loading: false });
     Select.setProps({ loading: true });
+    await Select.vm.$nextTick();
+
     expect(Select.vm.mutableLoading).toEqual(true);
   });
 });

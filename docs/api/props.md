@@ -120,6 +120,19 @@ clearSearchOnSelect: {
 },
 ```
 
+## clearSearchOnBlur
+
+Enables/disables clearing the search text when the search input is blurred.
+
+```js
+clearSearchOnBlur: {
+    type: Function,
+    default: function ({ clearSearchOnSelect, multiple }) {
+      return clearSearchOnSelect && !multiple
+    }
+},
+```
+
 ## closeOnSelect
 
 Close a dropdown when an option is chosen. Set to false to keep the dropdown
