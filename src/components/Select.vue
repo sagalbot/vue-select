@@ -533,15 +533,6 @@
       },
 
       /**
-       * Focus the input when the component is mounted.
-       * @type {Boolean}
-       */
-      autofocus: {
-        type: Boolean,
-        default: false
-      },
-
-      /**
        * When `appendToBody` is true, this function
        * is responsible for positioning the drop
        * down list.
@@ -627,14 +618,6 @@
       }
 
       this.$on('option:created', this.maybePushTag)
-    },
-
-    mounted() {
-      if (this.autofocus) {
-        this.$nextTick(() => {
-          this.searchEl.focus();
-        });
-      }
     },
 
     methods: {
