@@ -17,9 +17,15 @@ default implementation places the dropdown in the same position that it would no
 
 ## Popper.js Integration
 
+[Popper.js](https://popper.js.org/) is an awesome, 3kb utility for calculating positions of just
+about any DOM element relative to another.
+
 By using the `appendToBody` and `calculatePosition` props, we're able to integrate directly with
-Popper.js to handle positioning for us.
+popper to calculate positioning for us.
 
 <PositionedWithPopper />
 
-<<< @/.vuepress/components/PositionedWithPopper.vue
+Check out the [Popper Docs](https://popper.js.org/docs/v2/modifiers/) to see the full `modifiers`
+API being used below.
+
+<<< @/.vuepress/components/PositionedWithPopper.vue{25-59}

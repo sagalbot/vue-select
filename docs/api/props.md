@@ -1,3 +1,18 @@
+## appendToBody <Badge text="v3.7.0+" />
+
+Append the dropdown element to the end of the body
+and size/position it dynamically. Use it if you have
+overflow or z-index issues.
+
+See [Dropdown Position](../guide/positioning.md) for more details.
+
+```js
+appendToBody: {
+    type: Boolean,
+    default: false
+},
+```
+
 ## value
 
 Contains the currently selected value. Very similar to a
@@ -107,6 +122,30 @@ transition: {
 	type: String,
 	default: "fade"
 },
+```
+
+## calculatePosition <Badge text="v3.7.0+" />
+
+When `appendToBody` is true, this function is responsible for positioning the drop down list.
+
+See [Dropdown Position](../guide/positioning.md) for more details.
+
+```js
+calculatePosition: {
+    type: Function,
+    /**
+     * @param dropdownList {HTMLUListElement}
+     * @param component {Vue} current instance of vue select
+     * @param width {string} calculated width in pixels of the dropdown menu
+     * @param top {string} absolute position top value in pixels relative to the document
+     * @param left {string} absolute position left value in pixels relative to the document
+     */
+    default(dropdownList, component, {width, top, left}) {
+      dropdownList.style.top = top;
+      dropdownList.style.left = left;
+      dropdownList.style.width = width;
+    }
+}
 ```
 
 ## clearSearchOnSelect
@@ -353,10 +392,10 @@ createOption: {
 ## resetOnOptionsChange
 
 When false, updating the options will not reset the selected value.
- 
-Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`. 
 
-If defined as a function, it will receive the params listed below. 
+Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`.
+
+If defined as a function, it will receive the params listed below.
 
 ```js
 /**
@@ -412,3 +451,4 @@ selectOnTab: {
 	type: Boolean,
 	default: false
 }
+```
