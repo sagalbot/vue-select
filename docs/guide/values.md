@@ -127,7 +127,7 @@ To allow input that's not present within the options, set the `taggable` prop to
 If you want added tags to be pushed to the options array, set `push-tags` to true.
 
 ```html
-<v-select taggable multiple />
+<v-select taggable multiple push-tags />
 ```
 
 <v-select taggable multiple push-tags />

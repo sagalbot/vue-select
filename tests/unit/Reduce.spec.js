@@ -211,7 +211,7 @@ describe("When reduce prop is defined", () => {
 
   });
 
-  it("reacts correctly when value property changes", () => {
+  it("reacts correctly when value property changes", async () => {
     const optionToChangeTo = { id: 1, label: "Foo" };
     const Select = shallowMount(VueSelect, {
       propsData: {
@@ -222,6 +222,7 @@ describe("When reduce prop is defined", () => {
     });
 
     Select.setProps({ value: optionToChangeTo.id });
+    await Select.vm.$nextTick();
 
     expect(Select.vm.selectedValue).toEqual([optionToChangeTo]);
   });

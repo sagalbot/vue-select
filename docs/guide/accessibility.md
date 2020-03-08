@@ -2,7 +2,7 @@ Vue Select aims to follow the WAI-ARIA best practices for the
 [combobox](https://www.w3.org/TR/wai-aria-practices-1.1/#combobox) and 
 [listbox](https://www.w3.org/TR/wai-aria-practices-1.1/#Listbox) widgets. 
 
-The UX of the component isdesigned around the HTML `<select>` element, while following the WAI-ARIA 
+The UX of the component is designed around the HTML `<select>` element, while following the WAI-ARIA 
 specifications and best practices for creating accessible components. 
 
 ## Combobox

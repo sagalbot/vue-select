@@ -7,13 +7,16 @@ Slots can be used to change the look and feel of the UI, or to simply swap out t
 
 ### `selected-option`
 
-#### Scope: 
+#### Scope:
 
 - `option {Object}` - A selected option
 
 ```html
-<slot name="selected-option" v-bind="(typeof option === 'object')?option:{[label]: option}">
-	{{ getOptionLabel(option) }}
+<slot
+  name="selected-option"
+  v-bind="(typeof option === 'object')?option:{[label]: option}"
+>
+  {{ getOptionLabel(option) }}
 </slot>
 ```
 
@@ -27,16 +30,32 @@ Slots can be used to change the look and feel of the UI, or to simply swap out t
 - `multiple {Boolean}` - If the component supports the selection of multiple values
 
 ```html
-<slot v-for="option in valueAsArray" name="selected-option-container"
-			:option="(typeof option === 'object')?option:{[label]: option}" :deselect="deselect" :multiple="multiple" :disabled="disabled">
-	<span class="selected-tag" v-bind:key="option.index">
-		<slot name="selected-option" v-bind="(typeof option === 'object')?option:{[label]: option}">
-			{{ getOptionLabel(option) }}
-		</slot>
-		<button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="close" aria-label="Remove option">
-			<span aria-hidden="true">&times;</span>
-		</button>
-	</span>
+<slot
+  v-for="option in valueAsArray"
+  name="selected-option-container"
+  :option="(typeof option === 'object')?option:{[label]: option}"
+  :deselect="deselect"
+  :multiple="multiple"
+  :disabled="disabled"
+>
+  <span class="selected-tag" v-bind:key="option.index">
+    <slot
+      name="selected-option"
+      v-bind="(typeof option === 'object')?option:{[label]: option}"
+    >
+      {{ getOptionLabel(option) }}
+    </slot>
+    <button
+      v-if="multiple"
+      :disabled="disabled"
+      @click="deselect(option)"
+      type="button"
+      class="close"
+      aria-label="Remove option"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </span>
 </slot>
 ```
 
@@ -44,9 +63,29 @@ Slots can be used to change the look and feel of the UI, or to simply swap out t
 
 ### `spinner`
 
+#### Scope:
+
+- `loading {Boolean}` - if the component is in a loading state
+
 ```html
-<slot name="spinner">
-	<div class="spinner" v-show="mutableLoading">Loading...</div>
+<slot name="spinner" v-bind="scope.spinner">
+  <div class="vs__spinner" v-show="mutableLoading">Loading...</div>
+</slot>
+```
+
+### `open-indicator`
+
+```js
+attributes : {
+  'ref': 'openIndicator',
+  'role': 'presentation',
+  'class': 'vs__open-indicator',
+}
+```
+
+```vue
+<slot name="open-indicator" v-bind="scope.openIndicator">
+  <component :is="childComponents.OpenIndicator" v-if="!noDrop" v-bind="scope.openIndicator.attributes"/>
 </slot>
 ```
 
@@ -54,12 +93,26 @@ Slots can be used to change the look and feel of the UI, or to simply swap out t
 
 ### `option`
 
-#### Scope:
-
 - `option {Object}` - The currently iterated option from `filteredOptions`
 
 ```html
-<slot name="option" v-bind="(typeof option === 'object')?option:{[label]: option}">
-	{{ getOptionLabel(option) }}
+<slot
+  name="option"
+  v-bind="(typeof option === 'object')?option:{[label]: option}"
+>
+  {{ getOptionLabel(option) }}
+</slot>
+```
+
+### `no-options`
+
+The no options slot is displayed in the dropdown when `filteredOptions.length === 0`.
+
+- `search {String}` - the current search text
+- `searching {Boolean}` - if the component has search text
+
+```vue
+<slot name="no-options" v-bind="scope.noOptions">
+  Sorry, no matching options.
 </slot>
 ```
