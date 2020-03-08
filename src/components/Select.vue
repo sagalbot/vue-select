@@ -543,10 +543,10 @@
 
       calculatePosition: {
         type: Function,
-        default(el, vnode) {
-          const rect = vnode.context.$refs.toggle.getBoundingClientRect();
-          el.style.top = (window.scrollY + rect.top + rect.height) + 'px';
-          el.style.left = (window.scrollX + rect.left) + 'px';
+        default(dropdownList, component, {width, top, left}) {
+          dropdownList.style.width = width;
+          dropdownList.style.top = top;
+          dropdownList.style.left = left;
         }
       }
     },

@@ -7,10 +7,11 @@ import countries from '../data/countries'
 import { createPopper } from '@popperjs/core';
 
 export default {
-  data: () => ({ countries }),
+  data: () => ({countries}),
   methods: {
-    withPopper (el, vnode) {
-      createPopper(vnode.context.$refs.toggle, el, {
+    withPopper (dropdownList, component, {width},) {
+      dropdownList.style.width = width;
+      createPopper(component.$refs.toggle, dropdownList, {
         modifiers: [
           {
             name: 'offset', options: {
@@ -21,11 +22,7 @@ export default {
             enabled: true,
             phase: 'write',
             fn ({state}) {
-              if (state.placement === 'top') {
-                vnode.context.$el.classList.add('drop-up')
-              } else {
-                vnode.context.$el.classList.remove('drop-up')
-              }
+              component.$el.classList.toggle('drop-up', state.placement === 'top')
             },
           }]
       });
@@ -37,13 +34,14 @@ export default {
 <style>
   .v-select.drop-up .vs__dropdown-toggle {
     border-bottom-color: rgba(60, 60, 60, 0.26);
-    border-bottom-style: solid;
+    border-top-color: transparent;
     border-radius: 0 0 4px 4px;
   }
 
   [data-popper-placement='top'] {
     border-radius: 4px 4px 0 0;
     border-top-style: solid;
+    border-bottom-style: none;
     box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.15)
   }
 </style>

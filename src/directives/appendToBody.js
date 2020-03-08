@@ -1,16 +1,21 @@
 export default {
-    inserted: function (el, bindings, vnode) {
-        if (vnode.context.appendToBody) {
-            let rect = vnode.context.$refs.toggle.getBoundingClientRect();
-            el.style.width = rect.width + 'px';
-            vnode.context.calculatePosition(el, vnode);
+    inserted (el, bindings, {context}) {
+        if (context.appendToBody) {
+            const {height, top, left} = context.$refs.toggle.getBoundingClientRect();
+
+            context.calculatePosition(el, context, {
+                width: context.$refs.toggle.clientWidth + 'px',
+                top: (window.scrollY + top + height) + 'px',
+                left: (window.scrollX + left) + 'px',
+            });
+
             document.body.appendChild(el);
         }
     },
 
-    unbind: function (el, bindings, vnode) {
+    unbind (el, bindings, vnode) {
         if (vnode.context.appendToBody && el.parentNode) {
             el.parentNode.removeChild(el);
         }
-    }
+    },
 }
