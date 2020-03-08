@@ -3,8 +3,8 @@ export default {
         if (vnode.context.appendToBody) {
             let rect = vnode.context.$refs.toggle.getBoundingClientRect();
             el.style.width = rect.width + 'px';
-            document.body.appendChild(el);
             vnode.context.calculatePosition(el, vnode);
+            document.body.appendChild(el);
         }
     },
 
