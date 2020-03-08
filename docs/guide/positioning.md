@@ -2,10 +2,12 @@
 
 With the default CSS, Vue Select uses absolute positioning to render the dropdown menu. The root
 `.v-select` container (the components `$el`) is used as the `relative` parent for the dropdown. The
-dropdown will be displayed below the `$el` regardless of the available space. This works for most
-cases, but you might run into issues placing into a modal or near the bottom of the viewport.
+dropdown will be displayed below the `$el` regardless of the available space.
 
-## Calculated
+This works for most cases, but you might run into issues placing into a modal or near the bottom of
+the viewport. If you need more fine grain control, you can use calculated positioning.
+
+## Calculated <Badge text="v3.7.0+" />
 
 If you want more control over how the dropdown is rendered, or if you're running into z-index issues,
 you may use the `appendToBody` boolean prop. When enabled, Vue Select will append the dropdown to
@@ -15,7 +17,7 @@ When `appendToBody` is true, the positioning will be handled by the `calculatePo
 function is responsible for setting top/left absolute positioning values for the dropdown. The
 default implementation places the dropdown in the same position that it would normally appear.
 
-## Popper.js Integration
+## Popper.js Integration <Badge text="v3.7.0+" />
 
 [Popper.js](https://popper.js.org/) is an awesome, 3kb utility for calculating positions of just
 about any DOM element relative to another.
