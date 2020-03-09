@@ -485,6 +485,15 @@
       },
 
       /**
+       * Enables/disables updating the search text to the last selected value when the dropdown is opened.
+       * @type {Boolean}
+       */
+      preserveSelectedText: {
+        type: Boolean,
+        default: false
+      },
+
+    /**
        * Query Selector used to find the search input
        * when the 'search' scoped slot is used.
        *
@@ -859,6 +868,10 @@
       onSearchFocus() {
         this.open = true
         this.$emit('search:focus')
+
+        if (!this.multiple && this.preserveSelectedText) {
+          this.search = (this.value || {})[this.label] || ''
+        }
       },
 
       /**
