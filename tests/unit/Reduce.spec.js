@@ -252,8 +252,8 @@ describe("When reduce prop is defined", () => {
       await Select.$nextTick();
 
       //  Then
-      expect(Select.selectedValue).toEqual({ label: 'hello', value: -1 });
-      expect(Select.$refs.selectedOptions.textContent).toEqual('hello');
+      expect(Select.selectedValue).toEqual([{ label: 'hello', value: -1 }]);
+      expect(Select.$refs.selectedOptions.textContent.trim()).toEqual('hello');
       expect(Parent.vm.selected).toEqual(-1);
     });
 

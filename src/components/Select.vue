@@ -621,7 +621,7 @@
         this.setInternalValueFromOptions(this.value)
       }
 
-      this.$on('option:created', this.maybePushTag)
+      this.$on('option:created', this.pushTag)
     },
 
     methods: {
@@ -654,7 +654,6 @@
           }
           this.updateValue(option);
         }
-
         this.onAfterSelect(option)
       },
 
@@ -764,7 +763,7 @@
       },
 
       /**
-       * Finds an option from this.options
+       * Finds an option from the options
        * where a reduced value matches
        * the passed in value.
        *
@@ -772,7 +771,12 @@
        * @returns {*}
        */
       findOptionFromReducedValue (value) {
-        return this.options.find(option => JSON.stringify(this.reduce(option)) === JSON.stringify(value)) || value;
+        const predicate = option => JSON.stringify(this.reduce(option)) === JSON.stringify(value);
+
+        return [
+          ...this.options,
+          ...this.pushedTags
+        ].find(predicate) || value;
       },
 
       /**
@@ -828,10 +832,8 @@
        * @param  {Object || String} option
        * @return {void}
        */
-      maybePushTag(option) {
-        if (this.pushTags) {
-          this.pushedTags.push(option)
-        }
+      pushTag (option) {
+        this.pushedTags.push(option);
       },
 
       /**
@@ -978,7 +980,7 @@
        * @return {Array}
        */
       optionList () {
-        return this.options.concat(this.pushedTags);
+        return this.options.concat(this.pushTags ? this.pushedTags : []);
       },
 
       /**
