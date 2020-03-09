@@ -68,6 +68,7 @@ describe('Scoped Slots', () => {
     await Select.vm.$nextTick();
 
     expect(noOptions).toHaveBeenCalledWith({
+      loading: false,
       search: 'something not there',
       searching: true,
     })
