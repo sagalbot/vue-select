@@ -129,6 +129,7 @@ module.exports = {
           collapsable: false,
           children: [
             ['guide/keydown', 'Keydown Events'],
+            ['guide/positioning', 'Dropdown Position']
           ],
         },
         {
