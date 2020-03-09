@@ -1,5 +1,6 @@
 import { mount, shallowMount } from "@vue/test-utils";
 import VueSelect from "../../src/components/Select";
+import { mountDefault } from '../helpers';
 
 describe("When reduce prop is defined", () => {
   it("can accept an array of objects and pre-selected value (single)", () => {
@@ -225,5 +226,37 @@ describe("When reduce prop is defined", () => {
     await Select.vm.$nextTick();
 
     expect(Select.vm.selectedValue).toEqual([optionToChangeTo]);
+  });
+
+  describe('Reducing Tags', () => {
+
+    it('tracks values that have been created by the user', async () => {
+      const Parent = mount({
+        data: () => ({ selected: null, options: [] }),
+        template: `
+          <v-select
+            v-model="selected"
+            :options="options"
+            taggable
+            :reduce="name => name.value"
+            :create-option="label => ({ label, value: -1 })"
+          />
+        `,
+        components: { "v-select": VueSelect }
+      });
+      const Select = Parent.vm.$children[0];
+
+      //  When
+      Select.search = 'hello';
+      Select.typeAheadSelect();
+      await Select.$nextTick();
+
+      //  Then
+      expect(Select.selectedValue).toEqual({ label: 'hello', value: -1 });
+      expect(Select.$refs.selectedOptions.textContent).toEqual('hello');
+      expect(Parent.vm.selected).toEqual(-1);
+    });
+
+
   });
 });
