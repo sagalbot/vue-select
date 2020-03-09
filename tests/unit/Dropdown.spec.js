@@ -1,10 +1,12 @@
 import { selectWithProps } from "../helpers";
 import OpenIndicator from "../../src/components/OpenIndicator";
 
+const preventDefault = jest.fn()
+
 describe("Toggling Dropdown", () => {
   it("should not open the dropdown when the el is clicked but the component is disabled", () => {
     const Select = selectWithProps({ disabled: true });
-    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    Select.vm.toggleDropdown({ currentTarget: Select.vm.$refs.search, preventDefault });
     expect(Select.vm.open).toEqual(false);
   });
 
@@ -14,7 +16,7 @@ describe("Toggling Dropdown", () => {
       options: [{ label: "one" }]
     });
 
-    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    Select.vm.toggleDropdown({ currentTarget: Select.vm.$refs.search, preventDefault });
     expect(Select.vm.open).toEqual(true);
   });
 
@@ -26,7 +28,7 @@ describe("Toggling Dropdown", () => {
 
     const selectedTag = Select.find(".vs__selected").element;
 
-    Select.vm.toggleDropdown({ target: selectedTag });
+    Select.vm.toggleDropdown({ currentTarget: selectedTag, preventDefault });
     expect(Select.vm.open).toEqual(true);
   });
 
@@ -35,7 +37,7 @@ describe("Toggling Dropdown", () => {
     const spy = jest.spyOn(Select.vm.$refs.search, "blur");
 
     Select.vm.open = true;
-    Select.vm.toggleDropdown({ target: Select.vm.$el });
+    Select.vm.toggleDropdown({ currentTarget: Select.vm.$el, preventDefault });
 
     expect(spy).toHaveBeenCalled();
   });
@@ -134,7 +136,7 @@ describe("Toggling Dropdown", () => {
       noDrop: true,
     });
 
-    Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
+    Select.vm.toggleDropdown({ currentTarget: Select.vm.$refs.search, preventDefault });
     expect(Select.vm.open).toEqual(true);
     expect(Select.contains('.vs__dropdown-menu')).toBeFalsy();
     expect(Select.vm.stateClasses['vs--open']).toBeFalsy();
