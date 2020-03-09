@@ -3,10 +3,14 @@ import OpenIndicator from "../../src/components/OpenIndicator";
 
 const preventDefault = jest.fn()
 
+function clickEvent (currentTarget) {
+  return { currentTarget, preventDefault }
+}
+
 describe("Toggling Dropdown", () => {
   it("should not open the dropdown when the el is clicked but the component is disabled", () => {
     const Select = selectWithProps({ disabled: true });
-    Select.vm.toggleDropdown({ currentTarget: Select.vm.$refs.search, preventDefault });
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$refs.search));
     expect(Select.vm.open).toEqual(false);
   });
 
@@ -16,8 +20,21 @@ describe("Toggling Dropdown", () => {
       options: [{ label: "one" }]
     });
 
-    Select.vm.toggleDropdown({ currentTarget: Select.vm.$refs.search, preventDefault });
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$refs.search));
     expect(Select.vm.open).toEqual(true);
+  });
+
+  it("should not close the dropdown when the el is clicked and enableMouseInputSearch is set to true", () => {
+    const Select = selectWithProps({
+      value: [{ label: "one" }],
+      options: [{ label: "one" }],
+      enableMouseSearchInput: true
+    });
+
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$refs.search));
+    expect(Select.vm.open).toEqual(true);
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$el));
+    expect(Select.vm.open).toEqual(false)
   });
 
   it("should open the dropdown when the selected tag is clicked", () => {
@@ -28,7 +45,7 @@ describe("Toggling Dropdown", () => {
 
     const selectedTag = Select.find(".vs__selected").element;
 
-    Select.vm.toggleDropdown({ currentTarget: selectedTag, preventDefault });
+    Select.vm.toggleDropdown(clickEvent(selectedTag));
     expect(Select.vm.open).toEqual(true);
   });
 
@@ -37,7 +54,7 @@ describe("Toggling Dropdown", () => {
     const spy = jest.spyOn(Select.vm.$refs.search, "blur");
 
     Select.vm.open = true;
-    Select.vm.toggleDropdown({ currentTarget: Select.vm.$el, preventDefault });
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$el));
 
     expect(spy).toHaveBeenCalled();
   });
@@ -136,7 +153,7 @@ describe("Toggling Dropdown", () => {
       noDrop: true,
     });
 
-    Select.vm.toggleDropdown({ currentTarget: Select.vm.$refs.search, preventDefault });
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$refs.search));
     expect(Select.vm.open).toEqual(true);
     expect(Select.contains('.vs__dropdown-menu')).toBeFalsy();
     expect(Select.vm.stateClasses['vs--open']).toBeFalsy();
