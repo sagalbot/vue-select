@@ -4,7 +4,7 @@
 
 <template>
   <div :dir="dir" class="v-select" :class="stateClasses">
-    <div ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle">
+    <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
