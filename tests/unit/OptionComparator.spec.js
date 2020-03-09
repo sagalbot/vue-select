@@ -17,10 +17,14 @@ describe('Comparing Options', () => {
   });
 
   it('can compare objects', () => {
+    //  compare ID keys
     expect(comparator({label: 'halo', id: 1}, {label: 'halo', id: 2}))
       .toBeFalsy();
-
-    expect(comparator({label: 'halo', id: 1}, {label: 'halo', id: 1}))
+    //  compare objects
+    expect(comparator({label: 'halo', value: 1}, {label: 'halo', value: 1}))
+      .toBeTruthy();
+    //  compare objects with different orders
+    expect(comparator({value: 1, label: 'halo'}, {label: 'halo', value: 1}))
       .toBeTruthy();
   });
 

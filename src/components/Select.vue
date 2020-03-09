@@ -84,6 +84,7 @@
   import ajax from '../mixins/ajax'
   import childComponents from './childComponents';
   import appendToBody from '../directives/appendToBody';
+  import sortAndStringify from '../utility/sortAndStringify'
   import uniqueId from '../utility/uniqueId';
 
   /**
@@ -304,7 +305,7 @@
           }
 
           try {
-            return option.hasOwnProperty('id') ? option.id : JSON.stringify(option);
+            return option.hasOwnProperty('id') ? option.id : sortAndStringify(option);
           } catch (e) {
             const warning = `[vue-select warn]: Could not stringify this option ` +
               `to generate unique key. Please provide'getOptionKey' prop ` +
@@ -754,12 +755,12 @@
       /**
        * Determine if two option objects are matching.
        *
-       * @param value {Object}
-       * @param option {Object}
+       * @param a {Object}
+       * @param b {Object}
        * @returns {boolean}
        */
-      optionComparator(value, option) {
-        return this.getOptionKey(value) === this.getOptionKey(option);
+      optionComparator(a, b) {
+        return this.getOptionKey(a) === this.getOptionKey(b);
       },
 
       /**
