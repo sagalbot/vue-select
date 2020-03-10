@@ -3,6 +3,39 @@ Vue Select leverages scoped slots to allow for total customization of the presen
 Slots can be used to change the look and feel of the UI, or to simply swap out text.
 :::
 
+## Wrapper
+
+### `header`
+
+Displayed at the top of the component, above `.vs__dropdown-toggle`.
+
+- `search {string}` - the current search query
+- `loading {boolean}` - is the component loading
+- `searching {boolean}` - is the component searching
+- `filteredOptions {array}` - options filtered by the search text
+- `deselect {function}` - function to deselect an option
+
+```html
+<slot name="header" v-bind="scope.header" />
+```
+
+### `footer`
+
+Displayed at the bottom of the component, below `.vs__dropdown-toggle`.
+
+When implementing this slot, you'll likely need to use `appendToBody` to position the dropdown.
+Otherwise content in this slot will affect it's positioning.
+
+- `search {string}` - the current search query
+- `loading {boolean}` - is the component loading
+- `searching {boolean}` - is the component searching
+- `filteredOptions {array}` - options filtered by the search text
+- `deselect {function}` - function to deselect an option
+
+```html
+<slot name="footer" v-bind="scope.footer" />
+```
+
 ## Selected Option(s)
 
 ### `selected-option`
@@ -91,7 +124,37 @@ attributes : {
 
 ## Dropdown
 
+### `list-header`
+
+Displayed as the first item in the dropdown. No content by default. Parent element is the `<ul>`,
+so this slot should contain a root `<li>`.
+
+- `search {string}` - the current search query
+- `loading {boolean}` - is the component loading
+- `searching {boolean}` - is the component searching
+- `filteredOptions {array}` - options filtered by the search text
+
+```html
+<slot name="list-header" v-bind="scope.listHeader" />
+```
+
+### `list-footer`
+
+Displayed as the last item in the dropdown. No content by default. Parent element is the `<ul>`,
+so this slot should contain a root `<li>`.
+
+- `search {string}` - the current search query
+- `loading {boolean}` - is the component loading
+- `searching {boolean}` - is the component searching
+- `filteredOptions {array}` - options filtered by the search text
+
+```html
+<slot name="footer" v-bind="scope.listFooter" />
+```
+
 ### `option`
+
+The current option within the dropdown, contained within `<li>`.
 
 - `option {Object}` - The currently iterated option from `filteredOptions`
 
