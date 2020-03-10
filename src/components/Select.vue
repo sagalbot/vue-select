@@ -537,9 +537,13 @@
       },
 
       /**
-       * When `appendToBody` is true, this function
-       * is responsible for positioning the drop
-       * down list.
+       * When `appendToBody` is true, this function is responsible for
+       * positioning the drop down list.
+       *
+       * If a function is returned from `calculatePosition`, it will
+       * be called when the drop down list is removed from the DOM.
+       * This allows for any garbage collection you may need to do.
+       *
        * @since v3.7.0
        * @see http://vue-select.org/guide/positioning.html
        */
@@ -551,6 +555,7 @@
          * @param width {string} calculated width in pixels of the dropdown menu
          * @param top {string} absolute position top value in pixels relative to the document
          * @param left {string} absolute position left value in pixels relative to the document
+         * @return {function|void}
          */
         default(dropdownList, component, {width, top, left}) {
           dropdownList.style.top = top;
