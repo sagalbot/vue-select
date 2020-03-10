@@ -5,7 +5,7 @@ Slots can be used to change the look and feel of the UI, or to simply swap out t
 
 ## Wrapper
 
-### `header`
+### `header` <Badge text="3.8.0+" />
 
 Displayed at the top of the component, above `.vs__dropdown-toggle`.
 
@@ -19,7 +19,7 @@ Displayed at the top of the component, above `.vs__dropdown-toggle`.
 <slot name="header" v-bind="scope.header" />
 ```
 
-### `footer`
+### `footer` <Badge text="3.8.0+" />
 
 Displayed at the bottom of the component, below `.vs__dropdown-toggle`.
 
@@ -124,7 +124,7 @@ attributes : {
 
 ## Dropdown
 
-### `list-header`
+### `list-header` <Badge text="3.8.0+" />
 
 Displayed as the first item in the dropdown. No content by default. Parent element is the `<ul>`,
 so this slot should contain a root `<li>`.
@@ -138,7 +138,7 @@ so this slot should contain a root `<li>`.
 <slot name="list-header" v-bind="scope.listHeader" />
 ```
 
-### `list-footer`
+### `list-footer` <Badge text="3.8.0+" />
 
 Displayed as the last item in the dropdown. No content by default. Parent element is the `<ul>`,
 so this slot should contain a root `<li>`.

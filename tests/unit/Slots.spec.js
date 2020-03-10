@@ -107,7 +107,7 @@ describe('Scoped Slots', () => {
       'search', 'loading', 'searching', 'filteredOptions',
     ]);
   });
-  
+
   test('list-footer slot props', async () => {
     const footer = jest.fn();
     const Select = mountDefault({}, {
