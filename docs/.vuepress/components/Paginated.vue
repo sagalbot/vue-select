@@ -1,8 +1,8 @@
 <template>
-  <v-select :options="options">
+  <v-select :options="paginated" @search="query => search = query" filterable="false">
     <li slot="list-footer" class="pagination">
-      <button @click="offset -= 10" :disabled="disabled.prev">Prev</button>
-      <button @click="offset += 10" :disabled="disabled.next">Next</button>
+      <button @click="offset -= 10" :disabled="!hasPrevPage">Prev</button>
+      <button @click="offset += 10" :disabled="!hasNextPage">Next</button>
     </li>
   </v-select>
 </template>
@@ -12,19 +12,25 @@ import countries from '../data/countries';
 export default {
   data: () => ({
     countries,
+    search: '',
     offset: 0,
     limit: 10,
   }),
   computed: {
-    disabled() {
-      return {
-        prev: this.offset <= 0,
-        next: this.offset >= this.countries.length
-      }
+    filtered () {
+      return this.countries.filter(country => country.includes(this.search));
     },
-    options () {
-      return this.countries.slice(this.offset, this.limit + this.offset);
+    paginated () {
+      return this.filtered.slice(this.offset, this.limit + this.offset);
     },
+    hasNextPage () {
+      const nextOffset = this.offset + 10;
+      return Boolean(this.filtered.slice(nextOffset, this.limit + nextOffset).length);
+    },
+    hasPrevPage () {
+      const prevOffset = this.offset - 10;
+      return Boolean(this.filtered.slice(prevOffset, this.limit + prevOffset).length);
+    }
   },
 };
 </script>

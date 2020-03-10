@@ -119,6 +119,7 @@ module.exports = {
           children: [
             ['guide/validation', 'Validation'],
             ['guide/selectable', 'Limiting Selections'],
+            ['guide/pagination', 'Pagination'],
             ['guide/vuex', 'Vuex'],
             ['guide/ajax', 'AJAX'],
             ['guide/loops', 'Using in Loops'],
