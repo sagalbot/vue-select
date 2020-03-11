@@ -773,10 +773,22 @@
       findOptionFromReducedValue (value) {
         const predicate = option => JSON.stringify(this.reduce(option)) === JSON.stringify(value);
 
-        return [
+        const matches = [
           ...this.options,
-          ...this.pushedTags
-        ].find(predicate) || value;
+          ...this.pushedTags,
+        ].filter(predicate);
+
+        if (matches.length === 1) {
+          return matches[0];
+        }
+
+        /**
+         * This second loop is needed to cover an edge case where `taggable` + `reduce`
+         * were used in conjunction with a `create-option` that doesn't create a
+         * unique reduced value.
+         * @see https://github.com/sagalbot/vue-select/issues/1089#issuecomment-597238735
+         */
+        return matches.find(match => this.optionComparator(match, this.$data._value)) || value;
       },
 
       /**
