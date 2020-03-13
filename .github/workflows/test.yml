@@ -36,3 +36,9 @@ jobs:
 
       - name: Bundlewatch
         run: npx bundlewatch
+
+      - name: Build Docs
+        run: |
+          cd docs
+          yarn install --frozen-lockfile
+          yarn build:docs
