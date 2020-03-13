@@ -1,33 +1,45 @@
 <template>
-  <v-select :options="countries" @open="onOpen" @close="onClose">
+  <v-select
+    :options="paginated"
+    :filterable="false"
+    @open="onOpen"
+    @close="onClose"
+    @search="query => search = query"
+    ref="select"
+  >
     <template #list-footer v-if="hasNextPage">
-      <li ref="load">Loading more options...</li>
+      <li ref="load" class="loader">
+        Loading more options...
+      </li>
     </template>
   </v-select>
 </template>
 
 <script>
-import vSelect from '../../../src/components/Select'
 import countries from '../data/countries';
+import vSelect from '../../../src/components/Select'
 
 export default {
-  components: {vSelect},
   name: "InfiniteScroll",
-  data: () => ({observer: null, limit: 10}),
+  components: {vSelect},
+  data: () => ({
+    observer: null,
+    limit: 10,
+    search: ''
+  }),
   computed: {
-    countries () {
-      return countries.slice(0, this.limit);
+    filtered () {
+      return countries.filter(country => country.includes(this.search));
+    },
+    paginated () {
+      return this.filtered.slice(0, this.limit);
     },
     hasNextPage () {
-      return this.countries.length < countries.length;
+      return this.paginated.length + 10 < this.filtered.length;
     },
   },
   mounted () {
-    this.observer = new IntersectionObserver(this.infiniteScroll, {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0
-    });
+    this.observer = new IntersectionObserver(this.infiniteScroll);
   },
   methods: {
     async onOpen () {
@@ -41,10 +53,11 @@ export default {
     },
     async infiniteScroll ([{isIntersecting, target}]) {
       if (isIntersecting) {
+        const ul = target.offsetParent;
         const scrollTop = target.offsetParent.scrollTop;
         this.limit += 10;
         await this.$nextTick();
-        target.offsetParent.scrollTop = scrollTop;
+        ul.scrollTop = scrollTop;
       }
     }
   }
@@ -52,5 +65,8 @@ export default {
 </script>
 
 <style scoped>
-
+  .loader {
+    text-align: center;
+    color: #bbbbbb;
+  }
 </style>

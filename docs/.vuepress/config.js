@@ -120,6 +120,7 @@ module.exports = {
             ['guide/validation', 'Validation'],
             ['guide/selectable', 'Limiting Selections'],
             ['guide/pagination', 'Pagination'],
+            ['guide/infinite-scroll', 'Infinite Scroll'],
             ['guide/vuex', 'Vuex'],
             ['guide/ajax', 'AJAX'],
             ['guide/loops', 'Using in Loops'],
