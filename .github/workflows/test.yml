@@ -1,0 +1,38 @@
+name: Test & Build
+on: [pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Test with Coverage
+        run: yarn test --coverage --coverageReporters=lcov
+
+      - name: Report Coverage
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
+      - name: Bundlewatch
+        run: npx bundlewatch

@@ -23,6 +23,7 @@ $transition-duration: .15s;
 /* Dropdown Default Transition */
 .vs__fade-enter-active,
 .vs__fade-leave-active {
+  pointer-events: none;
   transition: opacity $transition-duration $transition-timing-function;
 }
 .vs__fade-enter,

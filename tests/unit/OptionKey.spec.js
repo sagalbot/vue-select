@@ -5,11 +5,11 @@ describe('Serializing Option Keys', () => {
   const getOptionKey = Select.props.getOptionKey.default;
 
   it('can serialize strings to a key', () => {
-    expect(getOptionKey('vue')).toBe('"vue"');
+    expect(getOptionKey('vue')).toBe('vue');
   });
 
   it('can serialize integers to a key', () => {
-    expect(getOptionKey(1)).toBe('1');
+    expect(getOptionKey(1)).toBe(1);
   });
 
   it('can serialize objects to a key', () => {

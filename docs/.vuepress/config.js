@@ -119,6 +119,8 @@ module.exports = {
           children: [
             ['guide/validation', 'Validation'],
             ['guide/selectable', 'Limiting Selections'],
+            ['guide/pagination', 'Pagination'],
+            ['guide/infinite-scroll', 'Infinite Scroll'],
             ['guide/vuex', 'Vuex'],
             ['guide/ajax', 'AJAX'],
             ['guide/loops', 'Using in Loops'],
@@ -129,6 +131,7 @@ module.exports = {
           collapsable: false,
           children: [
             ['guide/keydown', 'Keydown Events'],
+            ['guide/positioning', 'Dropdown Position'],
             ['guide/filtering', 'Filtering'],
           ],
         },

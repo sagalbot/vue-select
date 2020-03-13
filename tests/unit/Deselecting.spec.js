@@ -1,9 +1,10 @@
 import { selectWithProps } from "../helpers";
 
 describe("Removing values", () => {
-  it("can remove the given tag when its close icon is clicked", () => {
+  it("can remove the given tag when its close icon is clicked", async () => {
     const Select = selectWithProps({ multiple: true });
     Select.vm.$data._value = 'one';
+    await Select.vm.$nextTick();
 
     Select.find(".vs__deselect").trigger("click");
     expect(Select.emitted().input).toEqual([[[]]]);

@@ -120,11 +120,12 @@ describe("Moving the Typeahead Pointer", () => {
   });
 
   describe("Measuring pixel distances", () => {
-    it("should calculate pointerHeight as the offsetHeight of the pointer element if it exists", () => {
+    it("should calculate pointerHeight as the offsetHeight of the pointer element if it exists", async () => {
       const Select = mountDefault();
 
       // Drop down must be open for $refs to exist
       Select.vm.open = true;
+      await Select.vm.$nextTick();
 
       /**
        * Since JSDom doesn't render layouts, set the offsetHeight explicitly

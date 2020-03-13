@@ -1,6 +1,8 @@
 import { searchSubmit, selectWithProps } from "../helpers";
+import Select from '../../src/components/Select';
 
 describe("When Tagging Is Enabled", () => {
+
   it("can determine if a given option string already exists", () => {
     const Select = selectWithProps({ taggable: true, options: ["one", "two"] });
     expect(Select.vm.optionExists("one")).toEqual(true);
@@ -13,8 +15,8 @@ describe("When Tagging Is Enabled", () => {
       options: [{ label: "one" }, { label: "two" }]
     });
 
-    expect(Select.vm.optionExists("one")).toEqual(true);
-    expect(Select.vm.optionExists("three")).toEqual(false);
+    expect(Select.vm.optionExists({label: "one"})).toEqual(true);
+    expect(Select.vm.optionExists({label: "three"})).toEqual(false);
   });
 
   it("can determine if a given option object already exists when using custom labels", () => {
@@ -24,8 +26,10 @@ describe("When Tagging Is Enabled", () => {
       label: "foo"
     });
 
-    expect(Select.vm.optionExists("one")).toEqual(true);
-    expect(Select.vm.optionExists("three")).toEqual(false);
+    const createOption = (text) => Select.vm.createOption(text);
+
+    expect(Select.vm.optionExists(createOption("one"))).toEqual(true);
+    expect(Select.vm.optionExists(createOption("three"))).toEqual(false);
   });
 
   it("can add the current search text as the first item in the options list", () => {
@@ -153,7 +157,7 @@ describe("When Tagging Is Enabled", () => {
     expect(Select.vm.selectedValue).toEqual([two]);
   });
 
-  it("should select an existing option if the search string matches an objects label from options", () => {
+  it("should select an existing option if the search string matches an objects label from options", async () => {
     let two = { label: "two" };
     const Select = selectWithProps({
       taggable: true,
@@ -161,12 +165,13 @@ describe("When Tagging Is Enabled", () => {
     });
 
     Select.vm.search = "two";
+    await Select.vm.$nextTick();
 
     searchSubmit(Select);
     expect(Select.vm.selectedValue).toEqual([two]);
   });
 
-  it("should select an existing option if the search string matches an objects label from options when filter-options is false", () => {
+  it("should select an existing option if the search string matches an objects label from options when filter-options is false", async () => {
     let two = { label: "two" };
     const Select = selectWithProps({
       taggable: true,
@@ -175,6 +180,7 @@ describe("When Tagging Is Enabled", () => {
     });
 
     Select.vm.search = "two";
+    await Select.vm.$nextTick();
 
     searchSubmit(Select);
     expect(Select.vm.selectedValue).toEqual([two]);
@@ -226,9 +232,11 @@ describe("When Tagging Is Enabled", () => {
       multiple: true,
       options: [{ label: "two" }]
     });
+    const spy = jest.spyOn(Select.vm, 'select');
 
     searchSubmit(Select, "one");
     expect(Select.vm.selectedValue).toEqual([{ label: "one" }]);
+    expect(spy).lastCalledWith({label: 'one'});
     expect(Select.vm.search).toEqual("");
 
     searchSubmit(Select, "one");

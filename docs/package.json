@@ -8,6 +8,7 @@
     "build:preview": "cross-env DEPLOY_PREVIEW=true vuepress build"
   },
   "devDependencies": {
+    "@popperjs/core": "^2.1.0",
     "@vuepress/plugin-active-header-links": "^1.0.0-alpha.47",
     "@vuepress/plugin-google-analytics": "^1.0.0-alpha.47",
     "@vuepress/plugin-nprogress": "^1.0.0-alpha.47",
