@@ -619,6 +619,10 @@
        */
       multiple() {
         this.clearSelection()
+      },
+
+      open(isOpen) {
+        this.$emit(isOpen ? 'open' : 'close');
       }
     },
 
