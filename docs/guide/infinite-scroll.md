@@ -4,8 +4,8 @@ by hooking into the `open`, `close`, and `search` events, along with the `filter
 
 Let's break down the example below, starting with the `data`.
 
-- `observer` - when the component is mounted, a new `IntersectionObserver` will be set here
-- `limit` - the number of options to display 'per page'
+- `observer` - a new `IntersectionObserver` with `infiniteScroll` set as the callback
+- `limit` - the number of options to display
 - `search` - since we've disabled Vue Selects filtering, we'll need to filter options ourselves
 
 When Vue Select opens, the `open` event is emitted and `onOpen` will be called. We wait for
