@@ -19,12 +19,18 @@ import countries from '../data/countries';
 
 export default {
   name: "InfiniteScroll",
-  data () {
-    return {
-      observer: new IntersectionObserver(this.infiniteScroll),
-      limit: 10,
-      search: ''
-    }
+  data: () => ({
+    observer: null,
+    limit: 10,
+    search: ''
+  }),
+  mounted () {
+    /**
+     * You could do this directly in data(), but since these docs
+     * are server side rendered, IntersectionObserver doesn't exist
+     * in that environment, so we need to do it in mounted() instead.
+     */
+    this.observer = new IntersectionObserver(this.infiniteScroll);
   },
   computed: {
     filtered () {
