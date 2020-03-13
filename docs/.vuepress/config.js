@@ -132,7 +132,7 @@ module.exports = {
           children: [
             ['guide/keydown', 'Keydown Events'],
             ['guide/positioning', 'Dropdown Position'],
-            ['guide/filtering', 'Filtering'],
+            ['guide/filtering', 'Option Filtering'],
           ],
         },
         {

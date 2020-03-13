@@ -1,33 +1,19 @@
-Vue Select provides two `{Function}` props that can be used when implementing custom filtering 
-algorithms:
+Vue Select provides two props accepting `functions` that can be used to implement custom filtering
+algorithms.
 
-- filter
-- filterBy
+- `filter` <Badge text="v2.5.0+" />
+- `filterBy` <Badge text="v2.5.0+" />
 
 By default, the component will perform a very basic check to see if an options label includes
-the current search text. 
+the current search text. If you're using scoped slots, you might have information within the
+option templates that should be searchable. Or maybe you just want a better search algorithm that
+can do fuzzy search matching.
 
-#### Use Cases
+## Filtering with Fuse.js
 
-If you're using scoped slots, maybe you have information within the
-option templates that should be searchable. The built-in search is really basic string checking,
-so maybe you need more a advanced search algorithm that can handle fuzzy matching, like Fuse.js. 
-
-
-## Fuzzy Search with Fuse.js
+You can use the `filter` and `filterBy` props to hook right into something like
+[Fuse.js](https://fusejs.io/) that can handle searching multiple object keys with fuzzy matchings.
 
 <FuseFilter />
 
-<Prop 
-name="filter" 
-type="Function"
-return-type="Array" 
-description="Callback to filter results when search text is provided. Default implementation loops 
-each option, and returns the result of this.filterBy."
-:parameters="[{name: 'options', type: 'Array'}]" 
-/>
-
-
- 
-
-
+<<< @/.vuepress/components/FuseFilter.vue
