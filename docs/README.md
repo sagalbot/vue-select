@@ -20,7 +20,7 @@ template that fits the 80% use case for a select dropdown. Here it is by default
 </div>
 
 Vue Select aims to be as lightweight as possible, while maintaining high standards for accessibility,
-developer experience, and customization. Huge thanks to the [sponsors](sponsors.md) and 
+developer experience, and customization. Huge thanks to the [sponsors](sponsors.md) and
 [contributors](contributors.md) that make Vue Select possible!
 
 ## Features
