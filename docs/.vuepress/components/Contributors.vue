@@ -1,10 +1,16 @@
 <template>
   <ul>
-    <li v-for="c in contributors">
-      <img :src="`${c.avatar_url}&s=75`" :alt="`${c.login}'s Avatar`" />
+    <li v-for="{ login, avatar_url, html_url, contributions } in contributors">
+      <img :src="`${avatar_url}&s=75`" :alt="`${login}'s Avatar`" />
       <div>
-        <a :href="c.html_url">@{{ c.login }}</a>
-        <br>{{ c.contributions }} contributions
+        <a :href="html_url">@{{ login }}</a>
+        <br /><a
+          class="contributions-link"
+          :href="
+            `https://github.com/sagalbot/vue-select/commits?author=${login}`
+          "
+          >{{ contributions }} contributions</a
+        >
       </div>
     </li>
   </ul>
@@ -42,13 +48,16 @@ li {
   display: inline-flex;
   align-items: center;
   margin-bottom: 2rem;
-  /*max-width: 220px;*/
+  margin-right: 1rem;
 }
-  a {
-    display: inline-block;
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap
-  }
+a {
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.contributions-link {
+  color: #2c5282;
+}
 </style>

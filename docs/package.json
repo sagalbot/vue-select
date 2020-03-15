@@ -8,6 +8,7 @@
     "build:preview": "cross-env DEPLOY_PREVIEW=true vuepress build"
   },
   "devDependencies": {
+    "@octokit/graphql": "^4.3.1",
     "@popperjs/core": "^2.1.0",
     "@vuepress/plugin-active-header-links": "^1.0.0-alpha.47",
     "@vuepress/plugin-google-analytics": "^1.0.0-alpha.47",
@@ -17,6 +18,8 @@
     "@vuepress/plugin-search": "^1.0.0-alpha.47",
     "axios": "^0.19.2",
     "cross-env": "^5.2.0",
+    "date-fns": "^2.11.0",
+    "dotenv": "^8.2.0",
     "fuse.js": "^3.4.4",
     "gh-pages": "^0.11.0",
     "node-sass": "^4.12.0",
