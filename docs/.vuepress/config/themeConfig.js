@@ -10,7 +10,6 @@ module.exports = {
       {
         title: 'Community',
         collapsable: false,
-        // sidebarDepth: 1,
         children: [
           ['sponsors', 'Sponsors 🎉'],
           ['contributors', 'Contributors'],
@@ -26,13 +25,6 @@ module.exports = {
           ['guide/upgrading', 'Upgrading 2.x to 3.x'],
         ],
       },
-      // {
-      //   title: 'Sponsors',
-      //   collapsable: false,
-      //   children: [
-      //     ['guide/sponsors', 'Become a Sponsor 🎉']
-      //   ]
-      // },
       {
         title: 'Templating & Styling',
         collapsable: false,
