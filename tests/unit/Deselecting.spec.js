@@ -1,4 +1,4 @@
-import { selectWithProps } from "../helpers";
+import { mountDefault, selectWithProps } from '../helpers';
 
 describe("Removing values", () => {
   it("can remove the given tag when its close icon is clicked", async () => {
