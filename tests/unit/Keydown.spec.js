@@ -69,16 +69,6 @@ describe('Custom Keydown Handlers', () => {
       expect(spy).toHaveBeenCalledTimes(1);
     });
 
-    it('will not emit input event if value has not changed with backspace', () => {
-      const Select = mountDefault();
-      Select.vm.$data._value = 'one';
-      Select.find({ ref: 'search' }).trigger('keydown.backspace');
-      expect(Select.emitted().input.length).toBe(1);
-
-      Select.find({ ref: 'search' }).trigger('keydown.backspace');
-      Select.find({ ref: 'search' }).trigger('keydown.backspace');
-      expect(Select.emitted().input.length).toBe(1);
-    });
   });
 
 });
