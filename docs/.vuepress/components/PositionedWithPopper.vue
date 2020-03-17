@@ -22,7 +22,7 @@ import { createPopper } from '@popperjs/core';
 export default {
   data: () => ({countries, placement: 'top'}),
   methods: {
-    withPopper (dropdownList, component, {width},) {
+    withPopper (dropdownList, component, {width}) {
       /**
        * We need to explicitly define the dropdown width since
        * it is usually inherited from the parent with CSS.
@@ -39,7 +39,7 @@ export default {
        * wrapper so that we can set some styles for when the dropdown is placed
        * above.
        */
-      createPopper(component.$refs.toggle, dropdownList, {
+      const popper = createPopper(component.$refs.toggle, dropdownList, {
         placement: this.placement,
         modifiers: [
           {
@@ -56,6 +56,12 @@ export default {
             },
           }]
       });
+
+      /**
+       * To prevent memory leaks Popper needs to be destroyed.
+       * If you return function, it will be called just before dropdown is removed from DOM.
+       */
+      return () => popper.destroy();
     }
   }
 };

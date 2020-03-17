@@ -5,6 +5,7 @@
 <template>
   <div :dir="dir" class="v-select" :class="stateClasses">
     <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
+    <slot name="header" v-bind="scope.header" />
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
@@ -51,9 +52,9 @@
         </slot>
       </div>
     </div>
-
     <transition :name="transition">
       <ul ref="dropdownMenu" v-if="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
+        <slot name="list-header" v-bind="scope.listHeader" />
         <li
           role="option"
           v-for="(option, index) in filteredOptions"
@@ -72,9 +73,11 @@
         <li v-if="filteredOptions.length === 0" class="vs__no-options" @mousedown.stop="">
           <slot name="no-options" v-bind="scope.noOptions">Sorry, no matching options.</slot>
         </li>
+        <slot name="list-footer" v-bind="scope.listFooter" />
       </ul>
       <ul v-else :id="`vs${uid}__listbox`" role="listbox" style="display: none; visibility: hidden;"></ul>
     </transition>
+    <slot name="footer" v-bind="scope.footer" />
   </div>
 </template>
 
@@ -547,9 +550,13 @@
       },
 
       /**
-       * When `appendToBody` is true, this function
-       * is responsible for positioning the drop
-       * down list.
+       * When `appendToBody` is true, this function is responsible for
+       * positioning the drop down list.
+       *
+       * If a function is returned from `calculatePosition`, it will
+       * be called when the drop down list is removed from the DOM.
+       * This allows for any garbage collection you may need to do.
+       *
        * @since v3.7.0
        * @see http://vue-select.org/guide/positioning.html
        */
@@ -561,6 +568,7 @@
          * @param width {string} calculated width in pixels of the dropdown menu
          * @param top {string} absolute position top value in pixels relative to the document
          * @param left {string} absolute position left value in pixels relative to the document
+         * @return {function|void}
          */
         default(dropdownList, component, {width, top, left}) {
           dropdownList.style.top = top;
@@ -621,6 +629,10 @@
        */
       multiple() {
         this.clearSelection()
+      },
+
+      open(isOpen) {
+        this.$emit(isOpen ? 'open' : 'close');
       }
     },
 
@@ -631,7 +643,7 @@
         this.setInternalValueFromOptions(this.value)
       }
 
-      this.$on('option:created', this.maybePushTag)
+      this.$on('option:created', this.pushTag)
     },
 
     methods: {
@@ -664,7 +676,6 @@
           }
           this.updateValue(option);
         }
-
         this.onAfterSelect(option)
       },
 
@@ -777,7 +788,7 @@
       },
 
       /**
-       * Finds an option from this.options
+       * Finds an option from the options
        * where a reduced value matches
        * the passed in value.
        *
@@ -785,7 +796,24 @@
        * @returns {*}
        */
       findOptionFromReducedValue (value) {
-        return this.options.find(option => JSON.stringify(this.reduce(option)) === JSON.stringify(value)) || value;
+        const predicate = option => JSON.stringify(this.reduce(option)) === JSON.stringify(value);
+
+        const matches = [
+          ...this.options,
+          ...this.pushedTags,
+        ].filter(predicate);
+
+        if (matches.length === 1) {
+          return matches[0];
+        }
+
+        /**
+         * This second loop is needed to cover an edge case where `taggable` + `reduce`
+         * were used in conjunction with a `create-option` that doesn't create a
+         * unique reduced value.
+         * @see https://github.com/sagalbot/vue-select/issues/1089#issuecomment-597238735
+         */
+        return matches.find(match => this.optionComparator(match, this.$data._value)) || value;
       },
 
       /**
@@ -804,7 +832,7 @@
        * @return {this.value}
        */
       maybeDeleteValue() {
-        if (!this.searchEl.value.length && this.selectedValue && this.clearable) {
+        if (!this.searchEl.value.length && this.selectedValue && this.selectedValue.length && this.clearable) {
           let value = null;
           if (this.multiple) {
             value = [...this.selectedValue.slice(0, this.selectedValue.length - 1)]
@@ -841,10 +869,8 @@
        * @param  {Object || String} option
        * @return {void}
        */
-      maybePushTag(option) {
-        if (this.pushTags) {
-          this.pushedTags.push(option)
-        }
+      pushTag (option) {
+        this.pushedTags.push(option);
       },
 
       /**
@@ -926,7 +952,7 @@
         };
 
         const defaults = {
-          //  delete
+          //  backspace
           8: e => this.maybeDeleteValue(),
           //  tab
           9: e => this.onTab(),
@@ -991,7 +1017,7 @@
        * @return {Array}
        */
       optionList () {
-        return this.options.concat(this.pushedTags);
+        return this.options.concat(this.pushTags ? this.pushedTags : []);
       },
 
       /**
@@ -1009,6 +1035,12 @@
        * @returns {Object}
        */
       scope () {
+        const listSlot = {
+          search: this.search,
+          loading: this.loading,
+          searching: this.searching,
+          filteredOptions: this.filteredOptions
+        };
         return {
           search: {
             attributes: {
@@ -1040,6 +1072,7 @@
           },
           noOptions: {
             search: this.search,
+            loading: this.loading,
             searching: this.searching,
           },
           openIndicator: {
@@ -1049,6 +1082,10 @@
               'class': 'vs__open-indicator',
             },
           },
+          listHeader: listSlot,
+          listFooter: listSlot,
+          header: { ...listSlot, deselect: this.deselect },
+          footer: { ...listSlot, deselect: this.deselect }
         };
       },
 
