@@ -4,8 +4,8 @@
 
 <template>
   <div :dir="dir" class="v-select" :class="stateClasses">
-    <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
     <slot name="header" v-bind="scope.header" />
+    <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
@@ -752,7 +752,8 @@
           ...([this.$refs['clearButton']] || [])
         ];
 
-        if (ignoredButtons.some(ref => ref.contains(event.currentTarget) || ref === event.currentTarget)) {
+        if (ignoredButtons.some(ref => ref.contains(event.target) || ref === event.target)) {
+          event.preventDefault()
           return;
         }
 
