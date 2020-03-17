@@ -4,7 +4,8 @@
 
 <template>
   <div :dir="dir" class="v-select" :class="stateClasses">
-    <div ref="toggle" @mousedown.prevent="toggleDropdown" class="vs__dropdown-toggle">
+    <slot name="header" v-bind="scope.header" />
+    <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown.prevent="toggleDropdown" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
@@ -17,7 +18,7 @@
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
-            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" aria-label="Deselect option" ref="deselectButtons">
+            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" :title="`Deselect ${getOptionLabel(option)}`" :aria-label="`Deselect ${getOptionLabel(option)}`" ref="deselectButtons">
               <component :is="childComponents.Deselect" />
             </button>
           </span>
@@ -35,7 +36,8 @@
           @click="clearSelection"
           type="button"
           class="vs__clear"
-          title="Clear selection"
+          title="Clear Selected"
+          aria-label="Clear Selected"
           ref="clearButton"
         >
           <component :is="childComponents.Deselect" />
@@ -50,15 +52,17 @@
         </slot>
       </div>
     </div>
-
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
+      <ul ref="dropdownMenu" v-if="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
+        <slot name="list-header" v-bind="scope.listHeader" />
         <li
           role="option"
           v-for="(option, index) in filteredOptions"
           :key="getOptionKey(option)"
+          :id="`vs${uid}__option-${index}`"
           class="vs__dropdown-option"
           :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer, 'vs__dropdown-option--disabled': !selectable(option) }"
+          :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? typeAheadPointer = index : null"
           @mousedown.prevent.stop="selectable(option) ? select(option) : null"
         >
@@ -66,11 +70,14 @@
             {{ getOptionLabel(option) }}
           </slot>
         </li>
-        <li v-if="!filteredOptions.length" class="vs__no-options" @mousedown.stop="">
-          <slot name="no-options">Sorry, no matching options.</slot>
+        <li v-if="filteredOptions.length === 0" class="vs__no-options" @mousedown.stop="">
+          <slot name="no-options" v-bind="scope.noOptions">Sorry, no matching options.</slot>
         </li>
+        <slot name="list-footer" v-bind="scope.listFooter" />
       </ul>
+      <ul v-else :id="`vs${uid}__listbox`" role="listbox" style="display: none; visibility: hidden;"></ul>
     </transition>
+    <slot name="footer" v-bind="scope.footer" />
   </div>
 </template>
 
@@ -79,6 +86,9 @@
   import typeAheadPointer from '../mixins/typeAheadPointer'
   import ajax from '../mixins/ajax'
   import childComponents from './childComponents';
+  import appendToBody from '../directives/appendToBody';
+  import sortAndStringify from '../utility/sortAndStringify'
+  import uniqueId from '../utility/uniqueId';
 
   /**
    * @name VueSelect
@@ -87,6 +97,8 @@
     components: {...childComponents},
 
     mixins: [pointerScroll, typeAheadPointer, ajax],
+
+    directives: {appendToBody},
 
     props: {
       /**
@@ -273,12 +285,16 @@
       },
 
       /**
-       * Callback to get an option key. If {option}
-       * is an object and has an {id}, returns {option.id}
-       * by default, otherwise tries to serialize {option}
-       * to JSON.
+       * Generate a unique identifier for each option. If `option`
+       * is an object and `option.hasOwnProperty('id')` exists,
+       * `option.id` is used by default, otherwise the option
+       * will be serialized to JSON.
        *
-       * The key must be unique for an option.
+       * If you are supplying a lot of options, you should
+       * provide your own keys, as JSON.stringify can be
+       * slow with lots of objects.
+       *
+       * The result of this function *must* be unique.
        *
        * @type {Function}
        * @param  {Object || String} option
@@ -286,22 +302,21 @@
        */
       getOptionKey: {
         type: Function,
-        default(option) {
-          if (typeof option === 'object' && option.id) {
-            return option.id
-          } else {
-            try {
-              return JSON.stringify(option)
-            } catch(e) {
-              return console.warn(
-                `[vue-select warn]: Could not stringify option ` +
-                `to generate unique key. Please provide'getOptionKey' prop ` +
-                `to return a unique key for each option.\n` +
-                'https://vue-select.org/api/props.html#getoptionkey'
-              );
-            }
+        default (option) {
+          if (typeof option !== 'object') {
+            return option;
           }
-        }
+
+          try {
+            return option.hasOwnProperty('id') ? option.id : sortAndStringify(option);
+          } catch (e) {
+            const warning = `[vue-select warn]: Could not stringify this option ` +
+              `to generate unique key. Please provide'getOptionKey' prop ` +
+              `to return a unique key for each option.\n` +
+              'https://vue-select.org/api/props.html#getoptionkey';
+            return console.warn(warning, option, e);
+          }
+        },
       },
 
       /**
@@ -385,7 +400,7 @@
        * @return {Boolean}
        */
       filter: {
-        "type": Function,
+        type: Function,
         default(options, search) {
           return options.filter((option) => {
             let label = this.getOptionLabel(option)
@@ -520,11 +535,51 @@
          * @return {Object}
          */
         default: (map, vm) => map,
+      },
+
+      /**
+       * Append the dropdown element to the end of the body
+       * and size/position it dynamically. Use it if you have
+       * overflow or z-index issues.
+       * @type {Boolean}
+       */
+      appendToBody: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
+       * When `appendToBody` is true, this function is responsible for
+       * positioning the drop down list.
+       *
+       * If a function is returned from `calculatePosition`, it will
+       * be called when the drop down list is removed from the DOM.
+       * This allows for any garbage collection you may need to do.
+       *
+       * @since v3.7.0
+       * @see http://vue-select.org/guide/positioning.html
+       */
+      calculatePosition: {
+        type: Function,
+        /**
+         * @param dropdownList {HTMLUListElement}
+         * @param component {Vue} current instance of vue select
+         * @param width {string} calculated width in pixels of the dropdown menu
+         * @param top {string} absolute position top value in pixels relative to the document
+         * @param left {string} absolute position left value in pixels relative to the document
+         * @return {function|void}
+         */
+        default(dropdownList, component, {width, top, left}) {
+          dropdownList.style.top = top;
+          dropdownList.style.left = left;
+          dropdownList.style.width = width;
+        }
       }
     },
 
     data() {
       return {
+        uid: uniqueId(),
         search: '',
         open: false,
         isComposing: false,
@@ -573,6 +628,10 @@
        */
       multiple() {
         this.clearSelection()
+      },
+
+      open(isOpen) {
+        this.$emit(isOpen ? 'open' : 'close');
       }
     },
 
@@ -583,7 +642,7 @@
         this.setInternalValueFromOptions(this.value)
       }
 
-      this.$on('option:created', this.maybePushTag)
+      this.$on('option:created', this.pushTag)
     },
 
     methods: {
@@ -609,7 +668,6 @@
       select(option) {
         if (!this.isOptionSelected(option)) {
           if (this.taggable && !this.optionExists(option)) {
-            option = this.createOption(option);
             this.$emit('option:created', option);
           }
           if (this.multiple) {
@@ -617,7 +675,6 @@
           }
           this.updateValue(option);
         }
-
         this.onAfterSelect(option)
       },
 
@@ -712,42 +769,22 @@
        * @return {Boolean}        True when selected | False otherwise
        */
       isOptionSelected(option) {
-        return this.selectedValue.some(value => {
-          return this.optionComparator(value, option)
-        })
+        return this.selectedValue.some(value => this.optionComparator(value, option))
       },
 
       /**
        * Determine if two option objects are matching.
        *
-       * @param value {Object}
-       * @param option {Object}
+       * @param a {Object}
+       * @param b {Object}
        * @returns {boolean}
        */
-      optionComparator(value, option) {
-        if (typeof value !== 'object' && typeof option !== 'object') {
-          // Comparing primitives
-          if (value === option) {
-            return true
-          }
-        } else {
-          // Comparing objects
-          if (value === this.reduce(option)) {
-            return true
-          }
-          if ((this.getOptionLabel(value) === this.getOptionLabel(option)) || (this.getOptionLabel(value) === option)) {
-            return true
-          }
-          if (this.reduce(value) === this.reduce(option)) {
-            return true
-          }
-        }
-
-        return false;
+      optionComparator(a, b) {
+        return this.getOptionKey(a) === this.getOptionKey(b);
       },
 
       /**
-       * Finds an option from this.options
+       * Finds an option from the options
        * where a reduced value matches
        * the passed in value.
        *
@@ -755,7 +792,24 @@
        * @returns {*}
        */
       findOptionFromReducedValue (value) {
-        return this.options.find(option => JSON.stringify(this.reduce(option)) === JSON.stringify(value)) || value;
+        const predicate = option => JSON.stringify(this.reduce(option)) === JSON.stringify(value);
+
+        const matches = [
+          ...this.options,
+          ...this.pushedTags,
+        ].filter(predicate);
+
+        if (matches.length === 1) {
+          return matches[0];
+        }
+
+        /**
+         * This second loop is needed to cover an edge case where `taggable` + `reduce`
+         * were used in conjunction with a `create-option` that doesn't create a
+         * unique reduced value.
+         * @see https://github.com/sagalbot/vue-select/issues/1089#issuecomment-597238735
+         */
+        return matches.find(match => this.optionComparator(match, this.$data._value)) || value;
       },
 
       /**
@@ -774,7 +828,7 @@
        * @return {this.value}
        */
       maybeDeleteValue() {
-        if (!this.searchEl.value.length && this.selectedValue && this.clearable) {
+        if (!this.searchEl.value.length && this.selectedValue && this.selectedValue.length && this.clearable) {
           let value = null;
           if (this.multiple) {
             value = [...this.selectedValue.slice(0, this.selectedValue.length - 1)]
@@ -791,14 +845,7 @@
        * @return {boolean}
        */
       optionExists(option) {
-        return this.optionList.some(opt => {
-          if (typeof opt === 'object' && this.getOptionLabel(opt) === option) {
-            return true
-          } else if (opt === option) {
-            return true
-          }
-          return false
-        })
+        return this.optionList.some(_option => this.optionComparator(_option, option))
       },
 
       /**
@@ -818,10 +865,8 @@
        * @param  {Object || String} option
        * @return {void}
        */
-      maybePushTag(option) {
-        if (this.pushTags) {
-          this.pushedTags.push(option)
-        }
+      pushTag (option) {
+        this.pushedTags.push(option);
       },
 
       /**
@@ -907,7 +952,7 @@
         };
 
         const defaults = {
-          //  delete
+          //  backspace
           8: e => this.maybeDeleteValue(),
           //  tab
           9: e => this.onTab(),
@@ -972,7 +1017,7 @@
        * @return {Array}
        */
       optionList () {
-        return this.options.concat(this.pushedTags);
+        return this.options.concat(this.pushTags ? this.pushedTags : []);
       },
 
       /**
@@ -990,6 +1035,12 @@
        * @returns {Object}
        */
       scope () {
+        const listSlot = {
+          search: this.search,
+          loading: this.loading,
+          searching: this.searching,
+          filteredOptions: this.filteredOptions
+        };
         return {
           search: {
             attributes: {
@@ -998,10 +1049,11 @@
               'tabindex': this.tabindex,
               'readonly': !this.searchable,
               'id': this.inputId,
-              'aria-expanded': this.dropdownOpen,
-              'aria-label': 'Search for option',
+              'aria-autocomplete': 'list',
+              'aria-labelledby': `vs${this.uid}__combobox`,
+              'aria-controls': `vs${this.uid}__listbox`,
+              'aria-activedescendant': this.typeAheadPointer > -1 ? `vs${this.uid}__option-${this.typeAheadPointer}` : '',
               'ref': 'search',
-              'role': 'combobox',
               'type': 'search',
               'autocomplete': this.autocomplete,
               'value': this.search,
@@ -1018,6 +1070,11 @@
           spinner: {
             loading: this.mutableLoading
           },
+          noOptions: {
+            search: this.search,
+            loading: this.loading,
+            searching: this.searching,
+          },
           openIndicator: {
             attributes: {
               'ref': 'openIndicator',
@@ -1025,6 +1082,10 @@
               'class': 'vs__open-indicator',
             },
           },
+          listHeader: listSlot,
+          listFooter: listSlot,
+          header: { ...listSlot, deselect: this.deselect },
+          footer: { ...listSlot, deselect: this.deselect }
         };
       },
 
@@ -1103,7 +1164,7 @@
         }
 
         let options = this.search.length ? this.filter(optionList, this.search, this) : optionList;
-        if (this.taggable && this.search.length && !this.optionExists(this.search)) {
+        if (this.taggable && this.search.length && !this.optionExists(this.createOption(this.search))) {
           options.unshift(this.search)
         }
         return options
@@ -1123,7 +1184,7 @@
        */
       showClearButton() {
         return !this.multiple && this.clearable && !this.open && !this.isValueEmpty
-      }
+      },
     },
 
   }

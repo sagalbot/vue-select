@@ -129,14 +129,17 @@ describe("Toggling Dropdown", () => {
     expect(Select.vm.stateClasses['vs--open']).toEqual(true);
   });
 
-  it("should not display the dropdown if noDrop is true", () => {
+  it("should not display the dropdown if noDrop is true", async () => {
     const Select = selectWithProps({
       noDrop: true,
     });
-
     Select.vm.toggleDropdown({ target: Select.vm.$refs.search });
     expect(Select.vm.open).toEqual(true);
+    await Select.vm.$nextTick();
+
     expect(Select.contains('.vs__dropdown-menu')).toBeFalsy();
+    expect(Select.contains('.vs__dropdown-option')).toBeFalsy();
+    expect(Select.contains('.vs__no-options')).toBeFalsy();
     expect(Select.vm.stateClasses['vs--open']).toBeFalsy();
   });
 

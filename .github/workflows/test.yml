@@ -29,10 +29,16 @@ jobs:
           node-version: 12
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn install --frozen-lockfile
+          cd docs
+          yarn install --frozen-lockfile
 
-      - name: Build
+      - name: Build Dist
         run: yarn build
 
       - name: Bundlewatch
         run: npx bundlewatch
+
+      - name: Build Docs
+        run: yarn build:docs

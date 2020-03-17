@@ -41,4 +41,41 @@ describe("Labels", () => {
     Select.vm.$data._value = "one";
     expect(Select.vm.searchPlaceholder).not.toBeDefined();
   });
+
+  describe('getOptionLabel', () => {
+    it('will return undefined if the option lacks the label key', () => {
+      const getOptionLabel = VueSelect.props.getOptionLabel.default.bind({ label: 'label' });
+      expect(getOptionLabel({name: 'vue'})).toEqual(undefined);
+    });
+
+    it('will return a string value for a valid key', () => {
+      const getOptionLabel = VueSelect.props.getOptionLabel.default.bind({ label: 'label' });
+      expect(getOptionLabel({label: 'vue'})).toEqual('vue');
+    });
+
+    /**
+     * this test fails because of a bug where Vue executes the default contents
+     * of a slot, even if it is implemented by the consumer.
+     * @see https://github.com/vuejs/vue/issues/10224
+     * @see https://github.com/vuejs/vue/pull/10229
+     */
+    xit('will not call getOptionLabel if both scoped option slots are used and a filter is provided', () => {
+      const spy = spyOn(VueSelect.props.getOptionLabel, 'default');
+      const Select = shallowMount(VueSelect, {
+        propsData: {
+          options: [{name: 'one'}],
+          filter: () => {},
+        },
+        scopedSlots: {
+          'option': '<span class="option">{{ props.name }}</span>',
+          'selected-option': '<span class="selected">{{ props.name }}</span>',
+        },
+      });
+
+      Select.vm.select({name: 'one'});
+
+      expect(spy).toHaveBeenCalledTimes(0);
+      expect(Select.find('.selected').exists()).toBeTruthy();
+    });
+  });
 });
