@@ -56,16 +56,18 @@ export default {
      * Optionally clear the search input on selection.
      * @return {void}
      */
-    typeAheadSelect () {
-      if (!this.taggable && this.filteredOptions[this.typeAheadPointer]) {
-        this.select(this.filteredOptions[this.typeAheadPointer]);
+    typeAheadSelect() {
+      const typeAheadOption = this.filteredOptions[this.typeAheadPointer];
+
+      if (typeAheadOption) {
+        this.select(typeAheadOption);
       } else if (this.taggable && this.search.length) {
         this.select(this.createOption(this.search));
       }
 
       if (this.clearSearchOnSelect) {
-        this.search = '';
+        this.search = "";
       }
-    },
+    }
   }
 }

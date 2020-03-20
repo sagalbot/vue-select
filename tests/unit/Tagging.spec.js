@@ -1,4 +1,4 @@
-import { searchSubmit, selectWithProps } from "../helpers";
+import { mountDefault, searchSubmit, selectWithProps } from '../helpers';
 import Select from '../../src/components/Select';
 
 describe("When Tagging Is Enabled", () => {
@@ -243,4 +243,17 @@ describe("When Tagging Is Enabled", () => {
     expect(Select.vm.selectedValue).toEqual([{ label: "one" }]);
     expect(Select.vm.search).toEqual("");
   });
+
+  it("will select an existing option on tab", async () => {
+    const Select = mountDefault({
+      taggable: true,
+      selectOnTab: true
+    });
+
+    Select.vm.typeAheadPointer = 0;
+    Select.find({ ref: "search" }).trigger("keydown.tab");
+
+    await Select.vm.$nextTick();
+    expect(Select.vm.selectedValue).toEqual(['one']);
+  })
 });
