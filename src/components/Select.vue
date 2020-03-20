@@ -61,7 +61,7 @@
           :key="getOptionKey(option)"
           :id="`vs${uid}__option-${index}`"
           class="vs__dropdown-option"
-          :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer, 'vs__dropdown-option--disabled': !selectable(option) }"
+          :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': (index === typeAheadPointer) && !isOptionSelected(option), 'vs__dropdown-option--disabled': !selectable(option) }"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? typeAheadPointer = index : null"
           @mousedown.prevent.stop="selectable(option) ? select(option) : null"
@@ -255,6 +255,15 @@
       },
 
       /**
+       * Option to customize how Vue Select determines duplicate and selected options.  By default, "id" is used.
+       * This can be set to any property the object might contain as a *unique* identifier.
+       */
+      optionKey: {
+        type: String,
+        default: 'id'
+      },
+
+      /**
        * Callback to generate the label text. If {option}
        * is an object, returns option[this.label] by default.
        *
@@ -308,7 +317,7 @@
           }
 
           try {
-            return option.hasOwnProperty('id') ? option.id : sortAndStringify(option);
+            return option.hasOwnProperty(this.optionKey) ? option[this.optionKey] : sortAndStringify(option);
           } catch (e) {
             const warning = `[vue-select warn]: Could not stringify this option ` +
               `to generate unique key. Please provide'getOptionKey' prop ` +

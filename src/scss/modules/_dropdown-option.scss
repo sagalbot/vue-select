@@ -17,6 +17,12 @@
   color: $vs-state-active-color;
 }
 
+.vs__dropdown-option--selected {
+  background: $vs-selected-bg;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .vs__dropdown-option--disabled {
   background: inherit;
   color: $vs-state-disabled-color;
