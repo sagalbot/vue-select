@@ -915,7 +915,7 @@
         this.$emit('search:focus')
 
         if (!this.multiple && this.preserveSelectedText) {
-          this.search = (this.value || {})[this.label] || ''
+          this.search = this.selectedValue.length ? this.getOptionLabel(this.selectedValue[0]) : '';
         }
       },
 
