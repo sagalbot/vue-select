@@ -514,16 +514,6 @@
       },
 
       /**
-       * Enables/disables allowing the mouse to send events to the search input field without closing the dropdown menu
-       * @type {Boolean}
-       */
-      enableMouseSearchInput: {
-        type: Boolean,
-        default: false
-      },
-
-
-      /**
        * Used to modify the default keydown events map
        * for the search input. Can be used to implement
        * custom behaviour for key presses.
@@ -757,10 +747,10 @@
           return;
         }
 
-        if (!this.enableMouseSearchInput || event.target !== this.$refs.search) {
+        if (event.target != this.$refs.search) {
           event.preventDefault()
         }
-        if (this.open && (!this.enableMouseSearchInput || (this.enableMouseSearchInput && event.target !== this.$refs.search))) {
+        if (this.open && (event.target != this.$refs.search)) {
           this.searchEl.blur();
         } else if (!this.disabled) {
           this.open = true;
