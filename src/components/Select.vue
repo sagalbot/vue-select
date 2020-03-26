@@ -1039,11 +1039,13 @@
               'aria-autocomplete': 'list',
               'aria-labelledby': `vs${this.uid}__combobox`,
               'aria-controls': `vs${this.uid}__listbox`,
-              'aria-activedescendant': this.typeAheadPointer > -1 ? `vs${this.uid}__option-${this.typeAheadPointer}` : '',
               'ref': 'search',
               'type': 'search',
               'autocomplete': this.autocomplete,
               'value': this.search,
+              ...(this.dropdownOpen && this.filteredOptions[this.typeAheadPointer] ? {
+                'aria-activedescendant': `vs${this.uid}__option-${this.typeAheadPointer}`
+              } : {}),
             },
             events: {
               'compositionstart': () => this.isComposing = true,
