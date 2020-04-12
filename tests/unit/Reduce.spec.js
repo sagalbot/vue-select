@@ -245,7 +245,12 @@ describe("When reduce prop is defined", () => {
       const Select = Parent.vm.$children[0];
 
       //  When
+      Select.$refs.search.focus();
+      await Select.$nextTick();
+
       Select.search = 'hello';
+      await Select.$nextTick();
+
       Select.typeAheadSelect();
       await Select.$nextTick();
 

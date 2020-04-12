@@ -695,7 +695,7 @@
        */
       onAfterSelect(option) {
         if (this.closeOnSelect) {
-          this.open = !this.open
+          this.open = !this.open;
           this.searchEl.blur()
         }
 
@@ -1153,10 +1153,13 @@
         }
 
         let options = this.search.length ? this.filter(optionList, this.search, this) : optionList;
-        if (this.taggable && this.search.length && !this.optionExists(this.createOption(this.search))) {
-          options.unshift(this.search)
+        if (this.taggable && this.search.length) {
+          const createdOption = this.createOption(this.search);
+          if (!this.optionExists(createdOption)) {
+            options.unshift(createdOption);
+          }
         }
-        return options
+        return options;
       },
 
       /**

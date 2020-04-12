@@ -61,12 +61,6 @@ export default {
 
       if (typeAheadOption) {
         this.select(typeAheadOption);
-      } else if (this.taggable && this.search.length) {
-        this.select(this.createOption(this.search));
-      }
-
-      if (this.clearSearchOnSelect) {
-        this.search = "";
       }
     }
   }

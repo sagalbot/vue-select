@@ -17,6 +17,23 @@ export const searchSubmit = (Wrapper, searchText = false) => {
 };
 
 /**
+ * Focus the input, enter some search text, hit return.
+ * @param Wrapper {Wrapper<Vue>}
+ * @param searchText
+ * @return {Promise<void>}
+ */
+export const selectTag = async (Wrapper, searchText) => {
+  Wrapper.vm.$refs.search.focus();
+  await Wrapper.vm.$nextTick();
+
+  Wrapper.vm.search = searchText;
+  await Wrapper.vm.$nextTick();
+
+  Wrapper.find({ ref: "search" }).trigger("keydown.enter");
+  await Wrapper.vm.$nextTick();
+};
+
+/**
  * Create a new VueSelect instance with
  * a provided set of props.
  * @param propsData
