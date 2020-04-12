@@ -1,15 +1,7 @@
 <template>
   <div id="app">
     <sandbox hide-help v-slot="config">
-      <v-select
-        label="name"
-        :options="[]"
-        v-model="organization"
-        taggable
-        :create-option="org => ({ name: org })"
-      ></v-select>
-
-      {{ organization }}
+      <v-select v-bind="config"/>
     </sandbox>
   </div>
 </template>
@@ -22,7 +14,6 @@ import Sandbox from '../docs/.vuepress/components/Sandbox';
 
 export default {
   components: {Sandbox, vSelect},
-  data: () => ({organization: null})
 };
 </script>
 
