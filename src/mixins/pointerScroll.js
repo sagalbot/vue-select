@@ -1,7 +1,16 @@
 export default {
+  props: {
+    autoscroll: {
+      type: Boolean,
+      default: true
+    }
+  },
+
   watch: {
     typeAheadPointer() {
-      this.maybeAdjustScroll();
+      if (this.autoscroll) {
+        this.maybeAdjustScroll();
+      }
     }
   },
 
