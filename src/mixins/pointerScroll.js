@@ -11,7 +11,7 @@ export default {
       if (this.autoscroll) {
         this.maybeAdjustScroll();
       }
-    }
+    },
   },
 
   methods: {
@@ -26,14 +26,14 @@ export default {
         this.$refs.dropdownMenu?.children[this.typeAheadPointer] || false;
 
       if (optionEl) {
-        const dropdownBounds = this.getDropdownViewport();
-        const optionBounds = optionEl.getBoundingClientRect();
+        const bounds = this.getDropdownViewport();
+        const { top, bottom, height } = optionEl.getBoundingClientRect();
 
-        if (optionBounds.top < dropdownBounds.top) {
+        if (top < bounds.top) {
           return (this.$refs.dropdownMenu.scrollTop = optionEl.offsetTop);
-        } else if (optionBounds.bottom > dropdownBounds.bottom) {
+        } else if (bottom > bounds.bottom) {
           return (this.$refs.dropdownMenu.scrollTop =
-            optionEl.offsetTop - (dropdownBounds.height - optionBounds.height));
+            optionEl.offsetTop - (bounds.height - height));
         }
       }
     },
