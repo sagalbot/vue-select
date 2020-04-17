@@ -26,6 +26,7 @@ export default {
       for (let i = this.typeAheadPointer - 1; i >= 0; i--) {
         if (this.selectable(this.filteredOptions[i])) {
           this.typeAheadPointer = i;
+          break;
         }
       }
     },
@@ -39,6 +40,7 @@ export default {
       for (let i = this.typeAheadPointer + 1; i < this.filteredOptions.length; i++) {
         if (this.selectable(this.filteredOptions[i])) {
           this.typeAheadPointer = i;
+          break;
         }
       }
     },
