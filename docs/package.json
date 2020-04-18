@@ -1,6 +1,6 @@
 {
   "name": "@vue-select/docs",
-  "version": "1.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "serve": "vuepress dev",
