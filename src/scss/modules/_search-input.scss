@@ -48,10 +48,9 @@ $font-size: 1em;
 .vs--unsearchable {
   .vs__search {
     opacity: 1;
-
-    &:hover {
-      cursor: pointer;
-    }
+  }
+  &:not(.vs--disabled) .vs__search:hover {
+    cursor: pointer;
   }
 }
 // Single, when searching but not loading or open
