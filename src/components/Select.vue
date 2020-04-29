@@ -734,10 +734,10 @@
        * @param  {Event} event
        * @return {void}
        */
-      toggleDropdown ({target, preventDefault}) {
-        const targetIsNotSearch = target !== this.$refs.search;
+      toggleDropdown (event) {
+        const targetIsNotSearch = event.target !== this.$refs.search;
         if (targetIsNotSearch) {
-          preventDefault();
+          event.preventDefault();
         }
 
         //  don't react to click on deselect/clear buttons,
@@ -747,8 +747,8 @@
           ...([this.$refs['clearButton']] || []),
         ];
 
-        if (ignoredButtons.some(ref => ref.contains(target) || ref === target)) {
-          preventDefault();
+        if (ignoredButtons.some(ref => ref.contains(event.target) || ref === event.target)) {
+          event.preventDefault();
           return;
         }
 
