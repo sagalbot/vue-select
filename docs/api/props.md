@@ -11,6 +11,19 @@ autoscroll: {
 }
 ```
 
+## autocomplete
+
+The value provided here will be bound to the [autocomplete
+HTML attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete)
+on the search input. Defaults to `off`.
+
+```js
+autocomplete: {
+    type: String,
+    default: 'off'
+},
+```
+
 ## appendToBody <Badge text="v3.7.0+" />
 
 Append the dropdown element to the end of the body
