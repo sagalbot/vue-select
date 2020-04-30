@@ -995,7 +995,7 @@
           value = this.$data._value;
         }
 
-        if (value) {
+        if (value || value === false) {
           return [].concat(value);
         }
 
