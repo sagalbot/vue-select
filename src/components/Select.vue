@@ -384,6 +384,7 @@
       filterBy: {
         type: Function,
         default(option, label, search) {
+          if(typeof label === "boolean") return label;
           return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
         }
       },
