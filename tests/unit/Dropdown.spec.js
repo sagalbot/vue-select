@@ -4,7 +4,7 @@ import OpenIndicator from "../../src/components/OpenIndicator";
 const preventDefault = jest.fn()
 
 function clickEvent (currentTarget) {
-  return { currentTarget, preventDefault }
+  return { currentTarget, preventDefault, target: currentTarget }
 }
 
 describe("Toggling Dropdown", () => {
@@ -24,11 +24,10 @@ describe("Toggling Dropdown", () => {
     expect(Select.vm.open).toEqual(true);
   });
 
-  it("should not close the dropdown when the el is clicked and enableMouseInputSearch is set to true", () => {
+  it("should not close the dropdown when the Search element is clicked", () => {
     const Select = selectWithProps({
       value: [{ label: "one" }],
       options: [{ label: "one" }],
-      enableMouseSearchInput: true
     });
 
     Select.vm.toggleDropdown(clickEvent(Select.vm.$refs.search));

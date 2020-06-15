@@ -752,7 +752,10 @@
           return;
         }
 
-        if (this.open && targetIsNotSearch) {
+        const targetIsNotSelectedItem = !event.target.classList.contains('vs__selected')
+        if (this.open &&
+          // do not close the menu if clicking on search box or a selected item
+          targetIsNotSearch && targetIsNotSelectedItem) {
           this.searchEl.blur();
         } else if (!this.disabled) {
           this.open = true;
