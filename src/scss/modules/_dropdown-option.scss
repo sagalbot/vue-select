@@ -6,6 +6,7 @@
   clear: both;
   color: #333; /* Overrides most CSS frameworks */
   white-space: nowrap;
+  min-height: 28px;
 
   &:hover {
     cursor: pointer;
