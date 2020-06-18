@@ -13,6 +13,10 @@
 }
 
 .vs__dropdown-option--highlight {
+  background: #f5f6f7;
+}
+
+.vs__dropdown-option--selected {
   background: $vs-state-active-bg;
   color: $vs-state-active-color;
 }

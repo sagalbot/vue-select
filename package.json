@@ -127,5 +127,8 @@
         "maxSize": "6 KB"
       }
     ]
+  },
+  "dependencies": {
+    "fuse.js": "^6.2.0"
   }
 }

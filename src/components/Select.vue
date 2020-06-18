@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <div :dir="dir" class="v-select" :class="stateClasses">
+  <div ref="select" :dir="dir" class="v-select" :class="stateClasses">
     <slot name="header" v-bind="scope.header" />
     <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
 
@@ -53,29 +53,31 @@
       </div>
     </div>
     <transition :name="transition">
-      <ul ref="dropdownMenu" v-if="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
-        <slot name="list-header" v-bind="scope.listHeader" />
-        <li
-          role="option"
-          v-for="(option, index) in filteredOptions"
-          :key="getOptionKey(option)"
-          :id="`vs${uid}__option-${index}`"
-          class="vs__dropdown-option"
-          :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer, 'vs__dropdown-option--disabled': !selectable(option) }"
-          :aria-selected="index === typeAheadPointer ? true : null"
-          @mouseover="selectable(option) ? typeAheadPointer = index : null"
-          @mousedown.prevent.stop="selectable(option) ? select(option) : null"
-        >
-          <slot name="option" v-bind="normalizeOptionForSlot(option)">
-            {{ getOptionLabel(option) }}
-          </slot>
-        </li>
-        <li v-if="filteredOptions.length === 0" class="vs__no-options">
-          <slot name="no-options" v-bind="scope.noOptions">Sorry, no matching options.</slot>
-        </li>
-        <slot name="list-footer" v-bind="scope.listFooter" />
-      </ul>
-      <ul v-else :id="`vs${uid}__listbox`" role="listbox" style="display: none; visibility: hidden;"></ul>
+      <div v-if="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
+        <div ref="dropdownMenu">
+          <slot name="list-header" v-bind="scope.listHeader" />
+          <div
+            role="option"
+            v-for="(option, index) in filteredOptions"
+            :key="getOptionKey(option)"
+            :id="`vs${uid}__option-${index}`"
+            class="vs__dropdown-option"
+            :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer, 'vs__dropdown-option--disabled': !selectable(option) }"
+            :aria-selected="index === typeAheadPointer ? true : null"
+            @mouseover="selectable(option) ? typeAheadPointer = index : null"
+            @mousedown.prevent.stop="selectable(option) ? select(option) : null"
+          >
+            <slot name="option" v-bind="normalizeOptionForSlot(option)">
+              {{ getOptionLabel(option) }}
+            </slot>
+          </div>
+          <div v-if="!filteredOptions.length" class="vs__no-options" @mousedown.stop="">
+            <slot name="no-options" v-bind="scope.noOptions">Sorry, no matching options.</slot>
+          </div>
+          <slot name="list-footer" v-bind="scope.listFooter" />
+        </div>
+      </div>
+      <div v-else :id="`vs${uid}__listbox`" role="listbox" style="display: none; visibility: hidden;"></div>
     </transition>
     <slot name="footer" v-bind="scope.footer" />
   </div>
@@ -734,7 +736,7 @@
        * @param  {Event} event
        * @return {void}
        */
-      toggleDropdown (event) {
+      async toggleDropdown (event) {
         const targetIsNotSearch = event.target !== this.$refs.search;
         if (targetIsNotSearch) {
           event.preventDefault();
@@ -757,6 +759,19 @@
         } else if (!this.disabled) {
           this.open = true;
           this.searchEl.focus();
+
+          await this.$nextTick();
+          const selectedOption = this.$refs.select.querySelector(
+            '.vs__dropdown-option--selected'
+          );
+          if (selectedOption) {
+            const dropdownPanel = this.$refs.select.querySelector(
+              '.vs__dropdown-menu'
+            );
+            const panelRect = dropdownPanel.getBoundingClientRect();
+            const rect = selectedOption.getBoundingClientRect();
+            dropdownPanel.scrollTop += rect.top - panelRect.top;
+          }
         }
       },
 
