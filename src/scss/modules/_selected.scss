@@ -30,6 +30,8 @@
   .vs__selected {
     background-color: transparent;
     border-color: transparent;
+    max-width: calc(100% - 50px);
+    white-space: nowrap;
   }
   &.vs--open .vs__selected {
     position: absolute;
