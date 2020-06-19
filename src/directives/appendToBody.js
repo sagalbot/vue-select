@@ -2,11 +2,12 @@ export default {
     inserted (el, bindings, {context}) {
         if (context.appendToBody) {
             const {height, top, left, width} = context.$refs.toggle.getBoundingClientRect();
-
+            let scrollX = window.scrollX || window.pageXOffset;
+            let scrollY = window.scrollY || window.pageYOffset;
             el.unbindPosition = context.calculatePosition(el, context, {
                 width: width + 'px',
-                top: (window.scrollY + top + height) + 'px',
-                left: (window.scrollX + left) + 'px',
+                top: (scrollX + top + height) + 'px',
+                left: (scrollY + left) + 'px',
             });
 
             document.body.appendChild(el);
