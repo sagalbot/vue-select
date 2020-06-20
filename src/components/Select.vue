@@ -35,6 +35,7 @@
           :disabled="disabled"
           @click="clearSelection"
           type="button"
+          :tabindex="clearButtonTabIndex"
           class="vs__clear"
           title="Clear Selected"
           aria-label="Clear Selected"
@@ -101,6 +102,18 @@
     directives: {appendToBody},
 
     props: {
+      /**
+       * Control the tabindex for the clear button.
+       * Useful in situations where you might want
+       * tab to focus the clear button instead of
+       * moving to the next element.
+       * @type {Boolean}
+       */
+      clearButtonTabIndex: {
+        type: Number,
+        default: -1
+      },
+
       /**
        * Contains the currently selected value. Very similar to a
        * `value` attribute on an <input>. You can listen for changes
