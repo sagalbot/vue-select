@@ -1,27 +1,26 @@
 <template>
   <ParentLayout>
-    <CodeFund slot="sidebar-top"/>
+    <EthicalAds slot="sidebar-top" />
   </ParentLayout>
 </template>
 
 <script>
-import ParentLayout from '@parent-theme/layouts/Layout.vue'
-import CodeFund from '../components/CodeFund.vue'
+import ParentLayout from "@parent-theme/layouts/Layout.vue";
+import EthicalAds from "../components/EthicalAds.vue";
 
 export default {
   components: {
     ParentLayout,
-    CodeFund
+    EthicalAds
   }
-}
+};
 </script>
 
 <style>
-  #codefund {
-    border-bottom: 1px solid #eaecef;
-    min-height: 115px;
-  }
-  #codefund + .sidebar-links {
-    padding-top: 1rem;
-  }
+#ads {
+  border-bottom: 1px solid #eaecef;
+}
+#ads + .sidebar-links {
+  padding-top: 1rem;
+}
 </style>
