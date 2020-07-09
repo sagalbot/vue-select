@@ -6,10 +6,10 @@ export default {
             let scrollY = window.scrollY || window.pageYOffset;
             el.unbindPosition = context.calculatePosition(el, context, {
                 width: width + 'px',
-                top: (scrollY + top + height) + 'px',
                 left: (scrollX + left) + 'px',
+                top: (scrollY + top + height) + 'px',
             });
-
+            
             document.body.appendChild(el);
         }
     },
