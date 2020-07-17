@@ -6,8 +6,8 @@
     @close="onClose"
     @search="query => search = query"
   >
-    <template #list-footer v-if="hasNextPage">
-      <li ref="load" class="loader">
+    <template #list-footer>
+      <li ref="load" class="loader" v-show="hasNextPage">
         Loading more options...
       </li>
     </template>
