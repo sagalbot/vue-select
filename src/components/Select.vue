@@ -735,7 +735,7 @@
        * @return {void}
        */
       toggleDropdown (event) {
-        const targetIsNotSearch = event.target !== this.$refs.search;
+        const targetIsNotSearch = event.target !== this.searchEl;
         if (targetIsNotSearch) {
           event.preventDefault();
         }
