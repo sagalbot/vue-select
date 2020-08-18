@@ -53,7 +53,7 @@
       </div>
     </div>
     <transition :name="transition">
-      <div v-if="dropdownOpen" :id="`vs${uid}__listbox`" class="vs__dropdown-menu" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
+      <div v-if="dropdownOpen" :id="`vs${uid}__listbox`" :class="`vs__dropdown-menu ${customDropdownClass}`" role="listbox" @mousedown.prevent="onMousedown" @mouseup="onMouseUp" v-append-to-body>
         <div ref="dropdownMenu">
           <slot name="list-header" v-bind="scope.listHeader" />
           <div
@@ -189,6 +189,11 @@
       transition: {
         type: String,
         default: 'vs__fade'
+      },
+
+      customDropdownClass: {
+        type: String,
+        default: ''
       },
 
       /**
