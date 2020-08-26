@@ -54,6 +54,26 @@ Vue.component('v-select', VueSelect.VueSelect);
 
 <CodePen url="dJjzeP" />
 
+## In NuxtJS
+
+Create `v-select.js` inside the plugins folder
+```js
+import Vue from 'vue'
+import vSelect from 'vue-select'
+import "vue-select/src/scss/vue-select.scss";
+
+Vue.component('v-select', vSelect)
+```
+
+Then, tell nuxt to load the plugin by adding the file to the plugins field inside `nuxt.config.js`
+```js
+module.exports = {
+  plugins: [
+    '@/plugins/v-select.js',
+  ],
+}
+```
+
 ## Vue Compatibility
 
 - If you're on Vue `1.x`, use vue-select `1.x`. 
