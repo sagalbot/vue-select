@@ -5,7 +5,19 @@
 <template>
   <div :dir="dir" class="v-select" :class="stateClasses">
     <slot name="header" v-bind="scope.header" />
-    <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
+    <div
+      :id="`vs${uid}__combobox`"
+      ref="toggle"
+      @mousedown="toggleDropdown($event)"
+      class="vs__dropdown-toggle"
+      role="combobox"
+      :aria-expanded="dropdownOpen.toString()"
+      :aria-owns="`vs${uid}__listbox`"
+      :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabelledby"
+      :aria-describedby="ariaDescribedby"
+      :aria-invalid="ariaInvalid"
+      :aria-required="ariaRequired" >
 
       <div class="vs__selected-options" ref="selectedOptions">
         <slot v-for="option in selectedValue"
@@ -565,6 +577,51 @@
           dropdownList.style.left = left;
           dropdownList.style.width = width;
         }
+      },
+
+      /**
+       * Accessibility label for the combobox widget.
+       * @type String
+       */
+      ariaLabel: {
+        type: String,
+        default: 'Search for option'
+      },
+
+      /**
+       * ID of the labelling element for the combobox widget.
+       * @type String
+       */
+      ariaLabelledby: {
+        type: String,
+        default: ''
+      },
+
+      /**
+       * Accessibility label for the combobox widget.
+       * @type String
+       */
+      ariaDescribedby: {
+        type: String,
+        default: ''
+      },
+
+      /**
+       * Communicates to accessibility tools that the combobox contains an invalid value.
+       * @type String
+       */
+      ariaInvalid: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
+       * Communicates to accessibility tools that the combobox is a required field.
+       * @type String
+       */
+      ariaRequired: {
+        type: Boolean,
+        default: false
       }
     },
 
