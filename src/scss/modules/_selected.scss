@@ -20,7 +20,10 @@
   border: 0;
   cursor: pointer;
   background: none;
-  fill: $vs-controls-color;
+  stroke: $vs-controls-color;
+  stroke-width: $vs-controls-width;
+  stroke-linecap: $vs-controls-linecap;
+  stroke-miterlimit: $vs-controls-miterlimit;
   text-shadow: $vs-controls-deselect-text-shadow;
 }
 

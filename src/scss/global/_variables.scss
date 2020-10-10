@@ -1,6 +1,6 @@
 $vs-colors: (
-        lightest: rgba(60, 60, 60, 0.26),
-        light: rgba(60, 60, 60, 0.5),
+        lightest: rgba(60, 60, 60, .26),
+        light: rgba(60, 60, 60, .5),
         dark: #333,
         darkest: rgba(0, 0, 0, .15),
 ) !default;
@@ -28,6 +28,9 @@ $vs-border-color: map_get($vs-colors, 'lightest') !default;
 //  Component Controls: Clear, Open Indicator
 $vs-controls-color: map_get($vs-colors, 'light') !default;
 $vs-controls-size: 1 !default;
+$vs-controls-width: 2.625 !default;
+$vs-controls-linecap: round !default;
+$vs-controls-miterlimit: 10 !default;
 $vs-controls-deselect-text-shadow: 0 1px 0 #fff;
 
 //  Selected
