@@ -28,6 +28,27 @@ to the vue-select internal `loading` property. Call `loading(true)` to set the
 `loading` property to `true` - toggling the loading spinner. After your 
 asynchronous operation completes, call `loading(false)` to toggle it off.  
 
+## Ajax Responses
+Ajax Response must be an object and all the options data should be inside an **item** property.
+Example:
+```
+{
+  "items": [
+    {
+      "id": 1,
+      "label": "VueJS",
+      "full_name": "vuejs/vue",
+      "private": false,
+    },
+    {
+      "id": 2,
+      "label": "Vue-Select",
+      "full_name": "sagalbot/vue-select",
+      "private": false,
+    }]
+}
+```
+
 ## Disabling Filtering
 
 When loading server side options, it can be useful to disable the 
