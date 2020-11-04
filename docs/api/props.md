@@ -116,6 +116,23 @@ searchable: {
 },
 ```
 
+## selectable <Badge text="v3.3.0+" />
+
+The `selectable` prop determines if an option is selectable or not. If `selectable` returns false
+for a given option, it will be displayed with a `vs__dropdown-option--disabled` class. The option
+will be disabled and unable to be selected. 
+
+```js
+selectable: {
+  type: Function,
+  /**
+   * @param {Object|String} option
+   * @return {boolean}
+   */
+  default: option => true,
+},
+```
+
 ## multiple
 
 Equivalent to the `multiple` attribute on a `<select>` input.
