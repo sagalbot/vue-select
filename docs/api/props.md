@@ -356,6 +356,17 @@ tabindex: {
 },
 ```
 
+## clearButtonTabIndex
+
+Set the tabindex for the clear button.
+
+```js
+clearButtonTabIndex: {
+	type: Number,
+	default: -1
+},
+```
+
 ## pushTags
 
 When true, newly created tags will be added to
