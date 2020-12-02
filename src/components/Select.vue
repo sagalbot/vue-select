@@ -100,6 +100,8 @@
 
     directives: {appendToBody},
 
+    emits : ['open', 'close', 'search:focus', 'search:blur', 'update:modelValue', 'option:created'],
+
     props: {
       /**
        * Contains the currently selected value. Very similar to a
@@ -107,7 +109,7 @@
        * using 'change' event using v-on
        * @type {Object||String||null}
        */
-      value: {},
+      modelValue: {},
 
       /**
        * An object with any custom components that you'd like to overwrite
@@ -596,8 +598,8 @@
           this.clearSelection();
         }
 
-        if (this.value && this.isTrackingValues) {
-          this.setInternalValueFromOptions(this.value);
+        if (this.modelValue && this.isTrackingValues) {
+          this.setInternalValueFromOptions(this.modelValue);
         }
       },
 
@@ -605,7 +607,7 @@
        * Make sure to update internal
        * value if prop changes outside
        */
-      value(val) {
+      modelValue(val) {
         if (this.isTrackingValues) {
           this.setInternalValueFromOptions(val)
         }
@@ -629,11 +631,9 @@
     created() {
       this.mutableLoading = this.loading;
 
-      if (typeof this.value !== "undefined" && this.isTrackingValues) {
-        this.setInternalValueFromOptions(this.value)
+      if (typeof this.modelValue !== "undefined" && this.isTrackingValues) {
+        this.setInternalValueFromOptions(this.modelValue)
       }
-
-      this.$on('option:created', this.pushTag)
     },
 
     methods: {
@@ -660,6 +660,7 @@
         if (!this.isOptionSelected(option)) {
           if (this.taggable && !this.optionExists(option)) {
             this.$emit('option:created', option);
+            this.pushTag(option);
           }
           if (this.multiple) {
             option = this.selectedValue.concat(option)
@@ -713,7 +714,7 @@
        * @param value
        */
       updateValue (value) {
-        if (typeof this.value === 'undefined') {
+        if (typeof this.modelValue === 'undefined') {
           // Vue select has to manage value
           this.$data._value = value;
         }
@@ -726,7 +727,7 @@
           }
         }
 
-        this.$emit('input', value);
+        this.$emit('update:modelValue', value);
       },
 
       /**
@@ -742,8 +743,9 @@
 
         //  don't react to click on deselect/clear buttons,
         //  they dropdown state will be set in their click handlers
+
         const ignoredButtons = [
-          ...(this.$refs['deselectButtons'] || []),
+          ...(document.querySelectorAll('.vs__deselect') || []),
           ...([this.$refs['clearButton']] || []),
         ];
 
@@ -822,7 +824,7 @@
       /**
        * Delete the value on Delete keypress when there is no
        * text in the search input, & there's tags to delete
-       * @return {this.value}
+       * @return {this.modelValue}
        */
       maybeDeleteValue() {
         if (!this.searchEl.value.length && this.selectedValue && this.selectedValue.length && this.clearable) {
@@ -980,7 +982,7 @@
        * @return {boolean}
        */
       isTrackingValues () {
-        return typeof this.value === 'undefined' || this.$options.propsData.hasOwnProperty('reduce');
+        return typeof this.modelValue === 'undefined' || typeof this.reduce === 'function';
       },
 
       /**
@@ -988,7 +990,7 @@
        * @return {Array}
        */
       selectedValue () {
-        let value = this.value;
+        let value = this.modelValue;
         if (this.isTrackingValues) {
           // Vue select has to manage value internally
           value = this.$data._value;
@@ -1017,7 +1019,7 @@
        * @returns {HTMLInputElement}
        */
       searchEl () {
-        return !!this.$scopedSlots['search']
+        return !!this.$slots['search']
           ? this.$refs.selectedOptions.querySelector(this.searchInputQuerySelector)
           : this.$refs.search;
       },
