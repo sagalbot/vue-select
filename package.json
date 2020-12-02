@@ -20,7 +20,8 @@
         "build:preview": "cd docs && yarn build",
         "test": "jest",
         "semantic-release": "semantic-release",
-        "commit": "git-cz"
+        "commit": "git-cz",
+        "prepare": "npm run build"
     },
     "repository": {
         "type": "git",
