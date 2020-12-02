@@ -657,6 +657,7 @@
        * @return {void}
        */
       select(option) {
+        this.$emit('option:selected', option);
         if (!this.isOptionSelected(option)) {
           if (this.taggable && !this.optionExists(option)) {
             this.$emit('option:created', option);
@@ -675,6 +676,7 @@
        * @return {void}
        */
       deselect (option) {
+        this.$emit('option:deselected', option);
         this.updateValue(this.selectedValue.filter(val => {
           return !this.optionComparator(val, option);
         }));
