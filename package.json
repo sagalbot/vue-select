@@ -21,7 +21,8 @@
         "test": "jest",
         "semantic-release": "semantic-release",
         "commit": "git-cz",
-        "prepare": "npm run build"
+        "prepare": "npm run build",
+        "preinstall": "npm install"
     },
     "repository": {
         "type": "git",
