@@ -9,13 +9,29 @@ Triggered when the selected value changes. Used internally for `v-model`.
 this.$emit("input", val);
 ```
 
+## `option:selected`
+
+Triggered when an option has been selected. Receives the selected option.
+
+```js
+this.$emit("option:selected", selectedOption);
+```
+
+## `option:deselected`
+
+Triggered when an option has been deselected. Receives the deselected option.
+
+```js
+this.$emit("option:deselected", deselectedOption);
+```
+
 ## `option:created`
 
 Triggered when `taggable` is `true` and a new option has been created.
 
 ```js
 /**
- * @param newOption {Object} - created option  
+ * @param newOption {Object} - created option
  */
 this.$emit("option:created", newOption);
 ```
