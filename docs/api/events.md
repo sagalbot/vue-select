@@ -9,7 +9,7 @@ Triggered when the selected value changes. Used internally for `v-model`.
 this.$emit("input", val);
 ```
 
-## `option:selected`
+## `option:selected` <Badge text="v3.11.0+" />
 
 Triggered when an option has been selected. Receives the selected option.
 
@@ -17,7 +17,7 @@ Triggered when an option has been selected. Receives the selected option.
 this.$emit("option:selected", selectedOption);
 ```
 
-## `option:deselected`
+## `option:deselected` <Badge text="v3.11.0+" />
 
 Triggered when an option has been deselected. Receives the deselected option.
 
