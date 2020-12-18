@@ -657,7 +657,7 @@
        * @return {void}
        */
       select(option) {
-        this.$emit('option:selected', option);
+        this.$emit('option:selecting', option);
         if (!this.isOptionSelected(option)) {
           if (this.taggable && !this.optionExists(option)) {
             this.$emit('option:created', option);
@@ -666,6 +666,7 @@
             option = this.selectedValue.concat(option)
           }
           this.updateValue(option);
+          this.$emit('option:selected', option);
         }
         this.onAfterSelect(option)
       },
@@ -676,10 +677,11 @@
        * @return {void}
        */
       deselect (option) {
-        this.$emit('option:deselected', option);
+        this.$emit('option:deselecting', option);
         this.updateValue(this.selectedValue.filter(val => {
           return !this.optionComparator(val, option);
         }));
+        this.$emit('option:deselected', option);
       },
 
       /**
