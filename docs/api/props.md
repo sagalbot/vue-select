@@ -70,6 +70,29 @@ calculatePosition: {
 }
 ```
 
+## components <Badge text="v3.1.0+" />
+
+API to overwrite default vue-select components with your own. This can be used to change the clear button or select chevron with your own markup.
+
+The object provided to the components prop will be merged with Vue Select's default components.
+
+See [Components guide](../guide/components.md) for more details.
+
+```js
+import Deselect from './Deselect';
+import OpenIndicator from './OpenIndicator';
+
+// ...
+
+components: {
+  type: Object,
+  default: function () {
+      Deselect,
+      OpenIndicator
+  }
+},
+```
+
 
 ## clearable
 
