@@ -231,37 +231,37 @@ describe("VS - Selecting Values", () => {
     });
   });
 
-  describe("option:selected Event", () => {
-    it("will trigger the option:selected event when an option is selected", () => {
+  describe("option:selecting Event", () => {
+    it("will trigger the option:selecting event when an option is selected", () => {
       const Select = shallowMount(VueSelect);
       Select.vm.select("bar");
-      expect(Select.emitted("option:selected")[0]).toEqual(["bar"]);
+      expect(Select.emitted("option:selecting")[0]).toEqual(["bar"]);
     });
 
-    it("will trigger the option:selected event regardless of current value", () => {
+    it("will trigger the option:selecting event regardless of current value", () => {
       const Select = shallowMount(VueSelect, {
         propsData: { value: ["foo"], options: ["foo", "bar"] }
       });
       Select.vm.select("foo");
       Select.vm.select("bar");
-      expect(Select.emitted("option:selected")).toEqual([["foo"], ["bar"]]);
+      expect(Select.emitted("option:selecting")).toEqual([["foo"], ["bar"]]);
     });
 
-    it("will trigger the option:selected event with current selected item when multiple is true", () => {
+    it("will trigger the option:selecting event with current selected item when multiple is true", () => {
       const Select = shallowMount(VueSelect, {
         propsData: { multiple: true, value: ["foo"], options: ["foo", "bar"] }
       });
       Select.vm.select("bar");
-      expect(Select.emitted("option:selected")[0]).toEqual(["bar"]);
+      expect(Select.emitted("option:selecting")[0]).toEqual(["bar"]);
     });
 
-    it("will trigger the option:selected event regardless of current value when multiple is true", () => {
+    it("will trigger the option:selecting event regardless of current value when multiple is true", () => {
       const Select = shallowMount(VueSelect, {
         propsData: { multiple: true, value: ["foo", "bar"], options: ["foo", "bar"] }
       });
       Select.vm.select("bar");
       Select.vm.select("bar");
-      expect(Select.emitted("option:selected")).toEqual([["bar"], ["bar"]]);
+      expect(Select.emitted("option:selecting")).toEqual([["bar"], ["bar"]]);
     });
   });
 
