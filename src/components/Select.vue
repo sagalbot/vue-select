@@ -751,7 +751,7 @@
           ...([this.$refs['clearButton']] || []),
         ];
 
-        if (ignoredButtons.some(ref => ref.contains(event.target) || ref === event.target)) {
+        if (this.searchEl === undefined || ignoredButtons.filter(Boolean).some(ref => ref.contains(event.target) || ref === event.target)) {
           event.preventDefault();
           return;
         }
