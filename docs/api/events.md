@@ -4,7 +4,7 @@ Triggered when the selected value changes. Used internally for `v-model`.
 
 ```js
 /**
- * @param val {Object|String}` - selected option.
+ * @param {Object|String} val - selected option.
  */
 this.$emit("input", val);
 ```
@@ -47,7 +47,7 @@ Triggered when `taggable` is `true` and a new option has been created.
 
 ```js
 /**
- * @param newOption {Object} - created option
+ * @param {Object} newOption - created option
  */
 this.$emit("option:created", newOption);
 ```
