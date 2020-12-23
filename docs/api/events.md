@@ -52,6 +52,17 @@ Triggered when `taggable` is `true` and a new option has been created.
 this.$emit("option:created", newOption);
 ```
 
+## `search`
+
+Triggered on search.
+
+```js
+/**
+ * @param {String} searchString - the search string
+ */
+this.$emit("search", searchString);
+```
+
 ## `search:blur`
 
 Triggered when the text input loses focus. The dropdown will close immediately before this
