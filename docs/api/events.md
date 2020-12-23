@@ -59,8 +59,14 @@ Triggered on search.
 ```js
 /**
  * @param {String} searchString - the search string
+ * @param {Function} toggleLoading - callback to toggle loading state
  */
-this.$emit("search", searchString);
+this.$emit("search", searchString, toggleLoading = (toggle = null) {
+  if (toggle == null) {
+    return (this.mutableLoading = !this.mutableLoading);
+  }
+  return (this.mutableLoading = toggle);
+});
 ```
 
 ## `search:blur`
