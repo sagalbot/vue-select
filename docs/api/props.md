@@ -544,6 +544,17 @@ transition: {
 ```
 
 
+## uniqueKey
+
+Optional unique key for use on DOM attributes.
+
+```js
+uniqueKey: {
+    type: [String, Number]
+},
+```
+
+
 ## value
 
 Contains the currently selected value. Very similar to a

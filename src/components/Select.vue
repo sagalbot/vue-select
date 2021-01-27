@@ -470,6 +470,15 @@
       },
 
       /**
+       * Optional unique key for use on DOM attributes.
+       * @type {String}
+       * @default {null}
+       */
+      uniqueKey: {
+        type: [String, Number]
+      },
+
+      /**
        * Sets RTL support. Accepts 'ltr', 'rtl', 'auto'.
        * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/dir
        * @type {String}
@@ -570,7 +579,6 @@
 
     data() {
       return {
-        uid: uniqueId(),
         search: '',
         open: false,
         isComposing: false,
@@ -978,6 +986,13 @@
     },
 
     computed: {
+      /**
+       * Produce a unique ID to use in the DOM.
+       * @return {string}
+       */
+      uid () {
+        return String(this.uniqueKey || uniqueId());
+      },
       /**
        * Determine if the component needs to
        * track the state of values internally.
