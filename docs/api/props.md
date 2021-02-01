@@ -328,6 +328,19 @@ label: {
 ```
 
 
+## loading
+
+Tells vue-select if component is loading, displaying the loading
+spinner and toggling off options dropdown (unless `showOptionsWhileLoading` is `true`)
+
+```js
+loading: {
+  type: Boolean,
+  default: false
+}
+```
+
+
 ## maxHeight
 
 ::: warning Deprecated in `v2.x` & Removed in `v3.0`
@@ -503,6 +516,18 @@ When true, hitting the 'tab' key will select the current select value
 selectOnTab: {
 	type: Boolean,
 	default: false
+}
+```
+
+
+## showOptionsWhileLoading
+
+When true, continues showing options even if `loading` is true
+
+```js
+loading: {
+  type: Boolean,
+  default: false
 }
 ```
 

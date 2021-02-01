@@ -461,6 +461,15 @@
       },
 
       /**
+       * Show options while loading.
+       * @type {Boolean}
+       */
+      showOptionsWhileLoading: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
        * Sets the id of the input element.
        * @type {String}
        * @default {null}
@@ -1132,7 +1141,7 @@
        * @return {Boolean} True if open
        */
       dropdownOpen() {
-        return this.noDrop ? false : this.open && !this.mutableLoading
+        return this.noDrop ? false : this.open && (this.showOptionsWhileLoading || !this.mutableLoading)
       },
 
       /**

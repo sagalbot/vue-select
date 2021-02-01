@@ -188,4 +188,38 @@ describe("Toggling Dropdown", () => {
     expect(Select.classes('vs--searching')).toBeFalsy();
   });
 
+  it("should not display the dropdown if loading is true", async () => {
+    const Select = selectWithProps({
+      loading: true,
+      options: [{ label: "one" }],
+    });
+
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$refs.search));
+
+    expect(Select.vm.open).toEqual(true);
+    await Select.vm.$nextTick();
+
+    expect(Select.contains('.vs__dropdown-menu')).toBeFalsy();
+    expect(Select.contains('.vs__dropdown-option')).toBeFalsy();
+    expect(Select.contains('.vs__no-options')).toBeFalsy();
+    expect(Select.vm.stateClasses['vs--open']).toBeFalsy();
+  });
+
+  it("should display the dropdown if loading is true and showOptionsWhileLoading is true", async () => {
+    const Select = selectWithProps({
+      loading: true,
+      showOptionsWhileLoading: true,
+      options: [{ label: "one" }],
+    });
+
+    Select.vm.toggleDropdown(clickEvent(Select.vm.$refs.search));
+
+    expect(Select.vm.open).toEqual(true);
+    await Select.vm.$nextTick();
+
+    expect(Select.contains('.vs__dropdown-menu')).toBeTruthy();
+    expect(Select.contains('.vs__dropdown-option')).toBeTruthy();
+    expect(Select.contains('.vs__no-options')).toBeFalsy();
+    expect(Select.vm.stateClasses['vs--open']).toBeTruthy();
+  });
 });
