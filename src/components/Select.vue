@@ -64,7 +64,7 @@
           :class="{ 'vs__dropdown-option--selected': isOptionSelected(option), 'vs__dropdown-option--highlight': index === typeAheadPointer, 'vs__dropdown-option--disabled': !selectable(option) }"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? typeAheadPointer = index : null"
-          @mousedown.prevent.stop="selectable(option) ? select(option) : null"
+          @mousedown.prevent.stop="selectable(option) ? handleSelect(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
@@ -565,6 +565,30 @@
           dropdownList.style.left = left;
           dropdownList.style.width = width;
         }
+      },
+
+      /**
+       * Select a given option.
+       * @param  {Object|String} option
+       * @param  {Object} vSelect instance
+       * @return {void}
+       */
+      select: {
+        type: Function,
+        default(option) {
+          this.$emit('option:selecting', option);
+          if (!this.isOptionSelected(option)) {
+            if (this.taggable && !this.optionExists(option)) {
+              this.$emit('option:created', option);
+            }
+            if (this.multiple) {
+              option = this.selectedValue.concat(option)
+            }
+            this.updateValue(option);
+            this.$emit('option:selected', option);
+          }
+          this.onAfterSelect(option)
+        }
       }
     },
 
@@ -649,26 +673,6 @@
         } else {
           this.$data._value = this.findOptionFromReducedValue(value);
         }
-      },
-
-      /**
-       * Select a given option.
-       * @param  {Object|String} option
-       * @return {void}
-       */
-      select(option) {
-        this.$emit('option:selecting', option);
-        if (!this.isOptionSelected(option)) {
-          if (this.taggable && !this.optionExists(option)) {
-            this.$emit('option:created', option);
-          }
-          if (this.multiple) {
-            option = this.selectedValue.concat(option)
-          }
-          this.updateValue(option);
-          this.$emit('option:selected', option);
-        }
-        this.onAfterSelect(option)
       },
 
       /**
@@ -974,6 +978,15 @@
         if (typeof handlers[e.keyCode] === 'function') {
           return handlers[e.keyCode](e);
         }
+      },
+
+      /**
+       * Handle selection of an option after click event.
+       * @param  {Object || String} option
+       * @return {void}
+       */
+      handleSelect(option) {
+        this.select(option, this)
       }
     },
 
