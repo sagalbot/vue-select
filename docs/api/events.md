@@ -9,6 +9,22 @@ Triggered when the selected value changes. Used internally for `v-model`.
 this.$emit("input", val);
 ```
 
+## `open`
+
+Triggered when the dropdown is open.
+
+```js
+this.$emit("open");
+```
+
+## `close`
+
+Triggered when the dropdown is closed.
+
+```js
+this.$emilt('close');
+```
+
 ## `option:selecting` <Badge text="v3.11.0+" />
 
 Triggered after an option has been selected, <strong>before</strong> updating internal state. 
