@@ -1,5 +1,6 @@
 export default {
-    inserted (el, bindings, {context}) {
+    inserted (el, bindings) {
+        const context = bindings.instance;
         if (context.appendToBody) {
             const {height, top, left, width} = context.$refs.toggle.getBoundingClientRect();
             let scrollX = window.scrollX || window.pageXOffset;
@@ -14,7 +15,8 @@ export default {
         }
     },
 
-    unbind (el, bindings, {context}) {
+    unbind (el, bindings) {
+        const context = bindings.instance;
         if (context.appendToBody) {
             if (el.unbindPosition && typeof el.unbindPosition === 'function') {
                 el.unbindPosition();
