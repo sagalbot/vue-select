@@ -795,7 +795,7 @@
       findOptionFromReducedValue (value) {
         const predicate = option => JSON.stringify(this.reduce(option)) === JSON.stringify(value);
 
-        const matches = this.optionList.filter(predicate);
+        const matches = this.optionList.concat(!this.pushTags ? this.pushedTags : []).filter(predicate);
 
         if (matches.length === 1) {
           return matches[0];
@@ -1011,7 +1011,7 @@
        */
       optionList () {
         const uniqueOptions = this.options.concat(this.pushTags ? this.pushedTags : []).reduce((acc, option)=>{
-          const idx = acc.findIndex((item) => this.getOptionKey(item) === this.getOptionKey(option));
+          const idx = acc.findIndex((_option) => this.optionComparator(_option, option));
           if (idx === -1) acc.push(option);
           return acc;
         }, []);
