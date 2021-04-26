@@ -14,7 +14,7 @@
 <v-select :options="[{label: 'Canada', code: 'ca'}]"></v-select>
 ```
 
-<v-select :options="[{label: 'Canada', code: 'ca'}]"></v-select>
+<v-select :options="[{additional_information: "Info",company_name: "Hochguertel", company_types: 'type', email_addresses: 'email', id: 1, location_addresses: 'add', phone_numbers: 21212, website_addresses: 'www'}]"></v-select>
 
 ## Option Labels
 
