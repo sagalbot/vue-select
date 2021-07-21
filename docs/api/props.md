@@ -356,6 +356,30 @@ multiple: {
 },
 ```
 
+## select
+
+Override the select function. Useful to handle deselect from the list for example.
+
+```js
+select: {
+    type: Function,
+    default(option) {
+        this.$emit('option:selecting', option);
+        if (!this.isOptionSelected(option)) {
+            if (this.taggable && !this.optionExists(option)) {
+                this.$emit('option:created', option);
+            }
+            if (this.multiple) {
+                option = this.selectedValue.concat(option)
+            }
+            this.updateValue(option);
+            this.$emit('option:selected', option);
+        }
+        this.onAfterSelect(option)
+    }
+},
+```
+
 
 ## noDrop
 
