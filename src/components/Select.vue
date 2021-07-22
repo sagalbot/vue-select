@@ -565,6 +565,20 @@
           dropdownList.style.left = left;
           dropdownList.style.width = width;
         }
+      },
+
+      /**
+       * Determines whether the dropdown should be open.
+       * Receives the component instance as the only argument.
+       *
+       * @since v3.12.0
+       * @return boolean
+       */
+      dropdownShouldOpen: {
+        type: Function,
+        default({noDrop, open, mutableLoading}) {
+          return noDrop ? false : open && !mutableLoading;
+        }
       }
     },
 
@@ -1132,7 +1146,7 @@
        * @return {Boolean} True if open
        */
       dropdownOpen() {
-        return this.noDrop ? false : this.open && !this.mutableLoading
+        return this.dropdownShouldOpen(this);
       },
 
       /**

@@ -188,4 +188,14 @@ describe("Toggling Dropdown", () => {
     expect(Select.classes('vs--searching')).toBeFalsy();
   });
 
+  it("can be opened with dropdownShouldOpen", () => {
+    const Select = selectWithProps({
+      noDrop: true,
+      dropdownShouldOpen: () => true,
+      options: ['one']
+    });
+
+    expect(Select.classes('vs--open')).toBeTruthy();
+    expect(Select.find('.vs__dropdown-menu li')).toBeTruthy();
+  })
 });
