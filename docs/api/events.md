@@ -22,7 +22,7 @@ this.$emit("open");
 Triggered when the dropdown is closed.
 
 ```js
-this.$emilt('close');
+this.$emit("close");
 ```
 
 ## `option:selecting` <Badge text="v3.11.0+" />
