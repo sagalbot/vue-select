@@ -54,19 +54,31 @@ this.$emit("option:created", newOption);
 
 ## `search`
 
-Triggered on search.
+Anytime the search string changes, emit the
+'search' event. The event is passed with two 
+parameters: the search string, and a function 
+that accepts a boolean parameter to toggle the 
+loading state.
+
+See the [AJAX Guide](/guide/ajax.html#loading-options-with-ajax) 
+for a complete example.
 
 ```js
 /**
  * @param {String} searchString - the search string
- * @param {Function} toggleLoading - callback to toggle loading state
+ * @param {Function} toggleLoading - function to toggle loading state, accepts true or false boolean
  */
-this.$emit("search", searchString, toggleLoading = (toggle = null) {
-  if (toggle == null) {
-    return (this.mutableLoading = !this.mutableLoading);
-  }
-  return (this.mutableLoading = toggle);
-});
+this.$emit('search', this.search, this.toggleLoading);
+```
+
+```vue
+<!-- example usage -->
+<v-select
+    @search="(search, loading) => { 
+      loading(true)
+      fetchOptions(search).then(() => loading(false))
+    }"
+/>
 ```
 
 ## `search:blur`
