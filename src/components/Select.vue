@@ -1084,7 +1084,7 @@
           },
           noOptions: {
             search: this.search,
-            loading: this.loading,
+            loading: this.mutableLoading,
             searching: this.searching,
           },
           openIndicator: {
