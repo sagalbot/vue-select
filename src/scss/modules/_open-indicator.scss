@@ -8,9 +8,15 @@ $transition-duration: 150ms;
 
 $open-indicator-color: $vs-controls-color;
 $open-indicator-size: $vs-controls-size;
+$open-indicator-width: $vs-controls-width;
+$open-indicator-linecap: $vs-controls-linecap;
+$open-indicator-miterlimit: $vs-controls-miterlimit;
 
 .vs__open-indicator {
-  fill: $open-indicator-color;
+  stroke: $open-indicator-color;
+  stroke-width: $open-indicator-width;
+  stroke-linecap: $open-indicator-linecap;
+  stroke-miterlimit: $open-indicator-miterlimit;
   transform: scale($open-indicator-size);
   transition: transform $transition-duration $transition-timing-function;
   transition-timing-function: $transition-timing-function;
@@ -19,7 +25,7 @@ $open-indicator-size: $vs-controls-size;
 //  Open State
 
 .vs--open .vs__open-indicator {
-  transform: rotate(180deg) scale($open-indicator-size);
+  transform: rotate(180deg) scale($open-indicator-size) translateY(1px);
 }
 
 //  Loading State

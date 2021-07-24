@@ -1,7 +1,15 @@
 /* Clear Button */
 
+$clear-color: $vs-controls-color;
+$clear-width: $vs-controls-width;
+$clear-linecap: $vs-controls-linecap;
+$clear-miterlimit: $vs-controls-miterlimit;
+
 .vs__clear {
-  fill: $vs-controls-color;
+  stroke: $clear-color;
+  stroke-width: $clear-width;
+  stroke-linecap: $clear-linecap;
+  stroke-miterlimit: $clear-miterlimit;
   padding: 0;
   border: 0;
   background-color: transparent;
