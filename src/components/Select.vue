@@ -825,7 +825,9 @@ export default {
      * @return {String} Placeholder text
      */
     searchPlaceholder() {
-      return this.isValueEmpty && this.placeholder ? this.placeholder : ''
+      return this.isValueEmpty && this.placeholder
+        ? this.placeholder
+        : undefined
     },
 
     /**
