@@ -1,86 +1,86 @@
-import { shallowMount } from "@vue/test-utils";
-import VueSelect from "../../src/components/Select";
+import { shallowMount } from '@vue/test-utils'
+import VueSelect from '../../src/components/Select'
 
-describe("Filtering Options", () => {
+describe('Filtering Options', () => {
   it("should update the search value when the input element receives the 'input' event", () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { options: ["foo", "bar", "baz"] }
-    });
-    
-    const input = Select.find('.vs__search');
+      propsData: { options: ['foo', 'bar', 'baz'] },
+    })
+
+    const input = Select.find('.vs__search')
     input.element.value = 'a'
     input.trigger('input')
-    expect(Select.vm.search).toEqual('a');
-  });
+    expect(Select.vm.search).toEqual('a')
+  })
 
-  it("should filter an array of strings", () => {
+  it('should filter an array of strings', () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { options: ["foo", "bar", "baz"] }
-    });
-    Select.vm.search = "ba";
-    expect(Select.vm.filteredOptions).toEqual(["bar", "baz"]);
-  });
+      propsData: { options: ['foo', 'bar', 'baz'] },
+    })
+    Select.vm.search = 'ba'
+    expect(Select.vm.filteredOptions).toEqual(['bar', 'baz'])
+  })
 
-  it("should not filter the array of strings if filterable is false", () => {
+  it('should not filter the array of strings if filterable is false', () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { options: ["foo", "bar", "baz"], filterable: false }
-    });
-    Select.vm.search = "ba";
-    expect(Select.vm.filteredOptions).toEqual(["foo", "bar", "baz"]);
-  });
+      propsData: { options: ['foo', 'bar', 'baz'], filterable: false },
+    })
+    Select.vm.search = 'ba'
+    expect(Select.vm.filteredOptions).toEqual(['foo', 'bar', 'baz'])
+  })
 
-  it("should filter without case-sensitivity", () => {
+  it('should filter without case-sensitivity', () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { options: ["Foo", "Bar", "Baz"] }
-    });
-    Select.vm.search = "ba";
-    expect(Select.vm.filteredOptions).toEqual(["Bar", "Baz"]);
-  });
+      propsData: { options: ['Foo', 'Bar', 'Baz'] },
+    })
+    Select.vm.search = 'ba'
+    expect(Select.vm.filteredOptions).toEqual(['Bar', 'Baz'])
+  })
 
-  it("can filter an array of objects based on the objects label key", () => {
+  it('can filter an array of objects based on the objects label key', () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
-        options: [{ label: "Foo" }, { label: "Bar" }, { label: "Baz" }]
-      }
-    });
-    Select.vm.search = "ba";
+        options: [{ label: 'Foo' }, { label: 'Bar' }, { label: 'Baz' }],
+      },
+    })
+    Select.vm.search = 'ba'
     expect(Select.vm.filteredOptions).toEqual([
-      { label: "Bar" },
-      { label: "Baz" }
-    ]);
-  });
+      { label: 'Bar' },
+      { label: 'Baz' },
+    ])
+  })
 
-  it("can determine if a given option should match the current search text", () => {
+  it('can determine if a given option should match the current search text', () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
-        options: [{ label: "Aoo" }, { label: "Bar" }, { label: "Baz" }],
+        options: [{ label: 'Aoo' }, { label: 'Bar' }, { label: 'Baz' }],
         filterBy: (option, label, search) =>
-          label.match(new RegExp("^" + search, "i"))
-      }
-    });
+          label.match(new RegExp('^' + search, 'i')),
+      },
+    })
 
-    Select.vm.search = "a";
-    expect(Select.vm.filteredOptions).toEqual([{ label: "Aoo" }]);
-  });
+    Select.vm.search = 'a'
+    expect(Select.vm.filteredOptions).toEqual([{ label: 'Aoo' }])
+  })
 
-  it("can use a custom filtering method", () => {
+  it('can use a custom filtering method', () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
-        options: ["foo", "bar", "baz"],
-        filterBy: (option, label) => label.includes("o")
-      }
-    });
-    Select.vm.search = "a";
-    expect(Select.vm.filteredOptions).toEqual(["foo"]);
-  });
+        options: ['foo', 'bar', 'baz'],
+        filterBy: (option, label) => label.includes('o'),
+      },
+    })
+    Select.vm.search = 'a'
+    expect(Select.vm.filteredOptions).toEqual(['foo'])
+  })
 
-  it("can filter arrays of numbers", () => {
+  it('can filter arrays of numbers', () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
-        options: [1, 5, 10]
-      }
-    });
-    Select.vm.search = "1";
-    expect(Select.vm.filteredOptions).toEqual([1, 10]);
-  });
-});
+        options: [1, 5, 10],
+      },
+    })
+    Select.vm.search = '1'
+    expect(Select.vm.filteredOptions).toEqual([1, 10])
+  })
+})

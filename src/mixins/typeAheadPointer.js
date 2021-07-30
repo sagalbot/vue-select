@@ -1,7 +1,7 @@
 export default {
   data() {
     return {
-      typeAheadPointer: -1
+      typeAheadPointer: -1,
     }
   },
 
@@ -9,11 +9,11 @@ export default {
     filteredOptions() {
       for (let i = 0; i < this.filteredOptions.length; i++) {
         if (this.selectable(this.filteredOptions[i])) {
-          this.typeAheadPointer = i;
-          break;
+          this.typeAheadPointer = i
+          break
         }
       }
-    }
+    },
   },
 
   methods: {
@@ -25,8 +25,8 @@ export default {
     typeAheadUp() {
       for (let i = this.typeAheadPointer - 1; i >= 0; i--) {
         if (this.selectable(this.filteredOptions[i])) {
-          this.typeAheadPointer = i;
-          break;
+          this.typeAheadPointer = i
+          break
         }
       }
     },
@@ -37,10 +37,14 @@ export default {
      * @return {void}
      */
     typeAheadDown() {
-      for (let i = this.typeAheadPointer + 1; i < this.filteredOptions.length; i++) {
+      for (
+        let i = this.typeAheadPointer + 1;
+        i < this.filteredOptions.length;
+        i++
+      ) {
         if (this.selectable(this.filteredOptions[i])) {
-          this.typeAheadPointer = i;
-          break;
+          this.typeAheadPointer = i
+          break
         }
       }
     },
@@ -51,11 +55,11 @@ export default {
      * @return {void}
      */
     typeAheadSelect() {
-      const typeAheadOption = this.filteredOptions[this.typeAheadPointer];
+      const typeAheadOption = this.filteredOptions[this.typeAheadPointer]
 
       if (typeAheadOption) {
-        this.select(typeAheadOption);
+        this.select(typeAheadOption)
       }
-    }
-  }
+    },
+  },
 }

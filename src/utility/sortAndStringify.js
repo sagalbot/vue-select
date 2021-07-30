@@ -3,13 +3,15 @@
  * @return {string}
  */
 function sortAndStringify(sortable) {
-  const ordered = {};
+  const ordered = {}
 
-  Object.keys(sortable).sort().forEach(key => {
-    ordered[key] = sortable[key];
-  });
+  Object.keys(sortable)
+    .sort()
+    .forEach((key) => {
+      ordered[key] = sortable[key]
+    })
 
-  return JSON.stringify(ordered);
+  return JSON.stringify(ordered)
 }
 
-export default sortAndStringify;
+export default sortAndStringify
