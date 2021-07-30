@@ -18,7 +18,7 @@
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
-            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" :title="`Deselect ${getOptionLabel(option)}`" :aria-label="`Deselect ${getOptionLabel(option)}`" :ref="el => { if (el) _deselectButtonRefs[i] = el }">
+            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" :title="`Deselect ${getOptionLabel(option)}`" :aria-label="`Deselect ${getOptionLabel(option)}`" ref="deselectButtons">
               <component :is="childComponents.Deselect" />
             </button>
           </span>
@@ -109,7 +109,12 @@
       'search:keydown',
       'search:blur',
       'search:focus',
-      'search:input'
+      'search:input',
+      'option:created',
+      'option:selecting',
+      'option:selected',
+      'option:deselecting',
+      'option:deselected'
     ],
 
     props: {
@@ -587,7 +592,6 @@
         open: false,
         isComposing: false,
         pushedTags: [],
-        _deselectButtonRefs: [],
         _value: [] // Internal value managed by Vue Select if no `modelValue` prop is passed
       }
     },
@@ -645,10 +649,6 @@
       if (typeof this.modelValue !== "undefined" && this.isTrackingValues) {
         this.setInternalValueFromOptions(this.modelValue)
       }
-    },
-
-    beforeUpdate() {
-      this._deselectButtonRefs = [];
     },
 
     methods: {
@@ -765,7 +765,7 @@
         //  they dropdown state will be set in their click handlers
 
         const ignoredButtons = [
-          ...this._deselectButtonRefs,
+          ...([this.$refs['deselectButtons']] || []),
           ...([this.$refs['clearButton']] || []),
         ];
 
