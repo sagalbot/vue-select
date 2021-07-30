@@ -159,6 +159,7 @@ export default {
      * using 'change' event using v-on
      * @type {Object||String||null}
      */
+    // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
     value: {},
 
     /**
@@ -522,6 +523,7 @@ export default {
      * @type {String}
      * @default {null}
      */
+    // eslint-disable-next-line vue/require-default-prop
     inputId: {
       type: String,
     },
@@ -647,6 +649,7 @@ export default {
       open: false,
       isComposing: false,
       pushedTags: [],
+      // eslint-disable-next-line vue/no-reserved-keys
       _value: [], // Internal value managed by Vue Select if no `value` prop is passed
     }
   },
@@ -822,9 +825,7 @@ export default {
      * @return {String} Placeholder text
      */
     searchPlaceholder() {
-      if (this.isValueEmpty && this.placeholder) {
-        return this.placeholder
-      }
+      return this.isValueEmpty && this.placeholder ? this.placeholder : ''
     },
 
     /**
@@ -913,7 +914,6 @@ export default {
     /**
      * Always reset the value when
      * the multiple prop changes.
-     * @param  {Boolean} isMultiple
      * @return {void}
      */
     multiple() {
