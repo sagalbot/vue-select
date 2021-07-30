@@ -19,8 +19,8 @@
     "build:docs": "cd docs && yarn build",
     "build:preview": "cd docs && yarn build",
     "test": "jest",
-    "eslint": "eslint '**/**/*.{js,vue}'",
-    "eslint:fix": "eslint --fix '**/**/*.{js,vue}'",
+    "eslint": "eslint '{**,**/.vuepress/*,*}.{js,ts,jsx,tsx,vue}'",
+    "eslint:fix": "eslint --fix '{**,**/.vuepress/*,*}.{js,ts,jsx,tsx,vue}'",
     "semantic-release": "semantic-release",
     "commit": "git-cz"
   },
