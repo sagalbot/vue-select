@@ -384,6 +384,7 @@
       filterBy: {
         type: Function,
         default(option, label, search) {
+          if(typeof label === "boolean") return label;
           return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
         }
       },
@@ -1012,7 +1013,7 @@
           value = this.$data._value;
         }
 
-        if (value) {
+        if (value || value === false) {
           return [].concat(value);
         }
 

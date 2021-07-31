@@ -34,6 +34,9 @@
   "resolutions": {
     "ajv": "6.8.1"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/eslint-parser": "^7.14.7",
