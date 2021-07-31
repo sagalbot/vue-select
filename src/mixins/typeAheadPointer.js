@@ -13,7 +13,24 @@ export default {
           break;
         }
       }
-    }
+    },
+    open(newValue) {
+      if (newValue === true) {
+        // Just Opened dropdown
+
+        for (let i = 0; i < this.filteredOptions.length; i++) {
+          if (this.isOptionSelected(this.filteredOptions[i])) {
+            // Highlight the first selected option
+            this.typeAheadPointer = i;
+            this.$nextTick(function() {
+              // Scroll to it if there is a lot of options.
+              this.maybeAdjustScroll();
+            });
+            break;
+          }
+        }
+      }
+    },
   },
 
   methods: {
