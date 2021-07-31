@@ -77,6 +77,7 @@
       </ul>
       <ul v-else :id="`vs${uid}__listbox`" role="listbox" style="display: none; visibility: hidden;"></ul>
     </transition>
+    <input v-if="hiddenInputName" v-bind="scope.hiddenInput" type="hidden" class="vs__hidden-input">
     <slot name="footer" v-bind="scope.footer" />
   </div>
 </template>
@@ -466,6 +467,15 @@
        * @default {null}
        */
       inputId: {
+        type: String
+      },
+
+      /**
+       * Adds a hidden input with the value being a JSON encoded string.
+       * @type {String}
+       * @default {null}
+       */
+      hiddenInputName: {
         type: String
       },
 
@@ -1093,6 +1103,10 @@
               'role': 'presentation',
               'class': 'vs__open-indicator',
             },
+          },
+          hiddenInput: {
+            name: this.hiddenInputName,
+            value: JSON.stringify(this.value)
           },
           listHeader: listSlot,
           listFooter: listSlot,
