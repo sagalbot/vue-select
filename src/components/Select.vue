@@ -540,6 +540,18 @@
       },
 
       /**
+       * Sets the value of the currently selected option
+       * onto the input box
+       *
+       * Applicable only for single select
+       * @type {Boolean}
+       */
+      syncSearchValue: {
+        type: Boolean,
+        default: false
+      },
+
+      /**
        * When `appendToBody` is true, this function is responsible for
        * positioning the drop down list.
        *
@@ -623,6 +635,7 @@
         if (this.isTrackingValues) {
           this.setInternalValueFromOptions(val)
         }
+        this.setSearchValue(val);
       },
 
       /**
@@ -648,6 +661,10 @@
       }
 
       this.$on('option:created', this.pushTag)
+    },
+
+    mounted() {
+      this.setSearchValue(this.value);
     },
 
     methods: {
@@ -698,12 +715,19 @@
         this.$emit('option:deselected', option);
       },
 
+      setSearchValue(val) {
+        if (this.syncSearchValue && !this.multiple && val) {
+          this.search = this.getOptionLabel(val);
+        }
+      },
+
       /**
        * Clears the currently selected value(s)
        * @return {void}
        */
       clearSelection() {
         this.updateValue(this.multiple ? [] : null)
+        this.search = '';
       },
 
       /**
@@ -717,7 +741,9 @@
           this.searchEl.blur()
         }
 
-        if (this.clearSearchOnSelect) {
+        if (this.syncSearchValue && !this.isMultiple) {
+          this.search = this.getOptionLabel(option);
+        } else if (this.clearSearchOnSelect) {
           this.search = ''
         }
       },

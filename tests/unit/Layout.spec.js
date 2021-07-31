@@ -27,4 +27,22 @@ describe("Single value options", () => {
     Select.vm.onSearchBlur();
     expect(Select.vm.search).toEqual("t");
   });
+
+  it("should set the search text as option when syncSearchValue is true", () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: {
+        value: "one",
+        syncSearchValue: true,
+        options: ["one", "two", "three"],
+      }
+    });
+
+    expect(Select.vm.syncSearchValue).toEqual(true);
+
+    Select.vm.open = true;
+    expect(Select.vm.search).toEqual("one");
+
+    Select.vm.onAfterSelect("two");
+    expect(Select.vm.search).toEqual("two");
+  });
 });
