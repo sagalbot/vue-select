@@ -300,4 +300,21 @@ describe("VS - Selecting Values", () => {
       expect(Select.emitted("option:deselected")).toEqual([["bar"], ["bar"]]);
     });
   });
+
+  describe('selected classes', () => {
+    it("adds the vs__selected class by default", () => {
+      const Select = mountDefault({value: 'one'});
+      expect(Select. contains('.vs__selected')).toBe(true);
+    });
+
+    it("can add a custom class using the getSelectedOptionClasses prop", () => {
+      const Select = mountDefault({
+        value: 'one',
+        getSelectedOptionClasses: (option, defaults) => [...defaults, `vs__selected--${option}`]
+      });
+
+      expect(Select.contains('.vs__selected')).toBe(true);
+      expect(Select. contains('.vs__selected--one')).toBe(true);
+    });
+  });
 });

@@ -14,7 +14,7 @@
               :deselect="deselect"
               :multiple="multiple"
               :disabled="disabled">
-          <span :key="getOptionKey(option)" class="vs__selected">
+          <span :key="getOptionKey(option)" :class="getSelectedOptionClasses(option, ['vs__selected'])">
             <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
@@ -317,6 +317,25 @@
             return console.warn(warning, option, e);
           }
         },
+      },
+
+      /**
+       * Adjust the CSS classes applied to selected values.
+       */
+      getSelectedOptionClasses: {
+        type: Function,
+        /**
+         * Determines the classname for a given selected option. Receives the
+         * option as a parameter should return a valid class binding via a
+         * String, Object, or Array.
+         *
+         * @see https://vuejs.org/v2/guide/class-and-style.html
+         *
+         * @param option {Object|String|Number} An option that has been selected
+         * @param defaults {Array} Array of default classes ['vs__selected']
+         * @return {Array|Object|String} Any valid VueJS class binding format.
+         */
+        default: (option, defaults) => defaults
       },
 
       /**
