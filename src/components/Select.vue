@@ -8,20 +8,22 @@
     <div :id="`vs${uid}__combobox`" ref="toggle" @mousedown="toggleDropdown($event)" class="vs__dropdown-toggle" role="combobox" :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option">
 
       <div class="vs__selected-options" ref="selectedOptions">
-        <slot v-for="option in selectedValue"
-              name="selected-option-container"
-              :option="normalizeOptionForSlot(option)"
-              :deselect="deselect"
-              :multiple="multiple"
-              :disabled="disabled">
-          <span :key="getOptionKey(option)" class="vs__selected">
-            <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
-              {{ getOptionLabel(option) }}
-            </slot>
-            <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" :title="`Deselect ${getOptionLabel(option)}`" :aria-label="`Deselect ${getOptionLabel(option)}`" ref="deselectButtons">
-              <component :is="childComponents.Deselect" />
-            </button>
-          </span>
+        <slot name="selected-wrap">
+          <slot v-for="option in selectedValue"
+                name="selected-option-container"
+                :option="normalizeOptionForSlot(option)"
+                :deselect="deselect"
+                :multiple="multiple"
+                :disabled="disabled">
+            <span :key="getOptionKey(option)" class="vs__selected">
+              <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
+                {{ getOptionLabel(option) }}
+              </slot>
+              <button v-if="multiple" :disabled="disabled" @click="deselect(option)" type="button" class="vs__deselect" :title="`Deselect ${getOptionLabel(option)}`" :aria-label="`Deselect ${getOptionLabel(option)}`" ref="deselectButtons">
+                <component :is="childComponents.Deselect" />
+              </button>
+            </span>
+          </slot>
         </slot>
 
         <slot name="search" v-bind="scope.search">
