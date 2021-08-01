@@ -188,11 +188,11 @@
             v-bind="configuration"
             placeholder="country objects, using option scoped slots"
           >
-            <template slot="selected-option" slot-scope="{ label, value }">
-              {{ label }} -- {{ value }}
+            <template slot="selected-option" slot-scope="option">
+              {{ option.label }} -- {{ option.value }}
             </template>
-            <template slot="option" slot-scope="{ label, value }">
-              {{ label }} ({{ value }})
+            <template slot="option" slot-scope="option">
+              {{ option.label }} ({{ option.value }})
             </template>
           </v-select>
         </div>
