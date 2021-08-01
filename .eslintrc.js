@@ -10,5 +10,13 @@ module.exports = {
     'plugin:vue/recommended',
     'prettier/vue',
   ],
-  ignorePatterns: ['node_modules/', 'dist/', 'coverage/'],
+  ignorePatterns: [
+    '!.*.js',
+    '!docs/.vuepress',
+    'docs/.vuepress/dist',
+    'node_modules',
+    'dist',
+    'coverage',
+    'yarn.lock',
+  ],
 }
