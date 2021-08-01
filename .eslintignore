@@ -1,0 +1,4 @@
+!docs/.vuepress
+docs/.vuepress/dist
+node_modules
+dist
