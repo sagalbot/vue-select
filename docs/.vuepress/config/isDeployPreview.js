@@ -1,1 +1,1 @@
-module.exports = process.env.hasOwnProperty('DEPLOY_PREVIEW');
+module.exports = process.env.hasOwnProperty('DEPLOY_PREVIEW')

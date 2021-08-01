@@ -11,17 +11,17 @@
 </template>
 
 <script>
-import { SPONSORS } from "@dynamic/constants";
-import { format } from "date-fns";
+import { SPONSORS } from '@dynamic/constants'
+import { format } from 'date-fns'
 
 export default {
   data: () => ({
     sponsors: SPONSORS.map(({ createdAt, sponsorEntity }) => ({
-      createdAt: format(new Date(createdAt), "LLL yyyy"),
-      ...sponsorEntity
-    }))
+      createdAt: format(new Date(createdAt), 'LLL yyyy'),
+      ...sponsorEntity,
+    })),
   }),
-};
+}
 </script>
 
 <style scoped>
