@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-unused-vars  -->
   <v-select :options="books" label="title">
     <template
       #selected-option-container="{ option, deselect, multiple, disabled }"
