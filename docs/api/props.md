@@ -345,7 +345,7 @@ label: {
 
 ## loading
 
- show spinner if the component is in a loading state.
+ Show spinner if the component is in a loading state.
 
 ```js
 loading: {
