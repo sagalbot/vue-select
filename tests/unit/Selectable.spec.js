@@ -10,7 +10,7 @@ describe('Selectable prop', () => {
     Select.vm.$data.open = true
     await Select.vm.$nextTick()
 
-    Select.find('.vs__dropdown-menu li:first-child').trigger('mousedown')
+    Select.find('.vs__dropdown-menu li:first-child').trigger('click')
 
     await Select.vm.$nextTick()
     expect(Select.vm.selectedValue).toEqual(['one'])
@@ -25,7 +25,7 @@ describe('Selectable prop', () => {
     Select.vm.$data.open = true
     await Select.vm.$nextTick()
 
-    Select.find('.vs__dropdown-menu li:last-child').trigger('mousedown')
+    Select.find('.vs__dropdown-menu li:last-child').trigger('click')
     await Select.vm.$nextTick()
 
     expect(Select.vm.selectedValue).toEqual([])
