@@ -109,7 +109,7 @@
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
-          @mousedown.prevent.stop="selectable(option) ? select(option) : null"
+          @click.prevent.stop="selectable(option) ? select(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
