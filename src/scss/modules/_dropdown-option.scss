@@ -6,10 +6,7 @@
   clear: both;
   color: #333; /* Overrides most CSS frameworks */
   white-space: nowrap;
-
-  &:hover {
-    cursor: pointer;
-  }
+  cursor: pointer;
 }
 
 .vs__dropdown-option--highlight {
@@ -20,8 +17,5 @@
 .vs__dropdown-option--disabled {
   background: inherit;
   color: $vs-state-disabled-color;
-
-  &:hover {
-    cursor: inherit;
-  }
+  cursor: inherit;
 }
