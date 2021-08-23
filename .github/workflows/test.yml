@@ -15,6 +15,9 @@ jobs:
       - name: Test with Coverage
         run: yarn test --coverage --coverageReporters=lcov
 
+      - name: ESLint
+        run: yarn eslint
+
       - name: Report Coverage
         uses: coverallsapp/github-action@master
         with:
