@@ -110,7 +110,6 @@
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
           @mousedown.prevent.stop="selectable(option) ? select(option) : null"
-          @click.prevent.stop="select(option)"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
@@ -134,7 +133,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
 import pointerScroll from '../mixins/pointerScroll'
 import typeAheadPointer from '../mixins/typeAheadPointer'
 import ajax from '../mixins/ajax'
@@ -160,6 +159,7 @@ export default {
      * using 'change' event using v-on
      * @type {Object||String||null}
      */
+    // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
     value: {},
 
     /**
@@ -523,6 +523,7 @@ export default {
      * @type {String}
      * @default {null}
      */
+    // eslint-disable-next-line vue/require-default-prop
     inputId: {
       type: String,
     },
@@ -576,6 +577,7 @@ export default {
      * for the search input. Can be used to implement
      * custom behaviour for key presses.
      */
+
     mapKeydown: {
       type: Function,
       /**
@@ -647,6 +649,7 @@ export default {
       open: false,
       isComposing: false,
       pushedTags: [],
+      // eslint-disable-next-line vue/no-reserved-keys
       _value: [], // Internal value managed by Vue Select if no `value` prop is passed
     }
   },
@@ -822,9 +825,9 @@ export default {
      * @return {String} Placeholder text
      */
     searchPlaceholder() {
-      if (this.isValueEmpty && this.placeholder) {
-        return this.placeholder
-      }
+      return this.isValueEmpty && this.placeholder
+        ? this.placeholder
+        : undefined
     },
 
     /**
@@ -913,7 +916,6 @@ export default {
     /**
      * Always reset the value when
      * the multiple prop changes.
-     * @param  {Boolean} isMultiple
      * @return {void}
      */
     multiple() {

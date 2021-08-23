@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li v-for="{ createdAt, login, avatarUrl } in sponsors">
+    <li v-for="{ createdAt, login, avatarUrl } in sponsors" :key="login">
       <img :src="avatarUrl + '&s=150'" :alt="`@${login}'s avatar`" />
       <p>
         <a :href="`https://github.com/${login}`">@{{ login }}</a> <br />

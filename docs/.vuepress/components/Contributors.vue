@@ -1,6 +1,9 @@
 <template>
   <ul>
-    <li v-for="{ login, avatar_url, html_url, contributions } in contributors">
+    <li
+      v-for="{ login, avatar_url, html_url, contributions } in contributors"
+      :key="login"
+    >
       <img :src="`${avatar_url}&s=75`" :alt="`${login}'s Avatar`" />
       <div>
         <a :href="html_url">@{{ login }}</a>
