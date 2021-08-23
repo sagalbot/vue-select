@@ -1,23 +1,23 @@
 module.exports = {
   release: {
-    branch: "master"
+    branch: 'master',
   },
   plugins: [
-    "@semantic-release/npm",
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
+    '@semantic-release/npm',
+    '@semantic-release/commit-analyzer',
+    '@semantic-release/release-notes-generator',
     [
-      "@semantic-release/github",
+      '@semantic-release/github',
       {
-        assets: ["dist/**"]
-      }
+        assets: ['dist/**'],
+      },
     ],
     [
-      "@semantic-release/git",
+      '@semantic-release/git',
       {
-        assets: ["package.json"],
-        message: "chore(🚀): ${nextRelease.version}"
-      }
-    ]
-  ]
-};
+        assets: ['package.json'],
+        message: 'chore(🚀): ${nextRelease.version}',
+      },
+    ],
+  ],
+}
