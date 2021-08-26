@@ -793,6 +793,7 @@ export default {
       return {
         'vs--open': this.dropdownOpen,
         'vs--single': !this.multiple,
+        'vs--multiple': this.multiple,
         'vs--searching': this.searching && !this.noDrop,
         'vs--searchable': this.searchable && !this.noDrop,
         'vs--unsearchable': !this.searchable,
