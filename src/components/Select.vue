@@ -88,7 +88,7 @@
         :id="`vs${uid}__listbox`"
         ref="dropdownMenu"
         :key="`vs${uid}__listbox`"
-        v-append-to-body
+        v-append-to
         class="vs__dropdown-menu"
         role="listbox"
         tabindex="-1"
@@ -138,7 +138,7 @@ import pointerScroll from '../mixins/pointerScroll'
 import typeAheadPointer from '../mixins/typeAheadPointer'
 import ajax from '../mixins/ajax'
 import childComponents from './childComponents'
-import appendToBody from '../directives/appendToBody'
+import appendTo from '../directives/appendTo'
 import sortAndStringify from '../utility/sortAndStringify'
 import uniqueId from '../utility/uniqueId'
 
@@ -148,7 +148,7 @@ import uniqueId from '../utility/uniqueId'
 export default {
   components: { ...childComponents },
 
-  directives: { appendToBody },
+  directives: { appendTo },
 
   mixins: [pointerScroll, typeAheadPointer, ajax],
 
@@ -593,6 +593,8 @@ export default {
      * and size/position it dynamically. Use it if you have
      * overflow or z-index issues.
      * @type {Boolean}
+     *
+     * @deprecated use {@link appendTo}
      */
     appendToBody: {
       type: Boolean,
@@ -600,7 +602,18 @@ export default {
     },
 
     /**
-     * When `appendToBody` is true, this function is responsible for
+     * Append the dropdown element to the end of the element by selector
+     * and size/position it dynamically. Use it if you have
+     * overflow or z-index issues.
+     * @type {String}
+     */
+    appendTo: {
+      type: String,
+      default: null,
+    },
+
+    /**
+     * When `appendToBody` is true or `appendTo` is not empty, this function is responsible for
      * positioning the drop down list.
      *
      * If a function is returned from `calculatePosition`, it will
