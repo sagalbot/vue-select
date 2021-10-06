@@ -92,7 +92,7 @@ describe('Toggling Dropdown', () => {
     })
 
     Select.vm.open = true
-    Select.find({ ref: 'search' }).trigger('blur')
+    Select.findComponent({ ref: 'search' }).trigger('blur')
 
     expect(Select.vm.open).toEqual(false)
   })
@@ -158,9 +158,9 @@ describe('Toggling Dropdown', () => {
     expect(Select.vm.open).toEqual(true)
     await Select.vm.$nextTick()
 
-    expect(Select.contains('.vs__dropdown-menu')).toBeFalsy()
-    expect(Select.contains('.vs__dropdown-option')).toBeFalsy()
-    expect(Select.contains('.vs__no-options')).toBeFalsy()
+    expect(Select.find('.vs__dropdown-menu').exists()).toBeFalsy()
+    expect(Select.find('.vs__dropdown-option').exists()).toBeFalsy()
+    expect(Select.find('.vs__no-options').exists()).toBeFalsy()
     expect(Select.vm.stateClasses['vs--open']).toBeFalsy()
   })
 
@@ -168,7 +168,7 @@ describe('Toggling Dropdown', () => {
     const Select = selectWithProps({
       noDrop: true,
     })
-    expect(Select.contains(OpenIndicator)).toBeFalsy()
+    expect(Select.findComponent(OpenIndicator).exists()).toBeFalsy()
   })
 
   it('should not add the searchable state class when noDrop is true', () => {

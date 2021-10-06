@@ -39,7 +39,7 @@ describe('Selectable prop', () => {
 
     Select.vm.typeAheadPointer = 1
 
-    Select.find({ ref: 'search' }).trigger('keydown.down')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.down')
 
     expect(Select.vm.typeAheadPointer).toEqual(2)
   })
@@ -52,7 +52,7 @@ describe('Selectable prop', () => {
 
     Select.vm.typeAheadPointer = 2
 
-    Select.find({ ref: 'search' }).trigger('keydown.up')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.up')
 
     expect(Select.vm.typeAheadPointer).toEqual(0)
   })

@@ -59,7 +59,7 @@ describe('VS - Selecting Values', () => {
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
-    Select.find({ ref: 'search' }).trigger('keydown.tab')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
 
     expect(spy).toHaveBeenCalledWith()
   })

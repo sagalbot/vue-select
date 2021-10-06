@@ -11,7 +11,9 @@ describe('Scoped Slots', () => {
       }
     )
 
-    expect(Select.find({ ref: 'selectedOptions' }).text()).toEqual('one')
+    expect(Select.findComponent({ ref: 'selectedOptions' }).text()).toEqual(
+      'one'
+    )
   })
 
   describe('Slot: selected-option', () => {
@@ -56,7 +58,9 @@ describe('Scoped Slots', () => {
     Select.vm.open = true
     await Select.vm.$nextTick()
 
-    expect(Select.find({ ref: 'dropdownMenu' }).text()).toEqual('onetwothree')
+    expect(Select.findComponent({ ref: 'dropdownMenu' }).text()).toEqual(
+      'onetwothree'
+    )
   })
 
   it('noOptions slot receives the current search text', async () => {
