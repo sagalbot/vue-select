@@ -11,13 +11,15 @@ import books from '../docs/.vuepress/data/books'
 
 export default {
   components: { vSelect },
-  data: () => ({
-    selected: null,
-    config: {
-      options: countries,
-      appendToBody: true,
-    },
-  }),
+  data() {
+    return {
+      selected: null,
+      config: {
+        options: countries,
+        appendTo: this.$el,
+      },
+    }
+  },
 }
 </script>
 
