@@ -612,7 +612,7 @@ export default {
      * @type {String}
      */
     appendTo: {
-      type: HTMLElement,
+      type: String,
       default: null,
     },
 
