@@ -1,6 +1,7 @@
 export default {
   inserted(el, bindings, { context }) {
-    const container = context.appendTo || context.appendToBody
+    const container =
+      context.appendTo || context.appendToBody ? document.body : false
 
     if (container) {
       const {
