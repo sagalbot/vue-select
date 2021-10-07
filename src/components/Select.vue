@@ -440,7 +440,11 @@ export default {
     filterBy: {
       type: Function,
       default(option, label, search) {
-        return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
+        return (
+          (label || '')
+            .toLocaleLowerCase()
+            .indexOf(search.toLocaleLowerCase()) > -1
+        )
       },
     },
 

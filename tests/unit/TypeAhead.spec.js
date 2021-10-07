@@ -22,7 +22,7 @@ describe('Moving the Typeahead Pointer', () => {
 
     Select.vm.typeAheadPointer = 1
 
-    Select.find({ ref: 'search' }).trigger('keydown.up')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.up')
 
     expect(Select.vm.typeAheadPointer).toEqual(0)
   })
@@ -32,7 +32,7 @@ describe('Moving the Typeahead Pointer', () => {
 
     Select.vm.typeAheadPointer = 1
 
-    Select.find({ ref: 'search' }).trigger('keydown.down')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.down')
 
     expect(Select.vm.typeAheadPointer).toEqual(2)
   })
