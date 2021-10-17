@@ -103,6 +103,8 @@
           role="option"
           class="vs__dropdown-option"
           :class="{
+            'vs__dropdown-option--deselect':
+              isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
             'vs__dropdown-option--highlight': index === typeAheadPointer,
             'vs__dropdown-option--disabled': !selectable(option),
@@ -204,6 +206,16 @@ export default {
     clearable: {
       type: Boolean,
       default: true,
+    },
+
+    /**
+     * Can the user deselect an option by clicking it from
+     * within the dropdown.
+     * @type {Boolean}
+     */
+    deselectFromDropdown: {
+      type: Boolean,
+      default: false,
     },
 
     /**
@@ -960,7 +972,8 @@ export default {
     },
 
     /**
-     * Select a given option.
+     * Select or deselect a given option.
+     * Allow deselect if clearable or if not the only selected option.
      * @param  {Object|String} option
      * @return {void}
      */
@@ -975,6 +988,11 @@ export default {
         }
         this.updateValue(option)
         this.$emit('option:selected', option)
+      } else if (
+        this.deselectFromDropdown &&
+        (this.clearable || (this.multiple && this.selectedValue.length > 1))
+      ) {
+        this.deselect(option)
       }
       this.onAfterSelect(option)
     },
@@ -1088,6 +1106,13 @@ export default {
       return this.selectedValue.some((value) =>
         this.optionComparator(value, option)
       )
+    },
+
+    /**
+     *  Can the current option be removed via the dropdown?
+     */
+    isOptionDeselectable(option) {
+      return this.isOptionSelected(option) && this.deselectFromDropdown
     },
 
     /**

@@ -52,11 +52,11 @@ describe('Removing values', () => {
     const Select = mountDefault()
     Select.vm.$data._value = 'one'
 
-    Select.find({ ref: 'search' }).trigger('keydown.backspace')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.backspace')
     expect(Select.emitted().input.length).toBe(1)
 
-    Select.find({ ref: 'search' }).trigger('keydown.backspace')
-    Select.find({ ref: 'search' }).trigger('keydown.backspace')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.backspace')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.backspace')
     expect(Select.emitted().input.length).toBe(1)
   })
 
@@ -71,7 +71,7 @@ describe('Removing values', () => {
     Select.vm.open = true
     await Select.vm.$nextTick()
 
-    Select.find('.vs__dropdown-option--selected').trigger('mousedown')
+    Select.find('.vs__dropdown-option--selected').trigger('click')
     await Select.vm.$nextTick()
 
     expect(deselect).toHaveBeenCalledWith('one')
