@@ -51,6 +51,7 @@ describe('Removing values', () => {
   it('will not emit input event if value has not changed with backspace', () => {
     const Select = mountDefault()
     Select.vm.$data._value = 'one'
+
     Select.find({ ref: 'search' }).trigger('keydown.backspace')
     expect(Select.emitted().input.length).toBe(1)
 

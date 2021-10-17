@@ -103,15 +103,13 @@
           role="option"
           class="vs__dropdown-option"
           :class="{
-            'vs__dropdown-option--deselect':
-              isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
             'vs__dropdown-option--highlight': index === typeAheadPointer,
             'vs__dropdown-option--disabled': !selectable(option),
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
-          @mousedown.prevent.stop="selectable(option) ? select(option) : null"
+          @click.prevent.stop="selectable(option) ? select(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
@@ -135,7 +133,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
 import pointerScroll from '../mixins/pointerScroll'
 import typeAheadPointer from '../mixins/typeAheadPointer'
 import ajax from '../mixins/ajax'
@@ -161,6 +159,7 @@ export default {
      * using 'change' event using v-on
      * @type {Object||String||null}
      */
+    // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
     value: {},
 
     /**
@@ -205,16 +204,6 @@ export default {
     clearable: {
       type: Boolean,
       default: true,
-    },
-
-    /**
-     * Can the user deselect an option by clicking it from
-     * within the dropdown.
-     * @type {Boolean}
-     */
-    deselectFromDropdown: {
-      type: Boolean,
-      default: false,
     },
 
     /**
@@ -451,7 +440,11 @@ export default {
     filterBy: {
       type: Function,
       default(option, label, search) {
-        return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
+        return (
+          (label || '')
+            .toLocaleLowerCase()
+            .indexOf(search.toLocaleLowerCase()) > -1
+        )
       },
     },
 
@@ -534,6 +527,7 @@ export default {
      * @type {String}
      * @default {null}
      */
+    // eslint-disable-next-line vue/require-default-prop
     inputId: {
       type: String,
     },
@@ -587,6 +581,7 @@ export default {
      * for the search input. Can be used to implement
      * custom behaviour for key presses.
      */
+
     mapKeydown: {
       type: Function,
       /**
@@ -658,6 +653,7 @@ export default {
       open: false,
       isComposing: false,
       pushedTags: [],
+      // eslint-disable-next-line vue/no-reserved-keys
       _value: [], // Internal value managed by Vue Select if no `value` prop is passed
     }
   },
@@ -801,6 +797,7 @@ export default {
       return {
         'vs--open': this.dropdownOpen,
         'vs--single': !this.multiple,
+        'vs--multiple': this.multiple,
         'vs--searching': this.searching && !this.noDrop,
         'vs--searchable': this.searchable && !this.noDrop,
         'vs--unsearchable': !this.searchable,
@@ -833,9 +830,9 @@ export default {
      * @return {String} Placeholder text
      */
     searchPlaceholder() {
-      if (this.isValueEmpty && this.placeholder) {
-        return this.placeholder
-      }
+      return this.isValueEmpty && this.placeholder
+        ? this.placeholder
+        : undefined
     },
 
     /**
@@ -924,7 +921,6 @@ export default {
     /**
      * Always reset the value when
      * the multiple prop changes.
-     * @param  {Boolean} isMultiple
      * @return {void}
      */
     multiple() {
@@ -964,9 +960,7 @@ export default {
     },
 
     /**
-     * Select or deselect a given option.
-     *
-     * Allow deselect if clearable or if not the only selected option
+     * Select a given option.
      * @param  {Object|String} option
      * @return {void}
      */
@@ -981,11 +975,6 @@ export default {
         }
         this.updateValue(option)
         this.$emit('option:selected', option)
-      } else if (
-        this.deselectFromDropdown &&
-        (this.clearable || (this.multiple && this.selectedValue.length > 1))
-      ) {
-        this.deselect(option)
       }
       this.onAfterSelect(option)
     },
@@ -1099,13 +1088,6 @@ export default {
       return this.selectedValue.some((value) =>
         this.optionComparator(value, option)
       )
-    },
-
-    /**
-     *  Can the current option be removed via the dropdown?
-     */
-    isOptionDeselectable(option) {
-      return this.isOptionSelected(option) && this.deselectFromDropdown
     },
 
     /**

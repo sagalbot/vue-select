@@ -252,7 +252,7 @@ describe('When Tagging Is Enabled', () => {
     })
 
     Select.vm.typeAheadPointer = 0
-    Select.find({ ref: 'search' }).trigger('keydown.tab')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
 
     await Select.vm.$nextTick()
     expect(Select.vm.selectedValue).toEqual(['one'])

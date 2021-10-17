@@ -21,7 +21,9 @@
             v-model="configuration.multiple"
             type="checkbox"
           />
-          <code>:multiple="{{ !!configuration.multiple }}"</code>
+          <code
+            >:multiple="{{ configuration.multiple ? 'true' : 'false' }}"</code
+          >
         </label>
       </div>
 
@@ -32,7 +34,9 @@
             v-model="configuration.disabled"
             type="checkbox"
           />
-          <code>:disabled="{{ !!configuration.disabled }}"</code>
+          <code
+            >:disabled="{{ configuration.disabled ? 'true' : 'false' }}"</code
+          >
         </label>
       </div>
 
@@ -43,7 +47,9 @@
             v-model="configuration.clearable"
             type="checkbox"
           />
-          <code>:clearable="{{ !!configuration.clearable }}"</code>
+          <code
+            >:clearable="{{ configuration.clearable ? 'true' : 'false' }}"</code
+          >
         </label>
       </div>
 
@@ -54,7 +60,11 @@
             v-model="configuration.searchable"
             type="checkbox"
           />
-          <code>:searchable="{{ !!configuration.searchable }}"</code>
+          <code
+            >:searchable="{{
+              configuration.searchable ? 'true' : 'false'
+            }}"</code
+          >
         </label>
       </div>
 
@@ -65,7 +75,11 @@
             v-model="configuration.filterable"
             type="checkbox"
           />
-          <code>:filterable="{{ !!configuration.searchable }}"</code>
+          <code
+            >:filterable="{{
+              configuration.searchable ? 'true' : 'false'
+            }}"</code
+          >
         </label>
       </div>
 
@@ -78,14 +92,16 @@
             v-model="configuration.taggable"
             type="checkbox"
           />
-          <code>:taggable="{{ !!configuration.taggable }}"</code>
+          <code
+            >:taggable="{{ configuration.taggable ? 'true' : 'false' }}"</code
+          >
         </label>
       </div>
 
       <div class="list-item">
         <label for="noDrop">
           <input id="noDrop" v-model="configuration.noDrop" type="checkbox" />
-          <code>:no-drop="{{ !!configuration.noDrop }}"</code>
+          <code>:no-drop="{{ configuration.noDrop ? 'true' : 'false' }}"</code>
         </label>
       </div>
 
@@ -96,7 +112,9 @@
             v-model="configuration.pushTags"
             type="checkbox"
           />
-          <code>:push-tags="{{ !!configuration.pushTags }}"</code>
+          <code
+            >:push-tags="{{ configuration.pushTags ? 'true' : 'false' }}"</code
+          >
         </label>
       </div>
 
@@ -109,7 +127,11 @@
             v-model="configuration.selectOnTab"
             type="checkbox"
           />
-          <code>:select-on-tab="{{ !!configuration.selectOnTab }}"</code>
+          <code
+            >:select-on-tab="{{
+              configuration.selectOnTab ? 'true' : 'false'
+            }}"</code
+          >
         </label>
       </div>
 
@@ -120,19 +142,10 @@
             v-model="configuration.closeOnSelect"
             type="checkbox"
           />
-          <code>:close-on-select="{{ !!configuration.closeOnSelect }}"</code>
-        </label>
-      </div>
-
-      <div class="list-item">
-        <label for="deselectByOption">
-          <input
-            id="deselectByOption"
-            v-model="configuration.deselectByOption"
-            type="checkbox"
-          />
           <code
-            >:deselect-by-option="{{ !!configuration.deselectByOption }}"</code
+            >:close-on-select="{{
+              configuration.closeOnSelect ? 'true' : 'false'
+            }}"</code
           >
         </label>
       </div>
@@ -175,11 +188,11 @@
             v-bind="configuration"
             placeholder="country objects, using option scoped slots"
           >
-            <template slot="selected-option" slot-scope="{ label, value }">
-              {{ label }} -- {{ value }}
+            <template slot="selected-option" slot-scope="option">
+              {{ option.label }} -- {{ option.value }}
             </template>
-            <template slot="option" slot-scope="{ label, value }">
-              {{ label }} ({{ value }})
+            <template slot="option" slot-scope="option">
+              {{ option.label }} ({{ option.value }})
             </template>
           </v-select>
         </div>
@@ -264,7 +277,6 @@ const defaultConfig = () => ({
   filterable: true,
   noDrop: false,
   closeOnSelect: true,
-  deselectByOption: false,
   disabled: false,
   selectOntab: false,
   placeholder: 'Select a Country...',

@@ -8,7 +8,7 @@ describe('Automatic Scrolling', () => {
     Select.vm.typeAheadPointer = 1
 
     //  When
-    Select.find({ ref: 'search' }).trigger('keydown.up')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.up')
     await Select.vm.$nextTick()
 
     //  Then
@@ -22,7 +22,7 @@ describe('Automatic Scrolling', () => {
     Select.vm.typeAheadPointer = 1
 
     //  When
-    Select.find({ ref: 'search' }).trigger('keydown.down')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.down')
     await Select.vm.$nextTick()
 
     //  Then

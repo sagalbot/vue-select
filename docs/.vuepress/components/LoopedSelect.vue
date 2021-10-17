@@ -4,7 +4,7 @@
       <th>Name</th>
       <th>Country</th>
     </tr>
-    <tr v-for="person in people">
+    <tr v-for="person in people" :key="person.name">
       <td>{{ person.name }}</td>
       <td>
         <v-select
