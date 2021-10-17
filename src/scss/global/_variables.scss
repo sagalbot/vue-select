@@ -13,6 +13,10 @@ $vs-component-placeholder-color: inherit !default;
 $vs-state-active-bg: #5897fb !default;
 $vs-state-active-color: #fff !default;
 
+//  Deselect State
+$vs-state-deselect-bg: #fb5858 !default;
+$vs-state-deselect-color: #fff !default;
+
 //  Disabled State
 $vs-state-disabled-bg: rgb(248, 248, 248) !default;
 $vs-state-disabled-color: map_get($vs-colors, 'light') !default;
@@ -28,7 +32,7 @@ $vs-border-color: map_get($vs-colors, 'lightest') !default;
 //  Component Controls: Clear, Open Indicator
 $vs-controls-color: map_get($vs-colors, 'light') !default;
 $vs-controls-size: 1 !default;
-$vs-controls-deselect-text-shadow: 0 1px 0 #fff;
+$vs-controls-deselect-text-shadow: 0 1px 0 #fff !default;
 
 //  Selected
 $vs-selected-bg: #f0f0f0 !default;

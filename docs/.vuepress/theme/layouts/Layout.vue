@@ -1,19 +1,15 @@
 <template>
-  <ParentLayout>
-    <EthicalAds slot="sidebar-top" />
-  </ParentLayout>
+  <ParentLayout></ParentLayout>
 </template>
 
 <script>
-import ParentLayout from "@parent-theme/layouts/Layout.vue";
-import EthicalAds from "../components/EthicalAds.vue";
+import ParentLayout from '@parent-theme/layouts/Layout.vue'
 
 export default {
   components: {
     ParentLayout,
-    EthicalAds
-  }
-};
+  },
+}
 </script>
 
 <style>

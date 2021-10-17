@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-select
-            multiple
-            v-model="selected"
-            :options="['Canada', 'United States']"
-            :components="{Deselect}"
+      v-model="selected"
+      multiple
+      :options="['Canada', 'United States']"
+      :components="{ Deselect }"
     />
   </div>
 </template>
@@ -14,8 +14,8 @@ export default {
   data: () => ({
     selected: ['Canada'],
     Deselect: {
-      render: createElement => createElement('span', '❌'),
+      render: (createElement) => createElement('span', '❌'),
     },
   }),
-};
+}
 </script>

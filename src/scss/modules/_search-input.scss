@@ -50,7 +50,7 @@ $font-size: 1em;
   .vs__search {
     opacity: 1;
   }
-  &:not(.vs--disabled) .vs__search:hover {
+  &:not(.vs--disabled) .vs__search {
     cursor: pointer;
   }
 }

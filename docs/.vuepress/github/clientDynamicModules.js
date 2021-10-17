@@ -1,14 +1,14 @@
-require("dotenv").config();
-const axios = require("axios");
-const { graphql } = require("@octokit/graphql");
+require('dotenv').config()
+const axios = require('axios')
+const { graphql } = require('@octokit/graphql')
 
 module.exports = async () => ({
-  name: "constants.js",
+  name: 'constants.js',
   content: `
       export const SPONSORS = ${JSON.stringify(await getSponsors())};
       export const CONTRIBUTORS = ${JSON.stringify(await getContributors())};
-    `
-});
+    `,
+})
 
 /**
  * Get a list of vue select contributors.
@@ -16,10 +16,10 @@ module.exports = async () => ({
  */
 async function getContributors() {
   const { data } = await axios.get(
-    "https://api.github.com/repos/sagalbot/vue-select/contributors?per_page=100"
-  );
+    'https://api.github.com/repos/sagalbot/vue-select/contributors?per_page=100'
+  )
 
-  return data;
+  return data
 }
 
 /**
@@ -28,30 +28,38 @@ async function getContributors() {
  */
 async function getSponsors() {
   const query = `
-        {
-          user(login: "sagalbot") {
-            sponsorshipsAsMaintainer(first: 100) {
-              nodes {
-                createdAt
-                sponsor {
-                  login
-                  avatarUrl
-                }
+    {
+      user(login: "sagalbot") {
+        sponsorshipsAsMaintainer(first: 100) {
+          nodes {
+            sponsorEntity {
+              ... on User {
+                id
+                avatarUrl
+                login
+              }
+              ... on Organization {
+                id
+                avatarUrl
+                login
               }
             }
+            createdAt
           }
         }
-      `;
+      }
+    }
+  `
 
   try {
     const { user } = await graphql(query, {
       headers: {
-        authorization: `token ${process.env.GITHUB_TOKEN || ""}`
-      }
-    });
-    return user.sponsorshipsAsMaintainer.nodes;
+        authorization: `token ${process.env.GITHUB_TOKEN || ''}`,
+      },
+    })
+    return user.sponsorshipsAsMaintainer.nodes
   } catch (e) {
-    console.log(`${e.status} ${e.name} - Couldn't fetch sponsor data.`);
-    return [];
+    console.log(`${e.status} ${e.name} - Couldn't fetch sponsor data.`)
+    return []
   }
 }

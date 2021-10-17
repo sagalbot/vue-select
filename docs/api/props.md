@@ -163,6 +163,17 @@ createOption: {
 },
 ```
 
+## deselectFromDropdown <Badge text="v3.12.0+" />
+
+Determines whether the user can deselect an option by clicking 
+it from within the dropdown menu.
+
+```js
+deselectFromDropdown: {
+    type: Boolean,
+    default: false
+},
+```
 
 ## dir
 
@@ -185,6 +196,21 @@ disabled: {
 	type: Boolean,
 	default: false
 },
+```
+
+## dropdownShouldOpen <Badge text="v3.12.0+" />
+
+Determines whether the dropdown should open. Used
+for overriding the default dropdown behaviour. Receives
+the vue-select instance as the single argument to the function.
+
+```js
+dropdownShouldOpen: {
+    type: Function,
+    default({noDrop, open, mutableLoading}) {
+      return noDrop ? false : open && !mutableLoading;
+    }
+}
 ```
 
 
@@ -235,7 +261,7 @@ if the option should be displayed.
 filterBy: {
   type: Function,
   default(option, label, search) {
-    return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
+    return (label || '').toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) > -1
   }
 },
 ```

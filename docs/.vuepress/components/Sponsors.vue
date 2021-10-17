@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li v-for="{ createdAt, login, avatarUrl } in sponsors">
+    <li v-for="{ createdAt, login, avatarUrl } in sponsors" :key="login">
       <img :src="avatarUrl + '&s=150'" :alt="`@${login}'s avatar`" />
       <p>
         <a :href="`https://github.com/${login}`">@{{ login }}</a> <br />
@@ -11,17 +11,17 @@
 </template>
 
 <script>
-import { SPONSORS } from "@dynamic/constants";
-import { format } from "date-fns";
+import { SPONSORS } from '@dynamic/constants'
+import { format } from 'date-fns'
 
 export default {
   data: () => ({
-    sponsors: SPONSORS.map(({ createdAt, sponsor }) => ({
-      createdAt: format(new Date(createdAt), "LLL yyyy"),
-      ...sponsor
-    }))
-  })
-};
+    sponsors: SPONSORS.map(({ createdAt, sponsorEntity }) => ({
+      createdAt: format(new Date(createdAt), 'LLL yyyy'),
+      ...sponsorEntity,
+    })),
+  }),
+}
 </script>
 
 <style scoped>

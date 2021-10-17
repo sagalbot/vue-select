@@ -20,6 +20,6 @@
   color: #8492a4;
 }
 p a {
-  color: #48BB78;
+  color: #48bb78;
 }
 </style>
