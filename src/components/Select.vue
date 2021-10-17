@@ -158,7 +158,7 @@ export default {
     /**
      * Contains the currently selected value. Very similar to a
      * `value` attribute on an <input>. You can listen for changes
-     * using 'change' event using v-on
+     * with the 'input' event.
      * @type {Object||String||null}
      */
     // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types

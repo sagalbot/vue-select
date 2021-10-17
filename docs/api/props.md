@@ -598,7 +598,7 @@ uid: {
 
 Contains the currently selected value. Very similar to a
 `value` attribute on an `<input>`. You can listen for changes
-using 'change' event using v-on.
+using the 'input' event.
 
 ```js
 value: {
