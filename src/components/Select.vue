@@ -656,11 +656,19 @@ export default {
         return noDrop ? false : open && !mutableLoading
       },
     },
+
+    /**
+     * A unique identifier used to generate IDs in HTML.
+     * Must be unique for every instance of the component.
+     */
+    uid: {
+      type: [String, Number],
+      default: () => uniqueId(),
+    },
   },
 
   data() {
     return {
-      uid: uniqueId(),
       search: '',
       open: false,
       isComposing: false,

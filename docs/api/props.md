@@ -569,14 +569,15 @@ transition: {
 },
 ```
 
+## uid
 
-## uniqueKey
-
-Optional unique key for use on DOM attributes.
+A unique identifier used to generate IDs in HTML.
+Must be unique for every instance of the component.
 
 ```js
-uniqueKey: {
-    type: [String, Number]
+uid: {
+  type: [String, Number],
+  default: () => uniqueId(),
 },
 ```
 
