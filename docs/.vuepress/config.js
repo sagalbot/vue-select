@@ -1,7 +1,7 @@
-const {description} = require('./config/meta');
-const head = require('./config/head');
-const plugins = require('./config/plugins');
-const themeConfig = require('./config/themeConfig');
+const { description } = require('./config/meta')
+const head = require('./config/head')
+const plugins = require('./config/plugins')
+const themeConfig = require('./config/themeConfig')
 
 module.exports = {
   title: 'Vue Select',
@@ -9,5 +9,4 @@ module.exports = {
   head,
   plugins,
   themeConfig,
-};
-
+}

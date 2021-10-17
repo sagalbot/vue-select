@@ -10,7 +10,7 @@
         <v-select
           :options="options"
           :value="person.country"
-          @input="country => updateCountry(person, country)"
+          @input="(country) => updateCountry(person, country)"
         />
       </td>
     </tr>
@@ -18,26 +18,29 @@
 </template>
 
 <script>
-import countries from '../data/countries';
+import countries from '../data/countries'
 
 export default {
   data: () => ({
-    people: [{name: 'John', country: ''}, {name: 'Jane', country: ''}],
+    people: [
+      { name: 'John', country: '' },
+      { name: 'Jane', country: '' },
+    ],
   }),
-  methods: {
-    updateCountry (person, country) {
-      person.country = country;
-    },
-  },
   computed: {
     options: () => countries,
   },
-};
+  methods: {
+    updateCountry(person, country) {
+      person.country = country
+    },
+  },
+}
 </script>
 
 <style scoped>
-  table {
-    display: table;
-    width: 100%;
-  }
+table {
+  display: table;
+  width: 100%;
+}
 </style>

@@ -1,15 +1,16 @@
 <template>
-  <p :data-height="height"
-     data-theme-id="32252"
-     :data-slug-hash="url"
-     data-default-tab="result"
-     data-user="sagalbot"
-     class="codepen">
-  </p>
+  <p
+    :data-height="height"
+    data-theme-id="32252"
+    :data-slug-hash="url"
+    data-default-tab="result"
+    data-user="sagalbot"
+    class="codepen"
+  ></p>
 </template>
 
 <script>
-import mountCodePen from '../utils/codePen';
+import mountCodePen from '../utils/codePen'
 
 export default {
   props: {
@@ -18,11 +19,11 @@ export default {
       required: true,
     },
     height: {
-      default: 250
-    }
+      default: 250,
+    },
   },
-  mounted () {
-    mountCodePen();
+  mounted() {
+    mountCodePen()
   },
-};
+}
 </script>
