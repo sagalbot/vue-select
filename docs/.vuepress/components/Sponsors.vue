@@ -16,11 +16,11 @@ import { format } from "date-fns";
 
 export default {
   data: () => ({
-    sponsors: SPONSORS.map(({ createdAt, sponsor }) => ({
+    sponsors: SPONSORS.map(({ createdAt, sponsorEntity }) => ({
       createdAt: format(new Date(createdAt), "LLL yyyy"),
-      ...sponsor
+      ...sponsorEntity
     }))
-  })
+  }),
 };
 </script>
 

@@ -58,7 +58,7 @@ export default {
 
 ## Setting Globally at Registration
 
-If you want to all instances of Vue Select to use your custom components throughout your app, while
+If you want all instances of Vue Select to use your custom components throughout your app, while
 only having to set the implementation once, you can do so when registering Vue Select as a component.
 
 ```js
