@@ -28,20 +28,28 @@ async function getContributors() {
  */
 async function getSponsors() {
   const query = `
-        {
-          user(login: "sagalbot") {
-            sponsorshipsAsMaintainer(first: 100) {
-              nodes {
-                createdAt
-                sponsor {
-                  login
-                  avatarUrl
-                }
+    {
+      user(login: "sagalbot") {
+        sponsorshipsAsMaintainer(first: 100) {
+          nodes {
+            sponsorEntity {
+              ... on User {
+                id
+                avatarUrl
+                login
+              }
+              ... on Organization {
+                id
+                avatarUrl
+                login
               }
             }
+            createdAt
           }
         }
-      `;
+      }
+    }
+  `;
 
   try {
     const { user } = await graphql(query, {

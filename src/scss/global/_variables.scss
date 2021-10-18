@@ -28,7 +28,7 @@ $vs-border-color: map_get($vs-colors, 'lightest') !default;
 //  Component Controls: Clear, Open Indicator
 $vs-controls-color: map_get($vs-colors, 'light') !default;
 $vs-controls-size: 1 !default;
-$vs-controls-deselect-text-shadow: 0 1px 0 #fff;
+$vs-controls-deselect-text-shadow: 0 1px 0 #fff !default;
 
 //  Selected
 $vs-selected-bg: #f0f0f0 !default;

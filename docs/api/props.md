@@ -187,6 +187,21 @@ disabled: {
 },
 ```
 
+## dropdownShouldOpen <Badge text="v3.12.0+" />
+
+Determines whether the dropdown should open. Used 
+for overriding the default dropdown behaviour. Receives
+the vue-select instance as the single argument to the function.
+
+```js
+dropdownShouldOpen: {
+    type: Function,
+    default({noDrop, open, mutableLoading}) {
+      return noDrop ? false : open && !mutableLoading;
+    }
+}
+```
+
 
 ## filter
 
