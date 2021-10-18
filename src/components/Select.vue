@@ -932,10 +932,13 @@ export default {
      * Make sure to update internal
      * value if prop changes outside
      */
-    value(val) {
-      if (this.isTrackingValues) {
-        this.setInternalValueFromOptions(val)
-      }
+    value: {
+      immediate: true,
+      handler(val) {
+        if (this.isTrackingValues) {
+          this.setInternalValueFromOptions(val)
+        }
+      },
     },
 
     /**
@@ -954,10 +957,6 @@ export default {
 
   created() {
     this.mutableLoading = this.loading
-
-    if (typeof this.value !== 'undefined' && this.isTrackingValues) {
-      this.setInternalValueFromOptions(this.value)
-    }
 
     this.$on('option:created', this.pushTag)
   },
