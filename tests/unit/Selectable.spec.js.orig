@@ -1,0 +1,90 @@
+import { selectWithProps } from '../helpers'
+
+describe('Selectable prop', () => {
+  it('should select selectable option if clicked', async () => {
+    const Select = selectWithProps({
+      options: ['one', 'two', 'three'],
+      selectable: (option) => option === 'one',
+    })
+
+<<<<<<< HEAD
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    await Select.find('.vs__dropdown-menu li:first-child').trigger('mousedown')
+
+=======
+    Select.vm.$data.open = true
+    await Select.vm.$nextTick()
+
+    Select.find('.vs__dropdown-menu li:first-child').trigger('click')
+
+    await Select.vm.$nextTick()
+>>>>>>> master
+    expect(Select.vm.selectedValue).toEqual(['one'])
+  })
+
+  it('should not select not selectable option if clicked', async () => {
+    const Select = selectWithProps({
+      options: ['one', 'two', 'three'],
+      selectable: (option) => option === 'one',
+    })
+
+<<<<<<< HEAD
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    await Select.find('.vs__dropdown-menu li:last-child').trigger('mousedown')
+=======
+    Select.vm.$data.open = true
+    await Select.vm.$nextTick()
+
+    Select.find('.vs__dropdown-menu li:last-child').trigger('click')
+    await Select.vm.$nextTick()
+>>>>>>> master
+
+    expect(Select.vm.selectedValue).toEqual([])
+  })
+
+<<<<<<< HEAD
+  it('should skip non-selectable option on down arrow keyDown', async () => {
+=======
+  it('should skip non-selectable option on down arrow keyDown', () => {
+>>>>>>> master
+    const Select = selectWithProps({
+      options: ['one', 'two', 'three'],
+      selectable: (option) => option !== 'two',
+    })
+
+    Select.vm.typeAheadPointer = 1
+
+<<<<<<< HEAD
+    await Select.get('input').trigger('keydown.down')
+=======
+    Select.findComponent({ ref: 'search' }).trigger('keydown.down')
+>>>>>>> master
+
+    expect(Select.vm.typeAheadPointer).toEqual(2)
+  })
+
+<<<<<<< HEAD
+  it('should skip non-selectable option on up arrow keyDown', async () => {
+=======
+  it('should skip non-selectable option on up arrow keyDown', () => {
+>>>>>>> master
+    const Select = selectWithProps({
+      options: ['one', 'two', 'three'],
+      selectable: (option) => option !== 'two',
+    })
+
+    Select.vm.typeAheadPointer = 2
+
+<<<<<<< HEAD
+    await Select.get('input').trigger('keydown.up')
+=======
+    Select.findComponent({ ref: 'search' }).trigger('keydown.up')
+>>>>>>> master
+
+    expect(Select.vm.typeAheadPointer).toEqual(0)
+  })
+})
