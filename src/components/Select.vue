@@ -154,23 +154,23 @@ export default {
 
   mixins: [pointerScroll, typeAheadPointer, ajax],
 
-    emits: [
-'open',
-'close',
-'update:modelValue',
-'search',
-'search:compositionstart',
-'search:compositionend',
-'search:keydown',
-'search:blur',
-'search:focus',
-'search:input',
-'option:created',
-'option:selecting',
-'option:selected',
-'option:deselecting',
-'option:deselected',
-],
+  emits: [
+    'open',
+    'close',
+    'update:modelValue',
+    'search',
+    'search:compositionstart',
+    'search:compositionend',
+    'search:keydown',
+    'search:blur',
+    'search:focus',
+    'search:input',
+    'option:created',
+    'option:selecting',
+    'option:selected',
+    'option:deselecting',
+    'option:deselected',
+  ],
 
   props: {
     /**
@@ -950,7 +950,7 @@ export default {
      * Make sure to update internal
      * value if prop changes outside
      */
-    this.modelValue(val) {
+    modelValue(val) {
       if (this.isTrackingValues) {
         this.setInternalValueFromOptions(val)
       }
@@ -1008,9 +1008,9 @@ export default {
       this.$emit('option:selecting', option)
       if (!this.isOptionSelected(option)) {
         if (this.taggable && !this.optionExists(option)) {
-            /* @TODO: could we use v-model instead of push-tags? */
-            this.$emit('option:created', option)
-            this.pushTag(option)
+          /* @TODO: could we use v-model instead of push-tags? */
+          this.$emit('option:created', option)
+          this.pushTag(option)
         }
         if (this.multiple) {
           option = this.selectedValue.concat(option)
@@ -1087,7 +1087,7 @@ export default {
         }
       }
 
-        this.$emit('update: modelValue', value)
+      this.$emit('update: modelValue', value)
     },
 
     /**
