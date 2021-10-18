@@ -14,11 +14,11 @@ export default {
       {
         title: "Old Man's War",
         author: {
-          firstName: "John",
-          lastName: "Scalzi"
-        }
-      }
-    ]
-  })
+          firstName: 'John',
+          lastName: 'Scalzi',
+        },
+      },
+    ],
+  }),
 }
 </script>

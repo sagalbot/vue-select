@@ -1,17 +1,14 @@
-const path = require('path');
-const webpack = require('webpack');
-const VueLoaderPlugin = require('vue-loader').VueLoaderPlugin;
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const VueLoaderPlugin = require('vue-loader').VueLoaderPlugin
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const env = process.env.NODE_ENV === 'production'
-  ? 'production'
-  : 'development';
+const env = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
-const devtool = env === 'production' ? 'source-map' : 'eval-source-map';
+const devtool = env === 'production' ? 'source-map' : 'eval-source-map'
 
-const extractOrInjectStyles = env !== 'production'
-  ? 'vue-style-loader'
-  : MiniCssExtractPlugin.loader;
+const extractOrInjectStyles =
+  env !== 'production' ? 'vue-style-loader' : MiniCssExtractPlugin.loader
 
 module.exports = {
   mode: env,
@@ -24,11 +21,11 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue'],
     alias: {
-      'src': path.resolve(__dirname, '../src'),
-      'assets': path.resolve(__dirname, '../docs/assets'),
-      'mixins': path.resolve(__dirname, '../src/mixins'),
-      'components': path.resolve(__dirname, '../src/components'),
-      'vue$': 'vue/dist/vue.esm.js',
+      src: path.resolve(__dirname, '../src'),
+      assets: path.resolve(__dirname, '../docs/assets'),
+      mixins: path.resolve(__dirname, '../src/mixins'),
+      components: path.resolve(__dirname, '../src/components'),
+      vue$: 'vue/dist/vue.esm.js',
     },
   },
   module: {
@@ -67,4 +64,4 @@ module.exports = {
     children: false,
     modules: false,
   },
-};
+}
