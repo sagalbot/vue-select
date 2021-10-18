@@ -163,6 +163,17 @@ createOption: {
 },
 ```
 
+## deselectFromDropdown <Badge text="v3.12.0+" />
+
+Determines whether the user can deselect an option by clicking 
+it from within the dropdown menu.
+
+```js
+deselectFromDropdown: {
+    type: Boolean,
+    default: false
+},
+```
 
 ## dir
 
@@ -189,7 +200,7 @@ disabled: {
 
 ## dropdownShouldOpen <Badge text="v3.12.0+" />
 
-Determines whether the dropdown should open. Used 
+Determines whether the dropdown should open. Used
 for overriding the default dropdown behaviour. Receives
 the vue-select instance as the single argument to the function.
 
@@ -250,7 +261,7 @@ if the option should be displayed.
 filterBy: {
   type: Function,
   default(option, label, search) {
-    return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
+    return (label || '').toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) > -1
   }
 },
 ```
@@ -339,6 +350,18 @@ labels when each `option` is an object.
 label: {
 	type: String,
 	default: "label"
+},
+```
+
+
+## loading
+
+ Show spinner if the component is in a loading state.
+
+```js
+loading: {
+	type: Boolean,
+	default: false
 },
 ```
 
@@ -558,12 +581,24 @@ transition: {
 },
 ```
 
+## uid
+
+A unique identifier used to generate IDs and DOM attributes.
+Must be unique for every instance of the component.
+
+```js
+uid: {
+  type: [String, Number],
+  default: () => uniqueId(),
+},
+```
+
 
 ## value
 
 Contains the currently selected value. Very similar to a
 `value` attribute on an `<input>`. You can listen for changes
-using 'change' event using v-on.
+using the 'input' event.
 
 ```js
 value: {

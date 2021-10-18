@@ -13,6 +13,10 @@ $vs-component-placeholder-color: inherit !default;
 $vs-state-active-bg: #5897fb !default;
 $vs-state-active-color: #fff !default;
 
+//  Deselect State
+$vs-state-deselect-bg: #fb5858 !default;
+$vs-state-deselect-color: #fff !default;
+
 //  Disabled State
 $vs-state-disabled-bg: rgb(248, 248, 248) !default;
 $vs-state-disabled-color: map_get($vs-colors, 'light') !default;

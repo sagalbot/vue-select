@@ -19,6 +19,7 @@ export default {
       required: true,
     },
     height: {
+      type: [String, Number],
       default: 250,
     },
   },

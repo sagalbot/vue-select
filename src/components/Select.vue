@@ -103,13 +103,15 @@
           role="option"
           class="vs__dropdown-option"
           :class="{
+            'vs__dropdown-option--deselect':
+              isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
             'vs__dropdown-option--highlight': index === typeAheadPointer,
             'vs__dropdown-option--disabled': !selectable(option),
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
-          @mousedown.prevent.stop="selectable(option) ? select(option) : null"
+          @click.prevent.stop="selectable(option) ? select(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
@@ -133,7 +135,7 @@
   </div>
 </template>
 
-<script type="text/babel">
+<script>
 import pointerScroll from '../mixins/pointerScroll'
 import typeAheadPointer from '../mixins/typeAheadPointer'
 import ajax from '../mixins/ajax'
@@ -152,31 +154,32 @@ export default {
 
   mixins: [pointerScroll, typeAheadPointer, ajax],
 
-  emits: [
-    'open',
-    'close',
-    'update:modelValue',
-    'search',
-    'search:compositionstart',
-    'search:compositionend',
-    'search:keydown',
-    'search:blur',
-    'search:focus',
-    'search:input',
-    'option:created',
-    'option:selecting',
-    'option:selected',
-    'option:deselecting',
-    'option:deselected',
-  ],
+    emits: [
+'open',
+'close',
+'update:modelValue',
+'search',
+'search:compositionstart',
+'search:compositionend',
+'search:keydown',
+'search:blur',
+'search:focus',
+'search:input',
+'option:created',
+'option:selecting',
+'option:selected',
+'option:deselecting',
+'option:deselected',
+],
 
   props: {
     /**
      * Contains the currently selected value. Very similar to a
      * `value` attribute on an <input>. You can listen for changes
-     * using 'change' event using v-on
-     * @type {Object||String||null}
+     * with the 'input' event.
+     * @type {Object|String|Array|null}
      */
+    // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
     modelValue: {},
 
     /**
@@ -221,6 +224,16 @@ export default {
     clearable: {
       type: Boolean,
       default: true,
+    },
+
+    /**
+     * Can the user deselect an option by clicking it from
+     * within the dropdown.
+     * @type {Boolean}
+     */
+    deselectFromDropdown: {
+      type: Boolean,
+      default: false,
     },
 
     /**
@@ -457,7 +470,11 @@ export default {
     filterBy: {
       type: Function,
       default(option, label, search) {
-        return (label || '').toLowerCase().indexOf(search.toLowerCase()) > -1
+        return (
+          (label || '')
+            .toLocaleLowerCase()
+            .indexOf(search.toLocaleLowerCase()) > -1
+        )
       },
     },
 
@@ -540,6 +557,7 @@ export default {
      * @type {String}
      * @default {null}
      */
+    // eslint-disable-next-line vue/require-default-prop
     inputId: {
       type: String,
     },
@@ -576,7 +594,7 @@ export default {
 
     /**
      * Query Selector used to find the search input
-     * when the 'search' slot is used.
+     * when the 'search' scoped slot is used.
      *
      * Must be a valid CSS selector string.
      *
@@ -593,6 +611,7 @@ export default {
      * for the search input. Can be used to implement
      * custom behaviour for key presses.
      */
+
     mapKeydown: {
       type: Function,
       /**
@@ -655,16 +674,25 @@ export default {
         return noDrop ? false : open && !mutableLoading
       },
     },
+
+    /**
+     * A unique identifier used to generate IDs in HTML.
+     * Must be unique for every instance of the component.
+     */
+    uid: {
+      type: [String, Number],
+      default: () => uniqueId(),
+    },
   },
 
   data() {
     return {
-      uid: uniqueId(),
       search: '',
       open: false,
       isComposing: false,
       pushedTags: [],
-      _value: [], // Internal value managed by Vue Select if no `modelValue` prop is passed
+      // eslint-disable-next-line vue/no-reserved-keys
+      _value: [], // Internal value managed by Vue Select if no `value` prop is passed
     }
   },
 
@@ -677,7 +705,7 @@ export default {
     isTrackingValues() {
       return (
         typeof this.modelValue === 'undefined' ||
-        this.$options.props.hasOwnProperty('reduce')
+        this.$options.propsData.hasOwnProperty('reduce')
       )
     },
 
@@ -807,6 +835,7 @@ export default {
       return {
         'vs--open': this.dropdownOpen,
         'vs--single': !this.multiple,
+        'vs--multiple': this.multiple,
         'vs--searching': this.searching && !this.noDrop,
         'vs--searchable': this.searchable && !this.noDrop,
         'vs--unsearchable': !this.searchable,
@@ -839,9 +868,9 @@ export default {
      * @return {String} Placeholder text
      */
     searchPlaceholder() {
-      if (this.isValueEmpty && this.placeholder) {
-        return this.placeholder
-      }
+      return this.isValueEmpty && this.placeholder
+        ? this.placeholder
+        : undefined
     },
 
     /**
@@ -921,7 +950,7 @@ export default {
      * Make sure to update internal
      * value if prop changes outside
      */
-    modelValue(val) {
+    this.modelValue(val) {
       if (this.isTrackingValues) {
         this.setInternalValueFromOptions(val)
       }
@@ -930,7 +959,6 @@ export default {
     /**
      * Always reset the value when
      * the multiple prop changes.
-     * @param  {Boolean} isMultiple
      * @return {void}
      */
     multiple() {
@@ -948,6 +976,9 @@ export default {
     if (typeof this.modelValue !== 'undefined' && this.isTrackingValues) {
       this.setInternalValueFromOptions(this.modelValue)
     }
+
+    // @TODO: should this be an option?
+    this.$on('option:created', this.pushTag)
   },
 
   methods: {
@@ -968,7 +999,8 @@ export default {
     },
 
     /**
-     * Select a given option.
+     * Select or deselect a given option.
+     * Allow deselect if clearable or if not the only selected option.
      * @param  {Object|String} option
      * @return {void}
      */
@@ -976,15 +1008,20 @@ export default {
       this.$emit('option:selecting', option)
       if (!this.isOptionSelected(option)) {
         if (this.taggable && !this.optionExists(option)) {
-          /* @TODO: could we use v-model instead of push-tags? */
-          this.$emit('option:created', option)
-          this.pushTag(option)
+            /* @TODO: could we use v-model instead of push-tags? */
+            this.$emit('option:created', option)
+            this.pushTag(option)
         }
         if (this.multiple) {
           option = this.selectedValue.concat(option)
         }
         this.updateValue(option)
         this.$emit('option:selected', option)
+      } else if (
+        this.deselectFromDropdown &&
+        (this.clearable || (this.multiple && this.selectedValue.length > 1))
+      ) {
+        this.deselect(option)
       }
       this.onAfterSelect(option)
     },
@@ -1050,7 +1087,7 @@ export default {
         }
       }
 
-      this.$emit('update:modelValue', value)
+        this.$emit('update: modelValue', value)
     },
 
     /**
@@ -1066,9 +1103,8 @@ export default {
 
       //  don't react to click on deselect/clear buttons,
       //  they dropdown state will be set in their click handlers
-
       const ignoredButtons = [
-        ...([this.$refs['deselectButtons']] || []),
+        ...(this.$refs['deselectButtons'] || []),
         ...([this.$refs['clearButton']] || []),
       ]
 
@@ -1099,6 +1135,13 @@ export default {
       return this.selectedValue.some((value) =>
         this.optionComparator(value, option)
       )
+    },
+
+    /**
+     *  Can the current option be removed via the dropdown?
+     */
+    isOptionDeselectable(option) {
+      return this.isOptionSelected(option) && this.deselectFromDropdown
     },
 
     /**
@@ -1156,6 +1199,7 @@ export default {
     /**
      * Delete the value on Delete keypress when there is no
      * text in the search input, & there's tags to delete
+     * @return {this.value}
      */
     maybeDeleteValue() {
       if (
@@ -1189,7 +1233,7 @@ export default {
 
     /**
      * Ensures that options are always
-     * passed as objects to slots.
+     * passed as objects to scoped slots.
      * @param option
      * @return {*}
      */
