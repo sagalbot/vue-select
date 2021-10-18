@@ -61,7 +61,7 @@ describe('Removing values', () => {
 
   it('should deselect a selected option when clicked and deselectFromDropdown is true', async () => {
     const Select = selectWithProps({
-      value: 'one',
+      modelValue: 'one',
       options: ['one', 'two', 'three'],
       deselectFromDropdown: true,
     })
@@ -78,7 +78,7 @@ describe('Removing values', () => {
 
   it('should not deselect a selected option when clicked if clearable is false', async () => {
     const Select = selectWithProps({
-      value: 'one',
+      modelValue: 'one',
       options: ['one', 'two', 'three'],
       clearable: false,
       deselectFromDropdown: true,
@@ -96,7 +96,7 @@ describe('Removing values', () => {
 
   it('should not deselect a selected option when clicked if deselectFromDropdown is false', async () => {
     const Select = selectWithProps({
-      value: 'one',
+      modelValue: 'one',
       options: ['one', 'two', 'three'],
       deselectFromDropdown: false,
     })
