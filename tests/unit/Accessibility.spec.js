@@ -33,3 +33,15 @@ describe('Search Slot Scope', () => {
     })
   })
 })
+
+describe('UID', () => {
+  it('works with strings', () => {
+    const Select = mountDefault({ uid: 'hello' })
+    expect(Select.find('#vshello__combobox').exists()).toBeTruthy()
+  })
+
+  it('works with numbers', () => {
+    const Select = mountDefault({ uid: 2 })
+    expect(Select.find('#vs2__combobox').exists()).toBeTruthy()
+  })
+})

@@ -12,6 +12,11 @@ export default {
         this.maybeAdjustScroll()
       }
     },
+    open(open) {
+      if (this.autoscroll && open) {
+        this.$nextTick(() => this.maybeAdjustScroll())
+      }
+    },
   },
 
   methods: {

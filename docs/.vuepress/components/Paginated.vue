@@ -1,12 +1,8 @@
 <template>
-  <v-select
-    :options="paginated"
-    :filterable="false"
-    @search="(query) => (search = query)"
-  >
+  <v-select :options="paginated" :filterable="false" @search="onSearch">
     <li slot="list-footer" class="pagination">
-      <button :disabled="!hasPrevPage" @click="offset -= 10">Prev</button>
-      <button :disabled="!hasNextPage" @click="offset += 10">Next</button>
+      <button :disabled="!hasPrevPage" @click="offset -= limit">Prev</button>
+      <button :disabled="!hasNextPage" @click="offset += limit">Next</button>
     </li>
   </v-select>
 </template>
@@ -22,22 +18,30 @@ export default {
   }),
   computed: {
     filtered() {
-      return this.countries.filter((country) => country.includes(this.search))
+      return this.countries.filter((country) =>
+        country.toLocaleLowerCase().includes(this.search.toLocaleLowerCase())
+      )
     },
     paginated() {
       return this.filtered.slice(this.offset, this.limit + this.offset)
     },
     hasNextPage() {
-      const nextOffset = this.offset + 10
+      const nextOffset = this.offset + this.limit
       return Boolean(
         this.filtered.slice(nextOffset, this.limit + nextOffset).length
       )
     },
     hasPrevPage() {
-      const prevOffset = this.offset - 10
+      const prevOffset = this.offset - this.limit
       return Boolean(
         this.filtered.slice(prevOffset, this.limit + prevOffset).length
       )
+    },
+  },
+  methods: {
+    onSearch(query) {
+      this.search = query
+      this.offset = 0
     },
   },
 }

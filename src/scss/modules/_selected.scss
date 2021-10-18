@@ -31,7 +31,8 @@
     background-color: transparent;
     border-color: transparent;
   }
-  &.vs--open .vs__selected {
+  &.vs--open .vs__selected,
+  &.vs--loading .vs__selected {
     position: absolute;
     opacity: .4;
   }

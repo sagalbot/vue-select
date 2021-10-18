@@ -7,8 +7,10 @@ export default {
         left,
         width,
       } = context.$refs.toggle.getBoundingClientRect()
+
       let scrollX = window.scrollX || window.pageXOffset
       let scrollY = window.scrollY || window.pageYOffset
+
       el.unbindPosition = context.calculatePosition(el, context, {
         width: width + 'px',
         left: scrollX + left + 'px',

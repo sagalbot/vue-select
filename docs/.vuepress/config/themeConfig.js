@@ -59,6 +59,7 @@ module.exports = {
         children: [
           ['guide/keydown', 'Keydown Events'],
           ['guide/positioning', 'Dropdown Position'],
+          ['guide/opening', 'Dropdown Opening'],
           ['guide/filtering', 'Option Filtering'],
         ],
       },

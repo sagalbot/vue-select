@@ -51,12 +51,65 @@ describe('Removing values', () => {
   it('will not emit input event if value has not changed with backspace', () => {
     const Select = mountDefault()
     Select.vm.$data._value = 'one'
-    Select.find({ ref: 'search' }).trigger('keydown.backspace')
+
+    Select.findComponent({ ref: 'search' }).trigger('keydown.backspace')
     expect(Select.emitted().input.length).toBe(1)
 
-    Select.find({ ref: 'search' }).trigger('keydown.backspace')
-    Select.find({ ref: 'search' }).trigger('keydown.backspace')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.backspace')
+    Select.findComponent({ ref: 'search' }).trigger('keydown.backspace')
     expect(Select.emitted().input.length).toBe(1)
+  })
+
+  it('should deselect a selected option when clicked and deselectFromDropdown is true', async () => {
+    const Select = selectWithProps({
+      value: 'one',
+      options: ['one', 'two', 'three'],
+      deselectFromDropdown: true,
+    })
+    const deselect = spyOn(Select.vm, 'deselect')
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    Select.find('.vs__dropdown-option--selected').trigger('click')
+    await Select.vm.$nextTick()
+
+    expect(deselect).toHaveBeenCalledWith('one')
+  })
+
+  it('should not deselect a selected option when clicked if clearable is false', async () => {
+    const Select = selectWithProps({
+      value: 'one',
+      options: ['one', 'two', 'three'],
+      clearable: false,
+      deselectFromDropdown: true,
+    })
+    const deselect = spyOn(Select.vm, 'deselect')
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    Select.find('.vs__dropdown-option--selected').trigger('click')
+    await Select.vm.$nextTick()
+
+    expect(deselect).not.toHaveBeenCalledWith('one')
+  })
+
+  it('should not deselect a selected option when clicked if deselectFromDropdown is false', async () => {
+    const Select = selectWithProps({
+      value: 'one',
+      options: ['one', 'two', 'three'],
+      deselectFromDropdown: false,
+    })
+    const deselect = spyOn(Select.vm, 'deselect')
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    Select.find('.vs__dropdown-option--selected').trigger('click')
+    await Select.vm.$nextTick()
+
+    expect(deselect).not.toHaveBeenCalledWith('one')
   })
 
   describe('Clear button', () => {
