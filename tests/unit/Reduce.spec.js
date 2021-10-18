@@ -2,6 +2,19 @@ import { mount, shallowMount } from '@vue/test-utils'
 import VueSelect from '../../src/components/Select'
 
 describe('When reduce prop is defined', () => {
+  it('knows when the reduce prop has been supplied', async () => {
+    const Select = shallowMount(VueSelect, {
+      props: {
+        reduce: (option) => option.value,
+        modelValue: 'foo',
+        options: [{ label: 'This is Foo', value: 'foo' }],
+      },
+    })
+    await Select.vm.$nextTick()
+
+    expect(Select.vm.isReducingValues).toBeTruthy()
+  })
+
   it('can accept an array of objects and pre-selected value (single)', () => {
     const Select = shallowMount(VueSelect, {
       props: {

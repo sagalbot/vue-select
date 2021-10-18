@@ -698,14 +698,20 @@ export default {
 
   computed: {
     /**
+     * Determine if a custom reduce prop has
+     * been supplied to the component.
+     */
+    isReducingValues() {
+      return this.$options.props.reduce.default !== this.$props.reduce
+    },
+
+    /**
      * Determine if the component needs to
      * track the state of values internally.
      * @return {boolean}
      */
     isTrackingValues() {
-      const usingReduce = this.reduce === this.$options.props.reduce
-
-      return typeof this.modelValue === 'undefined' || usingReduce
+      return typeof this.modelValue === 'undefined' || this.isReducingValues
     },
 
     /**
