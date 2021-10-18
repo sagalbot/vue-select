@@ -703,10 +703,9 @@ export default {
      * @return {boolean}
      */
     isTrackingValues() {
-      return (
-        typeof this.modelValue === 'undefined' ||
-        this.$options.propsData.hasOwnProperty('reduce')
-      )
+      const usingReduce = this.reduce === this.$options.props.reduce
+
+      return typeof this.modelValue === 'undefined' || usingReduce
     },
 
     /**
@@ -976,9 +975,6 @@ export default {
     if (typeof this.modelValue !== 'undefined' && this.isTrackingValues) {
       this.setInternalValueFromOptions(this.modelValue)
     }
-
-    // @TODO: should this be an option?
-    this.$on('option:created', this.pushTag)
   },
 
   methods: {
