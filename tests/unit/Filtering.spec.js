@@ -1,12 +1,13 @@
 import { shallowMount } from "@vue/test-utils";
 import VueSelect from "../../src/components/Select";
+import { mountDefault } from '../helpers.js';
 
 describe("Filtering Options", () => {
   it("should update the search value when the input element receives the 'input' event", () => {
     const Select = shallowMount(VueSelect, {
       propsData: { options: ["foo", "bar", "baz"] }
     });
-    
+
     const input = Select.find('.vs__search');
     input.element.value = 'a'
     input.trigger('input')
@@ -83,4 +84,17 @@ describe("Filtering Options", () => {
     Select.vm.search = "1";
     expect(Select.vm.filteredOptions).toEqual([1, 10]);
   });
+
+
+  it('will not filter when filterable is false and taggable is true', () => {
+    const Select = mountDefault(
+      {
+        filterable: false,
+        taggable: true,
+      },
+      ['one', 'two', 'three']
+    )
+    Select.vm.search = 'one'
+    expect(Select.vm.filteredOptions).toEqual(['one', 'two', 'three'])
+  })
 });
