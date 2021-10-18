@@ -6,7 +6,7 @@
         class="vs__search"
         v-bind="attributes"
         v-on="events"
-      >
+      />
     </template>
   </v-select>
 </template>

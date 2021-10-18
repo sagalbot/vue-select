@@ -1,8 +1,8 @@
 <template>
   <div>
     <v-select
-            :options="['Canada', 'United States']"
-            :components="{OpenIndicator}"
+      :options="['Canada', 'United States']"
+      :components="{ OpenIndicator }"
     />
   </div>
 </template>
@@ -11,8 +11,8 @@
 export default {
   data: () => ({
     OpenIndicator: {
-      render: createElement => createElement('span', '🔽'),
+      render: (createElement) => createElement('span', '🔽'),
     },
   }),
-};
+}
 </script>

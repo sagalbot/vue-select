@@ -1,6 +1,6 @@
-const TerserPlugin = require('terser-webpack-plugin');
-const merge = require('webpack-merge');
-const baseWebpackConfig = require('./webpack.base.conf');
+const TerserPlugin = require('terser-webpack-plugin')
+const merge = require('webpack-merge')
+const baseWebpackConfig = require('./webpack.base.conf')
 
 module.exports = merge(baseWebpackConfig, {
   entry: './src/index.js',
@@ -8,10 +8,10 @@ module.exports = merge(baseWebpackConfig, {
     filename: 'vue-select.js',
     library: 'VueSelect',
     libraryTarget: 'umd',
-    globalObject: 'typeof self !== \'undefined\' ? self : this',
+    globalObject: "typeof self !== 'undefined' ? self : this",
   },
   externals: {
-    vue: 'vue'
+    vue: 'vue',
   },
   optimization: {
     minimizer: [
@@ -19,5 +19,5 @@ module.exports = merge(baseWebpackConfig, {
         sourceMap: true,
       }),
     ],
-  }
-});
+  },
+})

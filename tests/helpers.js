@@ -1,6 +1,6 @@
-import { shallowMount } from "@vue/test-utils";
-import VueSelect from "../src/components/Select.vue";
-import Vue from 'vue';
+import { shallowMount } from '@vue/test-utils'
+import VueSelect from '../src/components/Select.vue'
+import Vue from 'vue'
 
 /**
  * Trigger a submit event on the search
@@ -11,10 +11,10 @@ import Vue from 'vue';
  */
 export const searchSubmit = (Wrapper, searchText = false) => {
   if (searchText) {
-    Wrapper.vm.search = searchText;
+    Wrapper.vm.search = searchText
   }
-  Wrapper.get("input").trigger("keydown.enter")
-};
+  Wrapper.get('input').trigger('keydown.enter')
+}
 
 /**
  * Focus the input, enter some search text, hit return.
@@ -23,14 +23,14 @@ export const searchSubmit = (Wrapper, searchText = false) => {
  * @return {Promise<void>}
  */
 export const selectTag = async (Wrapper, searchText) => {
-  Wrapper.vm.$refs.search.focus();
-  await Wrapper.vm.$nextTick();
+  Wrapper.vm.$refs.search.focus()
+  await Wrapper.vm.$nextTick()
 
-  Wrapper.vm.search = searchText;
-  await Wrapper.vm.$nextTick();
+  Wrapper.vm.search = searchText
+  await Wrapper.vm.$nextTick()
 
-  await Wrapper.get("input").trigger("keydown.enter");
-};
+  await Wrapper.get('input').trigger('keydown.enter')
+}
 
 /**
  * Create a new VueSelect instance with
@@ -39,8 +39,8 @@ export const selectTag = async (Wrapper, searchText) => {
  * @returns {Wrapper<Vue>}
  */
 export const selectWithProps = (props = {}) => {
-  return shallowMount(VueSelect, { props });
-};
+  return shallowMount(VueSelect, { props })
+}
 
 /**
  * Returns a Wrapper with a v-select component.
@@ -55,9 +55,8 @@ export const mountDefault = (props = {}, options = {}) => {
       ...props,
     },
     ...options,
-  });
-};
-
+  })
+}
 
 /**
  * Returns a v-select component directly.
@@ -67,11 +66,12 @@ export const mountDefault = (props = {}, options = {}) => {
  */
 export const mountWithoutTestUtils = (props = {}, options = {}) => {
   return createApp({
-    render: createEl => createEl('vue-select', {
-      ref: 'select',
-      props: {options: ['one', 'two', 'three'], ...props},
-      ...options
-    }),
-    components: {VueSelect},
-  }).mount().$refs.select;
-};
+    render: (createEl) =>
+      createEl('vue-select', {
+        ref: 'select',
+        props: { options: ['one', 'two', 'three'], ...props },
+        ...options,
+      }),
+    components: { VueSelect },
+  }).mount().$refs.select
+}
