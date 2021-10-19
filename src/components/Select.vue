@@ -697,16 +697,17 @@ export default {
   },
 
   computed: {
+    isReducingValues() {
+      return this.$props.reduce !== this.$options.props.reduce.default
+    },
+
     /**
      * Determine if the component needs to
      * track the state of values internally.
      * @return {boolean}
      */
     isTrackingValues() {
-      return (
-        typeof this.modelValue === 'undefined' ||
-        this.$options.props.hasOwnProperty('reduce')
-      )
+      return typeof this.modelValue === 'undefined' || this.isReducingValues
     },
 
     /**
