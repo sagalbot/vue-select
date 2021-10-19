@@ -606,14 +606,21 @@ export default {
     },
 
     /**
-     * Append the dropdown element to the end of the element by selector
-     * and size/position it dynamically. Use it if you have
-     * overflow or z-index issues.
-     * @type {String}
+     * Append the dropdown element to a given element. Accepts
+     * a selector that will be used in `document.querySelector(appendTo)`.
+     *
+     * You may also pass an HTML element directly.
+     *
+     * @type {HTMLElement|String}
      */
     appendTo: {
-      type: String,
       default: null,
+      validator(appendTo) {
+        if (typeof appendTo === 'object') {
+          return typeof appendTo.appendChild === 'function'
+        }
+        return typeof appendTo === 'string'
+      },
     },
 
     /**

@@ -2,7 +2,9 @@ export default {
   inserted(el, bindings, { context }) {
     const container = (() => {
       if (context.appendTo) {
-        return document.querySelector(context.appendTo)
+        return typeof context.appendTo === 'object'
+          ? context.appendTo
+          : document.querySelector(context.appendTo)
       }
       if (context.appendToBody) {
         return document.body
