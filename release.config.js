@@ -1,6 +1,6 @@
 module.exports = {
   release: {
-    branch: 'master',
+    branch: ['master', { name: 'next', prerelease: true }],
   },
   plugins: [
     '@semantic-release/npm',
