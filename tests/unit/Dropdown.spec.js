@@ -1,5 +1,7 @@
-import { selectWithProps } from '../helpers'
+import { mountDefault, selectWithProps } from '../helpers'
 import OpenIndicator from '../../src/components/OpenIndicator'
+import { mount } from '@vue/test-utils'
+import VueSelect from '../../src/components/Select.vue'
 
 const preventDefault = jest.fn()
 
@@ -197,5 +199,43 @@ describe('Toggling Dropdown', () => {
 
     expect(Select.classes('vs--open')).toBeTruthy()
     expect(Select.find('.vs__dropdown-menu li')).toBeTruthy()
+  })
+})
+
+describe('Appending dropdown to containers', () => {
+  it('can append the dropdown to the body', async () => {
+    const Select = mount(VueSelect, {
+      propsData: { appendToBody: true },
+      attachTo: document.body,
+    })
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    expect(document.body.children.length).toEqual(2)
+    expect(document.body.children[0]).toBe(Select.vm.$el)
+    expect(document.body.children[1]).toBe(Select.vm.$refs.dropdownMenu)
+
+    Select.destroy()
+  })
+
+  it('can append the dropdown to a custom element via string', async () => {
+    const div = document.createElement('div')
+    div.id = 'root'
+    document.body.appendChild(div)
+
+    const Select = mount(VueSelect, {
+      propsData: { appendTo: '#root' },
+      attachTo: document.body,
+    })
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    expect(document.body.children.length).toEqual(2)
+    expect(document.body.children[1]).toBe(Select.vm.$el)
+    expect(div.children[0]).toBe(Select.vm.$refs.dropdownMenu)
+
+    Select.destroy()
   })
 })
