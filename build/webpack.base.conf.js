@@ -25,7 +25,7 @@ module.exports = {
       assets: path.resolve(__dirname, '../docs/assets'),
       mixins: path.resolve(__dirname, '../src/mixins'),
       components: path.resolve(__dirname, '../src/components'),
-      vue$: 'vue/dist/vue.esm-bundler.js',
+      vue$: 'vue/dist/vue.runtime.esm-bundler.js',
     },
   },
   module: {
