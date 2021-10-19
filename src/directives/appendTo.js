@@ -6,10 +6,8 @@ export default {
           ? context.appendTo
           : document.querySelector(context.appendTo)
       }
-      if (context.appendToBody) {
-        return document.body
-      }
-      return null
+
+      return context.appendToBody ? document.body : false
     })()
 
     if (container) {

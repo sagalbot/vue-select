@@ -273,4 +273,19 @@ describe('Appending dropdown to containers', () => {
     Select.destroy()
     div.remove()
   })
+
+  it('will not append the dropdown unless appendToBody or appendTo has been set', async () => {
+    const Select = mount(VueSelect, {
+      propsData: { appendToBody: false },
+      attachTo: document.body,
+    })
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    expect(document.body.children.length).toEqual(1)
+    expect(document.body.children[0]).toBe(Select.vm.$el)
+
+    Select.destroy()
+  })
 })
