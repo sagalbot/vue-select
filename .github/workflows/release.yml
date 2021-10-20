@@ -1,7 +1,9 @@
 name: Release
 on:
   push:
-    branches: [master, next]
+    branches:
+      - master
+      - next
 
 jobs:
   release:
