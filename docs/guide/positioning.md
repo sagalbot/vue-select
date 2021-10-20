@@ -9,20 +9,26 @@ the viewport. If you need more fine grain control, you can use calculated positi
 
 ## Calculated <Badge text="v3.7.0+" />
 
-If you want more control over how the dropdown is rendered, or if you're running into z-index issues,
-you may use the `appendToBody` boolean prop. When enabled, Vue Select will append the dropdown to
-the document, outside of the `.v-select` container, and position it with Javscript.
+If you want more control over how the dropdown is rendered, or if you're running into z-index
+issues, you may use the `appendTo` prop. `appendTo` accepts a string that will be used as a
+selector, or may pass an `HTMLElement` directly. When provided with a selector or element, Vue
+Select will append the dropdown to the element, outside of the `.v-select` container, and position
+it with Javascript instead of CSS.
 
-When `appendToBody` is true, the positioning will be handled by the `calculatePosition` prop. This
+When `appendTo` has been set, the positioning will be handled by the `calculatePosition` prop. This
 function is responsible for setting top/left absolute positioning values for the dropdown. The
 default implementation places the dropdown in the same position that it would normally appear.
+
+<AppendToBody />
+
+<<< @/.vuepress/components/AppendToBody.vue{25-59}
 
 ## Popper.js Integration <Badge text="v3.7.0+" />
 
 [Popper.js](https://popper.js.org/) is an awesome, 3kb utility for calculating positions of just
 about any DOM element relative to another.
 
-By using the `appendToBody` and `calculatePosition` props, we're able to integrate directly with
+By using the `appendTo` and `calculatePosition` props, we're able to integrate directly with
 popper to calculate positioning for us.
 
 <PositionedWithPopper />
