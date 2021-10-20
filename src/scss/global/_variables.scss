@@ -1,11 +1,12 @@
 $vs-colors: (
-        lightest: rgba(60, 60, 60, 0.26),
-        light: rgba(60, 60, 60, 0.5),
-        dark: #333,
-        darkest: rgba(0, 0, 0, .15),
+    lightest: rgba(60, 60, 60, 0.26),
+    light: rgba(60, 60, 60, 0.5),
+    dark: #333,
+    darkest: rgba(0, 0, 0, 0.15),
 ) !default;
 
 //  Global Component Variables
+$vs-component-bg: none !default;
 $vs-component-line-height: 1.4 !default;
 $vs-component-placeholder-color: inherit !default;
 
