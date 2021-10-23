@@ -198,6 +198,27 @@ disabled: {
 },
 ```
 
+## dropdownOptionWrap <Badge text="v3.17.0+ />
+
+Determines how to handle option labels that are
+wider than the dropdown itself. 
+
+Accepts:
+- `nowrap`: **default** don't wrap the option, introduce horizontal scrollbars
+- `wrap`: wrap the option onto the next line, no scrollbarrs
+- `truncate`: truncate text with ..., no scrollbars
+
+
+```js
+dropdownOptionWrap: {
+  type: String,
+  default: 'nowrap',
+  validator(wrap) {
+    return ['nowrap', 'wrap', 'truncate'].includes(wrap)
+  },
+},
+```
+
 ## dropdownShouldOpen <Badge text="v3.12.0+" />
 
 Determines whether the dropdown should open. Used

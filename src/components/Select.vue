@@ -102,13 +102,16 @@
           :key="getOptionKey(option)"
           role="option"
           class="vs__dropdown-option"
-          :class="{
-            'vs__dropdown-option--deselect':
-              isOptionDeselectable(option) && index === typeAheadPointer,
-            'vs__dropdown-option--selected': isOptionSelected(option),
-            'vs__dropdown-option--highlight': index === typeAheadPointer,
-            'vs__dropdown-option--disabled': !selectable(option),
-          }"
+          :class="[
+            `vs__dropdown-option--${dropdownOptionWrap}`,
+            {
+              'vs__dropdown-option--deselect':
+                isOptionDeselectable(option) && index === typeAheadPointer,
+              'vs__dropdown-option--selected': isOptionSelected(option),
+              'vs__dropdown-option--highlight': index === typeAheadPointer,
+              'vs__dropdown-option--disabled': !selectable(option),
+            },
+          ]"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
           @click.prevent.stop="selectable(option) ? select(option) : null"
@@ -556,6 +559,21 @@ export default {
     },
 
     /**
+     * Determines how to handle option labels that are
+     * wider than the dropdown itself. Accepts:
+     * - nowrap: don't wrap the option, introduce horizontal scrollbars
+     * - wrap: wrap the option onto the next line
+     * - truncate: truncate text with ...
+     */
+    dropdownOptionWrap: {
+      type: String,
+      default: 'nowrap',
+      validator(wrap) {
+        return ['nowrap', 'wrap', 'truncate'].includes(wrap)
+      },
+    },
+
+    /**
      * When true, hitting the 'tab' key will select the current select value
      * @type {Boolean}
      * @deprecated since 3.3 - use selectOnKeyCodes instead
@@ -593,7 +611,6 @@ export default {
      * for the search input. Can be used to implement
      * custom behaviour for key presses.
      */
-
     mapKeydown: {
       type: Function,
       /**
@@ -818,6 +835,8 @@ export default {
         'vs--open': this.dropdownOpen,
         'vs--single': !this.multiple,
         'vs--multiple': this.multiple,
+        'vs--empty': this.selectedValue.length === 0,
+        'vs--not-empty': this.selectedValue.length !== 0,
         'vs--searching': this.searching && !this.noDrop,
         'vs--searchable': this.searchable && !this.noDrop,
         'vs--unsearchable': !this.searchable,

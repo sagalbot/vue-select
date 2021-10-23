@@ -1,26 +1,41 @@
 /* List Items */
 .vs__dropdown-option {
-  line-height: 1.42857143; /* Normalize line height */
-  display: block;
-  padding: 3px 20px;
-  clear: both;
-  color: #333; /* Overrides most CSS frameworks */
-  white-space: nowrap;
-  cursor: pointer;
+    line-height: 1.42857143; /* Normalize line height */
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    color: #333; /* Overrides most CSS frameworks */
+    cursor: pointer;
+}
+
+.vs__dropdown-option--wrap {
+    white-space: normal;
+    line-break: loose;
+    overflow-wrap: anywhere;
+}
+
+.vs__dropdown-option--nowrap {
+    white-space: nowrap;
+}
+
+.vs__dropdown-option--truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .vs__dropdown-option--highlight {
-  background: $vs-state-active-bg;
-  color: $vs-state-active-color;
+    background: $vs-state-active-bg;
+    color: $vs-state-active-color;
 }
 
 .vs__dropdown-option--deselect {
-  background: $vs-state-deselect-bg;
-  color: $vs-state-deselect-color;
+    background: $vs-state-deselect-bg;
+    color: $vs-state-deselect-color;
 }
 
 .vs__dropdown-option--disabled {
-  background: inherit;
-  color: $vs-state-disabled-color;
-  cursor: inherit;
+    background: inherit;
+    color: $vs-state-disabled-color;
+    cursor: inherit;
 }
