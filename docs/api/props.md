@@ -353,6 +353,29 @@ label: {
 },
 ```
 
+## locale <Badge text="v3.13.0+" />
+
+The locale function receives the default english translations object for the component. This allows
+you to override the whole object, or change just the values you need. Can be used to localize the
+component to different languages, or just replace text to your liking throughout the component.
+
+See [localization guide](/guide/localization.html) for more details and examples.
+
+```js
+/**
+ * @since 3.13.0
+ * @see https://vue-select.org/guide/localization.html
+ */
+locale: {
+  type: Function,
+  /**
+   * @return {Object}
+   * @param localeStrings
+   */
+  default: (localeStrings) => localeStrings,
+},
+```
+
 
 ## loading
 

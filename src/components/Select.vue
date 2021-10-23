@@ -12,7 +12,7 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
-      aria-label="Search for option"
+      :aria-label="i18n.search.ariaLabel"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
@@ -37,8 +37,10 @@
               :disabled="disabled"
               type="button"
               class="vs__deselect"
-              :title="`Deselect ${getOptionLabel(option)}`"
-              :aria-label="`Deselect ${getOptionLabel(option)}`"
+              :title="i18n.deselectButton.title(getOptionLabel(option))"
+              :aria-label="
+                i18n.deselectButton.ariaLabel(getOptionLabel(option))
+              "
               @click="deselect(option)"
             >
               <component :is="childComponents.Deselect" />
@@ -62,8 +64,8 @@
           :disabled="disabled"
           type="button"
           class="vs__clear"
-          title="Clear Selected"
-          aria-label="Clear Selected"
+          :title="i18n.clearButton.title"
+          :aria-label="i18n.clearButton.ariaLabel"
           @click="clearSelection"
         >
           <component :is="childComponents.Deselect" />
@@ -78,7 +80,9 @@
         </slot>
 
         <slot name="spinner" v-bind="scope.spinner">
-          <div v-show="mutableLoading" class="vs__spinner">Loading...</div>
+          <div v-show="mutableLoading" class="vs__spinner">
+            {{ i18n.spinner.text }}
+          </div>
         </slot>
       </div>
     </div>
@@ -118,9 +122,9 @@
           </slot>
         </li>
         <li v-if="filteredOptions.length === 0" class="vs__no-options">
-          <slot name="no-options" v-bind="scope.noOptions"
-            >Sorry, no matching options.</slot
-          >
+          <slot name="no-options" v-bind="scope.noOptions">
+            {{ i18n.noOptions.text }}
+          </slot>
         </li>
         <slot name="list-footer" v-bind="scope.listFooter" />
       </ul>
@@ -136,9 +140,10 @@
 </template>
 
 <script>
-import pointerScroll from '../mixins/pointerScroll'
-import typeAheadPointer from '../mixins/typeAheadPointer'
-import ajax from '../mixins/ajax'
+import { locale as english } from '../locales/en.js'
+import ajax from '../mixins/ajax.js'
+import pointerScroll from '../mixins/pointerScroll.js'
+import typeAheadPointer from '../mixins/typeAheadPointer.js'
 import childComponents from './childComponents'
 import appendToBody from '../directives/appendToBody'
 import sortAndStringify from '../utility/sortAndStringify'
@@ -188,6 +193,23 @@ export default {
       default() {
         return []
       },
+    },
+
+    /**
+     * The locale function receives the default english translations for the
+     * component. This allows you to override the whole object, or change
+     * just the values you need.
+     *
+     * @since 3.13.0
+     * @see https://vue-select.org/guide/localization.html
+     */
+    locale: {
+      type: Function,
+      /**
+       * @return {Object}
+       * @param {Object} localeStrings
+       */
+      default: (localeStrings) => localeStrings,
     },
 
     /**
@@ -679,6 +701,16 @@ export default {
   },
 
   computed: {
+    /**
+     * Return the strings that will be used throughout the
+     * component for labels, titles, text.
+     *
+     * @return {Object} locale
+     */
+    i18n() {
+      return this.locale(english)
+    },
+
     /**
      * Determine if the component needs to
      * track the state of values internally.
