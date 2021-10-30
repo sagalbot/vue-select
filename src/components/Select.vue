@@ -17,7 +17,7 @@
     >
       <div ref="selectedOptions" class="vs__selected-options">
         <slot
-          v-for="option in selectedValue"
+          v-for="(option, i) in selectedValue"
           name="selected-option-container"
           :option="normalizeOptionForSlot(option)"
           :deselect="deselect"
@@ -34,6 +34,7 @@
             <button
               v-if="multiple"
               ref="deselectButtons"
+              :ref="el => deselectButtons[i] = el"
               :disabled="disabled"
               type="button"
               class="vs__deselect"
@@ -693,6 +694,7 @@ export default {
       pushedTags: [],
       // eslint-disable-next-line vue/no-reserved-keys
       _value: [], // Internal value managed by Vue Select if no `value` prop is passed
+      deselectButtons: []
     }
   },
 
@@ -1101,7 +1103,7 @@ export default {
       //  don't react to click on deselect/clear buttons,
       //  they dropdown state will be set in their click handlers
       const ignoredButtons = [
-        ...(this.$refs['deselectButtons'] || []),
+        ...(this.deselectButtons || []),
         ...([this.$refs['clearButton']] || []),
       ]
 
