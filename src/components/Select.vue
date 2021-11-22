@@ -1101,7 +1101,7 @@ export default {
       //  don't react to click on deselect/clear buttons,
       //  they dropdown state will be set in their click handlers
       const ignoredButtons = [
-        ...(this.$refs['deselectButtons'] || []),
+        ...([this.$refs['deselectButtons']] || []),
         ...([this.$refs['clearButton']] || []),
       ]
 
