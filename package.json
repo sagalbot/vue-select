@@ -22,7 +22,8 @@
     "eslint": "eslint '{**/*,*}.{js,ts,jsx,tsx,vue}'",
     "eslint:fix": "npm run eslint -- --fix",
     "semantic-release": "semantic-release",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "postinstall": "cd ./node_modules/vue-select && npm install && npm run build"
   },
   "repository": {
     "type": "git",
