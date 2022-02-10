@@ -66,7 +66,7 @@
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
     "mini-css-extract-plugin": "^0.5.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "postcss-loader": "^3.0.0",
     "postcss-scss": "^2.0.0",
     "prettier": "2.2.1",
