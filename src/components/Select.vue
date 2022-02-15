@@ -952,6 +952,9 @@ export default {
 
     open(isOpen) {
       this.$emit(isOpen ? 'open' : 'close')
+      if (Boolean(this.$data._value) && isOpen) {
+        this.highlightingSelectedItem()
+      }
     },
   },
 
@@ -1335,6 +1338,31 @@ export default {
 
       if (typeof handlers[e.keyCode] === 'function') {
         return handlers[e.keyCode](e)
+      }
+    },
+
+    /**
+     * highlighting selected item handler.
+     * @see https://github.com/sagalbot/vue-select/issues/1322
+     * @return {void}
+     */
+    highlightingSelectedItem() {
+      if (Array.isArray(this.$data._value) && this.$data._value.length > 0) {
+        this.typeAheadPointer = this.filteredOptions.findIndex(
+          (item) =>
+            item[this.label] ===
+            this.$data._value[this.$data._value.length - 1][this.label]
+        )
+      } else if (
+        !Array.isArray(this.$data._value) &&
+        typeof this.$data._value === 'object' &&
+        Object.keys(this.$data._value).length > 0
+      ) {
+        this.typeAheadPointer = this.filteredOptions.findIndex(
+          (item) => item[this.label] === this.$data._value[this.label]
+        )
+      } else {
+        this.typeAheadPointer = -1
       }
     },
   },
