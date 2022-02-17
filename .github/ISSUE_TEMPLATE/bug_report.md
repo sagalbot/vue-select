@@ -1,38 +1,27 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Bug Report
+about: Create a bug report to help fix an issue with the component.
 title: ''
-labels: ''
+labels: 'bug'
 assignees: ''
-
 ---
+
+> Please respect maintainers time by filling in these sections. Your issue will likely be closed without this information.
+
+- Vue Version: 
+- Vue Select Version: 
 
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Reproduction Link**
+A link to a reproduction of the bug. This is a huge help.
+
+**Steps To Reproduce**
+Outline the steps to reproduce the bug.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
-
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
