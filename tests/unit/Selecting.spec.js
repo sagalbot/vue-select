@@ -64,29 +64,6 @@ describe('VS - Selecting Values', () => {
     expect(spy).toHaveBeenCalledWith()
   })
 
-  // see https://github.com/sagalbot/vue-select/issues/1322
-  it('opening dropdown will highlight selected option', async () => {
-    const Select = shallowMount(VueSelect, {
-      propsData: {
-        selectOnTab: true,
-        value: { label: 'This is Bar', value: 'bar' },
-        options: [
-          { label: 'This is Foo', value: 'foo' },
-          { label: 'This is Bar', value: 'bar' },
-        ],
-      },
-    })
-
-    Select.vm.typeAheadPointer = 0
-
-    Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
-    await Select.vm.$nextTick()
-
-    expect(Select.vm.selectedValue).toEqual([
-      { label: 'This is Bar', value: 'bar' },
-    ])
-  })
-
   it('can deselect a pre-selected object', () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
