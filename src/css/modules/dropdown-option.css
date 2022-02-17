@@ -10,13 +10,13 @@
 }
 
 .vs__dropdown-option--highlight {
-    background: var(--vs-state-active-bg);
-    color: var(--vs-state-active-color);
+    background: var(--vs-dropdown-option--active-bg);
+    color: var(--vs-dropdown-option--active-color);
 }
 
 .vs__dropdown-option--deselect {
-    background: var(--vs-state-deselect-bg);
-    color: var(--vs-state-deselect-color);
+    background: var(--vs-dropdown-option--deselect-bg);
+    color: var(--vs-dropdown-option--deselect-color);
 }
 
 .vs__dropdown-option--disabled {

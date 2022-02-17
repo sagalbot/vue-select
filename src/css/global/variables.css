@@ -5,20 +5,12 @@
     --vs-colors--darkest: rgba(0, 0, 0, 0.15);
 
     /* Search Input */
-    --vs-input-color: #333;
-    --vs-input-placeholder-color: inherit;
+    --vs-search-input-color: inherit;
+    --vs-search-input-placeholder-color: inherit;
 
     /* Font */
     --vs-font-size: 1rem;
     --vs-line-height: 1.4;
-
-    /* Active State */
-    --vs-state-active-bg: #5897fb;
-    --vs-state-active-color: #fff;
-
-    /* Deselect State */
-    --vs-state-deselect-bg: #fb5858;
-    --vs-state-deselect-color: #fff;
 
     /* Disabled State */
     --vs-state-disabled-bg: rgb(248, 248, 248);
@@ -32,7 +24,7 @@
     --vs-border-style: solid;
     --vs-border-radius: 4px;
 
-    /* Actions houses the component controls */
+    /* Actions: house the component controls */
     --vs-actions-padding: 4px 6px 0 3px;
 
     /* Component Controls: Clear, Open Indicator */
@@ -49,6 +41,7 @@
 
     /* Dropdown */
     --vs-dropdown-bg: #fff;
+    --vs-dropdown-color: inherit;
     --vs-dropdown-z-index: 1000;
     --vs-dropdown-min-width: 160px;
     --vs-dropdown-max-height: 350px;
@@ -56,8 +49,16 @@
 
     /* Options */
     --vs-dropdown-option-bg: #000;
-    --vs-dropdown-option-color: #333;
+    --vs-dropdown-option-color: var(--vs-dropdown-color);
     --vs-dropdown-option-padding: 3px 20px;
+
+    /* Active State */
+    --vs-dropdown-option--active-bg: #5897fb;
+    --vs-dropdown-option--active-color: #fff;
+
+    /* Deselect State */
+    --vs-dropdown-option--deselect-bg: #fb5858;
+    --vs-dropdown-option--deselect-color: #fff;
 
     /* Transitions */
     --vs-transition-timing-function: cubic-bezier(1, -0.115, 0.975, 0.855);

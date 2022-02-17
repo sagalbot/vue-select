@@ -4,7 +4,7 @@
     display: block;
     box-sizing: border-box;
     position: absolute;
-    /* -{#$border-width} here ensures the left and right borders of the dropdown appear flush with the toggle. */
+    /* calc to ensure the left and right borders of the dropdown appear flush with the toggle. */
     top: calc(100% - var(--vs-border-width));
     left: 0;
     z-index: var(--vs-dropdown-z-index);
@@ -21,6 +21,7 @@
     text-align: left;
     list-style: none;
     background: var(--vs-dropdown-bg);
+    color: var(--vs-dropdown-color);
 }
 
 .vs__no-options {

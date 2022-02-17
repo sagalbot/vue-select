@@ -18,6 +18,7 @@
 
 .vs__search,
 .vs__search:focus {
+    color: var(--vs-search-input-color);
     appearance: none;
     line-height: var(--vs-line-height);
     font-size: var(--vs-font-size);
@@ -35,7 +36,7 @@
 }
 
 .vs__search::placeholder {
-    color: var(--vs-input-placeholder-color);
+    color: var(--vs-search-input-placeholder-color);
 }
 
 /**
