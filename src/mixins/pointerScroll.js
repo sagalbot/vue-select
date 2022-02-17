@@ -37,9 +37,8 @@ export default {
         if (top < bounds.top) {
           return (this.$refs.dropdownMenu.scrollTop = optionEl.offsetTop)
         } else if (bottom > bounds.bottom) {
-          // * 2 to show selected item better
           return (this.$refs.dropdownMenu.scrollTop =
-            optionEl.offsetTop - (bounds.height - height * 2))
+            optionEl.offsetTop - (bounds.height - height))
         }
       }
     },
