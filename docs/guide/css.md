@@ -26,15 +26,15 @@ about [CSS Custom Properties.](https://developer.mozilla.org/en-US/docs/Web/CSS/
 
 <<< @/.vuepress/components/CssVariables.vue
 
-### Available CSS Variables <Badge type="primary">3.17+</Badge>
+### Available CSS Variables <Badge type="primary">3.18+</Badge>
 
 <<< @/../src/css/global/variables.css
 
-## SCSS Variables <Badge type="warning">Deprecated in v3.17</Badge>
+## SCSS <Badge type="warning">Deprecated in v3.18</Badge>
 
 ::: warning Deprecation Notice 
 The SCSS build been deprecated for the `v3.x` release, and will be
-removed in `v4.0.0`. The SCSS files will remain in the v3 codebase if you really need them, but the
+removed in `v4.0.0`. The files will remain in the v3 codebase if you really need them, but the
 recommended approach is to leverage the included CSS variables instead.
 :::
 
