@@ -68,6 +68,7 @@
     "mini-css-extract-plugin": "^2.4.3",
     "postcss": "^8.3.11",
     "postcss-import": "^14.0.2",
+    "postcss-nested": "^5.0.6",
     "postcss-loader": "^6.2.0",
     "prettier": "2.2.1",
     "semantic-release": "^17.0.4",
@@ -136,8 +137,5 @@
         "maxSize": "8 KB"
       }
     ]
-  },
-  "dependencies": {
-    "postcss-nested": "^5.0.6"
   }
 }
