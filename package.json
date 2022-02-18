@@ -46,7 +46,7 @@
     "babel-loader": "^8.0.5",
     "bundlewatch": "^0.2.5",
     "commitizen": "^4.0.3",
-    "coveralls": "^3.0.2",
+    "coveralls": "^3.1.1",
     "cross-env": "^5.2.0",
     "css-loader": "^6.4.0",
     "cssnano": "^5.0.8",
