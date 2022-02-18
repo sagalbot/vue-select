@@ -218,6 +218,23 @@ describe('VS - Selecting Values', () => {
     expect(Select.vm.selectedValue).toEqual(options)
   })
 
+  fit('can select a false boolean option', async () => {
+    const Select = mountDefault({
+      options: [false],
+    })
+
+    expect(Select.vm.isOptionSelected(false)).toBeFalsy()
+    expect(Select.vm.optionExists(false)).toBeTruthy()
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    Select.find('.vs__dropdown-option').trigger('click')
+    await Select.vm.$nextTick()
+
+    expect(Select.vm.selectedValue).toEqual([false])
+  })
+
   describe('input Event', () => {
     it('will trigger the input event when the selection changes', () => {
       const Select = shallowMount(VueSelect)
