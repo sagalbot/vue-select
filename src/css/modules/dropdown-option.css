@@ -1,0 +1,26 @@
+/* List Items */
+.vs__dropdown-option {
+    line-height: 1.42857143; /* Normalize line height */
+    display: block;
+    padding: var(--vs-dropdown-option-padding);
+    clear: both;
+    color: var(--vs-dropdown-option-color); /* Overrides most CSS frameworks */
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.vs__dropdown-option--highlight {
+    background: var(--vs-dropdown-option--active-bg);
+    color: var(--vs-dropdown-option--active-color);
+}
+
+.vs__dropdown-option--deselect {
+    background: var(--vs-dropdown-option--deselect-bg);
+    color: var(--vs-dropdown-option--deselect-color);
+}
+
+.vs__dropdown-option--disabled {
+    background: var(--vs-state-disabled-bg);
+    color: var(--vs-state-disabled-color);
+    cursor: var(--vs-state-disabled-cursor);
+}

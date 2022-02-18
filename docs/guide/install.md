@@ -1,7 +1,13 @@
 ## Yarn / NPM
-Install with yarn:
+
+Install with yarn or npm:
+
 ```bash
+# vue 2
 yarn add vue-select
+
+# vue 3
+yarn add vue-select@beta
 
 # or, using NPM
 npm install vue-select
@@ -20,12 +26,6 @@ The component itself does not include any CSS. You'll need to include it separat
 
 ```js
 import 'vue-select/dist/vue-select.css';
-```
-
-Alternatively, you can import the scss for complete control of the component styles:
-
-```scss
-@import "vue-select/src/scss/vue-select.scss";
 ```
 
 ## In the Browser
@@ -56,5 +56,5 @@ Vue.component('v-select', VueSelect.VueSelect);
 
 ## Vue Compatibility
 
-- If you're on Vue `1.x`, use vue-select `1.x`. 
-- The `1.x` branch has not received updates since the 2.0 release.  
+- Vue `2.x`, use vue-select `3.x`. 
+- Vue `3.x`, use vue-select `3.x@beta`.  

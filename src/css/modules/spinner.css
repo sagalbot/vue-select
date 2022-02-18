@@ -1,0 +1,28 @@
+/* Loading Spinner */
+.vs__spinner {
+    align-self: center;
+    opacity: 0;
+    font-size: 5px;
+    text-indent: -9999em;
+    overflow: hidden;
+    border-top: 0.9em solid rgba(100, 100, 100, 0.1);
+    border-right: 0.9em solid rgba(100, 100, 100, 0.1);
+    border-bottom: 0.9em solid rgba(100, 100, 100, 0.1);
+    border-left: 0.9em solid rgba(60, 60, 60, 0.45);
+    transform: translateZ(0)
+        scale(var(--vs-controls--spinner-size, var(--vs-controls-size)));
+    animation: vSelectSpinner 1.1s infinite linear;
+    transition: opacity 0.1s;
+}
+.vs__spinner,
+.vs__spinner:after {
+    border-radius: 50%;
+    width: 5em;
+    height: 5em;
+    transform: scale(var(--vs-controls--spinner-size, var(--vs-controls-size)));
+}
+
+/* Loading Spinner States */
+.vs--loading .vs__spinner {
+    opacity: 1;
+}

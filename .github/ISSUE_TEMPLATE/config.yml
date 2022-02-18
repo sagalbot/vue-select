@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/sagalbot/vue-select/discussions
+    about: If you're not submitting a bug or feature request, please use discussions instead.
