@@ -1,6 +1,16 @@
 export default {
   inserted(el, bindings, { context }) {
-    if (context.appendToBody) {
+    const container = (() => {
+      if (context.appendTo) {
+        return typeof context.appendTo === 'object'
+          ? context.appendTo
+          : document.querySelector(context.appendTo)
+      }
+
+      return context.appendToBody ? document.body : false
+    })()
+
+    if (container) {
       const {
         height,
         top,
@@ -17,12 +27,12 @@ export default {
         top: scrollY + top + height + 'px',
       })
 
-      document.body.appendChild(el)
+      container.appendChild(el)
     }
   },
 
   unbind(el, bindings, { context }) {
-    if (context.appendToBody) {
+    if (context.appendTo || context.appendToBody) {
       if (el.unbindPosition && typeof el.unbindPosition === 'function') {
         el.unbindPosition()
       }

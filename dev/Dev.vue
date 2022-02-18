@@ -15,6 +15,7 @@ export default {
     selected: null,
     config: {
       options: countries,
+      appendToBody: true,
     },
   }),
 }

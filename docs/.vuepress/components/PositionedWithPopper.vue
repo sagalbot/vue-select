@@ -2,7 +2,7 @@
   <div>
     <v-select
       :options="countries"
-      append-to-body
+      append-to="body"
       :calculate-position="withPopper"
     />
 
