@@ -48,7 +48,6 @@
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.5",
     "bundlewatch": "^0.2.5",
-    "chokidar": "^3.5.2",
     "commitizen": "^4.0.3",
     "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
