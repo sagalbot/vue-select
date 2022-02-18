@@ -213,7 +213,7 @@ describe('VS - Selecting Values', () => {
     expect(Select.vm.selectedValue).toEqual(options)
   })
 
-  fit('can select a false boolean option', async () => {
+  it('can select a false boolean option', async () => {
     const Select = mountDefault({
       options: [false],
     })

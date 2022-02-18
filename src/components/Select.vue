@@ -702,7 +702,7 @@ export default {
         value = this.$data._value
       }
 
-      if (value !== undefined && value !== null) {
+      if (value !== undefined && value !== null && value !== '') {
         return [].concat(value)
       }
 
