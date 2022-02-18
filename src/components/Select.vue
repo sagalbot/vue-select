@@ -33,8 +33,7 @@
             </slot>
             <button
               v-if="multiple"
-              ref="deselectButtons"
-              :ref="el => deselectButtons[i] = el"
+              :ref="(el) => (deselectButtons[i] = el)"
               :disabled="disabled"
               type="button"
               class="vs__deselect"
@@ -694,7 +693,7 @@ export default {
       pushedTags: [],
       // eslint-disable-next-line vue/no-reserved-keys
       _value: [], // Internal value managed by Vue Select if no `value` prop is passed
-      deselectButtons: []
+      deselectButtons: [],
     }
   },
 
