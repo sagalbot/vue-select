@@ -40,7 +40,7 @@
     "@semantic-release/git": "^9.0.0",
     "@semantic-release/github": "^7.0.4",
     "@vue/compiler-sfc": "^3.2.20",
-    "@vue/test-utils": "^2.0.0-rc.16",
+    "@vue/test-utils": "^2.0.0-rc.17",
     "autoprefixer": "^10.3.7",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.3",

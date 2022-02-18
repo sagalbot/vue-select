@@ -21,7 +21,11 @@ describe('Search Slot Scope', () => {
     })
 
     it("adds the active descendant attribute when there's a typeahead value and an open dropdown", async () => {
-      const Select = mountDefault({ value: 'three' }, ['one', 'two', 'three'])
+      const Select = mountDefault({ modelValue: 'three' }, [
+        'one',
+        'two',
+        'three',
+      ])
 
       Select.vm.open = true
       Select.vm.typeAheadPointer = 1

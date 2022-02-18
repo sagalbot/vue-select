@@ -10,15 +10,21 @@ import Vue from 'vue'
  * @param searchText
  */
 export const searchSubmit = async (Wrapper, searchText = undefined) => {
-  const search = Wrapper.findComponent({ ref: 'search' })
-  await search.trigger('focus')
+  await Wrapper.get('input').trigger('focus')
 
   if (searchText) {
     Wrapper.vm.search = searchText
     await Wrapper.vm.$nextTick()
   }
 
-  await search.trigger('keydown.enter')
+  await Wrapper.get('input').trigger('keydown.enter')
+}
+
+/**
+ * Focus the search input
+ */
+export const searchFocus = async (Wrapper) => {
+  await Wrapper.get('input').trigger('focus')
   await Wrapper.vm.$nextTick()
 }
 
