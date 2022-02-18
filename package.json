@@ -65,6 +65,7 @@
     "postcss": "^8.3.11",
     "postcss-import": "^14.0.2",
     "postcss-loader": "^6.2.1",
+    "postcss-nested": "^5.0.6",
     "prettier": "2.2.1",
     "semantic-release": "^17.0.4",
     "terser-webpack-plugin": "^5.3.1",
@@ -132,8 +133,5 @@
         "maxSize": "8 KB"
       }
     ]
-  },
-  "dependencies": {
-    "postcss-nested": "^5.0.6"
   }
 }
