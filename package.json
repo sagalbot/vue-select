@@ -69,6 +69,7 @@
     "mini-css-extract-plugin": "^2.4.3",
     "postcss": "^8.3.11",
     "postcss-import": "^14.0.2",
+    "postcss-nested": "^5.0.6",
     "postcss-loader": "^6.2.0",
     "postcss-nested": "^5.0.6",
     "prettier": "2.2.1",
