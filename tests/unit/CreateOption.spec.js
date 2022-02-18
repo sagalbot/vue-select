@@ -1,4 +1,4 @@
-import { searchSubmit, selectTag, selectWithProps } from '../helpers'
+import { selectTag, selectWithProps } from '../helpers'
 
 describe('CreateOption When Tagging Is Enabled', () => {
   it('can select the current search text as a string', async () => {

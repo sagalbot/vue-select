@@ -14,6 +14,16 @@ export default {
         }
       }
     },
+    open(open) {
+      if (open) {
+        this.typeAheadToLastSelected()
+      }
+    },
+    selectedValue() {
+      if (this.open) {
+        this.typeAheadToLastSelected()
+      }
+    },
   },
 
   methods: {
@@ -57,9 +67,21 @@ export default {
     typeAheadSelect() {
       const typeAheadOption = this.filteredOptions[this.typeAheadPointer]
 
-      if (typeAheadOption) {
+      if (typeAheadOption && this.selectable(typeAheadOption)) {
         this.select(typeAheadOption)
       }
+    },
+
+    /**
+     * Moves the pointer to the last selected option.
+     */
+    typeAheadToLastSelected() {
+      this.typeAheadPointer =
+        this.selectedValue.length !== 0
+          ? this.filteredOptions.indexOf(
+              this.selectedValue[this.selectedValue.length - 1]
+            )
+          : -1
     },
   },
 }

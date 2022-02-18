@@ -165,10 +165,7 @@ describe('When Tagging Is Enabled', () => {
       options: [{ label: 'one' }, two],
     })
 
-    Select.vm.search = 'two'
-    await Select.vm.$nextTick()
-
-    searchSubmit(Select)
+    await searchSubmit(Select, 'two')
     expect(Select.vm.selectedValue).toEqual([two])
   })
 
@@ -180,10 +177,7 @@ describe('When Tagging Is Enabled', () => {
       options: [{ label: 'one' }, two],
     })
 
-    Select.vm.search = 'two'
-    await Select.vm.$nextTick()
-
-    searchSubmit(Select)
+    await searchSubmit(Select, 'two')
     expect(Select.vm.selectedValue).toEqual([two])
   })
 

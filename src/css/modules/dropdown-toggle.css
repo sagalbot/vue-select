@@ -10,18 +10,13 @@
     .vs__actions holds the clear button and dropdown toggle.
  */
 
-$border-width: $vs-border-width;
-$border-style: $vs-border-style;
-$border-color: $vs-border-color;
-$border-radius: $vs-border-radius;
-
 .vs__dropdown-toggle {
     appearance: none;
     display: flex;
     padding: 0 0 4px 0;
-    background: $vs-component-bg;
-    border: $border-width $border-style $border-color;
-    border-radius: $border-radius;
+    background: none;
+    border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
+    border-radius: var(--vs-border-radius);
     white-space: normal;
 }
 
@@ -37,7 +32,7 @@ $border-radius: $vs-border-radius;
 .vs__actions {
     display: flex;
     align-items: center;
-    padding: 4px 6px 0 3px;
+    padding: var(--vs-actions-padding);
 }
 
 /* Dropdown Toggle States */

@@ -1,13 +1,23 @@
-@import "global/variables";
-@import "global/component";
-@import "global/animations";
-@import "global/states";
+/**
+    Support for SASS is deprecated as of v3.18.
 
-@import "modules/dropdown-toggle";
-@import "modules/open-indicator";
-@import "modules/clear";
-@import "modules/dropdown-menu";
-@import "modules/dropdown-option";
-@import "modules/selected";
-@import "modules/search-input";
-@import "modules/spinner";
+    The files remain here if your build is dependent on them
+    but they will not receive updates in future releases. All
+    SASS variables have been translated into CSS variables, so
+    migration should be quite simple if you'd like to move over.
+
+    In v4, these files will be removed.
+ */
+@import 'global/variables';
+@import 'global/component';
+@import 'global/animations';
+@import 'global/states';
+
+@import 'modules/dropdown-toggle';
+@import 'modules/open-indicator';
+@import 'modules/clear';
+@import 'modules/dropdown-menu';
+@import 'modules/dropdown-option';
+@import 'modules/selected';
+@import 'modules/search-input';
+@import 'modules/spinner';

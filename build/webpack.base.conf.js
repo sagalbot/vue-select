@@ -41,12 +41,14 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.s?css$/,
+        test: /\.css$/i,
         use: [
           extractOrInjectStyles,
-          'css-loader',
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 },
+          },
           'postcss-loader',
-          'sass-loader',
         ],
       },
     ],
