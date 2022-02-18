@@ -114,21 +114,3 @@ event is triggered.
 ```js
 this.$emit("search:focus");
 ```
-
-## `search`
-
-Triggered when the search text changes.
-
-```js
-/**
- * Anytime the search string changes, emit the
- * 'search' event. The event is passed with two
- * parameters: the search string, and a function
- * that accepts a boolean parameter to toggle the
- * loading state.
- *
- * @emits search
- */
-this.$emit('search', newSearchString, toggleLoading);
-```
-
