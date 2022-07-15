@@ -878,9 +878,6 @@ export default {
         if (!this.optionExists(createdOption)) {
           options.unshift(createdOption)
         }
-        if (this.noDrop && this.multiple) {
-          this.$nextTick(() => this.$refs.search.focus())
-        }
       }
       return options
     },
