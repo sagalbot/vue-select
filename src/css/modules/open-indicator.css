@@ -1,0 +1,26 @@
+/* Open Indicator */
+
+/*
+  The open indicator appears as a down facing
+  caret on the right side of the select.
+ */
+
+.vs__open-indicator {
+    fill: var(--vs-controls-color);
+    transform: scale(var(--vs-controls-size));
+    transition: transform var(--vs-transition-duration)
+        var(--vs-transition-timing-function);
+    transition-timing-function: var(--vs-transition-timing-function);
+}
+
+/* Open State */
+
+.vs--open .vs__open-indicator {
+    transform: rotate(180deg) scale(var(--vs-controls-size));
+}
+
+/* Loading State */
+
+.vs--loading .vs__open-indicator {
+    opacity: 0;
+}

@@ -1,41 +1,60 @@
-module.exports = {
+export default {
   data() {
     return {
-      typeAheadPointer: -1
+      typeAheadPointer: -1,
     }
   },
 
   watch: {
     filteredOptions() {
-      this.typeAheadPointer = 0
-    }
+      for (let i = 0; i < this.filteredOptions.length; i++) {
+        if (this.selectable(this.filteredOptions[i])) {
+          this.typeAheadPointer = i
+          break
+        }
+      }
+    },
+    open(open) {
+      if (open) {
+        this.typeAheadToLastSelected()
+      }
+    },
+    selectedValue() {
+      if (this.open) {
+        this.typeAheadToLastSelected()
+      }
+    },
   },
 
   methods: {
     /**
      * Move the typeAheadPointer visually up the list by
-     * subtracting the current index by one.
+     * setting it to the previous selectable option.
      * @return {void}
      */
     typeAheadUp() {
-      if (this.typeAheadPointer > 0) {
-        this.typeAheadPointer--
-        if( this.maybeAdjustScroll ) {
-          this.maybeAdjustScroll()
+      for (let i = this.typeAheadPointer - 1; i >= 0; i--) {
+        if (this.selectable(this.filteredOptions[i])) {
+          this.typeAheadPointer = i
+          break
         }
       }
     },
 
     /**
      * Move the typeAheadPointer visually down the list by
-     * adding the current index by one.
+     * setting it to the next selectable option.
      * @return {void}
      */
     typeAheadDown() {
-      if (this.typeAheadPointer < this.filteredOptions.length - 1) {
-        this.typeAheadPointer++
-        if( this.maybeAdjustScroll ) {
-          this.maybeAdjustScroll()
+      for (
+        let i = this.typeAheadPointer + 1;
+        i < this.filteredOptions.length;
+        i++
+      ) {
+        if (this.selectable(this.filteredOptions[i])) {
+          this.typeAheadPointer = i
+          break
         }
       }
     },
@@ -46,15 +65,23 @@ module.exports = {
      * @return {void}
      */
     typeAheadSelect() {
-      if( this.filteredOptions[ this.typeAheadPointer ] ) {
-        this.select( this.filteredOptions[ this.typeAheadPointer ] );
-      } else if (this.taggable && this.search.length){
-        this.select(this.search)
-      }
+      const typeAheadOption = this.filteredOptions[this.typeAheadPointer]
 
-      if( this.clearSearchOnSelect ) {
-        this.search = "";
+      if (typeAheadOption && this.selectable(typeAheadOption)) {
+        this.select(typeAheadOption)
       }
     },
-  }
+
+    /**
+     * Moves the pointer to the last selected option.
+     */
+    typeAheadToLastSelected() {
+      this.typeAheadPointer =
+        this.selectedValue.length !== 0
+          ? this.filteredOptions.indexOf(
+              this.selectedValue[this.selectedValue.length - 1]
+            )
+          : -1
+    },
+  },
 }

@@ -1,0 +1,10 @@
+/* Clear Button */
+
+.vs__clear {
+    fill: var(--vs-controls-color);
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 8px;
+}

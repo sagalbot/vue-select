@@ -1,39 +1,21 @@
-var config = require('../config')
-var webpack = require('webpack')
-var merge = require('webpack-merge')
-var utils = require('./utils')
-var baseWebpackConfig = require('./webpack.base.conf')
-var HtmlWebpackPlugin = require('html-webpack-plugin')
-
-// add hot-reload related code to entry chunks
-Object.keys(baseWebpackConfig.entry).forEach(function (name) {
-  baseWebpackConfig.entry[name] = ['./build/dev-client'].concat(baseWebpackConfig.entry[name])
-})
+const { merge } = require('webpack-merge')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const baseWebpackConfig = require('./webpack.base.conf')
 
 module.exports = merge(baseWebpackConfig, {
-  module: {
-    loaders: utils.styleLoaders().concat({ test: /\.md$/, loader: "html!markdown" })
+  entry: './dev/dev.js',
+  devServer: {
+    open: true,
+    static: false,
+    client: { overlay: true },
+    watchFiles: ['dev/dev.html'],
   },
-  // eval-source-map is faster for development
-  devtool: '#eval-source-map',
+  stats: false,
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': config.dev.env
-    }),
-    // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: utils.shouldServeHomepage() ? './docs/homepage/home.html' : './dev/dev.html',
-      inject: true
-    })
+      title: 'dev',
+      template: './dev/dev.html',
+      inject: true,
+    }),
   ],
-  markdownLoader: {
-    highlight: function (code) {
-      return require('highlight.js').highlightAuto(code).value;
-    }
-  }
 })

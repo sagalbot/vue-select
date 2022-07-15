@@ -1,0 +1,25 @@
+# Settings in the [build] context are global and are applied to all contexts
+# unless otherwise overridden by more specific contexts.
+# @see https://www.netlify.com/docs/netlify-toml-reference/
+[build]
+  base = "docs"
+  publish = "docs/.vuepress/dist"
+  command = "yarn build"
+
+# Deploy Preview context
+#
+# All deploys resulting from a pull/merge request will
+# inherit these settings.
+[context.deploy-preview]
+  command = "yarn build:preview"
+
+# Branch Deploy context: all deploys that are not from a pull/merge request or
+# from the Production branch will inherit these settings.
+[context.branch-deploy]
+  command = "yarn build:preview"
+
+# Redirects and headers are GLOBAL for all builds – they do not get scoped to
+# contexts no matter where you define them in the file.
+[[redirects]]
+  from = "/guide/templating.html"
+  to = "/guide/slots.html"
