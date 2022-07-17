@@ -21,7 +21,7 @@
 
     /* Borders */
     --vs-border-color: var(--vs-colors--lightest);
-    --vs-border-width: 0;
+    --vs-border-width: 1px;
     --vs-border-style: solid;
     --vs-border-radius: 4px;
 
