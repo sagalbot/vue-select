@@ -6,6 +6,7 @@
 
     /* Search Input */
     --vs-search-input-color: inherit;
+    --vs-input-background: rgb(255, 255, 255);
     --vs-search-input-placeholder-color: inherit;
 
     /* Font */
@@ -20,7 +21,7 @@
 
     /* Borders */
     --vs-border-color: var(--vs-colors--lightest);
-    --vs-border-width: 1px;
+    --vs-border-width: 0;
     --vs-border-style: solid;
     --vs-border-radius: 4px;
 
