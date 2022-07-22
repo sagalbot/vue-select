@@ -40,7 +40,7 @@
     }
 
     .vs__clear {
-        margin-left: 6px;
+        margin-left: var(--vs-controls--clear-margin);
         margin-right: 0;
     }
 
