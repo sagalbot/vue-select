@@ -35,9 +35,7 @@
  */
 
 .v-select[dir='rtl'] {
-    .vs__actions {
-        padding: 0 3px 0 6px;
-    }
+    --vs-actions-padding: 4px 3px 0 6px;
 
     .vs__clear {
         margin-left: var(--vs-controls--clear-margin);
