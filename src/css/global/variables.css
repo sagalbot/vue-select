@@ -32,6 +32,7 @@
     --vs-controls-color: var(--vs-colors--light);
     --vs-controls-size: 1;
     --vs-controls--deselect-text-shadow: 0 1px 0 #fff;
+    --vs-controls--deselect-margin: 4px;
 
     /* Selected */
     --vs-selected-bg: #f0f0f0;

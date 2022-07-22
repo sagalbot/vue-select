@@ -46,7 +46,7 @@
 
     .vs__deselect {
         margin-left: 0;
-        margin-right: 2px;
+        margin-right: var(--vs-controls--deselect-margin);
     }
 
     .vs__dropdown-menu {
