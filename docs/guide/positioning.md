@@ -11,7 +11,7 @@ the viewport. If you need more fine grain control, you can use calculated positi
 
 If you want more control over how the dropdown is rendered, or if you're running into z-index issues,
 you may use the `appendToBody` boolean prop. When enabled, Vue Select will append the dropdown to
-the document, outside of the `.v-select` container, and position it with Javscript.
+the document, outside of the `.v-select` container, and position it with Javascript.
 
 When `appendToBody` is true, the positioning will be handled by the `calculatePosition` prop. This
 function is responsible for setting top/left absolute positioning values for the dropdown. The
