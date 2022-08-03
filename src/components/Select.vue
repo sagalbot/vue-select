@@ -153,6 +153,10 @@ export default {
   directives: { appendToBody },
 
   mixins: [pointerScroll, typeAheadPointer, ajax],
+  
+  compatConfig: {
+    MODE: 3,
+  },
 
   emits: [
     'open',
