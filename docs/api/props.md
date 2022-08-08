@@ -409,7 +409,7 @@ noDrop: {
 
 ## onTab
 
-Select the current value if `selectOnTab` is enabled
+Select the current value if `selectOnTab` is enabled.
 
 ```js
 onTab: {
