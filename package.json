@@ -17,6 +17,10 @@
         ".": {
             "import": "./dist/vue-select.es.js",
             "require": "./dist/vue-select.umd.js"
+        },
+        "./dist/vue-select.css": {
+            "import": "./dist/vue-select.css",
+            "require": "./dist/vue-select.css"
         }
     },
     "private": false,
