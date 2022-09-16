@@ -12,7 +12,7 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
-      aria-label="Search for option"
+      :aria-label="ariaLabel"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
@@ -37,8 +37,8 @@
               :disabled="disabled"
               type="button"
               class="vs__deselect"
-              :title="`Deselect ${getOptionLabel(option)}`"
-              :aria-label="`Deselect ${getOptionLabel(option)}`"
+              :title="`${deselectAriaLabel} ${getOptionLabel(option)}`"
+              :aria-label="`${deselectAriaLabel} ${getOptionLabel(option)}`"
               @click="deselect(option)"
             >
               <component :is="childComponents.Deselect" />
@@ -62,8 +62,8 @@
           :disabled="disabled"
           type="button"
           class="vs__clear"
-          title="Clear Selected"
-          aria-label="Clear Selected"
+          :title="clearAriaLabel"
+          :aria-label="clearAriaLabel"
           @click="clearSelection"
         >
           <component :is="childComponents.Deselect" />
@@ -665,6 +665,30 @@ export default {
       type: [String, Number],
       default: () => uniqueId(),
     },
+
+    /**
+     * The aria label for the combo box
+     */
+    ariaLabel: {
+      type: String,
+      default: 'Search for option',
+    },
+
+    /**
+     * The aria label for the deselect option button
+     */
+    deselectAriaLabel: {
+      type: String,
+      default: 'Deselect',
+    },
+
+    /**
+     * The aria label for the clear button
+     */
+    clearAriaLabel: {
+      type: String,
+      default: 'Clear Selected',
+    }
   },
 
   data() {
