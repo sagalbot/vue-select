@@ -27,17 +27,15 @@
 
 /* States */
 
-.vs--single {
-    .vs__selected {
-        background-color: transparent;
-        border-color: transparent;
-    }
-    &.vs--open .vs__selected,
-    &.vs--loading .vs__selected {
-        position: absolute;
-        opacity: 0.4;
-    }
-    &.vs--searching .vs__selected {
-        display: none;
-    }
+.vs--single .vs__selected {
+    background-color: transparent;
+    border-color: transparent;
+}
+.vs--single.vs--open .vs__selected,
+.vs--single.vs--loading .vs__selected {
+    position: absolute;
+    opacity: 0.4;
+}
+.vs--single.vs--searching .vs__selected {
+    display: none;
 }

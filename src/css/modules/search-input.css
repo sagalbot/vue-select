@@ -44,18 +44,14 @@
  */
 
 /* Unsearchable */
-.vs--unsearchable {
-    .vs__search {
-        opacity: 1;
-    }
-    &:not(.vs--disabled) .vs__search {
-        cursor: pointer;
-    }
+.vs--unsearchable .vs__search {
+    opacity: 1;
+}
+.vs--unsearchable:not(.vs--disabled) .vs__search {
+    cursor: pointer;
 }
 
 /* Single, when searching but not loading or open */
-.vs--single.vs--searching:not(.vs--open):not(.vs--loading) {
-    .vs__search {
-        opacity: 0.2;
-    }
+.vs--single.vs--searching:not(.vs--open):not(.vs--loading) .vs__search {
+    opacity: 0.2;
 }

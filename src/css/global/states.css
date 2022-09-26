@@ -15,15 +15,13 @@
     --vs-disabled-cursor: var(--vs-state-disabled-cursor);
 }
 
-.vs--disabled {
-    .vs__dropdown-toggle,
-    .vs__clear,
-    .vs__search,
-    .vs__selected,
-    .vs__open-indicator {
-        cursor: var(--vs-disabled-cursor);
-        background-color: var(--vs-disabled-bg);
-    }
+.vs--disabled .vs__dropdown-toggle, 
+.vs--disabled .vs__clear,
+.vs--disabled .vs__search,
+.vs--disabled .vs__selected,
+.vs--disabled .vs__open-indicator {
+    cursor: var(--vs-disabled-cursor);
+    background-color: var(--vs-disabled-bg);
 }
 
 /*
@@ -34,22 +32,17 @@
  *  rearranging the child elements visually.
  */
 
-.v-select[dir='rtl'] {
-    .vs__actions {
-        padding: 0 3px 0 6px;
-    }
-
-    .vs__clear {
-        margin-left: 6px;
-        margin-right: 0;
-    }
-
-    .vs__deselect {
-        margin-left: 0;
-        margin-right: 2px;
-    }
-
-    .vs__dropdown-menu {
-        text-align: right;
-    }
+.v-select[dir='rtl'] .vs__actions {
+    padding: 0 3px 0 6px;
+}
+.v-select[dir='rtl'] .vs__clear {
+    margin-left: 6px;
+    margin-right: 0;
+}
+.v-select[dir='rtl'] .vs__deselect {
+    margin-left: 0;
+    margin-right: 2px;
+}
+.v-select[dir='rtl'] .vs__dropdown-menu {
+    text-align: right;
 }
