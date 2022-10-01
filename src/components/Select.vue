@@ -665,6 +665,15 @@ export default {
       type: [String, Number],
       default: () => uniqueId(),
     },
+
+    /**
+     * Equivalent to the `required` attribute on a `<select>` input.
+     * @type {Boolean}
+     */
+    required: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -763,6 +772,7 @@ export default {
                   'aria-activedescendant': `vs${this.uid}__option-${this.typeAheadPointer}`,
                 }
               : {}),
+            required: this.required && this.isValueEmpty,
           },
           events: {
             compositionstart: () => (this.isComposing = true),
