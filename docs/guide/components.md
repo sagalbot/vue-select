@@ -61,6 +61,7 @@ export default {
 If you want all instances of Vue Select to use your custom components throughout your app, while
 only having to set the implementation once, you can do so when registering Vue Select as a component.
 
+## Vue 2x
 ```js
 import Vue from 'vue';
 import vSelect from 'vue-select';
@@ -77,6 +78,26 @@ vSelect.props.components.default = () => ({
 
 // Register the component
 Vue.component(vSelect)
+```
+
+## Vue 3x
+```js
+import {createApp, h} from 'vue';
+import vSelect from 'vue-select';
+
+// Set the components prop default to return our fresh components 
+vSelect.props.components.default = () => ({
+  Deselect: {
+    render: () => h('span', '❌'),
+  },
+  OpenIndicator: {
+    render: () => h('span', '🔽'),
+  },
+});
+
+// Register the component
+const app = createApp(App);
+app.component('vSelect', vSelect);
 ```
 
 <CustomComponentRegistration />
