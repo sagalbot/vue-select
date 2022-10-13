@@ -21,7 +21,7 @@
         "./dist/vue-select.css": {
             "import": "./dist/vue-select.css",
             "require": "./dist/vue-select.css",
-             "style": "./dist/vue-select.css"
+            "style": "./dist/vue-select.css"
         }
     },
     "private": false,
