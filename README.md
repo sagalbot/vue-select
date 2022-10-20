@@ -62,7 +62,7 @@ Then, import and register the component:
 import Vue from "vue";
 import vSelect from "vue-select";
 
-Vue.component("v-select", vSelect);
+Vue.component("sb-vue-select", vSelect);
 ```
 
 The component itself does not include any CSS. You'll need to include it separately:

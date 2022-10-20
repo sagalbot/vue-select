@@ -25,12 +25,18 @@
           :disabled="disabled"
         >
           <span :key="getOptionKey(option)" class="vs__selected">
-            <slot
-              name="selected-option"
-              v-bind="normalizeOptionForSlot(option)"
-            >
-              {{ getOptionLabel(option) }}
-            </slot>
+            <div class="labels-parent">
+              <p class="first-label"> 
+                <slot name="option" v-bind="normalizeOptionForSlot(option)">
+                  {{ getOptionLabel(option) }}
+                </slot>
+              </p>
+              <p class="second-label">
+                <slot name="option" v-bind="normalizeOptionForSlot(option)">
+                  {{ getOptionSecondLabel(option) }}
+                </slot>
+              </p>
+            </div>
             <button
               v-if="multiple"
               ref="deselectButtons"
@@ -101,7 +107,7 @@
           :id="`vs${uid}__option-${index}`"
           :key="getOptionKey(option)"
           role="option"
-          class="vs__dropdown-option"
+          class="vs__dropdown-option labels-parent"
           :class="{
             'vs__dropdown-option--deselect':
               isOptionDeselectable(option) && index === typeAheadPointer,
@@ -113,9 +119,16 @@
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
           @click.prevent.stop="selectable(option) ? select(option) : null"
         >
-          <slot name="option" v-bind="normalizeOptionForSlot(option)">
-            {{ getOptionLabel(option) }}
-          </slot>
+          <p class="first-label"> 
+            <slot name="option" v-bind="normalizeOptionForSlot(option)">
+              {{ getOptionLabel(option) }}
+            </slot>
+          </p>
+          <p class="second-label">
+            <slot name="option" v-bind="normalizeOptionForSlot(option)">
+              {{ getOptionSecondLabel(option) }}
+            </slot>
+          </p>
         </li>
         <li v-if="filteredOptions.length === 0" class="vs__no-options">
           <slot name="no-options" v-bind="scope.noOptions">
@@ -283,6 +296,11 @@ export default {
       default: 'label',
     },
 
+    optionalLabel: {
+      type: String,
+      default: 'optionalLabel',
+    },
+
     /**
      * Value of the 'autocomplete' field of the input
      * element.
@@ -344,6 +362,19 @@ export default {
             )
           }
           return option[this.label]
+        }
+        return option
+      },
+    },
+
+    getOptionSecondLabel: {
+      type: Function,
+      default(option) {
+        if (typeof option === 'object') {
+          if (option.hasOwnProperty(this.optionalLabel)) {
+            return option[this.optionalLabel]
+          }
+          return option[this.optionalLabel]
         }
         return option
       },
@@ -1343,3 +1374,19 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.first-label {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 2;
+}
+.second-label {
+  color: #626262; 
+  font-size: 13px;
+}
+.labels-parent:hover p {
+  color: white !important;
+}
+</style>
