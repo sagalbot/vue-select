@@ -74,6 +74,36 @@ import "vue-select/dist/vue-select.css";
 You can also include vue-select directly in the browser. Check out the
 [documentation for loading from CDN.](https://vue-select.org/guide/install.html#in-the-browser).
 
+
+## Quick start
+- Version 3 (current stable)
+
+```vue
+<v-select 
+  :options="[{label: 'world', value: 'world'}, {label: 'people', value: 'people'}]"
+  :value="selected" 
+/>
+```
+
+- Version 4 (4.0.0-beta.5)
+
+```vue
+<script setup>
+  import VueSelect from "vue-select";
+</script>
+
+<template>
+  <VueSelect
+    :options="[{hello: 'world', hello: 'people'}]"
+    :getOptionLabel="value => value.hello"
+    @update:modelValue="value => {
+      myRef.value = value
+    }"
+  />
+</template>
+
+```
+
 ## License
 
 [MIT](https://github.com/sagalbot/vue-select/blob/master/LICENSE.md)
