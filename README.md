@@ -80,7 +80,7 @@ You can also include vue-select directly in the browser. Check out the
 
 ```vue
 <v-select 
-  :options="[{label: 'world', value: 'world'}, {label: 'people', value: 'people'}]"
+  :options="[{label: 'people', value: 'people'}, {label: 'world', value: 'world'}]"
   :value="selected" 
 />
 ```
@@ -94,7 +94,7 @@ You can also include vue-select directly in the browser. Check out the
 
 <template>
   <VueSelect
-    :options="[{hello: 'world', hello: 'people'}]"
+    :options="[{hello: 'people'}, {hello: 'world'}]"
     :getOptionLabel="value => value.hello"
     @update:modelValue="value => {
       myRef.value = value
@@ -103,6 +103,8 @@ You can also include vue-select directly in the browser. Check out the
 </template>
 
 ```
+
+![result](docs/vselect-beta.png)
 
 ## License
 
