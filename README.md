@@ -97,7 +97,7 @@ You can also include vue-select directly in the browser. Check out the
     :options="[{hello: 'people'}, {hello: 'world'}]"
     :getOptionLabel="value => value.hello"
     @update:modelValue="value => {
-      myRef.value = value
+      myRef = value
     }"
   />
 </template>
