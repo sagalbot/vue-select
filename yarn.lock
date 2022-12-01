@@ -754,6 +754,14 @@
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-3.2.0.tgz#a1484089dd85d6528f435743f84cdd0d215bbb54"
   integrity sha512-E0tnaL4fr+qkdCNxJ+Xd0yM31UwMkQje76fsDVBBUCoGOUPexu2VDUYHL8P4CwV+zMvWw6nlRw19OnRKmYAJpw==
 
+"@vitest/coverage-c8@^0.25.3":
+  version "0.25.3"
+  resolved "https://registry.yarnpkg.com/@vitest/coverage-c8/-/coverage-c8-0.25.3.tgz#308dcfe574412ac8b212ee7a891f843a4e4bb10d"
+  integrity sha512-+tmrB3E7pZTSM+aWKzLk0FpyyaQOoRQf0594hHp+E3Kk0tiFONiEFYf7+9a1Z+C2ffU/0w6KvyBjpNPdashMrg==
+  dependencies:
+    c8 "^7.12.0"
+    vitest "0.25.3"
+
 "@volar/language-core@1.0.10":
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-1.0.10.tgz#ff41bd3d12e7ddb0e954c563d818fc63c47bd4ac"
@@ -5566,7 +5574,7 @@ vite@^3.0.0, vite@^3.2.4:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vitest@^0.25.3:
+vitest@0.25.3, vitest@^0.25.3:
   version "0.25.3"
   resolved "https://registry.yarnpkg.com/vitest/-/vitest-0.25.3.tgz#4e5ed481e4da6a0ce014bdb71dfc9661fd62b722"
   integrity sha512-/UzHfXIKsELZhL7OaM2xFlRF8HRZgAHtPctacvNK8H4vOcbJJAMEgbWNGSAK7Y9b1NBe5SeM7VTuz2RsTHFJJA==
