@@ -9,7 +9,8 @@
         "test": "tests"
     },
     "files": [
-        "dist"
+        "dist",
+        "src"
     ],
     "main": "./dist/vue-select.umd.js",
     "module": "./dist/vue-select.es.js",
