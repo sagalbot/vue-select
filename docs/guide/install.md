@@ -57,4 +57,4 @@ Vue.component('v-select', VueSelect.VueSelect);
 ## Vue Compatibility
 
 - Vue `2.x`, use vue-select `3.x`. 
-- Vue `3.x`, use vue-select `3.x@beta`.  
+- Vue `3.x`, use vue-select `4.x@beta`.  
