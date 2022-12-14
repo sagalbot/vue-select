@@ -1302,7 +1302,7 @@ export default {
 
     /**
      * Search <input> KeyBoardEvent handler.
-     * @param e {KeyboardEvent}
+     * @param {KeyboardEvent} e
      * @return {Function}
      */
     onSearchKeyDown(e) {
