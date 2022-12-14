@@ -1035,7 +1035,6 @@ export default {
     onAfterSelect(option) {
       if (this.closeOnSelect) {
         this.open = !this.open
-        this.searchEl.blur()
       }
 
       if (this.clearSearchOnSelect) {
