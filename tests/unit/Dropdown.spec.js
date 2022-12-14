@@ -120,12 +120,11 @@ describe('Toggling Dropdown', () => {
 
   it('will close the dropdown on escape, if search is empty', () => {
     const Select = selectWithProps()
-    const spy = jest.spyOn(Select.vm.$refs.search, 'blur')
 
     Select.vm.open = true
     Select.vm.onEscape()
 
-    expect(spy).toHaveBeenCalled()
+    expect(Select.vm.open).toEqual(false)
   })
 
   it('should remove existing search text on escape keydown', () => {

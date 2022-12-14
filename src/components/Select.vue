@@ -1239,7 +1239,7 @@ export default {
      */
     onEscape() {
       if (!this.search.length) {
-        this.searchEl.blur()
+        this.open = false
       } else {
         this.search = ''
       }
