@@ -1351,6 +1351,22 @@ export default {
       if (typeof handlers[e.keyCode] === 'function') {
         return handlers[e.keyCode](e)
       }
+
+      const isModifierKeyActive = (e) => {
+        // Allow `shiftKey` for capitalized characters
+        const modifierProperties = ['ctrlKey', 'altKey', 'metaKey']
+        return modifierProperties.some((property) => e[property])
+      }
+
+      const alphanumericCharRegex = /^[a-z0-9]{1}$/i
+
+      if (
+        !this.open &&
+        !isModifierKeyActive(e) &&
+        alphanumericCharRegex.test(e.key)
+      ) {
+        this.open = true
+      }
     },
   },
 }
