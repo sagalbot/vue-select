@@ -571,7 +571,12 @@ export default {
      */
     selectOnKeyCodes: {
       type: Array,
-      default: () => [13],
+      default: () => [
+        // enter
+        13,
+        // space
+        32,
+      ],
     },
 
     /**
