@@ -1320,11 +1320,19 @@ export default {
         //  up.prevent
         38: (e) => {
           e.preventDefault()
+          if (!this.open) {
+            this.open = true
+            return
+          }
           return this.typeAheadUp()
         },
         //  down.prevent
         40: (e) => {
           e.preventDefault()
+          if (!this.open) {
+            this.open = true
+            return
+          }
           return this.typeAheadDown()
         },
       }
