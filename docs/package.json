@@ -5,13 +5,12 @@
   "scripts": {
     "serve": "vuepress dev",
     "build": "vuepress build",
-    "build:preview": "cross-env DEPLOY_PREVIEW=true vuepress build"
+    "build:preview": "cross-env DEPLOY_PREVIEW=1 vuepress build"
   },
   "devDependencies": {
     "@octokit/graphql": "^4.3.1",
     "@popperjs/core": "^2.1.0",
     "@vuepress/plugin-active-header-links": "^1.4.0",
-    "@vuepress/plugin-google-analytics": "^1.4.0",
     "@vuepress/plugin-nprogress": "^1.4.0",
     "@vuepress/plugin-pwa": "^1.4.0",
     "@vuepress/plugin-register-components": "^1.4.0",
