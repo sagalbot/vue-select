@@ -27,6 +27,15 @@ async function getContributors() {
  * @return {Promise<*[]|ProfileNode[]|postcss.ChildNode[]|Array<parser.Node>|[]>}
  */
 async function getSponsors() {
+  /**
+   * Deploy previews don't have access to secrets.
+   * Return early since we don't have a token.
+   */
+  if (process.env['DEPLOY_PREVIEW']) {
+    console.log('Skipping sponsors because this is a deploy preview.')
+    return []
+  }
+
   const query = `
     {
       user(login: "sagalbot") {
