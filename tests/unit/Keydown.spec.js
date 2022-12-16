@@ -40,22 +40,6 @@ describe('Custom Keydown Handlers', () => {
     expect(spy).toHaveBeenCalledTimes(1)
   })
 
-  it('should open dropdown on alphabetic keydown', () => {
-    const Select = mountDefault()
-
-    Select.findComponent({ ref: 'search' }).trigger('keydown', { key: 'a' })
-
-    expect(Select.vm.open).toEqual(true)
-  })
-
-  it('should open dropdown on numeric keydown', () => {
-    const Select = mountDefault()
-
-    Select.findComponent({ ref: 'search' }).trigger('keydown', { key: 1 })
-
-    expect(Select.vm.open).toEqual(true)
-  })
-
   describe('CompositionEvent support', () => {
     it('will not select a value with enter if the user is composing', () => {
       const Select = mountDefault()

@@ -83,4 +83,26 @@ describe('Filtering Options', () => {
     Select.vm.search = '1'
     expect(Select.vm.filteredOptions).toEqual([1, 10])
   })
+
+  it('should open dropdown on alphabetic input', async () => {
+    const Select = shallowMount(VueSelect)
+
+    const input = Select.find('.vs__search')
+    input.element.value = 'a'
+    input.trigger('input')
+    await Select.vm.$nextTick()
+
+    expect(Select.vm.open).toEqual(true)
+  })
+
+  it('should open dropdown on numeric input', async () => {
+    const Select = shallowMount(VueSelect)
+
+    const input = Select.find('.vs__search')
+    input.element.value = 1
+    input.trigger('input')
+    await Select.vm.$nextTick()
+
+    expect(Select.vm.open).toEqual(true)
+  })
 })
