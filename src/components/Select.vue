@@ -960,7 +960,7 @@ export default {
     },
 
     search(search) {
-      if (!this.open && search) {
+      if (search.length) {
         this.open = true
       }
     },
