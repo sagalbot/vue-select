@@ -15,7 +15,7 @@
     "@vuepress/plugin-pwa": "^1.4.0",
     "@vuepress/plugin-register-components": "^1.4.0",
     "@vuepress/plugin-search": "^1.4.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "cross-env": "^7.0.2",
     "date-fns": "^2.11.0",
     "dotenv": "^8.2.0",
