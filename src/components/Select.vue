@@ -56,18 +56,20 @@
       </div>
 
       <div ref="actions" class="vs__actions">
-        <button
-          v-show="showClearButton"
-          ref="clearButton"
-          :disabled="disabled"
-          type="button"
-          class="vs__clear"
-          title="Clear Selected"
-          aria-label="Clear Selected"
-          @click="clearSelection"
-        >
-          <component :is="childComponents.Deselect" />
-        </button>
+        <slot name="clear-button" v-bind="{ clearSelection, disabled, showClearButton }">
+          <button
+            v-show="showClearButton"
+            ref="clearButton"
+            :disabled="disabled"
+            type="button"
+            class="vs__clear"
+            title="Clear Selected"
+            aria-label="Clear Selected"
+            @click="clearSelection"
+          >
+            <component :is="childComponents.Deselect" />
+          </button>
+        </slot>
 
         <slot name="open-indicator" v-bind="scope.openIndicator">
           <component
