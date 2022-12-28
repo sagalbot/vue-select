@@ -26,9 +26,6 @@ export default {
       if (el.unbindPosition && typeof el.unbindPosition === 'function') {
         el.unbindPosition()
       }
-      if (el.parentNode) {
-        el.parentNode.removeChild(el)
-      }
     }
   },
 }
