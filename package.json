@@ -10,6 +10,7 @@
   },
   "private": false,
   "main": "dist/vue-select.js",
+  "types": "types.d.ts",
   "license": "MIT",
   "prepare": "npm run build",
   "scripts": {
