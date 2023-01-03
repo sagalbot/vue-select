@@ -106,16 +106,26 @@
             'vs__dropdown-option--deselect':
               isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
-            'vs__dropdown-option--highlight': index === typeAheadPointer,
+            'vs__dropdown-option--highlight': !option.isHeader && index === typeAheadPointer,
             'vs__dropdown-option--disabled': !selectable(option),
+            'vs__dropdown-option--header': option.isHeader
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
-          @click.prevent.stop="selectable(option) ? select(option) : null"
+          @click.prevent.stop="selectable(option) && !option.isHeader ? select(option) : null"
         >
-          <slot name="option" v-bind="normalizeOptionForSlot(option)">
-            {{ getOptionLabel(option) }}
-          </slot>
+          <template v-if="option.isHeader">
+            <slot name="option-header" :header="option[label]">
+              <h2>
+                <span>{{ option[label] }}</span>
+              </h2>
+            </slot>
+          </template>
+          <template v-else>
+            <slot name="option" v-bind="normalizeOptionForSlot(option)">
+              {{ getOptionLabel(option) }}
+            </slot>
+          </template>
         </li>
         <li v-if="filteredOptions.length === 0" class="vs__no-options">
           <slot name="no-options" v-bind="scope.noOptions">
@@ -281,6 +291,12 @@ export default {
     label: {
       type: String,
       default: 'label',
+    },
+
+    // NOTE: custom by larry
+    groupBy: {
+      type: String,
+      default: ''
     },
 
     /**
@@ -883,6 +899,40 @@ export default {
           options.unshift(createdOption)
         }
       }
+
+      // NOTE: Custom by larry
+      if (this.groupBy) {
+        // get group types
+        let groups = options.reduce((groups, option) => {
+          if (groups.indexOf(option[this.groupBy]) === -1) {
+            groups.push(option[this.groupBy])
+          }
+          return groups
+        }, [])
+
+        // add options to groups
+        let groupedOptions = groups.map(group => {
+          return {
+            group,
+            options: options.filter(option => (option[this.groupBy] === group))
+          }
+        })
+
+        // flatten options with group label
+        let flatGroupedOptions = []
+        // console.log(groupedOptions)
+        groupedOptions.forEach(group => {
+          flatGroupedOptions.push({
+            [this.label]: group.group,
+            isHeader: true
+          })
+          flatGroupedOptions = flatGroupedOptions.concat(group.options)
+        }, [])
+        // console.log(flatGroupedOptions)
+        options = flatGroupedOptions
+      }
+
+
       return options
     },
 
