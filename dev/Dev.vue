@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <v-select v-model="selected" v-bind="config" />
+    <v-select v-model="selected" v-bind="config">
+      <template v-slot:option-header="slotProps">
+        <div v-if="slotProps.index > 0" class="divider"></div>
+        <h2>{{ slotProps.option.text }}</h2>
+      </template>
+    </v-select>
   </div>
 </template>
 
@@ -3266,5 +3271,12 @@ hr {
   margin-bottom: 1em;
   padding-top: 1em;
   width: 90%;
+}
+
+.divider {
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
 }
 </style>

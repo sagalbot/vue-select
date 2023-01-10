@@ -25,4 +25,13 @@
     cursor: var(--vs-state-disabled-cursor);
 }
 
-.vs__dropdown-option--header{color:#777;cursor:default;display:block;font-size:12px;line-height:1.42857143;padding:3px 20px;white-space:nowrap}
+/* NOTE: custom by larry */
+.vs__dropdown-option--header{
+    color:#777;
+    cursor:default;
+    display:block;
+    font-size:12px;
+    line-height:1.42857143;
+    padding:3px 20px;
+    white-space:nowrap
+}

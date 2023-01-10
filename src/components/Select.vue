@@ -115,9 +115,9 @@
           @click.prevent.stop="selectable(option) && !option.isHeader ? select(option) : null"
         >
           <template v-if="option.isHeader">
-            <slot name="option-header" :header="option[label]">
+            <slot name="option-header" :option="normalizeOptionForSlot(option)" :index="index">
               <h2>
-                <span>{{ option[label] }}</span>
+                <span>{{ getOptionLabel(option) }}</span>
               </h2>
             </slot>
           </template>
