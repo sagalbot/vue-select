@@ -106,16 +106,20 @@
             'vs__dropdown-option--deselect':
               isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
-            'vs__dropdown-option--highlight': !option.isHeader && index === typeAheadPointer,
+            'vs__dropdown-option--highlight': option && !option.isHeader && index === typeAheadPointer,
             'vs__dropdown-option--disabled': !selectable(option),
-            'vs__dropdown-option--header': option.isHeader
+            'vs__dropdown-option--header': option && option.isHeader
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
           @click.prevent.stop="selectable(option) && !option.isHeader ? select(option) : null"
         >
-          <template v-if="option.isHeader">
-            <slot name="option-header" :option="normalizeOptionForSlot(option)" :index="index">
+          <template v-if="groupBy && option.isHeader">
+            <slot 
+              name="option-header" 
+              :option="normalizeOptionForSlot(option)" 
+              :index="index"
+              >
               <h2>
                 <span>{{ getOptionLabel(option) }}</span>
               </h2>
