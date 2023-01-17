@@ -107,7 +107,7 @@
               isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
             'vs__dropdown-option--highlight': option && !option.isHeader && index === typeAheadPointer,
-            'vs__dropdown-option--disabled': !selectable(option),
+            'vs__dropdown-option--disabled': option && !option.isHeader && !selectable(option),
             'vs__dropdown-option--header': option && option.isHeader
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
@@ -336,7 +336,7 @@ export default {
      */
     selectable: {
       type: Function,
-      default: (option) => true,
+      default: (option) => option ? !option.isHeader : true,
     },
 
     /**
