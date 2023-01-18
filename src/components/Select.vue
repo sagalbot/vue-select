@@ -120,6 +120,7 @@
               :option="normalizeOptionForSlot(option)" 
               :index="index"
               >
+              <div class="divider" v-if="index > 0"></div>
               <h2>
                 <span>{{ getOptionLabel(option) }}</span>
               </h2>
@@ -907,16 +908,14 @@ export default {
       // NOTE: Custom by larry
       if (this.groupBy) {
         let groupings = []
-        let groupBy = ''
 
-          
         options.forEach((option) => {
           let groupName = this.isFunction(this.groupBy) ? this.groupBy(option) : option[this.groupBy]
           let group = groupings.find(group => group[this.label] == groupName)
+          console.log('Group: ', group)
           if (group) group.options.push(option)
           else groupings.push({ [this.label]: groupName, isHeader: true, options: [option] })
         })
-
 
         let flattened = []
         groupings.forEach(group => {
@@ -925,7 +924,6 @@ export default {
         }, [])
 
         return flattened
-
      }
 
 

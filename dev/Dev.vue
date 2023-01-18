@@ -34,8 +34,10 @@ export default {
           item.hasOwnProperty('folder_id') &&
           item.folder_id
         ) {
-          if (true) {
-            return 'Fake folder'
+          const folders = [{ id: 1, name: 'Test Folder' }]
+          const folder = folders.find(f => f.id == item.folder_id)
+          if (folder) {
+            return folder.name
           }
         }
 
@@ -87,7 +89,7 @@ export default {
             "google_mail": true,
             "outlook_mail": null
         },
-        "folder_id": "llkjkjl",
+        "folder_id": "",
         "$$hashKey": "object:2576"
     },
     {
