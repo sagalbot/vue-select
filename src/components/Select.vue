@@ -914,7 +914,6 @@ export default {
         options.forEach((option) => {
           let groupName = this.isFunction(this.groupBy) ? this.groupBy(option) : option[this.groupBy]
           let group = groupings.find(group => group[this.label] == groupName)
-          console.log('Group: ', group)
           if (group) group.options.push(option)
           else groupings.push({ [this.label]: groupName, isHeader: true, options: [option] })
         })
