@@ -299,7 +299,7 @@ export default {
 
     // NOTE: custom by larry
     groupBy: {
-      type: String,
+      type: [String, Function],
       default: ''
     },
 
@@ -906,35 +906,27 @@ export default {
 
       // NOTE: Custom by larry
       if (this.groupBy) {
-        // get group types
-        let groups = options.reduce((groups, option) => {
-          if (groups.indexOf(option[this.groupBy]) === -1) {
-            groups.push(option[this.groupBy])
-          }
-          return groups
-        }, [])
+        let groupings = []
+        let groupBy = ''
 
-        // add options to groups
-        let groupedOptions = groups.map(group => {
-          return {
-            group,
-            options: options.filter(option => (option[this.groupBy] === group))
-          }
+          
+        options.forEach((option) => {
+          let groupName = this.isFunction(this.groupBy) ? this.groupBy(option) : option[this.groupBy]
+          let group = groupings.find(group => group[this.label] == groupName)
+          if (group) group.options.push(option)
+          else groupings.push({ [this.label]: groupName, isHeader: true, options: [option] })
         })
 
-        // flatten options with group label
-        let flatGroupedOptions = []
-        // console.log(groupedOptions)
-        groupedOptions.forEach(group => {
-          flatGroupedOptions.push({
-            [this.label]: group.group,
-            isHeader: true
-          })
-          flatGroupedOptions = flatGroupedOptions.concat(group.options)
+
+        let flattened = []
+        groupings.forEach(group => {
+          if (group.isHeader) flattened.push({ [this.label]: group[this.label], isHeader: true })
+          flattened = flattened.concat(group.options)
         }, [])
-        // console.log(flatGroupedOptions)
-        options = flatGroupedOptions
-      }
+
+        return flattened
+
+     }
 
 
       return options
@@ -1026,6 +1018,9 @@ export default {
   },
 
   methods: {
+    isFunction(maybeFn) {
+      return typeof maybeFn === 'function'
+    },
     /**
      * Make sure tracked value is
      * one option if possible.

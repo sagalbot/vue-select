@@ -6,6 +6,12 @@
         <h2>{{ slotProps.option.text }}</h2>
       </template>
     </v-select>
+    <v-select v-model="selected_two" v-bind="config_two">
+      <template v-slot:option-header="slotProps">
+        <div v-if="slotProps.index > 0" class="divider"></div>
+        <h2>{{slotProps.option.name}}</h2>
+      </template>
+    </v-select>
   </div>
 </template>
 
@@ -18,6 +24,78 @@ export default {
   components: { vSelect },
   data: () => ({
     selected: null,
+    selected_two: null,
+    config_two: {
+      label: 'name',
+      groupBy: item => {
+        
+        if (
+          item &&
+          item.hasOwnProperty('folder_id') &&
+          item.folder_id
+        ) {
+          if (true) {
+            return 'Fake folder'
+          }
+        }
+
+        return undefined
+      },
+      options: [
+    {
+        "_id": "873216a50352",
+        "version": 1673644662246,
+        "sections": [
+            {
+                "type": "purpose",
+                "criteria": [
+                    {
+                        "text": "Odio ad officia a beatae ipsum fugiat quaerat molestiae voluptatem cumque."
+                    },
+                    {
+                        "text": "Dolore quae odit suscipit fuga."
+                    }
+                ],
+                "name": "Inventore sint amet est inventore officiis dolorem mollitia cum amet neque et."
+            },
+            {
+                "type": "questions",
+                "criteria": [
+                    {
+                        "text": "Voluptatem accusamus quisquam nam vel dolorem quia aut doloribus est ullam."
+                    },
+                    {
+                        "text": "Molestiae ut incidunt dolorem officiis enim velit iste."
+                    }
+                ],
+                "name": "Qui facilis sint aut perferendis nostrum neque molestiae vitae corporis corrupti."
+            }
+        ],
+        "name": "The only guide",
+        "attachments": [],
+        "company_id": "e2cfd1f7e3fb",
+        "acting_user": {
+            "_id": "817de8bdbb65",
+            "name": "Larry Faudree",
+            "username": "larry",
+            "email_address": "larry@breezyhr.com",
+            "type": null,
+            "profile_photo_url": "https://avatar-cdn.breezy.hr/139af/16337536355.png",
+            "initial": "L",
+            "hex_color": "color3",
+            "tz_offset": "240",
+            "google_mail": true,
+            "outlook_mail": null
+        },
+        "folder_id": "llkjkjl",
+        "$$hashKey": "object:2576"
+    },
+    {
+        "name": "None",
+        "$$hashKey": "object:2577"
+    }
+],
+    },
     config: {
       // options: countries,
       label: 'text',
