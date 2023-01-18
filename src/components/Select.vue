@@ -121,9 +121,11 @@
               :index="index"
               >
               <div class="divider" v-if="index > 0"></div>
-              <h2>
-                <span>{{ getOptionLabel(option) }}</span>
-              </h2>
+              <template v-if="getOptionLabel(option)">
+                <h2>
+                  <span>{{ getOptionLabel(option) }}</span>
+                </h2>
+              </template>
             </slot>
           </template>
           <template v-else>

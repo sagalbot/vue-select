@@ -7,10 +7,10 @@
       </template>
     </v-select>
     <v-select v-model="selected_two" v-bind="config_two">
-      <template v-slot:option-header="slotProps">
+      <!-- <template v-slot:option-header="slotProps">
         <div v-if="slotProps.index > 0" class="divider"></div>
         <h2>{{slotProps.option.name}}</h2>
-      </template>
+      </template> -->
     </v-select>
   </div>
 </template>
