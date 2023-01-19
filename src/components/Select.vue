@@ -5,76 +5,37 @@
 <template>
   <div :dir="dir" class="v-select" :class="stateClasses">
     <slot name="header" v-bind="scope.header" />
-    <div
-      :id="`vs${uid}__combobox`"
-      ref="toggle"
-      class="vs__dropdown-toggle"
-      role="combobox"
-      :aria-expanded="dropdownOpen.toString()"
-      :aria-owns="`vs${uid}__listbox`"
-      aria-label="Search for option"
-      @mousedown="toggleDropdown($event)"
-    >
+    <div :id="`vs${uid}__combobox`" ref="toggle" class="vs__dropdown-toggle" role="combobox"
+      :aria-expanded="dropdownOpen.toString()" :aria-owns="`vs${uid}__listbox`" aria-label="Search for option"
+      @mousedown="toggleDropdown($event)">
       <div ref="selectedOptions" class="vs__selected-options">
-        <slot
-          v-for="option in selectedValue"
-          name="selected-option-container"
-          :option="normalizeOptionForSlot(option)"
-          :deselect="deselect"
-          :multiple="multiple"
-          :disabled="disabled"
-        >
+        <slot v-for="option in selectedValue" name="selected-option-container" :option="normalizeOptionForSlot(option)"
+          :deselect="deselect" :multiple="multiple" :disabled="disabled">
           <span :key="getOptionKey(option)" class="vs__selected">
-            <slot
-              name="selected-option"
-              v-bind="normalizeOptionForSlot(option)"
-            >
+            <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
               {{ getOptionLabel(option) }}
             </slot>
-            <button
-              v-if="multiple"
-              ref="deselectButtons"
-              :disabled="disabled"
-              type="button"
-              class="vs__deselect"
-              :title="`Deselect ${getOptionLabel(option)}`"
-              :aria-label="`Deselect ${getOptionLabel(option)}`"
-              @click="deselect(option)"
-            >
+            <button v-if="multiple" ref="deselectButtons" :disabled="disabled" type="button" class="vs__deselect"
+              :title="`Deselect ${getOptionLabel(option)}`" :aria-label="`Deselect ${getOptionLabel(option)}`"
+              @click="deselect(option)">
               <component :is="childComponents.Deselect" />
             </button>
           </span>
         </slot>
 
         <slot name="search" v-bind="scope.search">
-          <input
-            class="vs__search"
-            v-bind="scope.search.attributes"
-            v-on="scope.search.events"
-          />
+          <input class="vs__search" v-bind="scope.search.attributes" v-on="scope.search.events" />
         </slot>
       </div>
 
       <div ref="actions" class="vs__actions">
-        <button
-          v-show="showClearButton"
-          ref="clearButton"
-          :disabled="disabled"
-          type="button"
-          class="vs__clear"
-          title="Clear Selected"
-          aria-label="Clear Selected"
-          @click="clearSelection"
-        >
+        <button v-show="showClearButton" ref="clearButton" :disabled="disabled" type="button" class="vs__clear"
+          title="Clear Selected" aria-label="Clear Selected" @click="clearSelection">
           <component :is="childComponents.Deselect" />
         </button>
 
         <slot name="open-indicator" v-bind="scope.openIndicator">
-          <component
-            :is="childComponents.OpenIndicator"
-            v-if="!noDrop"
-            v-bind="scope.openIndicator.attributes"
-          />
+          <component :is="childComponents.OpenIndicator" v-if="!noDrop" v-bind="scope.openIndicator.attributes" />
         </slot>
 
         <slot name="spinner" v-bind="scope.spinner">
@@ -83,43 +44,22 @@
       </div>
     </div>
     <transition :name="transition">
-      <ul
-        v-if="dropdownOpen"
-        :id="`vs${uid}__listbox`"
-        ref="dropdownMenu"
-        :key="`vs${uid}__listbox`"
-        v-append-to-body
-        class="vs__dropdown-menu"
-        role="listbox"
-        tabindex="-1"
-        @mousedown.prevent="onMousedown"
-        @mouseup="onMouseUp"
-      >
+      <ul v-if="dropdownOpen" :id="`vs${uid}__listbox`" ref="dropdownMenu" :key="`vs${uid}__listbox`" v-append-to-body
+        class="vs__dropdown-menu" role="listbox" tabindex="-1" @mousedown.prevent="onMousedown" @mouseup="onMouseUp">
         <slot name="list-header" v-bind="scope.listHeader" />
-        <li
-          v-for="(option, index) in filteredOptions"
-          :id="`vs${uid}__option-${index}`"
-          :key="getOptionKey(option)"
-          role="option"
-          class="vs__dropdown-option"
-          :class="{
+        <li v-for="(option, index) in filteredOptions" :id="`vs${uid}__option-${index}`" :key="getOptionKey(option)"
+          role="option" class="vs__dropdown-option" :class="{
             'vs__dropdown-option--deselect':
               isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
             'vs__dropdown-option--highlight': option && !option.isHeader && index === typeAheadPointer,
             'vs__dropdown-option--disabled': option && !option.isHeader && !selectable(option),
             'vs__dropdown-option--header': option && option.isHeader
-          }"
-          :aria-selected="index === typeAheadPointer ? true : null"
+          }" :aria-selected="index === typeAheadPointer ? true : null"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
-          @click.prevent.stop="selectable(option) && !option.isHeader ? select(option) : null"
-        >
+          @click.prevent.stop="selectable(option) && !option.isHeader ? select(option) : null">
           <template v-if="groupBy && option.isHeader">
-            <slot 
-              name="option-header" 
-              :option="normalizeOptionForSlot(option)" 
-              :index="index"
-              >
+            <slot name="option-header" :option="normalizeOptionForSlot(option)" :index="index">
               <div class="divider" v-if="index > 0"></div>
               <template v-if="getOptionLabel(option)">
                 <h2>
@@ -141,12 +81,7 @@
         </li>
         <slot name="list-footer" v-bind="scope.listFooter" />
       </ul>
-      <ul
-        v-else
-        :id="`vs${uid}__listbox`"
-        role="listbox"
-        style="display: none; visibility: hidden"
-      ></ul>
+      <ul v-else :id="`vs${uid}__listbox`" role="listbox" style="display: none; visibility: hidden"></ul>
     </transition>
     <slot name="footer" v-bind="scope.footer" />
   </div>
@@ -306,6 +241,11 @@ export default {
       default: ''
     },
 
+    groupFilter: {
+      type: [Array, Function],
+      default: x => x 
+    },
+
     /**
      * Value of the 'autocomplete' field of the input
      * element.
@@ -362,8 +302,8 @@ export default {
           if (!option.hasOwnProperty(this.label)) {
             return console.warn(
               `[vue-select warn]: Label key "option.${this.label}" does not` +
-                ` exist in options object ${JSON.stringify(option)}.\n` +
-                'https://vue-select.org/api/props.html#getoptionlabel'
+              ` exist in options object ${JSON.stringify(option)}.\n` +
+              'https://vue-select.org/api/props.html#getoptionlabel'
             )
           }
           return option[this.label]
@@ -753,8 +693,8 @@ export default {
     searchEl() {
       return !!this.$scopedSlots['search']
         ? this.$refs.selectedOptions.querySelector(
-            this.searchInputQuerySelector
-          )
+          this.searchInputQuerySelector
+        )
         : this.$refs.search
     },
 
@@ -786,8 +726,8 @@ export default {
             value: this.search,
             ...(this.dropdownOpen && this.filteredOptions[this.typeAheadPointer]
               ? {
-                  'aria-activedescendant': `vs${this.uid}__option-${this.typeAheadPointer}`,
-                }
+                'aria-activedescendant': `vs${this.uid}__option-${this.typeAheadPointer}`,
+              }
               : {}),
           },
           events: {
@@ -918,6 +858,14 @@ export default {
           else groupings.push({ [this.label]: groupName, isHeader: true, options: [option] })
         })
 
+        if (this.groupFilter) {
+          if (this.isFunction(this.groupFilter)) {
+            groupings = this.groupFilter(groupings);
+          } else if (Array.isArray(this.groupFilter)) {
+            groupings = _groupsFilter(groupings, this.groupFilter);
+          }
+        }
+
         let flattened = []
         groupings.forEach(group => {
           if (group.isHeader) flattened.push({ [this.label]: group[this.label], isHeader: true })
@@ -925,7 +873,7 @@ export default {
         }, [])
 
         return flattened
-     }
+      }
 
 
       return options
@@ -962,10 +910,10 @@ export default {
       let shouldReset = () =>
         typeof this.resetOnOptionsChange === 'function'
           ? this.resetOnOptionsChange(
-              newOptions,
-              oldOptions,
-              this.selectedValue
-            )
+            newOptions,
+            oldOptions,
+            this.selectedValue
+          )
           : this.resetOnOptionsChange
 
       if (!this.taggable && shouldReset()) {
@@ -1019,6 +967,17 @@ export default {
   methods: {
     isFunction(maybeFn) {
       return typeof maybeFn === 'function'
+    },
+    _groupsFilter(groups, groupNames) {
+      var i, j, result = [];
+      for (i = 0; i < groupNames.length; i++) {
+        for (j = 0; j < groups.length; j++) {
+          if (groups[j].name == [groupNames[i]]) {
+            result.push(groups[j]);
+          }
+        }
+      }
+      return result;
     },
     /**
      * Make sure tracked value is
@@ -1093,6 +1052,7 @@ export default {
     onAfterSelect(option) {
       if (this.closeOnSelect) {
         this.open = !this.open
+        this.searchEl.blur()
       }
 
       if (this.clearSearchOnSelect) {
