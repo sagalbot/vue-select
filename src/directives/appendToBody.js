@@ -14,8 +14,6 @@ export default {
         left: scrollX + left + 'px',
         top: scrollY + top + height + 'px',
       })
-
-      document.body.appendChild(el)
     }
   },
 
@@ -23,9 +21,6 @@ export default {
     if (instance.appendToBody) {
       if (el.unbindPosition && typeof el.unbindPosition === 'function') {
         el.unbindPosition()
-      }
-      if (el.parentNode) {
-        el.parentNode.removeChild(el)
       }
     }
   },
