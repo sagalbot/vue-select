@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <v-select v-model="selected" v-bind="config" />
+    <button v-if="config.appendToBody" @click="hide">Hide</button>
+    <v-select v-if="!hidden" v-model="selected" v-bind="config" />
   </div>
 </template>
 
@@ -11,11 +12,21 @@ import countries from '../docs/.vuepress/data/countryCodes.js'
 export default {
   components: { vSelect },
   data: () => ({
+    hidden: false,
     selected: null,
     config: {
       options: countries,
+      appendToBody: true,
     },
   }),
+  methods: {
+    hide() {
+      this.hidden = true
+      setTimeout(() => {
+        this.hidden = false
+      }, 2000)
+    },
+  },
 }
 </script>
 
