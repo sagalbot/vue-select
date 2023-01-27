@@ -1332,6 +1332,10 @@ export default {
     onSearchKeyDown(e) {
       const preventAndSelect = (e) => {
         e.preventDefault()
+        if (!this.open) {
+          this.open = true
+          return
+        }
         return !this.isComposing && this.typeAheadSelect()
       }
 
