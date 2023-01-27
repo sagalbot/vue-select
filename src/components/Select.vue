@@ -107,10 +107,11 @@
               isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
             'vs__dropdown-option--highlight': index === typeAheadPointer,
+            'vs__dropdown-option--kb-focus': hasKeyboardFocusBorder(index),
             'vs__dropdown-option--disabled': !selectable(option),
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
-          @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
+          @mousemove="onMouseMove(option, index)"
           @click.prevent.stop="selectable(option) ? select(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
@@ -661,6 +662,15 @@ export default {
     },
 
     /**
+     * Display a visible border around dropdown options
+     * which have keyboard focus.
+     */
+    keyboardFocusBorder: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
      * A unique identifier used to generate IDs in HTML.
      * Must be unique for every instance of the component.
      */
@@ -675,6 +685,7 @@ export default {
       search: '',
       open: false,
       isComposing: false,
+      isKeyboardNavigation: false,
       pushedTags: [],
       // eslint-disable-next-line vue/no-reserved-keys
       _value: [], // Internal value managed by Vue Select if no `value` prop is passed
@@ -1135,6 +1146,19 @@ export default {
     },
 
     /**
+     * Check if the option at the given index should display a
+     * keyboard focus border.
+     * @param  {Number} index
+     * @return {Boolean}
+     */
+    hasKeyboardFocusBorder(index) {
+      if (this.keyboardFocusBorder && this.isKeyboardNavigation) {
+        return index === this.typeAheadPointer
+      }
+      return false
+    },
+
+    /**
      * Determine if two option objects are matching.
      *
      * @param a {Object}
@@ -1310,6 +1334,20 @@ export default {
     },
 
     /**
+     * Event-Handler for option mousemove
+     * @param {Object|String} option
+     * @param {Number} index
+     * @return {void}
+     */
+    onMouseMove(option, index) {
+      this.isKeyboardNavigation = false
+      if (!this.selectable(option)) {
+        return
+      }
+      this.typeAheadPointer = index
+    },
+
+    /**
      * Search <input> KeyBoardEvent handler.
      * @param {KeyboardEvent} e
      * @return {Function}
@@ -1330,6 +1368,7 @@ export default {
         //  up.prevent
         38: (e) => {
           e.preventDefault()
+          this.isKeyboardNavigation = true
           if (!this.open) {
             this.open = true
             return
@@ -1339,6 +1378,7 @@ export default {
         //  down.prevent
         40: (e) => {
           e.preventDefault()
+          this.isKeyboardNavigation = true
           if (!this.open) {
             this.open = true
             return
