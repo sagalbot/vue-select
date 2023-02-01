@@ -1,6 +1,6 @@
 {
   "name": "@nextcloud/vue-select",
-  "version": "3.21.1",
+  "version": "3.21.2",
   "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
   "author": "Jeff Sagal <sagalbot@gmail.com>",
   "homepage": "https://vue-select.org",
