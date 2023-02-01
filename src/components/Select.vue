@@ -1039,6 +1039,7 @@ export default {
         })
       )
       this.$emit('option:deselected', option)
+      this.searchEl.focus()
     },
 
     /**
@@ -1047,6 +1048,7 @@ export default {
      */
     clearSelection() {
       this.updateValue(this.multiple ? [] : null)
+      this.searchEl.focus()
     },
 
     /**
