@@ -112,6 +112,20 @@ describe('Removing values', () => {
     expect(deselect).not.toHaveBeenCalledWith('one')
   })
 
+  it('should return focus to the search input after deselect', () => {
+    const Select = selectWithProps({
+      multiple: true,
+      options: ['one', 'two', 'three'],
+      value: ['one'],
+    })
+
+    const deselect = Select.findComponent({ ref: 'deselectButtons' })
+    deselect.trigger('click')
+
+    const input = Select.findComponent({ ref: 'search' })
+    expect(document.activeElement).toEqual(input.element)
+  })
+
   describe('Clear button', () => {
     it('should be displayed on single select when value is selected', () => {
       const Select = selectWithProps({
@@ -155,6 +169,19 @@ describe('Removing values', () => {
       expect(Select.find('button.vs__clear').attributes().disabled).toEqual(
         'disabled'
       )
+    })
+
+    it('should return focus to the search input after clear', () => {
+      const Select = selectWithProps({
+        options: ['foo', 'bar'],
+        value: 'foo',
+      })
+
+      const clear = Select.findComponent({ ref: 'clearButton' })
+      clear.trigger('click')
+
+      const input = Select.findComponent({ ref: 'search' })
+      expect(document.activeElement).toEqual(input.element)
     })
   })
 })
