@@ -6,7 +6,7 @@ describe('Removing values', () => {
     Select.vm.$data._value = 'one'
     await Select.vm.$nextTick()
 
-    Select.find('.vs__deselect').trigger('click')
+    Select.find('.vs__deselect').trigger('mousedown')
     expect(Select.emitted().input).toEqual([[[]]])
     expect(Select.vm.selectedValue).toEqual([])
   })
@@ -120,7 +120,7 @@ describe('Removing values', () => {
     })
 
     const deselect = Select.findComponent({ ref: 'deselectButtons' })
-    deselect.trigger('click', { pointerType: '' })
+    deselect.trigger('keydown.enter')
 
     const input = Select.findComponent({ ref: 'search' })
     expect(document.activeElement).toEqual(input.element)
@@ -137,7 +137,7 @@ describe('Removing values', () => {
       ref: 'deselectButtons',
     }).wrappers
 
-    deselect.trigger('click', { pointerType: '' })
+    deselect.trigger('keydown.enter')
     expect(document.activeElement).toEqual(nextDeselect.element)
   })
 
@@ -152,7 +152,7 @@ describe('Removing values', () => {
       ref: 'deselectButtons',
     }).wrappers
 
-    deselect.trigger('click', { pointerType: '' })
+    deselect.trigger('keydown.enter')
     expect(document.activeElement).toEqual(prevDeselect.element)
   })
 
