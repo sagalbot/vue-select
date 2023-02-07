@@ -112,7 +112,7 @@ describe('Removing values', () => {
     expect(deselect).not.toHaveBeenCalledWith('one')
   })
 
-  it('should return focus to the search input after deselect', () => {
+  it('should return focus to the search input after keyboard deselect', () => {
     const Select = selectWithProps({
       multiple: true,
       options: ['one', 'two', 'three'],
@@ -120,10 +120,40 @@ describe('Removing values', () => {
     })
 
     const deselect = Select.findComponent({ ref: 'deselectButtons' })
-    deselect.trigger('click')
+    deselect.trigger('click', { pointerType: '' })
 
     const input = Select.findComponent({ ref: 'search' })
     expect(document.activeElement).toEqual(input.element)
+  })
+
+  it('should return focus to the next deselect after keyboard deselect', () => {
+    const Select = selectWithProps({
+      multiple: true,
+      options: ['one', 'two', 'three'],
+      value: ['one', 'two'],
+    })
+
+    const [deselect, nextDeselect] = Select.findAllComponents({
+      ref: 'deselectButtons',
+    }).wrappers
+
+    deselect.trigger('click', { pointerType: '' })
+    expect(document.activeElement).toEqual(nextDeselect.element)
+  })
+
+  it('should return focus to the previous deselect after keyboard deselect', () => {
+    const Select = selectWithProps({
+      multiple: true,
+      options: ['one', 'two', 'three'],
+      value: ['one', 'two'],
+    })
+
+    const [prevDeselect, deselect] = Select.findAllComponents({
+      ref: 'deselectButtons',
+    }).wrappers
+
+    deselect.trigger('click', { pointerType: '' })
+    expect(document.activeElement).toEqual(prevDeselect.element)
   })
 
   describe('Clear button', () => {
