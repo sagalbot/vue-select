@@ -17,7 +17,7 @@
     >
       <div ref="selectedOptions" class="vs__selected-options">
         <slot
-          v-for="option in selectedValue"
+          v-for="(option, index) in selectedValue"
           name="selected-option-container"
           :option="normalizeOptionForSlot(option)"
           :deselect="deselect"
@@ -39,7 +39,7 @@
               class="vs__deselect"
               :title="`Deselect ${getOptionLabel(option)}`"
               :aria-label="`Deselect ${getOptionLabel(option)}`"
-              @click="deselect(option)"
+              @click="(event) => deselect(option, index, event)"
             >
               <component :is="childComponents.Deselect" />
             </button>
@@ -1029,9 +1029,11 @@ export default {
     /**
      * De-select a given option.
      * @param  {Object|String} option
+     * @param  {Number} index
+     * @param  {PointerEvent} event
      * @return {void}
      */
-    deselect(option) {
+    deselect(option, index, event) {
       this.$emit('option:deselecting', option)
       this.updateValue(
         this.selectedValue.filter((val) => {
@@ -1039,7 +1041,24 @@ export default {
         })
       )
       this.$emit('option:deselected', option)
-      this.searchEl.focus()
+      // Handle keyboard deselect
+      if (event?.pointerType === '') {
+        /**
+         * The index of the next deselect is not yet at the same index as the
+         * removed deselect element because Vue updates asynchronously
+         *
+         * $nextTick cannot be used as the tests will fail even after using
+         * $nextTick in the tests as well
+         */
+        const nextDeselect = this.$refs.deselectButtons?.[index + 1]
+        const prevDeselect = this.$refs.deselectButtons?.[index - 1]
+        const deselectToFocus = nextDeselect ?? prevDeselect
+        if (deselectToFocus) {
+          deselectToFocus.focus()
+        } else {
+          this.searchEl.focus()
+        }
+      }
     },
 
     /**
