@@ -91,4 +91,16 @@ describe('Filtering Options', () => {
     Select.vm.search = '1'
     expect(Select.vm.filteredOptions).toEqual([1, 10])
   })
+
+  it('will not filter when filterable is false and taggable is true', () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: {
+        filterable: false,
+        taggable: true,
+        options: ['one', 'two', 'three'],
+      },
+    })
+    Select.vm.search = 'one'
+    expect(Select.vm.filteredOptions).toEqual(['one', 'two', 'three'])
+  })
 })
