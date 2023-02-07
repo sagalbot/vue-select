@@ -16,7 +16,7 @@
 .vs__deselect {
     display: inline-flex;
     appearance: none;
-    margin-left: 4px;
+    margin-left: var(--vs-controls--deselect-margin);
     padding: 0;
     border: 0;
     cursor: pointer;

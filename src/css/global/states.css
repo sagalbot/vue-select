@@ -35,18 +35,16 @@
  */
 
 .v-select[dir='rtl'] {
-    .vs__actions {
-        padding: 0 3px 0 6px;
-    }
+    --vs-actions-padding: 4px 3px 0 6px;
 
     .vs__clear {
-        margin-left: 6px;
+        margin-left: var(--vs-controls--clear-margin);
         margin-right: 0;
     }
 
     .vs__deselect {
         margin-left: 0;
-        margin-right: 2px;
+        margin-right: var(--vs-controls--deselect-margin);
     }
 
     .vs__dropdown-menu {
