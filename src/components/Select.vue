@@ -39,7 +39,8 @@
               class="vs__deselect"
               :title="`Deselect ${getOptionLabel(option)}`"
               :aria-label="`Deselect ${getOptionLabel(option)}`"
-              @click="(event) => deselect(option, index, event)"
+              @mousedown.stop="deselect(option)"
+              @keydown.enter="keyboardDeselect(option, index)"
             >
               <component :is="childComponents.Deselect" />
             </button>
@@ -1029,11 +1030,9 @@ export default {
     /**
      * De-select a given option.
      * @param  {Object|String} option
-     * @param  {Number} index
-     * @param  {PointerEvent} event
      * @return {void}
      */
-    deselect(option, index, event) {
+    deselect(option) {
       this.$emit('option:deselecting', option)
       this.updateValue(
         this.selectedValue.filter((val) => {
@@ -1041,23 +1040,30 @@ export default {
         })
       )
       this.$emit('option:deselected', option)
-      // Handle keyboard deselect
-      if (event?.pointerType === '') {
-        /**
-         * The index of the next deselect is not yet at the same index as the
-         * removed deselect element because Vue updates asynchronously
-         *
-         * $nextTick cannot be used as the tests will fail even after using
-         * $nextTick in the tests as well
-         */
-        const nextDeselect = this.$refs.deselectButtons?.[index + 1]
-        const prevDeselect = this.$refs.deselectButtons?.[index - 1]
-        const deselectToFocus = nextDeselect ?? prevDeselect
-        if (deselectToFocus) {
-          deselectToFocus.focus()
-        } else {
-          this.searchEl.focus()
-        }
+    },
+
+    /**
+     * De-select a given option on keyboard input.
+     * @param  {Object|String} option
+     * @param  {Number} index
+     * @return {void}
+     */
+    keyboardDeselect(option, index) {
+      this.deselect(option)
+      /**
+       * The index of the next deselect is not yet at the same index as the
+       * removed deselect element because Vue updates asynchronously
+       *
+       * $nextTick cannot be used as the tests will fail even after using
+       * $nextTick in the tests as well
+       */
+      const nextDeselect = this.$refs.deselectButtons?.[index + 1]
+      const prevDeselect = this.$refs.deselectButtons?.[index - 1]
+      const deselectToFocus = nextDeselect ?? prevDeselect
+      if (deselectToFocus) {
+        deselectToFocus.focus()
+      } else {
+        this.searchEl.focus()
       }
     },
 
