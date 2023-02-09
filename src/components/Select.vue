@@ -194,6 +194,15 @@ export default {
     },
 
     /**
+     * Sets the maximum number of options to display in the dropdown list
+     * @type {Number}
+     */
+    limit: {
+      type: Number,
+      default: null,
+    },
+
+    /**
      * Disable the entire component.
      * @type {Boolean}
      */
@@ -881,10 +890,17 @@ export default {
      * @return {array}
      */
     filteredOptions() {
+      const limitOptions = (options) => {
+        if (this.limit !== null) {
+          return options.slice(0, this.limit)
+        }
+        return options
+      }
+
       const optionList = [].concat(this.optionList)
 
       if (!this.filterable && !this.taggable) {
-        return optionList
+        return limitOptions(optionList)
       }
 
       let options = this.search.length
@@ -896,7 +912,7 @@ export default {
           options.unshift(createdOption)
         }
       }
-      return options
+      return limitOptions(options)
     },
 
     /**

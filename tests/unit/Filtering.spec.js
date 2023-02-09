@@ -91,4 +91,27 @@ describe('Filtering Options', () => {
     Select.vm.search = '1'
     expect(Select.vm.filteredOptions).toEqual([1, 10])
   })
+
+  it('should return a limited number of options if limit is set', () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: {
+        options: ['foo', 'bar', 'baz', 'qux', 'quux'],
+        limit: 3,
+      },
+    })
+
+    expect(Select.vm.filteredOptions).toEqual(['foo', 'bar', 'baz'])
+  })
+
+  it('should return a limited number of options if limit is set and options are filtered', () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: {
+        options: ['b', 'bc', 'a', 'ab', 'abc'],
+        limit: 2,
+      },
+    })
+
+    Select.vm.search = 'a'
+    expect(Select.vm.filteredOptions).toEqual(['a', 'ab'])
+  })
 })
