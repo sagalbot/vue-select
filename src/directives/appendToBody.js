@@ -1,6 +1,8 @@
 export default {
   inserted(el, bindings, { context }) {
     if (context.appendToBody) {
+      document.body.appendChild(el)
+
       const {
         height,
         top,
@@ -16,8 +18,6 @@ export default {
         left: scrollX + left + 'px',
         top: scrollY + top + height + 'px',
       })
-
-      document.body.appendChild(el)
     }
   },
 
