@@ -1,3 +1,5 @@
+import { toRaw } from 'vue'
+
 export default {
   data() {
     return {
@@ -78,8 +80,10 @@ export default {
     typeAheadToLastSelected() {
       this.typeAheadPointer =
         this.selectedValue.length !== 0
-          ? this.filteredOptions.indexOf(
-              this.selectedValue[this.selectedValue.length - 1]
+          ? this.filteredOptions.findIndex(
+              (option) =>
+                toRaw(option) ===
+                toRaw(this.selectedValue[this.selectedValue.length - 1])
             )
           : -1
     },
