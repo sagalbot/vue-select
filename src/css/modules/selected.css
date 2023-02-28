@@ -9,6 +9,7 @@
     color: var(--vs-selected-color);
     line-height: var(--vs-line-height);
     margin: 4px 2px 0px 2px;
+    min-width: 0;
     padding: 0 0.25em;
     z-index: 0;
 }
@@ -34,6 +35,7 @@
     }
     &.vs--open .vs__selected,
     &.vs--loading .vs__selected {
+        max-width: 100%;
         position: absolute;
         opacity: 0.4;
     }
