@@ -19,7 +19,7 @@ export default defineConfig({
         lib: {
             entry: resolve(__dirname, 'src/index.js'),
             name: 'vue-select',
-            fileName: (format) => `vue-select.${format}.js`,
+            fileName: (format) => `vue-select.${format}.${format === 'es' ? 'mjs' : 'js'}`,
         },
         rollupOptions: {
             external: ['vue'],
