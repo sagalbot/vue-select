@@ -12,10 +12,10 @@
         "dist"
     ],
     "main": "./dist/vue-select.umd.js",
-    "module": "./dist/vue-select.es.js",
+    "module": "./dist/vue-select.es.mjs",
     "exports": {
         ".": {
-            "import": "./dist/vue-select.es.js",
+            "import": "./dist/vue-select.es.mjs",
             "require": "./dist/vue-select.umd.js"
         },
         "./dist/vue-select.css": {
