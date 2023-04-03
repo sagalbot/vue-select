@@ -1,3 +1,16 @@
+## ariaLabel
+
+This value will be bound to the [aria-label
+HTML attribute](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label)
+for the search input. Defaults to `Search for option`.
+
+```js
+ariaLabel: {
+    type: String,
+    default: 'Search for option'
+},
+```
+
 ## appendToBody <Badge text="v3.7.0+" />
 
 Append the dropdown element to the end of the body

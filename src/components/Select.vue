@@ -12,7 +12,7 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
-      aria-label="Search for option"
+      :aria-label="ariaLabel"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
@@ -243,6 +243,15 @@ export default {
     placeholder: {
       type: String,
       default: '',
+    },
+
+    /**
+     * Sets the value of the 'aria-label' for the search `<input>`.
+     * @type {String}
+     */
+    ariaLabel: {
+      type: String,
+      default: 'Search for option',
     },
 
     /**
