@@ -1,12 +1,29 @@
 {
   "name": "vue3-select",
   "version": "0.0.1",
-  "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
-  "author": "Howard Chen <howard.tzw@gmail.com>, Jeff Sagal <sagalbot@gmail.com>",
+  "description": "A maintained fork of vue-select for Vue 3",
+  "author": "Jeff Sagal <sagalbot@gmail.com>, Howard Chen <howard.tzw@gmail.com>",
   "homepage": "https://vue-select.org",
   "directories": {
     "doc": "docs",
     "test": "tests"
+  },
+  "scripts": {
+    "dev:docs": "cd docs && yarn serve",
+    "build:docs": "cd docs && yarn build",
+    "semantic-release": "semantic-release",
+    "commit": "git-cz",
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --port 5050",
+    "test": "vitest --environment jsdom",
+    "coverage": "vitest --run --coverage --environment jsdom --silent",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "release": "standard-version",
+    "release:patch": "standard-version --release-as patch",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major"
   },
   "files": [
     "dist"
@@ -27,22 +44,9 @@
   "private": false,
   "license": "MIT",
   "prepare": "npm run build",
-  "scripts": {
-    "dev:docs": "cd docs && yarn serve",
-    "build:docs": "cd docs && yarn build",
-    "semantic-release": "semantic-release",
-    "commit": "git-cz",
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview --port 5050",
-    "test": "vitest --environment jsdom",
-    "coverage": "vitest --run --coverage --environment jsdom --silent",
-    "typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sagalbot/vue-select.git"
+    "url": "https://github.com/howard-tzw/vue3-select.git"
   },
   "peerDependencies": {
     "vue": "3.x"
@@ -71,6 +75,7 @@
     "postcss-nested": "^5.0.6",
     "prettier": "^2.7.1",
     "semantic-release": "^19.0.3",
+    "standard-version": "^9.5.0",
     "typescript": "^4.7.4",
     "vite": "^3.0.0",
     "vitest": "^0.18.1",

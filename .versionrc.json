@@ -1,0 +1,13 @@
+{
+	"types": [
+		{ "type": "feat", "section": "Features" },
+		{ "type": "fix", "section": "Bug Fixes" },
+		{ "type": "chore", "section": "Chores" },
+		{ "type": "docs", "hidden": true },
+		{ "type": "style", "section": "Style Updates" },
+		{ "type": "refactor", "section": "Refactor" },
+		{ "type": "perf", "section": "Performance Improvement" },
+		{ "type": "test", "hidden": true },
+		{ "type": "dev", "hidden": true }
+	]
+}
