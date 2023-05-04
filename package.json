@@ -1,104 +1,104 @@
 {
-    "name": "vue-select",
-    "version": "4.0.0-beta.6",
-    "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
-    "author": "Jeff Sagal <sagalbot@gmail.com>",
-    "homepage": "https://vue-select.org",
-    "directories": {
-        "doc": "docs",
-        "test": "tests"
+  "name": "vue3-select",
+  "version": "0.0.1",
+  "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
+  "author": "Howard Chen <howard.tzw@gmail.com>, Jeff Sagal <sagalbot@gmail.com>",
+  "homepage": "https://vue-select.org",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/vue-select.umd.js",
+  "module": "./dist/vue-select.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-select.es.js",
+      "require": "./dist/vue-select.umd.js"
     },
-    "files": [
-        "dist"
-    ],
-    "main": "./dist/vue-select.umd.js",
-    "module": "./dist/vue-select.es.js",
-    "exports": {
-        ".": {
-            "import": "./dist/vue-select.es.js",
-            "require": "./dist/vue-select.umd.js"
-        },
-        "./dist/vue-select.css": {
-            "import": "./dist/vue-select.css",
-            "require": "./dist/vue-select.css",
-            "style": "./dist/vue-select.css"
-        }
-    },
-    "private": false,
-    "license": "MIT",
-    "prepare": "npm run build",
-    "scripts": {
-        "dev:docs": "cd docs && yarn serve",
-        "build:docs": "cd docs && yarn build",
-        "semantic-release": "semantic-release",
-        "commit": "git-cz",
-        "dev": "vite",
-        "build": "vue-tsc --noEmit && vite build",
-        "preview": "vite preview --port 5050",
-        "test": "vitest --environment jsdom",
-        "coverage": "vitest --run --coverage --environment jsdom --silent",
-        "typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/sagalbot/vue-select.git"
-    },
-    "peerDependencies": {
-        "vue": "3.x"
-    },
-    "devDependencies": {
-        "@rushstack/eslint-patch": "^1.1.4",
-        "@semantic-release/git": "^10.0.1",
-        "@semantic-release/github": "^8.0.5",
-        "@types/jsdom": "^16.2.14",
-        "@types/node": "^18.0.5",
-        "@vitejs/plugin-vue": "^3.0.0",
-        "@vue/eslint-config-prettier": "^7.0.0",
-        "@vue/eslint-config-typescript": "^11.0.0",
-        "@vue/test-utils": "^2.0.2",
-        "@vue/tsconfig": "^0.1.3",
-        "autoprefixer": "^10.4.7",
-        "bundlewatch": "^0.3.3",
-        "c8": "^7.11.3",
-        "commitizen": "^4.2.5",
-        "coveralls": "^3.1.1",
-        "cross-env": "^7.0.3",
-        "cz-conventional-changelog": "3.3.0",
-        "eslint": "^8.20.0",
-        "eslint-plugin-vue": "^9.2.0",
-        "jsdom": "^20.0.0",
-        "postcss-nested": "^5.0.6",
-        "prettier": "^2.7.1",
-        "semantic-release": "^19.0.3",
-        "typescript": "^4.7.4",
-        "vite": "^3.0.0",
-        "vitest": "^0.18.1",
-        "vue": "^3.2.37",
-        "vue-tsc": "^0.38.8"
-    },
-    "config": {
-        "commitizen": {
-            "path": "./node_modules/cz-conventional-changelog"
-        }
-    },
-    "bundlewatch": {
-        "files": [
-            {
-                "path": "./dist/vue-select.es.js",
-                "compression": "gzip",
-                "maxSize": "8 KB"
-            },
-            {
-                "path": "./dist/vue-select.umd.js",
-                "compression": "gzip",
-                "maxSize": "7 KB"
-            },
-            {
-                "path": "./dist/vue-select.css",
-                "compression": "gzip",
-                "maxSize": "2 KB"
-            }
-        ]
+    "./dist/vue-select.css": {
+      "import": "./dist/vue-select.css",
+      "require": "./dist/vue-select.css",
+      "style": "./dist/vue-select.css"
     }
+  },
+  "private": false,
+  "license": "MIT",
+  "prepare": "npm run build",
+  "scripts": {
+    "dev:docs": "cd docs && yarn serve",
+    "build:docs": "cd docs && yarn build",
+    "semantic-release": "semantic-release",
+    "commit": "git-cz",
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --port 5050",
+    "test": "vitest --environment jsdom",
+    "coverage": "vitest --run --coverage --environment jsdom --silent",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sagalbot/vue-select.git"
+  },
+  "peerDependencies": {
+    "vue": "3.x"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^8.0.5",
+    "@types/jsdom": "^16.2.14",
+    "@types/node": "^18.0.5",
+    "@vitejs/plugin-vue": "^3.0.0",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^11.0.0",
+    "@vue/test-utils": "^2.0.2",
+    "@vue/tsconfig": "^0.1.3",
+    "autoprefixer": "^10.4.7",
+    "bundlewatch": "^0.3.3",
+    "c8": "^7.11.3",
+    "commitizen": "^4.2.5",
+    "coveralls": "^3.1.1",
+    "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "^8.20.0",
+    "eslint-plugin-vue": "^9.2.0",
+    "jsdom": "^20.0.0",
+    "postcss-nested": "^5.0.6",
+    "prettier": "^2.7.1",
+    "semantic-release": "^19.0.3",
+    "typescript": "^4.7.4",
+    "vite": "^3.0.0",
+    "vitest": "^0.18.1",
+    "vue": "^3.2.37",
+    "vue-tsc": "^0.38.8"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "bundlewatch": {
+    "files": [
+      {
+        "path": "./dist/vue-select.es.js",
+        "compression": "gzip",
+        "maxSize": "8 KB"
+      },
+      {
+        "path": "./dist/vue-select.umd.js",
+        "compression": "gzip",
+        "maxSize": "7 KB"
+      },
+      {
+        "path": "./dist/vue-select.css",
+        "compression": "gzip",
+        "maxSize": "2 KB"
+      }
+    ]
+  }
 }
