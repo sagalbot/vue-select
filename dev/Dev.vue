@@ -1,6 +1,10 @@
 <template>
   <div id="app">
+    <p>searchable</p>
     <v-select v-model="selected" v-bind="config" />
+
+    <p>unsearchable</p>
+    <v-select v-model="selected" v-bind="config" :searchable="false" />
   </div>
 </template>
 
@@ -30,7 +34,8 @@ body {
 #app {
   height: 100%;
   max-width: 20rem;
-  margin: 10rem auto 0;
+  margin: 0 auto;
+  padding: 10px;
 }
 
 hr {

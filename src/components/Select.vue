@@ -987,7 +987,7 @@ export default {
 
   methods: {
     clickOutside() {
-      if (this.open) {
+      if (this.open && !this.searchable) {
         this.open = false
       }
     },
@@ -1129,11 +1129,12 @@ export default {
 
       if (this.open && targetIsNotSearch) {
         this.searchEl.blur()
+      } else if (this.open && !targetIsNotSearch && !this.searchable) {
+        this.open = false
       } else if (!this.disabled) {
+        this.open = true
         this.searchEl.focus()
       }
-
-      this.open = !this.open
     },
 
     /**
@@ -1271,6 +1272,7 @@ export default {
      * @return {void}
      */
     onSearchBlur() {
+      this.open = false
       if (this.mousedown && !this.searching) {
         this.mousedown = false
       } else {
@@ -1294,6 +1296,7 @@ export default {
      * @return {void}
      */
     onSearchFocus() {
+      this.open = true
       this.$emit('search:focus')
     },
 
