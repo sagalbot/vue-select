@@ -13,6 +13,7 @@
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
       aria-label="Search for option"
+      v-click-outside="clickOutside"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
@@ -141,6 +142,7 @@ import typeAheadPointer from '@/mixins/typeAheadPointer.js'
 import ajax from '@/mixins/ajax.js'
 import childComponents from '@/components/childComponents.js'
 import appendToBody from '@/directives/appendToBody.js'
+import clickOutside from '@/directives/clickOutside.js'
 import sortAndStringify from '@/utility/sortAndStringify.js'
 import uniqueId from '@/utility/uniqueId.js'
 
@@ -150,10 +152,10 @@ import uniqueId from '@/utility/uniqueId.js'
 export default {
   components: { ...childComponents },
 
-  directives: { appendToBody },
+  directives: { appendToBody, clickOutside },
 
   mixins: [pointerScroll, typeAheadPointer, ajax],
-  
+
   compatConfig: {
     MODE: 3,
   },
@@ -984,6 +986,11 @@ export default {
   },
 
   methods: {
+    clickOutside() {
+      if (this.open) {
+        this.open = false
+      }
+    },
     /**
      * Make sure tracked value is
      * one option if possible.
@@ -1123,9 +1130,10 @@ export default {
       if (this.open && targetIsNotSearch) {
         this.searchEl.blur()
       } else if (!this.disabled) {
-        this.open = true
         this.searchEl.focus()
       }
+
+      this.open = !this.open
     },
 
     /**
@@ -1186,16 +1194,6 @@ export default {
           this.optionComparator(match, this.$data._value)
         ) || value
       )
-    },
-
-    /**
-     * 'Private' function to close the search options
-     * @emits  {search:blur}
-     * @returns {void}
-     */
-    closeSearchOptions() {
-      this.open = false
-      this.$emit('search:blur')
     },
 
     /**
@@ -1280,12 +1278,12 @@ export default {
         if (this.clearSearchOnBlur({ clearSearchOnSelect, multiple })) {
           this.search = ''
         }
-        this.closeSearchOptions()
+        this.$emit('search:blur')
         return
       }
       // Fixed bug where no-options message could not be closed
       if (this.search.length === 0 && this.options.length === 0) {
-        this.closeSearchOptions()
+        this.$emit('search:blur')
         return
       }
     },
@@ -1296,7 +1294,6 @@ export default {
      * @return {void}
      */
     onSearchFocus() {
-      this.open = true
       this.$emit('search:focus')
     },
 
