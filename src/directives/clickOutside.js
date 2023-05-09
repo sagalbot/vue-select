@@ -7,17 +7,17 @@ export default {
         binding.value(event)
       }
     }
-    const clickHandler =
-      'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
+    // const clickHandler =
+    //   'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
     setTimeout(() => {
-      document.addEventListener(clickHandler, el.clickOutsideEvent)
+      document.addEventListener('click', el.clickOutsideEvent)
     }, 0)
   },
   unmounted: (el) => {
     const clickOutsideEvent = el.clickOutsideEvent
     delete el.clickOutsideEvent
-    const clickHandler =
-      'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
-    document.removeEventListener(clickHandler, clickOutsideEvent)
+    // const clickHandler =
+    //   'ontouchstart' in document.documentElement ? 'touchstart' : 'click'
+    document.removeEventListener('click', clickOutsideEvent)
   },
 }
