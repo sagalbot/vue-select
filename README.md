@@ -1,4 +1,5 @@
-# @nextcloud/vue-select ![Current Release](https://img.shields.io/github/release/nextcloud-deps/vue-select?style=flat-square) ![Release Date](https://img.shields.io/github/release-date/nextcloud-deps/vue-select?style=flat-square) ![Bundle Size](https://flat.badgen.net/bundlephobia/min/@nextcloud/vue-select) ![Monthly Downloads](https://img.shields.io/npm/dm/@nextcloud/vue-select?style=flat-square) ![MIT License](https://img.shields.io/github/license/sagalbot/vue-select.svg?style=flat-square)
+# @nextcloud/vue-select
+![Current Release](https://img.shields.io/github/release/nextcloud-deps/vue-select?style=flat-square) ![Release Date](https://img.shields.io/github/release-date/nextcloud-deps/vue-select?style=flat-square) ![Bundle Size](https://flat.badgen.net/bundlephobia/min/@nextcloud/vue-select) ![Monthly Downloads](https://img.shields.io/npm/dm/@nextcloud/vue-select?style=flat-square) ![MIT License](https://img.shields.io/github/license/sagalbot/vue-select.svg?style=flat-square)
 
 > **Everything you wish the HTML `<select>` element could do, wrapped up into a lightweight, zero
 > dependency, extensible Vue component.**
