@@ -1,4 +1,20 @@
 import { createApp, h } from 'vue'
-import Dev from './Dev.vue'
+import VueSelect from '@/components/Select.vue'
+import '@/css/vue-select.css'
+import App from './app.vue' // must be imported after VueSelect
+import IconDown from './IconDown.vue'
+import './index.css'
 
-createApp(Dev).mount('#app')
+VueSelect.props.components.default = () => ({
+  // Deselect: {
+  // 	render: () => h('span', '❌'),
+  // },
+  OpenIndicator: {
+    render: () => h(IconDown),
+  },
+})
+
+const app = createApp(App)
+app.component('VSelect', VueSelect)
+
+app.mount('#app')
