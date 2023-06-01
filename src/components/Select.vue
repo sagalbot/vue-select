@@ -668,6 +668,14 @@ export default {
       type: [String, Number],
       default: () => uniqueId(),
     },
+    /**
+     * Whether to retain the text in the search input when the user
+     * clicks on the dropdown.
+     */
+    retainTextOnClick: {
+      type: Boolean,
+      default: false,
+    }
   },
 
   data() {
@@ -1113,6 +1121,14 @@ export default {
       } else if (!this.disabled) {
         this.open = true
         this.searchEl.focus()
+        if (this.value !== null && this.retainTextOnClick) {
+          this.search = this.getOptionLabel(this.value)
+          /**
+           * 0-second setTimeout to force this event to the end of the callback queue and
+           * ensure that the select event is called last.
+          */
+          setTimeout(() => this.searchEl.select(), 0)
+        }
       }
     },
 
