@@ -502,6 +502,20 @@ resetOnOptionsChange: {
 },
 ```
 
+## retainTextOnClick
+
+When true, the selected option text will not clear when the user clicks on the component. The search text will automatically be selected.
+
+```js
+/**
+* Whether to retain the text in the search input when the user
+* clicks on the dropdown.
+*/
+retainTextOnClick: {
+    type: Boolean,
+    default: false,
+}
+```
 
 ## searchable
 
