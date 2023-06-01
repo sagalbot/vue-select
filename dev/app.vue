@@ -21,11 +21,7 @@
 
     <div class="section">
       <h2 class="title">BaseSelect</h2>
-      <BaseSelect
-        class="w-56"
-        v-model="selected"
-        :options="baseSelectOptions"
-      />
+      <BaseSelect class="" v-model="selected" :options="baseSelectOptions" />
     </div>
   </div>
 </template>
@@ -49,7 +45,7 @@ const baseSelectOptions = ref(
 html,
 body {
   margin: 0;
-  height: 100%;
+  height: 1000px;
   font-family: -apple-system, sans-serif;
 }
 

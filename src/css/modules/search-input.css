@@ -22,6 +22,16 @@
   /* refer to https://stackoverflow.com/questions/3516173/ipad-safari-how-to-disable-the-quick-blinking-effect-when-a-link-has-been-hit */
   -webkit-tap-highlight-color: transparent;
 
+  width: 0;
+  max-width: 100%;
+  flex-grow: 1;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+
+  background: none;
+  box-shadow: none;
   color: var(--vs-search-input-color);
   appearance: none;
   line-height: var(--vs-line-height);
@@ -29,14 +39,6 @@
   border: 1px solid transparent;
   border-left: none;
   outline: none;
-  margin: 4px 0 0 0;
-  padding: 0 7px;
-  background: none;
-  box-shadow: none;
-  width: 0;
-  max-width: 100%;
-  flex-grow: 1;
-  z-index: 1;
 }
 
 .vs__search::placeholder {

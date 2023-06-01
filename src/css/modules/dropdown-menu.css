@@ -1,29 +1,59 @@
 /* Dropdown Menu */
 
 .vs__dropdown-menu {
-    display: block;
-    box-sizing: border-box;
-    position: absolute;
-    /* calc to ensure the left and right borders of the dropdown appear flush with the toggle. */
-    top: calc(100% - var(--vs-border-width));
-    left: 0;
-    z-index: var(--vs-dropdown-z-index);
-    padding: 5px 0;
-    margin: 0;
-    width: 100%;
-    max-height: var(--vs-dropdown-max-height);
-    min-width: var(--vs-dropdown-min-width);
-    overflow-y: auto;
-    box-shadow: var(--vs-dropdown-box-shadow);
-    border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
-    border-top-style: none;
-    border-radius: 0 0 var(--vs-border-radius) var(--vs-border-radius);
-    text-align: left;
-    list-style: none;
-    background: var(--vs-dropdown-bg);
-    color: var(--vs-dropdown-color);
+  width: 100%;
+  max-height: var(--vs-dropdown-max-height);
+  min-width: var(--vs-dropdown-min-width);
+
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  /* calc to ensure the left and right borders of the dropdown appear flush with the toggle. */
+  top: calc(100% - var(--vs-border-width));
+  left: 0;
+  z-index: var(--vs-dropdown-z-index);
+  padding: 5px;
+  margin: 0;
+  margin-top: 5px;
+  overflow: var(--vs-dropdown-overflow-x) var(--vs-dropdown-overflow-y);
+
+  box-shadow: var(--vs-dropdown-box-shadow);
+  border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
+  border-radius: var(--vs-border-radius);
+  text-align: left;
+  list-style: none;
+  background: var(--vs-dropdown-bg);
+  color: var(--vs-dropdown-color);
 }
 
 .vs__no-options {
-    text-align: center;
+  text-align: center;
+}
+
+/* List Items */
+.vs__dropdown-option {
+  line-height: 1.42857143; /* Normalize line height */
+  display: block;
+  padding: var(--vs-dropdown-option-padding);
+  clear: both;
+  color: var(--vs-dropdown-option-color); /* Overrides most CSS frameworks */
+  white-space: nowrap;
+  cursor: pointer;
+  border-radius: var(--vs-dropdown-option-border-radius);
+}
+
+.vs__dropdown-option--highlight {
+  background: var(--vs-dropdown-option--active-bg);
+  color: var(--vs-dropdown-option--active-color);
+}
+
+.vs__dropdown-option--deselect {
+  background: var(--vs-dropdown-option--deselect-bg);
+  color: var(--vs-dropdown-option--deselect-color);
+}
+
+.vs__dropdown-option--disabled {
+  background: var(--vs-state-disabled-bg);
+  color: var(--vs-state-disabled-color);
+  cursor: var(--vs-state-disabled-cursor);
 }

@@ -53,10 +53,6 @@ function selectedOptionNameClass(name: string) {
       append-to-body
       transition="fade"
     >
-      <template #selected-option="{ name }">
-        <p class="">{{ name }}</p>
-      </template>
-
       <template #option="{ name }">
         <div class="option--scroll">
           <p :class="selectedOptionNameClass(name)">{{ name }}</p>
@@ -71,30 +67,31 @@ function selectedOptionNameClass(name: string) {
 </template>
 
 <style lang="scss" scoped>
-// v-select 為套件內最上層的 class
 :deep(.vs__dropdown-toggle) {
-  border-radius: v-bind(borderRadius);
-  box-shadow: var(--input-shadow);
-  background-color: v-bind(noDropBackgroundColor);
+  border-radius: v-bind(borderRadius); // 欄位外匡
+  box-shadow: var(--input-shadow); // 欄位陰影
+  background-color: v-bind(noDropBackgroundColor); // 欄位背景色
 }
 
-// 在 iphone 上 vue-select 莫名會多出 input.vs__search 的 padding 導致元件跑版
-:deep(.vs__dropdown-toggle .vs__selected-options input.vs__search) {
-  // -webkit-appearance: none;
-  padding: 0;
-  position: relative;
-  left: var(--vselect-left-space);
-}
-
-// 調整左右間距
+// vs__selected-options 調整左側間隔
 :deep(.vs__dropdown-toggle .vs__selected-options) {
-  position: relative;
-  left: var(--vselect-left-space);
-  flex-wrap: nowrap;
+  padding-left: 15px;
 }
-:deep(.vs__dropdown-toggle .vs__actions) {
-  position: relative;
-  right: var(--vselect-right-space);
+
+// vs__selected 欄位文字過長橫軸滑動
+:deep(.vs__dropdown-toggle .vs__selected-options .vs__selected) {
+  overflow-x: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+:deep(.vs__dropdown-toggle
+    .vs__selected-options
+    .vs__selected::-webkit-scrollbar) {
+  display: none;
+}
+
+// vs__search
+:deep(.vs__dropdown-toggle .vs__selected-options input.vs__search) {
 }
 
 // ============== no-drop 為 true 時的樣式 ==============

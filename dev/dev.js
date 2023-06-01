@@ -1,5 +1,5 @@
 import { createApp, h } from 'vue'
-import VueSelect from '@/components/Select.vue'
+import VueSelect from '@/index'
 import '@/css/vue-select.css'
 import App from './app.vue' // must be imported after VueSelect
 import IconDown from './IconDown.vue'
