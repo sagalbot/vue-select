@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/howard-tzw/vue3-select/compare/v0.0.4...v0.0.5) (2023-06-02)
+
+
+### Style Updates
+
+* export  --vs-dropdown-border-radius ([48eb5c5](https://github.com/howard-tzw/vue3-select/commit/48eb5c579c3cf8225d40b5985f476af3fee22fb9))
+
 ### [0.0.4](https://github.com/howard-tzw/vue3-select/compare/v0.0.3...v0.0.4) (2023-06-02)
 
 
