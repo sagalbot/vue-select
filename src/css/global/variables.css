@@ -49,6 +49,7 @@
   --vs-dropdown-overflow-x: auto;
   --vs-dropdown-overflow-y: auto;
   --vs-dropdown-border-radius: 4px;
+  --vs-dropdown-options-gap: 5px;
 
   /* Dropdown Options */
   --vs-dropdown-option-color: var(--vs-dropdown-color);

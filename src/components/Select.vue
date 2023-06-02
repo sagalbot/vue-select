@@ -107,7 +107,8 @@
             'vs__dropdown-option--deselect':
               isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
-            'vs__dropdown-option--highlight': index === typeAheadPointer,
+            'vs__dropdown-option--highlight':
+              index === typeAheadPointer || isOptionSelected(option),
             'vs__dropdown-option--disabled': !selectable(option),
           }"
           :aria-selected="index === typeAheadPointer ? true : null"

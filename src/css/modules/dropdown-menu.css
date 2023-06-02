@@ -5,7 +5,9 @@
   max-height: var(--vs-dropdown-max-height);
   min-width: var(--vs-dropdown-min-width);
 
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vs-dropdown-options-gap);
   box-sizing: border-box;
   position: absolute;
   /* calc to ensure the left and right borders of the dropdown appear flush with the toggle. */
