@@ -21,7 +21,7 @@
 
     <div class="section">
       <h2 class="title">BaseSelect</h2>
-      <BaseSelect class="" v-model="selected" :options="baseSelectOptions" />
+      <BaseSelect v-model="selectedOption" :options="baseSelectOptions" />
     </div>
   </div>
 </template>
@@ -33,6 +33,8 @@ import BaseSelect from './BaseSelect.vue'
 
 const selected = ref(null)
 const options = ref(countries)
+
+const selectedOption = ref(null)
 const baseSelectOptions = ref(
   countries.map((country) => ({
     name: country.label,
