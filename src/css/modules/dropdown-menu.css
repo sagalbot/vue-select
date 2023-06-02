@@ -19,7 +19,7 @@
 
   box-shadow: var(--vs-dropdown-box-shadow);
   border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
-  border-radius: var(--vs-border-radius);
+  border-radius: var(--vs-dropdown-border-radius);
   text-align: left;
   list-style: none;
   background: var(--vs-dropdown-bg);

@@ -48,6 +48,7 @@
   --vs-dropdown-box-shadow: 0px 3px 6px 0px var(--vs-colors--darkest);
   --vs-dropdown-overflow-x: auto;
   --vs-dropdown-overflow-y: auto;
+  --vs-dropdown-border-radius: 4px;
 
   /* Dropdown Options */
   --vs-dropdown-option-color: var(--vs-dropdown-color);
