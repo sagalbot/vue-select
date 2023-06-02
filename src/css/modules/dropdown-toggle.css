@@ -11,10 +11,10 @@
  */
 
 .vs__dropdown-toggle {
-  height: 40px;
+  height: var(--vs-height);
   display: grid;
   grid-template-columns: 1fr auto;
-  padding: 0 0 0px 0;
+  padding: 0px;
   white-space: normal;
 
   appearance: none;

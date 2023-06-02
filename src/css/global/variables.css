@@ -4,6 +4,8 @@
   --vs-colors--dark: #333;
   --vs-colors--darkest: rgba(0, 0, 0, 0.15);
 
+  --vs-height: 36px;
+
   /* Search Input */
   --vs-search-input-color: inherit;
   --vs-search-input-placeholder-color: inherit;
