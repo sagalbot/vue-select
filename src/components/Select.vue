@@ -88,7 +88,7 @@
         :id="`vs${uid}__listbox`"
         ref="dropdownMenu"
         :key="`vs${uid}__listbox`"
-        v-append-to-body
+        v-append-to
         class="vs__dropdown-menu"
         role="listbox"
         tabindex="-1"
@@ -140,7 +140,7 @@ import pointerScroll from '@/mixins/pointerScroll.js'
 import typeAheadPointer from '@/mixins/typeAheadPointer.js'
 import ajax from '@/mixins/ajax.js'
 import childComponents from '@/components/childComponents.js'
-import appendToBody from '@/directives/appendToBody.js'
+import appendTo from '@/directives/appendTo.js'
 import sortAndStringify from '@/utility/sortAndStringify.js'
 import uniqueId from '@/utility/uniqueId.js'
 
@@ -150,7 +150,7 @@ import uniqueId from '@/utility/uniqueId.js'
 export default {
   components: { ...childComponents },
 
-  directives: { appendToBody },
+  directives: { appendTo },
 
   mixins: [pointerScroll, typeAheadPointer, ajax],
   
@@ -627,18 +627,17 @@ export default {
     },
 
     /**
-     * Append the dropdown element to the end of the body
+     * Append the dropdown element to the specified element (or its DOM selector)
      * and size/position it dynamically. Use it if you have
      * overflow or z-index issues.
-     * @type {Boolean}
+     * Note: the specified element must already exist (be mounted) in the DOM.
      */
-    appendToBody: {
-      type: Boolean,
+    appendTo: {
       default: false,
     },
 
     /**
-     * When `appendToBody` is true, this function is responsible for
+     * When `appendTo` is not false, this function is responsible for
      * positioning the drop down list.
      *
      * If a function is returned from `calculatePosition`, it will
