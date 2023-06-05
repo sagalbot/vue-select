@@ -38,7 +38,7 @@ export default {
           return (this.$refs.dropdownMenu.scrollTop = optionEl.offsetTop)
         } else if (bottom > bounds.bottom) {
           return (this.$refs.dropdownMenu.scrollTop =
-            optionEl.offsetTop - (bounds.height - height))
+            optionEl.offsetTop - (bounds.height - height) + 200)
         }
       }
     },

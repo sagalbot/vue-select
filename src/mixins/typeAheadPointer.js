@@ -27,6 +27,9 @@ export default {
   },
 
   methods: {
+    updateTypeAheadPointer(index) {
+      this.typeAheadPointer = index
+    },
     /**
      * Move the typeAheadPointer visually up the list by
      * setting it to the previous selectable option.
@@ -35,7 +38,7 @@ export default {
     typeAheadUp() {
       for (let i = this.typeAheadPointer - 1; i >= 0; i--) {
         if (this.selectable(this.filteredOptions[i])) {
-          this.typeAheadPointer = i
+          this.updateTypeAheadPointer(i)
           break
         }
       }
@@ -53,7 +56,7 @@ export default {
         i++
       ) {
         if (this.selectable(this.filteredOptions[i])) {
-          this.typeAheadPointer = i
+          this.updateTypeAheadPointer(i)
           break
         }
       }
@@ -76,12 +79,32 @@ export default {
      * Moves the pointer to the last selected option.
      */
     typeAheadToLastSelected() {
-      this.typeAheadPointer =
+      /**
+       * @feat If the option is an object, the "label" will be used as the previous selection record,
+       * enabling the "computed" options to function properly.
+       */
+      if (
+        this.filteredOptions[0] &&
+        typeof this.filteredOptions[0] === 'object'
+      ) {
+        const label = this.label
+        const index = this.filteredOptions
+          .map((option) => option[label])
+          .indexOf(this.selectedValue[this.selectedValue.length - 1]?.[label])
+
+        this.updateTypeAheadPointer(
+          this.selectedValue.length !== 0 ? index : -1
+        )
+        return
+      }
+
+      this.updateTypeAheadPointer(
         this.selectedValue.length !== 0
           ? this.filteredOptions.indexOf(
               this.selectedValue[this.selectedValue.length - 1]
             )
           : -1
+      )
     },
   },
 }
