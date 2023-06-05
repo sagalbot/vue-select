@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/howard-tzw/vue3-select/compare/v0.0.5...v0.0.6) (2023-06-05)
+
+
+### Bug Fixes
+
+* set the pointer to the selected option for the computed options ([b710b8e](https://github.com/howard-tzw/vue3-select/commit/b710b8e9ba98ddaab6a75cdc4475236a3c128bea))
+
+
+### Style Updates
+
+* export --vs-height ([bf2d2cb](https://github.com/howard-tzw/vue3-select/commit/bf2d2cbe644ac8db1a2b8b5feac6bcbd4651809c))
+* selected option highlight in menu and add --vs-dropdown-options-gap ([49dcbc3](https://github.com/howard-tzw/vue3-select/commit/49dcbc3f12bcba086f3bc597e730684a2389ae32))
+
+
+### Chores
+
+* remove scss folder ([1943696](https://github.com/howard-tzw/vue3-select/commit/194369614c48614c92171c5955b351a1fb2a3fc1))
+
 ### [0.0.5](https://github.com/howard-tzw/vue3-select/compare/v0.0.4...v0.0.5) (2023-06-02)
 
 
