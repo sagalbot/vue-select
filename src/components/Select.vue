@@ -112,9 +112,11 @@
             'vs__dropdown-option--disabled': !selectable(option),
           }"
           :aria-selected="index === typeAheadPointer ? true : null"
-          @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
+          @mouseover="selectable(option) ? updateTypeAheadPointer(index) : null"
           @click.prevent.stop="selectable(option) ? select(option) : null"
-          @touchstart="selectable(option) ? (typeAheadPointer = index) : null"
+          @touchstart="
+            selectable(option) ? updateTypeAheadPointer(index) : null
+          "
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
@@ -731,7 +733,7 @@ export default {
       }
 
       if (value !== undefined && value !== null && value !== '') {
-        return [].concat(value)
+        return Array.prototype.concat(value)
       }
 
       return []
@@ -892,7 +894,7 @@ export default {
      * @return {array}
      */
     filteredOptions() {
-      const optionList = [].concat(this.optionList)
+      const optionList = Array.prototype.concat(this.optionList)
 
       if (!this.filterable && !this.taggable) {
         return optionList

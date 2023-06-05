@@ -13,7 +13,7 @@
       </ul>
       <v-select
         v-model="selected"
-        :options="options"
+        :options="computedOptions"
         :clearable="false"
         :searchable="false"
       />
@@ -34,13 +34,19 @@ import BaseSelect from './BaseSelect.vue'
 const selected = ref(null)
 const options = ref(countries)
 
-const selectedOption = ref(null)
+const computedOptions = computed(() => countries)
+
 const baseSelectOptions = ref(
   countries.map((country) => ({
     name: country.label,
     value: country.value,
   }))
 )
+const selectedOption = ref()
+
+setTimeout(() => {
+  selectedOption.value = baseSelectOptions.value[0]
+}, 3000)
 </script>
 
 <style lang="scss">
