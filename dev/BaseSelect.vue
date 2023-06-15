@@ -22,14 +22,7 @@ const borderRadius = computed(() => {
   return props.square ? '8px' : '30px'
 })
 
-/**
- * @feat noDrop 為 true 時的樣式
- */
 const attrs = useAttrs()
-const noDropBackgroundColor = computed(() =>
-  attrs['no-drop'] ? '#f7f7f7' : '#fff'
-)
-const noDropCursor = computed(() => (attrs['no-drop'] ? 'default' : 'pointer'))
 
 /**
  * @feat 將選擇的選項名稱加上粗體
@@ -45,7 +38,6 @@ function selectedOptionNameClass(name: string) {
 <template>
   <div>
     <v-select
-      class="cursor-auto"
       v-bind="$attrs"
       :clearable="false"
       :searchable="searchable"
@@ -70,7 +62,6 @@ function selectedOptionNameClass(name: string) {
 :deep(.vs__dropdown-toggle) {
   border-radius: v-bind(borderRadius); // 欄位外匡
   box-shadow: var(--input-shadow); // 欄位陰影
-  background-color: v-bind(noDropBackgroundColor); // 欄位背景色
 }
 
 // vs__selected-options 調整左側間隔
@@ -88,19 +79,6 @@ function selectedOptionNameClass(name: string) {
     .vs__selected-options
     .vs__selected::-webkit-scrollbar) {
   display: none;
-}
-
-// vs__search
-:deep(.vs__dropdown-toggle .vs__selected-options input.vs__search) {
-}
-
-// ============== no-drop 為 true 時的樣式 ==============
-:deep(.vs--unsearchable .vs__dropdown-toggle) {
-  cursor: v-bind(noDropCursor);
-}
-
-:deep(.vs--unsearchable:not(.vs--disabled) .vs__search) {
-  cursor: v-bind(noDropCursor);
 }
 
 .option--scroll {

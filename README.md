@@ -8,6 +8,10 @@ New documentation specific to vue3-select will be available soon as the project 
 
 ## Documentation
 
+New in vue3-select
+
+- **[CSS variables](https://github.com/howard-tzw/vue3-select/blob/main/src/css/global/variables.css)**
+
 Complete documentation and examples available at https://vue-select.org.
 
 - **[API Documentation](https://vue-select.org)**

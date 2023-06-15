@@ -14,7 +14,7 @@
   top: calc(100% - var(--vs-border-width));
   left: 0;
   z-index: var(--vs-dropdown-z-index);
-  padding: 5px;
+  padding: var(--vs-dropdown-padding);
   margin: 0;
   margin-top: 5px;
   overflow: var(--vs-dropdown-overflow-x) var(--vs-dropdown-overflow-y);

@@ -10,20 +10,32 @@
  */
 
 :root {
-    --vs-disabled-bg: var(--vs-state-disabled-bg);
-    --vs-disabled-color: var(--vs-state-disabled-color);
-    --vs-disabled-cursor: var(--vs-state-disabled-cursor);
+  --vs-disabled-bg: var(--vs-state-disabled-bg);
+  --vs-disabled-color: var(--vs-state-disabled-color);
+  --vs-disabled-cursor: var(--vs-state-disabled-cursor);
 }
 
+.vs--no-drop {
+  .vs__dropdown-toggle,
+  .vs__clear,
+  .vs__search,
+  .vs__selected,
+  .vs__open-indicator {
+    background-color: var(--vs-state-no-drop-bg);
+    cursor: var(--vs-state-no-drop-cursor);
+  }
+}
+
+/* If both "no-drop" and "disabled" are enabled simultaneously, .vs--disabled will overwrite .vs--no-drop */
 .vs--disabled {
-    .vs__dropdown-toggle,
-    .vs__clear,
-    .vs__search,
-    .vs__selected,
-    .vs__open-indicator {
-        cursor: var(--vs-disabled-cursor);
-        background-color: var(--vs-disabled-bg);
-    }
+  .vs__dropdown-toggle,
+  .vs__clear,
+  .vs__search,
+  .vs__selected,
+  .vs__open-indicator {
+    background-color: var(--vs-disabled-bg);
+    cursor: var(--vs-disabled-cursor);
+  }
 }
 
 /*
@@ -35,21 +47,21 @@
  */
 
 .v-select[dir='rtl'] {
-    .vs__actions {
-        padding: 0 3px 0 6px;
-    }
+  .vs__actions {
+    padding: 0 3px 0 6px;
+  }
 
-    .vs__clear {
-        margin-left: 6px;
-        margin-right: 0;
-    }
+  .vs__clear {
+    margin-left: 6px;
+    margin-right: 0;
+  }
 
-    .vs__deselect {
-        margin-left: 0;
-        margin-right: 2px;
-    }
+  .vs__deselect {
+    margin-left: 0;
+    margin-right: 2px;
+  }
 
-    .vs__dropdown-menu {
-        text-align: right;
-    }
+  .vs__dropdown-menu {
+    text-align: right;
+  }
 }

@@ -853,6 +853,7 @@ export default {
         'vs--unsearchable': !this.searchable,
         'vs--loading': this.mutableLoading,
         'vs--disabled': this.disabled,
+        'vs--no-drop': this.noDrop,
       }
     },
 

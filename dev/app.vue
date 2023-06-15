@@ -23,6 +23,44 @@
       <h2 class="title">BaseSelect</h2>
       <BaseSelect v-model="selectedOption" :options="baseSelectOptions" />
     </div>
+
+    <div class="section">
+      <h2 class="title">BaseSelect</h2>
+      <ul>
+        <li>no-drop: true</li>
+      </ul>
+      <BaseSelect
+        v-model="selectedOption"
+        :options="baseSelectOptions"
+        no-drop
+      />
+    </div>
+
+    <div class="section">
+      <h2 class="title">BaseSelect</h2>
+      <ul>
+        <li>disabled: true</li>
+      </ul>
+      <BaseSelect
+        v-model="selectedOption"
+        :options="baseSelectOptions"
+        disabled
+      />
+    </div>
+
+    <div class="section">
+      <h2 class="title">BaseSelect</h2>
+      <ul>
+        <li>no-drop: true</li>
+        <li>disabled: true</li>
+      </ul>
+      <BaseSelect
+        v-model="selectedOption"
+        :options="baseSelectOptions"
+        no-drop
+        disabled
+      />
+    </div>
   </div>
 </template>
 
@@ -46,7 +84,7 @@ const selectedOption = ref()
 
 setTimeout(() => {
   selectedOption.value = baseSelectOptions.value[0]
-}, 3000)
+}, 500)
 </script>
 
 <style lang="scss">
@@ -55,6 +93,7 @@ body {
   margin: 0;
   height: 1000px;
   font-family: -apple-system, sans-serif;
+  background-color: #fafafa;
 }
 
 .title {

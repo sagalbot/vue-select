@@ -54,7 +54,7 @@
   .vs__search {
     opacity: 1;
   }
-  &:not(.vs--disabled) .vs__search {
+  &:not(.vs--disabled, .vs--no-drop) .vs__search {
     cursor: pointer;
   }
 }

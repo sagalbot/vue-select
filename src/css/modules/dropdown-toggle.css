@@ -18,7 +18,7 @@
   white-space: normal;
 
   appearance: none;
-  background: none;
+  background: var(--vs-bg-color);
   border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
   border-radius: var(--vs-border-radius);
 }

@@ -4,17 +4,23 @@
   --vs-colors--dark: #333;
   --vs-colors--darkest: rgba(0, 0, 0, 0.15);
 
+  /* Font */
+  --vs-font-size: 1rem;
+  --vs-line-height: 1.4;
+
+  /* vs__dropdown-toggle */
   --vs-height: 36px;
+  --vs-bg-color: inherit;
 
   /* Search Input */
   --vs-search-input-color: inherit;
   --vs-search-input-placeholder-color: inherit;
 
-  /* Font */
-  --vs-font-size: 1rem;
-  --vs-line-height: 1.4;
+  /* State - No drop */
+  --vs-state-no-drop-bg: inherit;
+  --vs-state-no-drop-cursor: default;
 
-  /* Disabled State */
+  /* State - Disabled */
   --vs-state-disabled-bg: rgb(248, 248, 248);
   --vs-state-disabled-color: var(--vs-colors--light);
   --vs-state-disabled-controls-color: var(--vs-colors--light);
@@ -41,7 +47,7 @@
   --vs-selected-border-style: var(--vs-border-style);
   --vs-selected-border-width: var(--vs-border-width);
 
-  /* Dropdown */
+  /* Dropdown Menu */
   --vs-dropdown-bg: #fff;
   --vs-dropdown-color: inherit;
   --vs-dropdown-z-index: 1000;
@@ -51,9 +57,10 @@
   --vs-dropdown-overflow-x: auto;
   --vs-dropdown-overflow-y: auto;
   --vs-dropdown-border-radius: 4px;
-  --vs-dropdown-options-gap: 5px;
+  --vs-dropdown-options-gap: 2px;
+  --vs-dropdown-padding: 5px;
 
-  /* Dropdown Options */
+  /* Dropdown Option */
   --vs-dropdown-option-color: var(--vs-dropdown-color);
   --vs-dropdown-option-padding: 5px 15px;
   --vs-dropdown-option-border-radius: var(--vs-border-radius);
