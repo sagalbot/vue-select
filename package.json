@@ -1,6 +1,6 @@
 {
   "name": "vue3-select",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A maintained fork of vue-select for Vue 3",
   "author": "Jeff Sagal <sagalbot@gmail.com>, Howard Chen <howard.tzw@gmail.com>",
   "homepage": "https://vue-select.org",

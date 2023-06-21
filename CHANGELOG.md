@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/howard-tzw/vue3-select/compare/v0.0.6...v0.0.7) (2023-06-21)
+
+
+### Features
+
+* export no-drop and dropdown-menu padding style in css variables ([242c814](https://github.com/howard-tzw/vue3-select/commit/242c814e8d98e080eff2dae82f1cde4b599b5d84))
+
+
+### Style Updates
+
+* export .vs__dropdown-option--selected ([2118d83](https://github.com/howard-tzw/vue3-select/commit/2118d83ce49e43e79db499981c223e5a4bff79ff))
+
 ### [0.0.6](https://github.com/howard-tzw/vue3-select/compare/v0.0.5...v0.0.6) (2023-06-05)
 
 
