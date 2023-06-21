@@ -68,6 +68,8 @@
   /* Option */
   --vs-dropdown-option--active-bg: #5897fb;
   --vs-dropdown-option--active-color: #fff;
+  --vs-dropdown-option--selected-bg: #5897fb;
+  --vs-dropdown-option--selected-color: #fff;
 
   /* Deselect State */
   --vs-dropdown-option--deselect-bg: #fb5858;

@@ -49,6 +49,12 @@
   color: var(--vs-dropdown-option--active-color);
 }
 
+/* should be after .vs__dropdown-option--highlight to cover */
+.vs__dropdown-option--selected {
+  background: var(--vs-dropdown-option--selected-bg);
+  color: var(--vs-dropdown-option--selected-color);
+}
+
 .vs__dropdown-option--deselect {
   background: var(--vs-dropdown-option--deselect-bg);
   color: var(--vs-dropdown-option--deselect-color);

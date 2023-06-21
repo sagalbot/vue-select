@@ -9,9 +9,7 @@
   /* vs__dropdown-toggle */
   --vs-height: 36px;
   --vs-bg-color: #fff;
-
-  /* state */
-  --vs-state-no-drop-bg: #fff;
+  --vs-state-no-drop-bg: red;
   --vs-state-disabled-bg: rgb(248, 248, 248);
 
   /* .vs__dropdown-menu */
@@ -20,4 +18,5 @@
 
   /* dropdown option */
   --vs-dropdown-option--active-bg: black;
+  --vs-dropdown-option--selected-bg: gray;
 }
