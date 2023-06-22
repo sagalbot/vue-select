@@ -510,6 +510,16 @@ export default {
     },
 
     /**
+     * If false, the focused dropdown option will not be reset when filtered
+     * options change.
+     * @type {Boolean}
+     */
+    resetFocusOnOptionsChange: {
+      type: Boolean,
+      default: true,
+    },
+
+    /**
      * When false, updating the options will not reset the selected value. Accepts
      * a `boolean` or `function` that returns a `boolean`. If defined as a function,
      * it will receive the params listed below.
