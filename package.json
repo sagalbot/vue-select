@@ -13,7 +13,7 @@
     ],
     "main": "./dist/vue-select.umd.js",
     "module": "./dist/vue-select.es.js",
-    "types": "./dist/src/index.d.ts",
+    "types": "./dist/src/components/Select.vue.d.ts",
     "exports": {
         ".": {
             "import": "./dist/vue-select.es.js",
