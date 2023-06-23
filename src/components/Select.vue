@@ -135,7 +135,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import pointerScroll from '@/mixins/pointerScroll.js'
 import typeAheadPointer from '@/mixins/typeAheadPointer.js'
 import ajax from '@/mixins/ajax.js'
@@ -147,7 +147,8 @@ import uniqueId from '@/utility/uniqueId.js'
 /**
  * @name VueSelect
  */
-export default {
+ import { defineComponent } from 'vue'
+ export default defineComponent({
   components: { ...childComponents },
 
   directives: { appendToBody },
@@ -1362,5 +1363,5 @@ export default {
       }
     },
   },
-}
+})
 </script>
