@@ -1,6 +1,6 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "include": ["env.d.ts", "shims-vue.d.ts", "src/**/*", "src/**/*.vue"],
   "exclude": ["tests"],
   "compilerOptions": {
     "composite": true,

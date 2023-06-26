@@ -7,7 +7,9 @@ import vue from '@vitejs/plugin-vue'
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [vue(), dts({
-        insertTypesEntry: true,
+      staticImport: true,
+      skipDiagnostics: false,
+      insertTypesEntry: true
       })],
     publicDir: false,
     resolve: {

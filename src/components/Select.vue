@@ -136,13 +136,13 @@
 </template>
 
 <script lang="ts">
-import pointerScroll from '@/mixins/pointerScroll.js'
-import typeAheadPointer from '@/mixins/typeAheadPointer.js'
-import ajax from '@/mixins/ajax.js'
-import childComponents from '@/components/childComponents.js'
-import appendToBody from '@/directives/appendToBody.js'
-import sortAndStringify from '@/utility/sortAndStringify.js'
-import uniqueId from '@/utility/uniqueId.js'
+import pointerScroll from '@/mixins/pointerScroll.ts'
+import typeAheadPointer from '@/mixins/typeAheadPointer.ts'
+import ajax from '@/mixins/ajax.ts'
+import childComponents from '@/components/childComponents.ts'
+import appendToBody from '@/directives/appendToBody.ts'
+import sortAndStringify from '@/utility/sortAndStringify.ts'
+import uniqueId from '@/utility/uniqueId.ts'
 
 /**
  * @name VueSelect
