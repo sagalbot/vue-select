@@ -12,7 +12,7 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
-      aria-label="Search for option"
+      :aria-label="optionSearchLabel"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
@@ -62,8 +62,8 @@
           :disabled="disabled"
           type="button"
           class="vs__clear"
-          title="Clear Selected"
-          aria-label="Clear Selected"
+          :title="clearSelectedLabel"
+          :aria-label="clearSelectedLabel"
           @click="clearSelection"
         >
           <component :is="childComponents.Deselect" />
@@ -347,6 +347,25 @@ export default {
         }
         return option
       },
+    },
+
+    /**
+     * Sets the value of the 'aria-label' for the search `<input>`.
+     * @type {String}
+     */
+    optionSearchLabel: {
+      type: String,
+      default: 'Rechercher une option',
+    },
+
+    
+    /**
+     * Sets the value of the 'aria-label' for the clear `<button>`.
+     * @type {String}
+     */
+    clearSelectedLabel: {
+      type: String,
+      default: 'Effacer la sélection',
     },
 
     /**
