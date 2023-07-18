@@ -1064,8 +1064,6 @@ export default {
      * @param value
      */
     updateValue(value) {
-      console.trace();
-
       if (typeof this.value === 'undefined') {
         // Vue select has to manage value
         this.$data._value = value
