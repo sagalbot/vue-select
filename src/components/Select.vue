@@ -394,7 +394,7 @@ export default {
     onTab: {
       type: Function,
       default: function () {
-        if (this.selectOnTab && !this.isComposing) {
+        if (this.selectOnTab && !this.isComposing && this.open) {
           this.typeAheadSelect()
         }
       },
@@ -1064,6 +1064,8 @@ export default {
      * @param value
      */
     updateValue(value) {
+      console.trace();
+
       if (typeof this.value === 'undefined') {
         // Vue select has to manage value
         this.$data._value = value
