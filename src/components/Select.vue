@@ -774,7 +774,7 @@ export default {
             readonly: !this.searchable,
             id: this.inputId,
             'aria-autocomplete': 'list',
-            'aria-labelledby': `vs${this.uid}__combobox`,
+            'aria-describedby': `vs${this.uid}__combobox`,
             'aria-controls': `vs${this.uid}__listbox`,
             ref: 'search',
             type: 'search',
