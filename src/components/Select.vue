@@ -37,8 +37,8 @@
               :disabled="disabled"
               type="button"
               class="vs__deselect"
-              :title="`Deselect ${getOptionLabel(option)}`"
-              :aria-label="`Deselect ${getOptionLabel(option)}`"
+              :title="`${deselectItemLabel} ${getOptionLabel(option)}`"
+              :aria-label="`${deselectItemLabel} ${getOptionLabel(option)}`"
               @click="deselect(option)"
             >
               <component :is="childComponents.Deselect" />
@@ -365,7 +365,16 @@ export default {
      */
     clearSelectedLabel: {
       type: String,
-      default: 'Effacer la sélection',
+      default: 'Réinitialiser la sélection',
+    },
+    
+    /**
+     * Localizable text to be added to the "clear" icon for multi-select chips.
+     * @type {String}
+     */
+    deselectItemLabel: {
+      type: String,
+      default: 'Déselectionner',
     },
 
     /**
