@@ -17,7 +17,7 @@
     >
       <div ref="selectedOptions" class="vs__selected-options">
         <slot
-          v-for="option in selectedValue"
+          v-for="option, optionIdx in selectedValue"
           name="selected-option-container"
           :option="normalizeOptionForSlot(option)"
           :deselect="deselect"
@@ -29,7 +29,9 @@
               name="selected-option"
               v-bind="normalizeOptionForSlot(option)"
             >
-              {{ getOptionLabel(option) }}
+              <span :id="`vs${uid}__selected-option${optionIdx}`">
+                {{ getOptionLabel(option) }}
+              </span>
             </slot>
             <button
               v-if="multiple"
@@ -706,6 +708,16 @@ export default {
 
   computed: {
     /**
+     * Returns a list of selected options's IDs in order to 
+     * be able to set the aria-describedby attribute on the
+     * search input.
+     * @return {String}
+     */
+    ariaDescribedBy() {
+      return this.selectedValue.map((option, idx) => `vs${this.uid}__selected-option${idx}`).join(' ');
+    },
+
+    /**
      * Determine if the component needs to
      * track the state of values internally.
      * @return {boolean}
@@ -778,7 +790,7 @@ export default {
             readonly: !this.searchable,
             id: this.inputId,
             'aria-autocomplete': 'list',
-            'aria-describedby': `vs${this.uid}__combobox`,
+            'aria-describedby': this.ariaDescribedBy,
             'aria-controls': `vs${this.uid}__listbox`,
             ref: 'search',
             type: 'search',
