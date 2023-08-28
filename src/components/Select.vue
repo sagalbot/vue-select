@@ -84,7 +84,7 @@
     </div>
     <transition :name="transition">
       <ul
-        v-if="dropdownOpen"
+        v-show="dropdownOpen"
         :id="`vs${uid}__listbox`"
         ref="dropdownMenu"
         :key="`vs${uid}__listbox`"
@@ -124,12 +124,6 @@
         </li>
         <slot name="list-footer" v-bind="scope.listFooter" />
       </ul>
-      <ul
-        v-else
-        :id="`vs${uid}__listbox`"
-        role="listbox"
-        style="display: none; visibility: hidden"
-      ></ul>
     </transition>
     <slot name="footer" v-bind="scope.footer" />
   </div>
