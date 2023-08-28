@@ -12,7 +12,7 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
-      :aria-label="optionSearchLabel"
+      :aria-label="selectedValue.length === 0 ? optionSearchLabel : false"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
