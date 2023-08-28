@@ -1053,7 +1053,9 @@ export default {
      * @return {void}
      */
     clearSelection() {
-      this.updateValue(this.multiple ? [] : null)
+      this.updateValue(this.multiple ? [] : null);
+      // Set the focus on the search input
+      this.$refs.search.focus();
     },
 
     /**
