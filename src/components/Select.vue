@@ -215,7 +215,7 @@ export default {
      */
     deselectFromDropdown: {
       type: Boolean,
-      default: false,
+      default: true,
     },
 
     /**
