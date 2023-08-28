@@ -1382,7 +1382,7 @@ export default {
      * @param {KeyboardEvent} e
      */
     onSearchKeyPress(e) {
-      if (!this.open && e.keyCode === 32) {
+      if (!this.open && e.code === 32) {
         e.preventDefault()
         this.open = true
       }
