@@ -1,6 +1,22 @@
 <template>
   <div id="app">
-    <v-select v-model="selected" v-bind="config" />
+    <v-select
+      v-model="selectedCountry"
+      v-bind="countriesModel"
+      placeholder="Sélectionnez un pays"
+    />
+
+    <label for="books-select">
+      Books
+    </label>
+    <v-select
+      inputId="books-select"
+      v-model="selectedBook"
+      v-bind="bookModel"
+      multiple="true"
+      placeholder="Sélectionnez des livres"
+    />
+
   </div>
 </template>
 
@@ -12,9 +28,13 @@ import books from '../docs/.vuepress/data/books'
 export default {
   components: { vSelect },
   data: () => ({
-    selected: null,
-    config: {
+    selectedCountry: null,
+    countriesModel: {
       options: countries,
+    },
+    selectedBook: null,
+    bookModel: {
+      options: books,
     },
   }),
 }

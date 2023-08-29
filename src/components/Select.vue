@@ -12,12 +12,12 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
-      :aria-label="optionSearchLabel"
+      :aria-label="selectedValue.length === 0 ? optionSearchLabel : false"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
         <slot
-          v-for="option in selectedValue"
+          v-for="option, optionIdx in selectedValue"
           name="selected-option-container"
           :option="normalizeOptionForSlot(option)"
           :deselect="deselect"
@@ -29,7 +29,9 @@
               name="selected-option"
               v-bind="normalizeOptionForSlot(option)"
             >
-              {{ getOptionLabel(option) }}
+              <span :id="`vs${uid}__selected-option${optionIdx}`">
+                {{ getOptionLabel(option) }}
+              </span>
             </slot>
             <button
               v-if="multiple"
@@ -37,8 +39,8 @@
               :disabled="disabled"
               type="button"
               class="vs__deselect"
-              :title="`Deselect ${getOptionLabel(option)}`"
-              :aria-label="`Deselect ${getOptionLabel(option)}`"
+              :title="`${deselectItemLabel} ${getOptionLabel(option)}`"
+              :aria-label="`${deselectItemLabel} ${getOptionLabel(option)}`"
               @click="deselect(option)"
             >
               <component :is="childComponents.Deselect" />
@@ -84,7 +86,7 @@
     </div>
     <transition :name="transition">
       <ul
-        v-if="dropdownOpen"
+        v-show="dropdownOpen"
         :id="`vs${uid}__listbox`"
         ref="dropdownMenu"
         :key="`vs${uid}__listbox`"
@@ -94,6 +96,7 @@
         tabindex="-1"
         @mousedown.prevent="onMousedown"
         @mouseup="onMouseUp"
+        :aria-multiselectable="true"
       >
         <slot name="list-header" v-bind="scope.listHeader" />
         <li
@@ -109,7 +112,7 @@
             'vs__dropdown-option--highlight': index === typeAheadPointer,
             'vs__dropdown-option--disabled': !selectable(option),
           }"
-          :aria-selected="index === typeAheadPointer ? true : null"
+          :aria-selected="isOptionSelected(option) ? 'true' : 'false'"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
           @click.prevent.stop="selectable(option) ? select(option) : null"
         >
@@ -124,12 +127,6 @@
         </li>
         <slot name="list-footer" v-bind="scope.listFooter" />
       </ul>
-      <ul
-        v-else
-        :id="`vs${uid}__listbox`"
-        role="listbox"
-        style="display: none; visibility: hidden"
-      ></ul>
     </transition>
     <slot name="footer" v-bind="scope.footer" />
   </div>
@@ -215,7 +212,7 @@ export default {
      */
     deselectFromDropdown: {
       type: Boolean,
-      default: false,
+      default: true,
     },
 
     /**
@@ -365,7 +362,16 @@ export default {
      */
     clearSelectedLabel: {
       type: String,
-      default: 'Effacer la sélection',
+      default: 'Réinitialiser la sélection',
+    },
+    
+    /**
+     * Localizable text to be added to the "clear" icon for multi-select chips.
+     * @type {String}
+     */
+    deselectItemLabel: {
+      type: String,
+      default: 'Déselectionner',
     },
 
     /**
@@ -702,6 +708,16 @@ export default {
 
   computed: {
     /**
+     * Returns a list of selected options's IDs in order to 
+     * be able to set the aria-describedby attribute on the
+     * search input.
+     * @return {String}
+     */
+    ariaDescribedBy() {
+      return this.selectedValue.map((option, idx) => `vs${this.uid}__selected-option${idx}`).join(' ');
+    },
+
+    /**
      * Determine if the component needs to
      * track the state of values internally.
      * @return {boolean}
@@ -774,7 +790,7 @@ export default {
             readonly: !this.searchable,
             id: this.inputId,
             'aria-autocomplete': 'list',
-            'aria-describedby': `vs${this.uid}__combobox`,
+            'aria-describedby': this.ariaDescribedBy,
             'aria-controls': `vs${this.uid}__listbox`,
             ref: 'search',
             type: 'search',
@@ -919,7 +935,7 @@ export default {
      */
     showClearButton() {
       return (
-        !this.multiple && this.clearable && !this.open && !this.isValueEmpty
+        this.clearable && !this.open && !this.isValueEmpty
       )
     },
   },
@@ -1053,7 +1069,9 @@ export default {
      * @return {void}
      */
     clearSelection() {
-      this.updateValue(this.multiple ? [] : null)
+      this.updateValue(this.multiple ? [] : null);
+      // Set the focus on the search input
+      this.$refs.search.focus();
     },
 
     /**
@@ -1382,7 +1400,7 @@ export default {
      * @param {KeyboardEvent} e
      */
     onSearchKeyPress(e) {
-      if (!this.open && e.keyCode === 32) {
+      if (!this.open && e.code === 32) {
         e.preventDefault()
         this.open = true
       }
