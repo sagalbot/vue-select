@@ -4,6 +4,8 @@
       v-model="selectedCountry"
       v-bind="countriesModel"
       placeholder="Sélectionnez un pays"
+      :selectOnTab="true"
+      :deselectFromDropdown="true"
     />
 
     <label for="books-select">
@@ -28,13 +30,9 @@ import books from '../docs/.vuepress/data/books'
 export default {
   components: { vSelect },
   data: () => ({
-    selectedCountry: null,
-    countriesModel: {
+    selected: null,
+    config: {
       options: countries,
-    },
-    selectedBook: null,
-    bookModel: {
-      options: books,
     },
   }),
 }

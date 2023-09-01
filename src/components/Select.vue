@@ -212,7 +212,7 @@ export default {
      */
     deselectFromDropdown: {
       type: Boolean,
-      default: true,
+      default: false,
     },
 
     /**
@@ -1041,7 +1041,7 @@ export default {
         this.updateValue(option)
         this.$emit('option:selected', option)
       } else if (
-        this.deselectFromDropdown &&
+        this.deselectFromDropdown && this.dropdownOpen &&
         (this.clearable || (this.multiple && this.selectedValue.length > 1))
       ) {
         this.deselect(option)
