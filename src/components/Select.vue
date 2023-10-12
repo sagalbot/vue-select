@@ -12,6 +12,7 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
+      :aria-controls="`vs${uid}__listbox`"
       aria-label="Search for option"
       @mousedown="toggleDropdown($event)"
     >
