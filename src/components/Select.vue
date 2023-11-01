@@ -12,7 +12,7 @@
       role="combobox"
       :aria-expanded="dropdownOpen.toString()"
       :aria-owns="`vs${uid}__listbox`"
-      aria-label="Search for option"
+      :aria-label="ariaLabelCombobox"
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
@@ -37,8 +37,8 @@
               :disabled="disabled"
               type="button"
               class="vs__deselect"
-              :title="`Deselect ${getOptionLabel(option)}`"
-              :aria-label="`Deselect ${getOptionLabel(option)}`"
+              :title="ariaLabelDeselectOption(getOptionLabel(option))"
+              :aria-label="ariaLabelDeselectOption(getOptionLabel(option))"
               @click="deselect(option)"
             >
               <component :is="childComponents.Deselect" />
@@ -62,8 +62,8 @@
           :disabled="disabled"
           type="button"
           class="vs__clear"
-          title="Clear Selected"
-          aria-label="Clear Selected"
+          :title="ariaLabelClearSelected"
+          :aria-label="ariaLabelClearSelected"
           @click="clearSelection"
         >
           <component :is="childComponents.Deselect" />
@@ -281,6 +281,36 @@ export default {
     label: {
       type: String,
       default: 'label',
+    },
+
+    /**
+     * Allows to customize the `aria-label` set on the comobobox for searching options.
+     * @type {String}
+     * @default 'Search for options'
+     */
+    ariaLabelCombobox: {
+      type: String,
+      default: 'Search for options',
+    },
+
+    /**
+     * Allows to customize the `aria-label` set on the clear-selected button
+     * @type {String}
+     * @default 'Clear selected'
+     */
+    ariaLabelClearSelected: {
+      type: String,
+      default: 'Clear selected',
+    },
+
+    /**
+     * Allows to customize the `aria-label` for the deselect-option button
+     * The default is "Deselect " + optionLabel
+     * @type {(optionLabel: string) => string}
+     */
+    ariaLabelDeselectOption: {
+      type: Function,
+      default: (optionLabel) => `Deselect ${optionLabel}`,
     },
 
     /**
