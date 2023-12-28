@@ -1,4 +1,5 @@
-:root {
+:root,
+:host {
     --vs-colors--lightest: rgba(60, 60, 60, 0.26);
     --vs-colors--light: rgba(60, 60, 60, 0.5);
     --vs-colors--dark: #333;
