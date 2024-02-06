@@ -675,7 +675,6 @@ export default {
     category: {
       id: Number,
       label: String,
-      default: '',
     },
 
     categorizedOptions: {
@@ -1389,8 +1388,10 @@ export default {
     },
 
     /**
-     * Add category labels to options
-     * @param {CategorizedOption} options 
+     * Add categories to options.
+     *
+     * @param  {Array} options
+     * @return {Object}
      */
     groupOptionsByCategory(options) {
       const categorizedOptions = {}
@@ -1405,10 +1406,8 @@ export default {
         categorizedOptions[category].push(option)
       })
 
-      // Sort categories alphabetically
       const sortedCategories = Object.keys(categorizedOptions).sort()
 
-      // Create a new object with sorted categories and sorted options within each category
       const sortedCategorizedOptions = {}
       sortedCategories.forEach((category) => {
         sortedCategorizedOptions[category] = this.sortOptions(
@@ -1420,8 +1419,11 @@ export default {
     },
 
     /**
-     * Sort the options alphabetically by category label
-     * @param {sortOptions} options 
+     * Sort options alphabetically based on label
+     * from option.category Object.
+     *
+     * @param  {Array} options
+     * @return {void}
      */
     sortOptions(options) {
       return options.sort((a, b) =>
@@ -1430,8 +1432,11 @@ export default {
     },
 
     /**
-     * 
-     * @param {CategoryLabel} option 
+     * Return the label of a given category
+     * from option.category Object.
+     *
+     * @param  {Object} option
+     * @return {string}
      */
     getOptionCategory(option) {
       if (typeof option === 'object' && option.category?.label) {
