@@ -1,8 +1,8 @@
 /* eslint-disable */
 export default [
-  {value: "AF", label: "Afghanistan"},
-  {value: "AX", label: "Åland Islands"},
-  {value: "AL", label: "Albania"},
+  {value: "AF", label: "Afghanistan", category: {id: 1, label: "cat1"}},
+  {value: "AX", label: "Åland Islands", category: {id: 2, label: "cat2"}},
+  {value: "AL", label: "Albania", category: {id: 1, label: "cat1"}},
   {value: "DZ", label: "Algeria"},
   {value: "AS", label: "American Samoa"},
   {value: "AD", label: "Andorra"},
