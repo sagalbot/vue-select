@@ -605,3 +605,13 @@ value: {
 	default: null
 },
 ```
+
+## limit
+
+It will limit the display of selected options. The rest will be hidden. only work when multiple selections are made.
+
+```js
+limit: {
+	default: 0
+},
+```
