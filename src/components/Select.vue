@@ -775,7 +775,7 @@ export default {
      * @return {Array}
      */
     limitedSelectedValue() {
-      if (this.limit > 0 && this.selectedValue.length > 0) {
+      if (this.selectedValue.length > 0 && this.limit > 0) {
         return this.selectedValue.slice(0, this.limit)
       }
 
