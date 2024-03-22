@@ -394,7 +394,7 @@ export default {
     onTab: {
       type: Function,
       default: function () {
-        if (this.selectOnTab && !this.isComposing) {
+        if (this.selectOnTab && !this.isComposing && this.open) {
           this.typeAheadSelect()
         }
       },

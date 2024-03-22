@@ -50,7 +50,7 @@ describe('VS - Selecting Values', () => {
     expect(Select.selectedValue).toEqual(Select.value)
   })
 
-  it('can select an option on tab', () => {
+  it('can select an option on tab while open', async () => {
     const Select = shallowMount(VueSelect, {
       propsData: {
         selectOnTab: true,
@@ -59,9 +59,26 @@ describe('VS - Selecting Values', () => {
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
+    Select.findComponent({ ref: 'search' }).trigger('focus');
     Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
 
-    expect(spy).toHaveBeenCalledWith()
+    expect(spy).toHaveBeenCalledTimes(1);
+  })
+
+  it('cannot select an option on tab while closed', async () => {
+    const Select = shallowMount(VueSelect, {
+      propsData: {
+        selectOnTab: true,
+      },
+    })
+
+    const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
+
+    Select.findComponent({ ref: 'search' }).trigger('focus');
+    Select.findComponent({ ref: 'search' }).trigger('blur');
+    Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
+
+    expect(spy).toHaveBeenCalledTimes(0);
   })
 
   it('can deselect a pre-selected object', () => {
