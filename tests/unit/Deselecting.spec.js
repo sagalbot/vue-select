@@ -6,7 +6,7 @@ describe('Removing values', () => {
     Select.vm.$data._value = 'one'
     await Select.vm.$nextTick()
 
-    Select.find('.vs__deselect').trigger('click')
+    Select.find('.vs__deselect').trigger('mousedown')
     expect(Select.emitted().input).toEqual([[[]]])
     expect(Select.vm.selectedValue).toEqual([])
   })
@@ -112,6 +112,50 @@ describe('Removing values', () => {
     expect(deselect).not.toHaveBeenCalledWith('one')
   })
 
+  it('should return focus to the search input after keyboard deselect', () => {
+    const Select = selectWithProps({
+      multiple: true,
+      options: ['one', 'two', 'three'],
+      value: ['one'],
+    })
+
+    const deselect = Select.findComponent({ ref: 'deselectButtons' })
+    deselect.trigger('keydown.enter')
+
+    const input = Select.findComponent({ ref: 'search' })
+    expect(document.activeElement).toEqual(input.element)
+  })
+
+  it('should return focus to the next deselect after keyboard deselect', () => {
+    const Select = selectWithProps({
+      multiple: true,
+      options: ['one', 'two', 'three'],
+      value: ['one', 'two'],
+    })
+
+    const [deselect, nextDeselect] = Select.findAllComponents({
+      ref: 'deselectButtons',
+    }).wrappers
+
+    deselect.trigger('keydown.enter')
+    expect(document.activeElement).toEqual(nextDeselect.element)
+  })
+
+  it('should return focus to the previous deselect after keyboard deselect', () => {
+    const Select = selectWithProps({
+      multiple: true,
+      options: ['one', 'two', 'three'],
+      value: ['one', 'two'],
+    })
+
+    const [prevDeselect, deselect] = Select.findAllComponents({
+      ref: 'deselectButtons',
+    }).wrappers
+
+    deselect.trigger('keydown.enter')
+    expect(document.activeElement).toEqual(prevDeselect.element)
+  })
+
   describe('Clear button', () => {
     it('should be displayed on single select when value is selected', () => {
       const Select = selectWithProps({
@@ -155,6 +199,19 @@ describe('Removing values', () => {
       expect(Select.find('button.vs__clear').attributes().disabled).toEqual(
         'disabled'
       )
+    })
+
+    it('should return focus to the search input after clear', () => {
+      const Select = selectWithProps({
+        options: ['foo', 'bar'],
+        value: 'foo',
+      })
+
+      const clear = Select.findComponent({ ref: 'clearButton' })
+      clear.trigger('click')
+
+      const input = Select.findComponent({ ref: 'search' })
+      expect(document.activeElement).toEqual(input.element)
     })
   })
 })

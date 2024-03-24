@@ -17,7 +17,7 @@
     >
       <div ref="selectedOptions" class="vs__selected-options">
         <slot
-          v-for="option in selectedValue"
+          v-for="(option, index) in selectedValue"
           name="selected-option-container"
           :option="normalizeOptionForSlot(option)"
           :deselect="deselect"
@@ -39,7 +39,8 @@
               class="vs__deselect"
               :title="`Deselect ${getOptionLabel(option)}`"
               :aria-label="`Deselect ${getOptionLabel(option)}`"
-              @click="deselect(option)"
+              @mousedown.stop="deselect(option)"
+              @keydown.enter="keyboardDeselect(option, index)"
             >
               <component :is="childComponents.Deselect" />
             </button>
@@ -91,6 +92,7 @@
         v-append-to-body
         class="vs__dropdown-menu"
         role="listbox"
+        :aria-multiselectable="multiple"
         tabindex="-1"
         @mousedown.prevent="onMousedown"
         @mouseup="onMouseUp"
@@ -107,10 +109,11 @@
               isOptionDeselectable(option) && index === typeAheadPointer,
             'vs__dropdown-option--selected': isOptionSelected(option),
             'vs__dropdown-option--highlight': index === typeAheadPointer,
+            'vs__dropdown-option--kb-focus': hasKeyboardFocusBorder(index),
             'vs__dropdown-option--disabled': !selectable(option),
           }"
-          :aria-selected="index === typeAheadPointer ? true : null"
-          @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
+          :aria-selected="optionAriaSelected(option)"
+          @mousemove="onMouseMove(option, index)"
           @click.prevent.stop="selectable(option) ? select(option) : null"
         >
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
@@ -188,6 +191,15 @@ export default {
       default() {
         return []
       },
+    },
+
+    /**
+     * Sets the maximum number of options to display in the dropdown list
+     * @type {Number}
+     */
+    limit: {
+      type: Number,
+      default: null,
     },
 
     /**
@@ -498,6 +510,16 @@ export default {
     },
 
     /**
+     * If false, the focused dropdown option will not be reset when filtered
+     * options change.
+     * @type {Boolean}
+     */
+    resetFocusOnOptionsChange: {
+      type: Boolean,
+      default: true,
+    },
+
+    /**
      * When false, updating the options will not reset the selected value. Accepts
      * a `boolean` or `function` that returns a `boolean`. If defined as a function,
      * it will receive the params listed below.
@@ -661,6 +683,15 @@ export default {
     },
 
     /**
+     * Display a visible border around dropdown options
+     * which have keyboard focus.
+     */
+    keyboardFocusBorder: {
+      type: Boolean,
+      default: false,
+    },
+
+    /**
      * A unique identifier used to generate IDs in HTML.
      * Must be unique for every instance of the component.
      */
@@ -675,6 +706,7 @@ export default {
       search: '',
       open: false,
       isComposing: false,
+      isKeyboardNavigation: false,
       pushedTags: [],
       // eslint-disable-next-line vue/no-reserved-keys
       _value: [], // Internal value managed by Vue Select if no `value` prop is passed
@@ -868,10 +900,17 @@ export default {
      * @return {array}
      */
     filteredOptions() {
+      const limitOptions = (options) => {
+        if (this.limit !== null) {
+          return options.slice(0, this.limit)
+        }
+        return options
+      }
+
       const optionList = [].concat(this.optionList)
 
       if (!this.filterable && !this.taggable) {
-        return optionList
+        return limitOptions(optionList)
       }
 
       let options = this.search.length
@@ -883,7 +922,7 @@ export default {
           options.unshift(createdOption)
         }
       }
-      return options
+      return limitOptions(options)
     },
 
     /**
@@ -1030,11 +1069,37 @@ export default {
     },
 
     /**
+     * De-select a given option on keyboard input.
+     * @param  {Object|String} option
+     * @param  {Number} index
+     * @return {void}
+     */
+    keyboardDeselect(option, index) {
+      this.deselect(option)
+      /**
+       * The index of the next deselect is not yet at the same index as the
+       * removed deselect element because Vue updates asynchronously
+       *
+       * $nextTick cannot be used as the tests will fail even after using
+       * $nextTick in the tests as well
+       */
+      const nextDeselect = this.$refs.deselectButtons?.[index + 1]
+      const prevDeselect = this.$refs.deselectButtons?.[index - 1]
+      const deselectToFocus = nextDeselect ?? prevDeselect
+      if (deselectToFocus) {
+        deselectToFocus.focus()
+      } else {
+        this.searchEl.focus()
+      }
+    },
+
+    /**
      * Clears the currently selected value(s)
      * @return {void}
      */
     clearSelection() {
       this.updateValue(this.multiple ? [] : null)
+      this.searchEl.focus()
     },
 
     /**
@@ -1135,6 +1200,19 @@ export default {
     },
 
     /**
+     * Check if the option at the given index should display a
+     * keyboard focus border.
+     * @param  {Number} index
+     * @return {Boolean}
+     */
+    hasKeyboardFocusBorder(index) {
+      if (this.keyboardFocusBorder && this.isKeyboardNavigation) {
+        return index === this.typeAheadPointer
+      }
+      return false
+    },
+
+    /**
      * Determine if two option objects are matching.
      *
      * @param a {Object}
@@ -1219,6 +1297,20 @@ export default {
       return this.optionList.some((_option) =>
         this.optionComparator(_option, option)
       )
+    },
+
+    /**
+     * Determine the `aria-selected` value
+     * of an option
+     *
+     * @param  {Object|String} option
+     * @return {null|string}
+     */
+    optionAriaSelected(option) {
+      if (!this.selectable(option)) {
+        return null
+      }
+      return String(this.isOptionSelected(option))
     },
 
     /**
@@ -1310,6 +1402,20 @@ export default {
     },
 
     /**
+     * Event-Handler for option mousemove
+     * @param {Object|String} option
+     * @param {Number} index
+     * @return {void}
+     */
+    onMouseMove(option, index) {
+      this.isKeyboardNavigation = false
+      if (!this.selectable(option)) {
+        return
+      }
+      this.typeAheadPointer = index
+    },
+
+    /**
      * Search <input> KeyBoardEvent handler.
      * @param {KeyboardEvent} e
      * @return {Function}
@@ -1317,6 +1423,10 @@ export default {
     onSearchKeyDown(e) {
       const preventAndSelect = (e) => {
         e.preventDefault()
+        if (!this.open) {
+          this.open = true
+          return
+        }
         return !this.isComposing && this.typeAheadSelect()
       }
 
@@ -1330,6 +1440,7 @@ export default {
         //  up.prevent
         38: (e) => {
           e.preventDefault()
+          this.isKeyboardNavigation = true
           if (!this.open) {
             this.open = true
             return
@@ -1339,6 +1450,7 @@ export default {
         //  down.prevent
         40: (e) => {
           e.preventDefault()
+          this.isKeyboardNavigation = true
           if (!this.open) {
             this.open = true
             return

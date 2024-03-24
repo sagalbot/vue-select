@@ -1,9 +1,12 @@
 {
-  "name": "vue-select",
-  "version": "3.20.2",
+  "name": "@nextcloud/vue-select",
+  "version": "3.23.0",
   "description": "Everything you wish the HTML <select> element could do, wrapped up into a lightweight, extensible Vue component.",
   "author": "Jeff Sagal <sagalbot@gmail.com>",
-  "homepage": "https://vue-select.org",
+  "contributors": [
+    "Christopher Ng <chrng8@gmail.com>"
+  ],
+  "homepage": "https://github.com/nextcloud-deps/vue-select",
   "directories": {
     "doc": "docs",
     "test": "tests"
@@ -26,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sagalbot/vue-select.git"
+    "url": "https://github.com/nextcloud-deps/vue-select.git"
   },
   "peerDependencies": {
     "vue": "2.x"

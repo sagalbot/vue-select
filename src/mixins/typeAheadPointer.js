@@ -7,6 +7,9 @@ export default {
 
   watch: {
     filteredOptions() {
+      if (!this.resetFocusOnOptionsChange) {
+        return
+      }
       for (let i = 0; i < this.filteredOptions.length; i++) {
         if (this.selectable(this.filteredOptions[i])) {
           this.typeAheadPointer = i
