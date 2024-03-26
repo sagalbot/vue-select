@@ -113,6 +113,9 @@
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
           @click.prevent.stop="selectable(option) ? select(option) : null"
         >
+          <slot name="category" v-if="categorizedOptions">
+            <div>{{ getOptionCategory(option) }}</div>
+          </slot>
           <slot name="option" v-bind="normalizeOptionForSlot(option)">
             {{ getOptionLabel(option) }}
           </slot>
@@ -668,6 +671,16 @@ export default {
       type: [String, Number],
       default: () => uniqueId(),
     },
+
+    category: {
+      id: Number,
+      label: String,
+    },
+
+    categorizedOptions: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
@@ -883,7 +896,12 @@ export default {
           options.unshift(createdOption)
         }
       }
-      return options
+
+      const optionsByCategory = this.groupOptionsByCategory(options)
+
+      const groupedOptions = Object.values(optionsByCategory).flat()
+
+      return groupedOptions
     },
 
     /**
@@ -1366,6 +1384,63 @@ export default {
       if (!this.open && e.keyCode === 32) {
         e.preventDefault()
         this.open = true
+      }
+    },
+
+    /**
+     * Add categories to options.
+     *
+     * @param  {Array} options
+     * @return {Object}
+     */
+    groupOptionsByCategory(options) {
+      const categorizedOptions = {}
+
+      options.forEach((option) => {
+        const category = option.category ? option.category.label : null
+
+        if (!categorizedOptions[category]) {
+          categorizedOptions[category] = []
+        }
+
+        categorizedOptions[category].push(option)
+      })
+
+      const sortedCategories = Object.keys(categorizedOptions).sort()
+
+      const sortedCategorizedOptions = {}
+      sortedCategories.forEach((category) => {
+        sortedCategorizedOptions[category] = this.sortOptions(
+          categorizedOptions[category]
+        )
+      })
+
+      return sortedCategorizedOptions
+    },
+
+    /**
+     * Sort options alphabetically based on label
+     * from option.category Object.
+     *
+     * @param  {Array} options
+     * @return {void}
+     */
+    sortOptions(options) {
+      return options.sort((a, b) =>
+        (a.category?.label || '').localeCompare(b.category?.label || '')
+      )
+    },
+
+    /**
+     * Return the label of a given category
+     * from option.category Object.
+     *
+     * @param  {Object} option
+     * @return {string}
+     */
+    getOptionCategory(option) {
+      if (typeof option === 'object' && option.category?.label) {
+        return option.category.label
       }
     },
   },
