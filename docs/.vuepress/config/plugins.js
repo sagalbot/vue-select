@@ -1,5 +1,3 @@
-const isDeployPreview = require('./isDeployPreview')
-
 module.exports = [
   [
     '@vuepress/pwa',

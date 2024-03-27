@@ -1,12 +1,10 @@
-const isDeployPreview = require('./isDeployPreview')
 const meta = require('./meta')
 
 const head = [
   [
     'link',
     {
-      href:
-        '//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600|Roboto Mono',
+      href: '//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600|Roboto Mono',
       rel: 'stylesheet',
       type: 'text/css',
     },
@@ -56,12 +54,5 @@ const head = [
   ['meta', { property: 'og:site_name', content: meta.title }],
   ['meta', { property: 'og:url', content: meta.url }],
 ]
-
-if (isDeployPreview) {
-  head.push(
-    ['meta', { name: 'robots', content: 'noindex' }],
-    ['meta', { name: 'googlebot', content: 'noindex' }]
-  )
-}
 
 module.exports = head
