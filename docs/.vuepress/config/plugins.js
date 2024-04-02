@@ -10,5 +10,11 @@ module.exports = [
   '@vuepress/plugin-active-header-links',
   '@vuepress/plugin-search',
   '@vuepress/plugin-nprogress',
+  [
+    'sitemap',
+    {
+      hostname: 'https://vue-select.org',
+    },
+  ],
   require('../github/index'),
 ]

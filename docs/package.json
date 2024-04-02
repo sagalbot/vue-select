@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vuepress dev",
     "build": "vuepress build",
-    "build:preview": "cross-env DEPLOY_PREVIEW=1 vuepress build"
+    "build:preview": "cross-env vuepress build"
   },
   "devDependencies": {
     "@octokit/graphql": "^4.3.1",
@@ -25,5 +25,8 @@
     "vue": "^2.6.10",
     "vuepress": "^1.4.0",
     "vuex": "^3.1.0"
+  },
+  "dependencies": {
+    "vuepress-plugin-sitemap": "^2.3.1"
   }
 }
