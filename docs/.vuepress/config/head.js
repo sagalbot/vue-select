@@ -4,7 +4,8 @@ const head = [
   [
     'link',
     {
-      href: '//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600|Roboto Mono',
+      href:
+        '//fonts.googleapis.com/css?family=Source+Sans+Pro:400,600|Roboto Mono',
       rel: 'stylesheet',
       type: 'text/css',
     },
