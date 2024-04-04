@@ -185,4 +185,11 @@ or have fine grain control over the markup.
 <SlotSpinner />
 <<< @/.vuepress/components/SlotSpinner.vue
 
+## `limit`
+
+- `limit {Number}` - if the limit props is provided
+
+<SlotLimit />
+<<< @/.vuepress/components/SlotLimit.vue
+
 </div>
