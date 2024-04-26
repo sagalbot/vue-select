@@ -877,7 +877,7 @@ export default {
       let options = this.search.length
         ? this.filter(optionList, this.search, this)
         : optionList
-      if (this.taggable && this.search.length) {
+      if (this.taggable && this.search.length && !this.mutableLoading) {
         const createdOption = this.createOption(this.search)
         if (!this.optionExists(createdOption)) {
           options.unshift(createdOption)
