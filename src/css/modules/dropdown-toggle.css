@@ -27,6 +27,7 @@
     flex-wrap: wrap;
     padding: 0 2px;
     position: relative;
+    word-break: break-all;
 }
 
 .vs__actions {
