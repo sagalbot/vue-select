@@ -19,6 +19,7 @@ describe('Custom Keydown Handlers', () => {
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
+    Select.vm.open = true
     Select.findComponent({ ref: 'search' }).trigger('keydown.space')
 
     expect(spy).toHaveBeenCalledTimes(1)
@@ -33,6 +34,7 @@ describe('Custom Keydown Handlers', () => {
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
+    Select.vm.open = true
     Select.findComponent({ ref: 'search' }).trigger('keydown.space')
     expect(onKeyDown.mock.calls.length).toBe(1)
 

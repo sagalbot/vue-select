@@ -63,6 +63,15 @@ describe('Toggling Dropdown', () => {
     expect(Select.vm.search).toEqual('')
   })
 
+  it('should open dropdown on selectOnKeyCodes keydown', async () => {
+    const Select = mountDefault()
+    const input = Select.findComponent({ ref: 'search' })
+
+    input.trigger('keydown.enter')
+
+    expect(Select.vm.open).toEqual(true)
+  })
+
   it('should open dropdown on alphabetic input', async () => {
     const Select = mountDefault()
     const input = Select.findComponent({ ref: 'search' })
