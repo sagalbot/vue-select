@@ -6,5 +6,5 @@
     border: 0;
     background-color: transparent;
     cursor: pointer;
-    margin-right: 8px;
+    margin-right: var(--vs-controls--clear-margin);
 }
