@@ -7,26 +7,26 @@
     "preview": "nuxt preview"
   },
   "devDependencies": {
-    "@nuxt/content": "^2.12.1",
-    "@nuxt/eslint-config": "^0.2.0",
-    "@nuxtjs/color-mode": "^3.3.3",
+    "@nuxt/content": "^2.13.4",
+    "@nuxt/eslint-config": "^0.7.2",
+    "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/google-fonts": "^3.2.0",
-    "@tailwindcss/typography": "^0.5.10",
-    "@vue/eslint-config-prettier": "^9.0.0",
-    "@vue/eslint-config-typescript": "^13.0.0",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-plugin-prettier": "^5.1.3",
-    "eslint-plugin-vue": "^9.23.0",
-    "nuxt": "3.11.1",
-    "nuxt-svgo": "^4.0.0",
-    "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.12"
+    "@tailwindcss/typography": "^0.5.15",
+    "@vue/eslint-config-prettier": "^10.1.0",
+    "@vue/eslint-config-typescript": "^14.1.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.16.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "nuxt": "3.14.1592",
+    "nuxt-svgo": "^4.0.9",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.9"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.7.19",
-    "@heroicons/vue": "^2.1.1",
-    "@vueuse/core": "^10.9.0",
-    "tailwindcss": "^3.4.1"
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
+    "@vueuse/core": "^12.0.0",
+    "tailwindcss": "^3.4.16"
   }
 }
