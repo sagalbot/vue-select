@@ -453,7 +453,7 @@ export default {
       type: Function,
       default(option, label, search) {
         return (
-          (label || '')
+          String(label || '')
             .toLocaleLowerCase()
             .indexOf(search.toLocaleLowerCase()) > -1
         )
