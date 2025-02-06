@@ -12,7 +12,7 @@ export default {
 </script>
 
 <style scoped>
->>> {
+:deep() {
   --vs-controls-color: #664cc3;
   --vs-border-color: #664cc3;
 
