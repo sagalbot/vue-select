@@ -928,7 +928,7 @@ export default {
         this.clearSelection()
       }
 
-      if (this.value && this.isTrackingValues) {
+      if (this.isValueEmpty && this.isTrackingValues) {
         this.setInternalValueFromOptions(this.value)
       }
     },
