@@ -55,8 +55,11 @@
     --vs-dropdown-option-padding: 3px 20px;
 
     /* Active State */
-    --vs-dropdown-option--active-bg: #5897fb;
+    --vs-dropdown-option--active-bg: #136cfb;
     --vs-dropdown-option--active-color: #fff;
+
+    /* Keyboard Focus State */
+    --vs-dropdown-option--kb-focus-box-shadow: inset 0px 0px 0px 2px #949494;
 
     /* Deselect State */
     --vs-dropdown-option--deselect-bg: #fb5858;
