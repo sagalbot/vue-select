@@ -45,3 +45,62 @@ describe('UID', () => {
     expect(Select.find('#vs2__combobox').exists()).toBeTruthy()
   })
 })
+
+describe('Option List', () => {
+  it('multiselectable attribute should not be present by default', async () => {
+    const Select = mountDefault()
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    expect(
+      Select.findComponent({ ref: 'dropdownMenu' }).attributes()[
+        'aria-multiselectable'
+      ]
+    ).toEqual(undefined)
+  })
+
+  it('multiselectable attribute should be true when multiple is true', async () => {
+    const Select = mountDefault({ multiple: true })
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    expect(
+      Select.findComponent({ ref: 'dropdownMenu' }).attributes()[
+        'aria-multiselectable'
+      ]
+    ).toEqual('true')
+  })
+
+  it('selected attribute should be true if selected, false otherwise', async () => {
+    const Select = mountDefault({
+      value: 'two',
+    })
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    expect(
+      Select.findAll('.vs__dropdown-option').wrappers.map(
+        (option) => option.attributes()['aria-selected']
+      )
+    ).toStrictEqual(['false', 'true', 'false'])
+  })
+
+  it('selected attribute should be true on all selected options when multiple is true, false otherwise', async () => {
+    const Select = mountDefault({
+      multiple: true,
+      value: ['one', 'two'],
+    })
+
+    Select.vm.open = true
+    await Select.vm.$nextTick()
+
+    expect(
+      Select.findAll('.vs__dropdown-option').wrappers.map(
+        (option) => option.attributes()['aria-selected']
+      )
+    ).toStrictEqual(['true', 'true', 'false'])
+  })
+})

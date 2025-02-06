@@ -92,6 +92,7 @@
         v-append-to-body
         class="vs__dropdown-menu"
         role="listbox"
+        :aria-multiselectable="multiple"
         tabindex="-1"
         @mousedown.prevent="onMousedown"
         @mouseup="onMouseUp"
@@ -110,7 +111,7 @@
             'vs__dropdown-option--highlight': index === typeAheadPointer,
             'vs__dropdown-option--disabled': !selectable(option),
           }"
-          :aria-selected="index === typeAheadPointer ? true : null"
+          :aria-selected="optionAriaSelected(option)"
           @mouseover="selectable(option) ? (typeAheadPointer = index) : null"
           @click.prevent.stop="selectable(option) ? select(option) : null"
         >
@@ -1220,6 +1221,20 @@ export default {
       return this.optionList.some((_option) =>
         this.optionComparator(_option, option)
       )
+    },
+
+    /**
+     * Determine the `aria-selected` value
+     * of an option
+     *
+     * @param  {Object|String} option
+     * @return {null|string}
+     */
+    optionAriaSelected(option) {
+      if (!this.selectable(option)) {
+        return null
+      }
+      return String(this.isOptionSelected(option))
     },
 
     /**
