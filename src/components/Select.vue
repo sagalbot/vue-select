@@ -17,36 +17,85 @@
       @mousedown="toggleDropdown($event)"
     >
       <div ref="selectedOptions" class="vs__selected-options">
-        <slot
-          v-for="option in selectedValue"
-          name="selected-option-container"
-          :option="normalizeOptionForSlot(option)"
-          :deselect="deselect"
-          :multiple="multiple"
-          :disabled="disabled"
-        >
-          <span :key="getOptionKey(option)" class="vs__selected">
-            <slot
-              name="selected-option"
-              v-bind="normalizeOptionForSlot(option)"
-            >
-              {{ getOptionLabel(option) }}
-            </slot>
-            <button
-              v-if="multiple"
-              ref="deselectButtons"
-              :disabled="disabled"
-              type="button"
-              class="vs__deselect"
-              :title="`Deselect ${getOptionLabel(option)}`"
-              :aria-label="`Deselect ${getOptionLabel(option)}`"
-              @click="deselect(option)"
-            >
-              <component :is="childComponents.Deselect" />
-            </button>
-          </span>
-        </slot>
+        <template v-if="multiple">
+          <slot
+            v-for="option in limitedSelectedValue"
+            name="selected-option-container"
+            :option="normalizeOptionForSlot(option)"
+            :deselect="deselect"
+            :multiple="multiple"
+            :disabled="disabled"
+          >
+            <span :key="getOptionKey(option)" class="vs__selected">
+              <slot
+                name="selected-option"
+                v-bind="normalizeOptionForSlot(option)"
+              >
+                {{ getOptionLabel(option) }}
+              </slot>
+              <button
+                v-if="multiple"
+                ref="deselectButtons"
+                :disabled="disabled"
+                type="button"
+                class="vs__deselect"
+                :title="`Deselect ${getOptionLabel(option)}`"
+                :aria-label="`Deselect ${getOptionLabel(option)}`"
+                @click="deselect(option)"
+              >
+                <component :is="childComponents.Deselect" />
+              </button>
+            </span>
+          </slot>
 
+          <template v-if="selectedValue.length > limit && limit > 0">
+            <span class="vs__limit-label">
+              <slot
+                v-if="$slots.limit"
+                name="limit"
+                :length="scope.limit.length"
+              >
+                <template #default="{ length }">
+                  {{ selectedValue.length - length }} more
+                </template>
+              </slot>
+              <template v-else>
+                {{ selectedValue.length - limit }} more
+              </template>
+            </span>
+          </template>
+        </template>
+        <template v-else>
+          <slot
+            v-for="option in selectedValue"
+            name="selected-option-container"
+            :option="normalizeOptionForSlot(option)"
+            :deselect="deselect"
+            :multiple="multiple"
+            :disabled="disabled"
+          >
+            <span :key="getOptionKey(option)" class="vs__selected">
+              <slot
+                name="selected-option"
+                v-bind="normalizeOptionForSlot(option)"
+              >
+                {{ getOptionLabel(option) }}
+              </slot>
+              <button
+                v-if="multiple"
+                ref="deselectButtons"
+                :disabled="disabled"
+                type="button"
+                class="vs__deselect"
+                :title="`Deselect ${getOptionLabel(option)}`"
+                :aria-label="`Deselect ${getOptionLabel(option)}`"
+                @click="deselect(option)"
+              >
+                <component :is="childComponents.Deselect" />
+              </button>
+            </span>
+          </slot>
+        </template>
         <slot name="search" v-bind="scope.search">
           <input
             class="vs__search"
@@ -669,6 +718,15 @@ export default {
       type: [String, Number],
       default: () => uniqueId(),
     },
+
+    /**
+     * To limit the visibility with multiple options.
+     * @type {Number}
+     */
+    limit: {
+      type: Number,
+      default: 0,
+    },
   },
 
   data() {
@@ -711,6 +769,18 @@ export default {
       }
 
       return []
+    },
+
+    /**
+     * The options that are currently selected with limit.
+     * @return {Array}
+     */
+    limitedSelectedValue() {
+      if (this.selectedValue.length > 0 && this.limit > 0) {
+        return this.selectedValue.slice(0, this.limit)
+      }
+
+      return this.selectedValue
     },
 
     /**
@@ -780,6 +850,9 @@ export default {
         },
         spinner: {
           loading: this.mutableLoading,
+        },
+        limit: {
+          length: this.selectedValue.length,
         },
         noOptions: {
           search: this.search,
