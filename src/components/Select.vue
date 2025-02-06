@@ -1036,6 +1036,7 @@ export default {
      */
     clearSelection() {
       this.updateValue(this.multiple ? [] : null)
+      this.$emit('clear');
     },
 
     /**
