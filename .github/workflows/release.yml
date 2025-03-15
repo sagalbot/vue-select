@@ -1,28 +1,17 @@
 name: Release
+
 on:
   push:
     branches:
       - master
       - next
       - beta
+
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - uses: actions/cache@v3
-        id: pnpm-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Test
         run: pnpm test

@@ -10,20 +10,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: pnpm
-      - uses: actions/cache@v4
-        id: pnpm-cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-
-
-      - name: Install dependencies
-        run: pnpm install
+      - uses: ./.github/actions/setup
 
       - name: Test with Coverage
         run: pnpm run coverage
@@ -32,27 +19,14 @@ jobs:
         run: pnpm run eslint
 
       - name: Report Coverage
-        uses: coverallsapp/github-action@master
+        uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: pnpm
-      - uses: actions/cache@v3
-        id: pnpm-cache
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: ${{ runner.os }}-pnpm-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - uses: ./.github/actions/setup
 
       - name: Build Dist
         run: pnpm build
@@ -61,5 +35,4 @@ jobs:
         run: npx bundlewatch
 
       - name: Build Docs
-        run: |
-          npm run build:docs
+        run: npm run build:docs

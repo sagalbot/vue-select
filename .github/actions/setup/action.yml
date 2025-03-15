@@ -1,0 +1,23 @@
+name: "Setup Environment"
+description: "Checkout, setup node, restore cache, install dependencies"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: pnpm
+
+    - uses: actions/cache@v4
+      id: pnpm-cache
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-
+
+    - name: Install dependencies
+      run: pnpm install
