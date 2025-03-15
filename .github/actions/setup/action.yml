@@ -12,6 +12,7 @@ runs:
         cache: 'pnpm'
 
     - name: Install pnpm
+      shell: bash
       run: npm install -g pnpm
 
     - uses: actions/cache@v4
