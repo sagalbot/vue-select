@@ -11,10 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - uses: ./.github/actions/install
 
       - name: Test with Coverage
         run: pnpm run coverage
@@ -31,10 +34,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - uses: ./.github/actions/install
 
       - name: Build Dist
         run: pnpm build

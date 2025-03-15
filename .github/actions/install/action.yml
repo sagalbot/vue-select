@@ -1,21 +1,12 @@
-name: "Setup Environment"
-description: "Checkout, setup node, restore cache, install dependencies"
+name: "Install Dependencies"
+description: "Install cached dependencies"
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
-
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'pnpm'
-
-    - name: Install pnpm
-      shell: bash
-      run: npm install -g pnpm
 
     - uses: actions/cache@v4
+      shell: bash
       id: pnpm-cache
       with:
         path: '**/node_modules'
