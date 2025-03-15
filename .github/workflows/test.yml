@@ -1,6 +1,6 @@
 name: Test & Build
 
-on: [push]
+on: [pull_request]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,18 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
       - uses: ./.github/actions/install
 
       - name: Test with Coverage
         run: pnpm run coverage
 
       - name: ESLint
-        run: pnpm run eslint
+        run: pnpm run lint
 
       - name: Report Coverage
         uses: coverallsapp/github-action@v2
@@ -34,11 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
 
       - uses: ./.github/actions/install
 
