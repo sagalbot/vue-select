@@ -13,6 +13,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Test with Coverage
         run: pnpm run coverage
 
@@ -30,6 +33,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Build Dist
         run: pnpm build
 
@@ -37,4 +43,4 @@ jobs:
         run: npx bundlewatch
 
       - name: Build Docs
-        run: npm run build:docs
+        run: pnpm run build:docs

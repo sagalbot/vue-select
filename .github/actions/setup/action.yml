@@ -11,10 +11,6 @@ runs:
         node-version: 20
         cache: 'pnpm'
 
-    - name: Install pnpm
-      shell: bash
-      run: npm install -g pnpm
-
     - uses: actions/cache@v4
       id: pnpm-cache
       with:
