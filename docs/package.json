@@ -26,6 +26,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
+    "@tailwindcss/vite": "^4.0.14",
     "@vueuse/core": "^13.0.0",
     "tailwindcss": "^4.0.14"
   }

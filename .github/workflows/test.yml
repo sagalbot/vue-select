@@ -1,29 +1,35 @@
 name: Test & Build
-on: [pull_request]
+
+on: [push, pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16
-          cache: yarn
-      - uses: actions/cache@v3
-        id: yarn-cache
+          node-version: 20
+          cache: pnpm
+      - uses: actions/cache@v4
+        id: pnpm-cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install
 
       - name: Test with Coverage
-        run: yarn coverage
+        run: pnpm run coverage
 
       - name: ESLint
-        run: yarn eslint
+        run: pnpm run eslint
 
       - name: Report Coverage
         uses: coverallsapp/github-action@master
@@ -37,25 +43,23 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: yarn
+          cache: pnpm
       - uses: actions/cache@v3
-        id: yarn-cache
+        id: pnpm-cache
         with:
           path: '**/node_modules'
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --prefer-offline
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Build Dist
-        run: yarn build
+        run: pnpm build
 
       - name: Bundlewatch
         run: npx bundlewatch
 
       - name: Build Docs
         run: |
-          cd docs
-          yarn install --frozen-lockfile --prefer-offline
-          yarn build
+          npm run build:docs
