@@ -20,4 +20,5 @@ runs:
           ${{ runner.os }}-pnpm-
 
     - name: Install dependencies
-      run: pnpm install
+      shell: bash  # <–– explicitly required in composite actions
+      run: pnpm install --frozen-lockfile
