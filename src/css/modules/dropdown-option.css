@@ -24,3 +24,8 @@
     color: var(--vs-state-disabled-color);
     cursor: var(--vs-state-disabled-cursor);
 }
+
+.vs__dropdown-option--selected:not(.vs__dropdown-option--highlight) {
+    background: var(--vs-dropdown-option--selected-bg);
+    color: var(--vs-dropdown-option--selected-color);
+}
