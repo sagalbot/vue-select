@@ -29,7 +29,7 @@ import {
           />
           <div class="relative">
             <p
-              class="font-display inline bg-gradient-to-r from-indigo-200 via-sky-400 font-bold to-indigo-200 bg-clip-text text-5xl tracking-tight text-transparent"
+              class="font-display inline bg-linear-to-r from-indigo-200 via-sky-400 font-bold to-indigo-200 bg-clip-text text-5xl tracking-tight text-transparent"
             >
               The complete Vue.js combobox solution.
             </p>
@@ -74,19 +74,19 @@ import {
               height="567"
             />
             <div
-              class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg"
+              class="absolute inset-0 rounded-2xl bg-linear-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg"
             ></div>
             <div
-              class="absolute inset-0 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10"
+              class="absolute inset-0 rounded-2xl bg-linear-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10"
             ></div>
             <div
-              class="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur"
+              class="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur-sm"
             >
               <div
-                class="absolute -top-px left-20 right-11 h-px bg-gradient-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0"
+                class="absolute -top-px left-20 right-11 h-px bg-linear-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0"
               ></div>
               <div
-                class="absolute -bottom-px left-11 right-20 h-px bg-gradient-to-r from-blue-400/0 via-blue-400 to-blue-400/0"
+                class="absolute -bottom-px left-11 right-20 h-px bg-linear-to-r from-blue-400/0 via-blue-400 to-blue-400/0"
               ></div>
               <div class="p-4 dark">
                 <div class="flex items-center space-x-4">
