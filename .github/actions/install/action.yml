@@ -1,0 +1,28 @@
+name: "Install Dependencies"
+description: "Install cached dependencies"
+
+runs:
+  using: "composite"
+  steps:
+    - uses: pnpm/action-setup@v3
+      with:
+        version: 9
+        run_install: false
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'pnpm'
+
+    - name: Restore node_modules cache
+      uses: actions/cache@v4
+      id: pnpm-cache
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
