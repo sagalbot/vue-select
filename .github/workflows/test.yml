@@ -33,7 +33,7 @@ jobs:
       - uses: ./.github/actions/install
 
       - name: Build Dist
-        run: pnpm build
+        run: pnpm run build
 
       - name: Bundlewatch
         run: npx bundlewatch
