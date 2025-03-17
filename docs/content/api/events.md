@@ -25,6 +25,14 @@ Triggered when the dropdown is closed.
 this.$emit("close");
 ```
 
+## `clear`
+
+Triggered when clear button clicked, cleared value passed as an argument.
+
+```js
+this.$emit("clear", selectedOption);
+```
+
 ## `option:selecting` <Badge text="v3.11.0+" />
 
 Triggered after an option has been selected, <strong>before</strong> updating internal state. 

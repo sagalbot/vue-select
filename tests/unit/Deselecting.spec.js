@@ -143,6 +143,7 @@ describe('Removing values', () => {
 
       expect(Select.emitted()['update:modelValue']).toEqual([[null]])
       expect(Select.vm.selectedValue).toEqual([])
+      expect(Select.emitted()['clear']).toEqual([['foo']])
     })
 
     it('should be disabled when component is disabled', () => {

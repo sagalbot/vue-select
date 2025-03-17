@@ -162,6 +162,7 @@ export default {
     'open',
     'close',
     'update:modelValue',
+    'clear',
     'search',
     'search:compositionstart',
     'search:compositionend',
@@ -1044,10 +1045,12 @@ export default {
     },
 
     /**
-     * Clears the currently selected value(s)
+     * Clears the currently selected value(s),
+     * triggers the clear event and passes cleared value as argument
      * @return {void}
      */
     clearSelection() {
+      this.$emit('clear', this.$data._value)
       this.updateValue(this.multiple ? [] : null)
     },
 
