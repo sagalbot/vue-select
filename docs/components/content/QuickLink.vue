@@ -24,7 +24,7 @@ defineProps<{
         </NuxtLink>
       </h2>
       <p class="mt-1 text-sm text-slate-700 dark:text-slate-400">
-        <ContentSlot :use="$slots.default" unwrap="p" />
+        <slot mdc-unwrap="p" />
       </p>
     </div>
   </div>

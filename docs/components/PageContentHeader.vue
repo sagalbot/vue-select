@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { useContent } from '#imports'
+import type { PageCollections } from '@nuxt/content'
 
-const { page } = useContent()
+type PageCollectionItem = PageCollections[keyof PageCollections]
+
+defineProps<{
+  page: PageCollectionItem
+}>()
 </script>
 
 <template>

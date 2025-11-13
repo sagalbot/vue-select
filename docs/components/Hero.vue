@@ -35,7 +35,7 @@ import {
             </p>
             <p class="mt-3 text-2xl tracking-tight text-slate-400">
               Everything you wish <code>&lt;select&gt;</code> could do, wrapped
-              up in a lightweight, extendable Vue component.
+              up in lightweight, composable Vue component.
             </p>
             <div class="mt-8 flex gap-4 md:justify-center lg:justify-start">
               <Button variant="primary"> Get started </Button>
