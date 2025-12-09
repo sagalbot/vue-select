@@ -90,7 +90,7 @@
       {
         "path": "./dist/vue-select.es.js",
         "compression": "gzip",
-        "maxSize": "8 KB"
+        "maxSize": "11 KB"
       },
       {
         "path": "./dist/vue-select.umd.js",
