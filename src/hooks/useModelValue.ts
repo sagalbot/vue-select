@@ -1,5 +1,8 @@
 export function useModelValue<TypeProps>(
-  props: Readonly<TypeProps>,
-  key: string,
-  emit: (name: string, ...args: any[]) => void
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _props: Readonly<TypeProps>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _key: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _emit: (name: string, ...args: unknown[]) => void
 ) {}
