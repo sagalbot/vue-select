@@ -1,3 +1,4 @@
+import { nextTick } from "vue"
 import { searchSubmit, selectWithProps } from '../helpers'
 
 describe('Selectable prop', () => {
@@ -8,11 +9,11 @@ describe('Selectable prop', () => {
     })
 
     Select.vm.$data.open = true
-    await Select.vm.$nextTick()
+    await nextTick()
 
     Select.find('.vs__dropdown-menu li:first-child').trigger('click')
 
-    await Select.vm.$nextTick()
+    await nextTick()
     expect(Select.vm.selectedValue).toEqual(['one'])
   })
 
@@ -23,10 +24,10 @@ describe('Selectable prop', () => {
     })
 
     Select.vm.$data.open = true
-    await Select.vm.$nextTick()
+    await nextTick()
 
     Select.find('.vs__dropdown-menu li:last-child').trigger('click')
-    await Select.vm.$nextTick()
+    await nextTick()
 
     expect(Select.vm.selectedValue).toEqual([])
   })
@@ -40,7 +41,7 @@ describe('Selectable prop', () => {
     Select.vm.open = true
     Select.vm.typeAheadPointer = 1
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.down')
+    Select.find('.vs__search').trigger('keydown.down')
 
     expect(Select.vm.typeAheadPointer).toEqual(2)
   })
@@ -54,7 +55,7 @@ describe('Selectable prop', () => {
     Select.vm.open = true
     Select.vm.typeAheadPointer = 2
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.up')
+    Select.find('.vs__search').trigger('keydown.up')
 
     expect(Select.vm.typeAheadPointer).toEqual(0)
   })

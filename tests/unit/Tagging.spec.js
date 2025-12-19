@@ -1,10 +1,11 @@
+import { nextTick } from "vue"
 import {
   mountDefault,
   searchSubmit,
   selectTag,
   selectWithProps,
 } from '../helpers'
-import Select from '../../src/components/Select'
+import Select from '../../src/components/Select.vue'
 
 describe('When Tagging Is Enabled', () => {
   it('can determine if a given option string already exists', () => {
@@ -40,12 +41,12 @@ describe('When Tagging Is Enabled', () => {
     const Select = selectWithProps({
       taggable: true,
       multiple: true,
-      value: ['one'],
+      modelValue: ['one'],
       options: ['one', 'two'],
     })
 
     Select.vm.search = 'three'
-    await Select.vm.$nextTick()
+    await nextTick()
     expect(Select.vm.filteredOptions).toEqual(['three'])
   })
 
@@ -78,7 +79,7 @@ describe('When Tagging Is Enabled', () => {
       pushTags: true,
       taggable: true,
       multiple: true,
-      value: ['one'],
+      modelValue: ['one'],
       options: ['one', 'two'],
     })
 
@@ -107,7 +108,7 @@ describe('When Tagging Is Enabled', () => {
       pushTags: true,
       taggable: true,
       multiple: true,
-      value: ['one'],
+      modelValue: ['one'],
       options: ['one', 'two'],
     })
 
@@ -122,7 +123,7 @@ describe('When Tagging Is Enabled', () => {
       pushTags: false,
       taggable: true,
       multiple: true,
-      value: ['one'],
+      modelValue: ['one'],
       options: ['one', 'two'],
     })
 
@@ -136,7 +137,7 @@ describe('When Tagging Is Enabled', () => {
       pushTags: false,
       taggable: true,
       multiple: true,
-      value: ['one'],
+      modelValue: ['one'],
       options: ['one', 'two'],
     })
 
@@ -185,7 +186,7 @@ describe('When Tagging Is Enabled', () => {
     const Select = selectWithProps({
       taggable: true,
       multiple: true,
-      value: [{ label: 'one' }],
+      modelValue: [{ label: 'one' }],
       options: [{ label: 'one' }],
     })
 
@@ -198,7 +199,7 @@ describe('When Tagging Is Enabled', () => {
       taggable: true,
       multiple: true,
       filterable: false,
-      value: [{ label: 'one' }],
+      modelValue: [{ label: 'one' }],
       options: [{ label: 'one' }],
     })
 
@@ -246,9 +247,9 @@ describe('When Tagging Is Enabled', () => {
     })
 
     Select.vm.typeAheadPointer = 0
-    Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
+    Select.find('.vs__search').trigger('keydown.tab')
 
-    await Select.vm.$nextTick()
+    await nextTick()
     expect(Select.vm.selectedValue).toEqual(['one'])
   })
 })

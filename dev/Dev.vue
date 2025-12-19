@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import vSelect from '../src/components/Select'
+import vSelect from '../src/components/Select.vue'
 import countries from '../docs/.vuepress/data/countryCodes'
 import books from '../docs/.vuepress/data/books'
 

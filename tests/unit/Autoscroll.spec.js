@@ -1,3 +1,4 @@
+import { nextTick } from "vue"
 import { mountDefault } from '../helpers'
 
 describe('Automatic Scrolling', () => {
@@ -8,8 +9,8 @@ describe('Automatic Scrolling', () => {
     Select.vm.typeAheadPointer = 1
 
     //  When
-    Select.findComponent({ ref: 'search' }).trigger('keydown.up')
-    await Select.vm.$nextTick()
+    Select.find('.vs__search').trigger('keydown.up')
+    await nextTick()
 
     //  Then
     expect(spy).toHaveBeenCalled()
@@ -22,8 +23,8 @@ describe('Automatic Scrolling', () => {
     Select.vm.typeAheadPointer = 1
 
     //  When
-    Select.findComponent({ ref: 'search' }).trigger('keydown.down')
-    await Select.vm.$nextTick()
+    Select.find('.vs__search').trigger('keydown.down')
+    await nextTick()
 
     //  Then
     expect(spy).toHaveBeenCalled()
@@ -37,7 +38,7 @@ describe('Automatic Scrolling', () => {
 
     //  When
     Select.vm.search = 'two'
-    await Select.vm.$nextTick()
+    await nextTick()
 
     //  Then
     expect(spy).toHaveBeenCalled()
@@ -53,7 +54,7 @@ describe('Automatic Scrolling', () => {
 
     // When
     Select.vm.search = 'two'
-    await Select.vm.$nextTick()
+    await nextTick()
 
     //  Then
     expect(spy).toHaveBeenCalledTimes(0)

@@ -3,11 +3,8 @@
 Install with yarn or npm:
 
 ```bash
-# vue 2
-yarn add vue-select
-
 # vue 3
-yarn add vue-select@beta
+yarn add vue-select
 
 # or, using NPM
 npm install vue-select
@@ -16,10 +13,11 @@ npm install vue-select
 Then, import and register the component:
 
 ```js
-import Vue from 'vue'
+import { createApp } from 'vue'
 import vSelect from 'vue-select'
 
-Vue.component('v-select', vSelect)
+const app = createApp({})
+app.component('v-select', vSelect)
 ```
 
 The component itself does not include any CSS. You'll need to include it separately:
@@ -41,15 +39,12 @@ global variable. You'll need to load Vue.js, vue-select JS & vue-select CSS.
 <!-- use the latest vue-select release -->
 <script src="https://unpkg.com/vue-select@latest"></script>
 <link rel="stylesheet" href="https://unpkg.com/vue-select@latest/dist/vue-select.css">
-
-<!-- or point to a specific vue-select release -->
-<script src="https://unpkg.com/vue-select@3.0.0"></script>
-<link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
 ```
 Then register the component in your javascript:
 
 ```js
-Vue.component('v-select', VueSelect.VueSelect);
+const app = Vue.createApp({});
+app.component('v-select', VueSelect.VueSelect);
 ```
 
 <CodePen url="dJjzeP" />
@@ -57,4 +52,4 @@ Vue.component('v-select', VueSelect.VueSelect);
 ## Vue Compatibility
 
 - Vue `2.x`, use vue-select `3.x`. 
-- Vue `3.x`, use vue-select `4.x@beta`.  
+- Vue `3.x`, use vue-select `4.x`.  

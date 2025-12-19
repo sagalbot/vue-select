@@ -49,6 +49,7 @@
 
         <slot name="search" v-bind="scope.search">
           <input
+            ref="search"
             class="vs__search"
             v-bind="scope.search.attributes"
             v-on="scope.search.events"
@@ -155,15 +156,29 @@ export default {
 
   mixins: [pointerScroll, typeAheadPointer, ajax],
 
+  emits: [
+    'update:modelValue',
+    'search',
+    'search:blur',
+    'search:focus',
+    'open',
+    'close',
+    'option:selecting',
+    'option:selected',
+    'option:deselecting',
+    'option:deselected',
+    'option:created',
+  ],
+
   props: {
     /**
      * Contains the currently selected value. Very similar to a
      * `value` attribute on an <input>. You can listen for changes
-     * with the 'input' event.
+     * with the 'update:modelValue' event.
      * @type {Object||String||null}
      */
     // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
-    value: {},
+    modelValue: {},
 
     /**
      * An object with any custom components that you'd like to overwrite
@@ -678,7 +693,7 @@ export default {
       isComposing: false,
       pushedTags: [],
       // eslint-disable-next-line vue/no-reserved-keys
-      _value: [], // Internal value managed by Vue Select if no `value` prop is passed
+      _value: [], // Internal value managed by Vue Select if no `modelValue` prop is passed
     }
   },
 
@@ -690,8 +705,8 @@ export default {
      */
     isTrackingValues() {
       return (
-        typeof this.value === 'undefined' ||
-        this.$options.propsData.hasOwnProperty('reduce')
+        typeof this.modelValue === 'undefined' ||
+        this.$.vnode.props?.hasOwnProperty('reduce')
       )
     },
 
@@ -700,7 +715,7 @@ export default {
      * @return {Array}
      */
     selectedValue() {
-      let value = this.value
+      let value = this.modelValue
       if (this.isTrackingValues) {
         // Vue select has to manage value internally
         value = this.$data._value
@@ -729,7 +744,7 @@ export default {
      * @returns {HTMLInputElement}
      */
     searchEl() {
-      return !!this.$scopedSlots['search']
+      return !!this.$slots['search']
         ? this.$refs.selectedOptions.querySelector(
             this.searchInputQuerySelector
           )
@@ -928,8 +943,8 @@ export default {
         this.clearSelection()
       }
 
-      if (this.value && this.isTrackingValues) {
-        this.setInternalValueFromOptions(this.value)
+      if (this.modelValue && this.isTrackingValues) {
+        this.setInternalValueFromOptions(this.modelValue)
       }
     },
 
@@ -937,7 +952,7 @@ export default {
      * Make sure to update internal
      * value if prop changes outside
      */
-    value: {
+    modelValue: {
       immediate: true,
       handler(val) {
         if (this.isTrackingValues) {
@@ -968,8 +983,6 @@ export default {
 
   created() {
     this.mutableLoading = this.loading
-
-    this.$on('option:created', this.pushTag)
   },
 
   methods: {
@@ -1000,6 +1013,7 @@ export default {
       if (!this.isOptionSelected(option)) {
         if (this.taggable && !this.optionExists(option)) {
           this.$emit('option:created', option)
+          this.pushTag(option)
         }
         if (this.multiple) {
           option = this.selectedValue.concat(option)
@@ -1065,7 +1079,7 @@ export default {
      * @param value
      */
     updateValue(value) {
-      if (typeof this.value === 'undefined') {
+      if (typeof this.modelValue === 'undefined') {
         // Vue select has to manage value
         this.$data._value = value
       }
@@ -1078,7 +1092,7 @@ export default {
         }
       }
 
-      this.$emit('input', value)
+      this.$emit('update:modelValue', value)
     },
 
     /**
@@ -1095,7 +1109,7 @@ export default {
       //  don't react to click on deselect/clear buttons,
       //  they dropdown state will be set in their click handlers
       const ignoredButtons = [
-        ...(this.$refs['deselectButtons'] || []),
+        ...([...this.$el.querySelectorAll('.vs__deselect')] || []),
         ...([this.$refs['clearButton']] || []),
       ]
 
@@ -1190,7 +1204,7 @@ export default {
     /**
      * Delete the value on Delete keypress when there is no
      * text in the search input, & there's tags to delete
-     * @return {this.value}
+     * @return {this.modelValue}
      */
     maybeDeleteValue() {
       if (

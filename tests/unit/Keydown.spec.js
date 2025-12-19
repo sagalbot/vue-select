@@ -7,7 +7,7 @@ describe('Custom Keydown Handlers', () => {
       mapKeydown: (defaults, vm) => ({ ...defaults, 32: onKeyDown }),
     })
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.space')
+    Select.find('.vs__search').trigger('keydown.space')
 
     expect(onKeyDown.mock.calls.length).toBe(1)
   })
@@ -19,7 +19,7 @@ describe('Custom Keydown Handlers', () => {
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.space')
+    Select.find('.vs__search').trigger('keydown.space')
 
     expect(spy).toHaveBeenCalledTimes(1)
   })
@@ -33,10 +33,10 @@ describe('Custom Keydown Handlers', () => {
 
     const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.space')
+    Select.find('.vs__search').trigger('keydown.space')
     expect(onKeyDown.mock.calls.length).toBe(1)
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
+    Select.find('.vs__search').trigger('keydown.tab')
     expect(spy).toHaveBeenCalledTimes(1)
   })
 
@@ -45,12 +45,12 @@ describe('Custom Keydown Handlers', () => {
       const Select = mountDefault()
       const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
-      Select.findComponent({ ref: 'search' }).trigger('compositionstart')
-      Select.findComponent({ ref: 'search' }).trigger('keydown.enter')
+      Select.find('.vs__search').trigger('compositionstart')
+      Select.find('.vs__search').trigger('keydown.enter')
       expect(spy).toHaveBeenCalledTimes(0)
 
-      Select.findComponent({ ref: 'search' }).trigger('compositionend')
-      Select.findComponent({ ref: 'search' }).trigger('keydown.enter')
+      Select.find('.vs__search').trigger('compositionend')
+      Select.find('.vs__search').trigger('keydown.enter')
       expect(spy).toHaveBeenCalledTimes(1)
     })
 
@@ -58,12 +58,12 @@ describe('Custom Keydown Handlers', () => {
       const Select = mountDefault({ selectOnTab: true })
       const spy = jest.spyOn(Select.vm, 'typeAheadSelect')
 
-      Select.findComponent({ ref: 'search' }).trigger('compositionstart')
-      Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
+      Select.find('.vs__search').trigger('compositionstart')
+      Select.find('.vs__search').trigger('keydown.tab')
       expect(spy).toHaveBeenCalledTimes(0)
 
-      Select.findComponent({ ref: 'search' }).trigger('compositionend')
-      Select.findComponent({ ref: 'search' }).trigger('keydown.tab')
+      Select.find('.vs__search').trigger('compositionend')
+      Select.find('.vs__search').trigger('keydown.tab')
       expect(spy).toHaveBeenCalledTimes(1)
     })
   })

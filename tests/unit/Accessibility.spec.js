@@ -1,3 +1,4 @@
+import { nextTick } from "vue"
 import { mountDefault } from '../helpers'
 
 describe('Search Slot Scope', () => {
@@ -13,7 +14,7 @@ describe('Search Slot Scope', () => {
       ).toEqual(undefined)
 
       Select.vm.open = true
-      await Select.vm.$nextTick()
+      await nextTick()
 
       expect(
         Select.vm.scope.search.attributes['aria-activedescendant']
@@ -21,11 +22,11 @@ describe('Search Slot Scope', () => {
     })
 
     it("adds the active descendant attribute when there's a typeahead value and an open dropdown", async () => {
-      const Select = mountDefault({ value: 'three' }, ['one', 'two', 'three'])
+      const Select = mountDefault({ modelValue: 'three' }, ['one', 'two', 'three'])
 
       Select.vm.open = true
       Select.vm.typeAheadPointer = 1
-      await Select.vm.$nextTick()
+      await nextTick()
 
       expect(
         Select.vm.scope.search.attributes['aria-activedescendant']

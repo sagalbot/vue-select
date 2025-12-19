@@ -29,58 +29,67 @@
     "url": "https://github.com/sagalbot/vue-select.git"
   },
   "peerDependencies": {
-    "vue": "2.x"
+    "vue": "^3.5.26"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0",
-    "@babel/eslint-parser": "^7.14.7",
-    "@babel/plugin-transform-runtime": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
-    "@babel/runtime": "^7.4.2",
-    "@semantic-release/git": "^9.0.0",
-    "@semantic-release/github": "^7.0.4",
-    "@vue/test-utils": "^1.2.2",
+    "@babel/core": "^7.24.0",
+    "@babel/eslint-parser": "^7.24.1",
+    "@babel/plugin-transform-runtime": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/runtime": "^7.24.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@vue/compiler-sfc": "^3.5.26",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/vue3-jest": "^27.0.0",
     "autoprefixer": "^10.3.7",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.0.3",
+    "babel-jest": "^27.5.1",
     "babel-loader": "^8.0.5",
-    "bundlewatch": "^0.2.5",
-    "commitizen": "^4.0.3",
+    "braces": "^3.0.3",
+    "bundlewatch": "^0.4.1",
+    "commitizen": "^3.0.0",
     "coveralls": "^3.1.1",
     "cross-env": "^5.2.0",
     "css-loader": "^6.4.0",
     "cssnano": "^5.0.8",
-    "cz-conventional-changelog": "3.1.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-loader": "^3.0.3",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-vue": "^6.2.1",
+    "cz-conventional-changelog": "^3.0.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.7.1",
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
-    "jest": "^24.1.0",
+    "jest": "^27.5.1",
+    "jest-environment-jsdom": "^27.5.1",
     "jest-serializer-vue": "^2.0.2",
     "jest-transform-stub": "^2.0.0",
+    "lodash": "^4.17.21",
     "mini-css-extract-plugin": "^2.5.3",
+    "minimist": "^1.2.8",
     "postcss": "^8.3.11",
     "postcss-import": "^14.0.2",
     "postcss-loader": "^6.2.1",
     "postcss-nested": "^5.0.6",
     "prettier": "2.2.1",
-    "semantic-release": "^17.0.4",
+    "semantic-release": "^24.2.1",
     "terser-webpack-plugin": "^5.3.1",
     "url-loader": "^4.1.1",
-    "vue": "^2.6.10",
+    "vue": "^3.5.26",
     "vue-html-loader": "^1.2.4",
-    "vue-jest": "^3.0.4",
-    "vue-loader": "^15.9.8",
-    "vue-server-renderer": "^2.6.10",
+    "vue-loader": "^17.4.2",
     "vue-style-loader": "^4.1.3",
-    "vue-template-compiler": "^2.6.10",
     "webpack": "^5.69.1",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.4",
+    "webpack-dev-server": "^4.15.2",
     "webpack-merge": "^5.8.0"
+  },
+  "overrides": {
+    "braces": "^3.0.3",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.8",
+    "tough-cookie": "^4.1.3"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -90,7 +99,7 @@
       "vue"
     ],
     "transform": {
-      "^.+\\.vue$": "vue-jest",
+      "^.+\\.vue$": "@vue/vue3-jest",
       ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
       "^.+\\.jsx?$": "babel-jest"
     },
@@ -104,6 +113,12 @@
       "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
     ],
     "testURL": "http://localhost/",
+    "testEnvironment": "jsdom",
+    "globals": {
+      "vue-jest": {
+        "babelConfig": true
+      }
+    },
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/mixins/*.js",
@@ -133,5 +148,8 @@
         "maxSize": "8 KB"
       }
     ]
+  },
+  "dependencies": {
+    "or": "^0.2.0"
   }
 }

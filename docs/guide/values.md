@@ -7,7 +7,6 @@ vue-select takes advantage of the `v-model` syntax to sync values with a parent.
 syntax works with primitives and objects.
 
 ```html
-
 <v-select v-model="selected" />
 ```
 
@@ -16,41 +15,39 @@ Note that when using the `multiple` prop, the `v-model` value will always be an 
 ### Props and Events
 
 Sometimes `v-model` might not fit your use case. For example, when working
-with [Vuex](https://vuex.vuejs.org), you'll need to trigger a mutation rather than mutating a value
-directly. In that case, maybe you need to bind a pre-selected value, and trigger a mutation when it
+with [Pinia](https://pinia.vuejs.org) or [Vuex](https://vuex.vuejs.org), you'll need to trigger an action rather than mutating a value
+directly. In that case, maybe you need to bind a pre-selected value, and trigger a change when it
 changes.
 
-vue-select exposes the `value` prop and an `input` event to enable this. This combo of props and
+vue-select exposes the `modelValue` prop and an `update:modelValue` event to enable this. This combo of props and
 events is also how Vue wires up the `v-model` syntax internally.
 
-#### Prop: `value`
+#### Prop: `modelValue`
 
-The `value` prop lets vue-select know what value is currently selected. It will accept strings,
+The `modelValue` prop lets vue-select know what value is currently selected. It will accept strings,
 numbers or objects. If you're using a `multiple` v-select, you'll want to pass an array.
 
 ```html
-
-<v-select :value="selected" />
+<v-select :modelValue="selected" />
 ```
 
-::: tip 🤓 Anytime you bind the `value` prop directly, you're responsible for updating the bound
-variable in your code using the `@input` event.
+::: tip 🤓 Anytime you bind the `modelValue` prop directly, you're responsible for updating the bound
+variable in your code using the `@update:modelValue` event.
 :::
 
-#### Event: `input`
+#### Event: `update:modelValue`
 
-The `input` event is triggered anytime the value state changes, and is emitted with the `value`
-state as it's only parameter.
+The `update:modelValue` event is triggered anytime the value state changes, and is emitted with the `value`
+state as its only parameter.
 
-#### Vuex Support
+#### Vuex / Pinia Support
 
-The `value` prop and `emit` event are very useful when using a state management tool, like Vuex. You
-can bind the selected value with `:value="$store.myValue"`, and use the `input` event to trigger a
+The `modelValue` prop and `update:modelValue` event are very useful when using a state management tool. You
+can bind the selected value with `:modelValue="$store.myValue"`, and use the `update:modelValue` event to trigger a
 mutation, or dispatch an action – or anything else you might need to do when the selection changes.
 
 ```html
-
-<v-select :value="$store.myValue" @input="setSelected" />
+<v-select :modelValue="$store.myValue" @update:modelValue="setSelected" />
 ```
 
 ```js
@@ -66,10 +63,9 @@ methods: {
 
 By default, vue-select supports choosing a single value. If you need multiple values, use the
 `multiple` boolean prop, much the same way you would on an HTML `<select>` element. When `multiple`
-is true, `v-model` and `value` must be an array.
+is true, `v-model` and `modelValue` must be an array.
 
 ```html
-
 <v-select multiple v-model="selected" :options="['Canada','United States']" />
 ```
 
@@ -86,7 +82,7 @@ object.
 
 If you need to return a single key, or transform the selection before it is synced, vue-select
 provides a `reduce` callback that allows you to transform a selected option before it is passed to
-the `@input` event. Consider this data structure:
+the `@update:modelValue` event. Consider this data structure:
 
  ```js
  let options = [{code: 'CA', country: 'Canada'}];
@@ -96,7 +92,6 @@ If we want to display the `country`, but return the `code` to `v-model`, we can 
 prop to receive only the data that's required.
 
  ```html
-
 <v-select :options="options" :reduce="country => country.code" label="country" />
  ```
 
@@ -115,7 +110,6 @@ The `reduce` property also works well when you have a deeply nested value:
  ```
 
  ```html
-
 <v-select :options="options" :reduce="country => country.meta.code" label="country" />
  ```
 
@@ -124,7 +118,7 @@ The `reduce` property also works well when you have a deeply nested value:
 ## Caveats with `reduce`
 
 The most common issue with `reduce` is when the component displays your _reduced_ _value_ instead of
-it's _label_. This happens when you supply Vue Select a `value` or `v-model` binding with a reduced_
+it's _label_. This happens when you supply Vue Select a `modelValue` or `v-model` binding with a _reduced_
 value, but the complete option object is not present in the `options` array.
 
 <ReducedWithNoMatchingOption />
@@ -132,13 +126,13 @@ value, but the complete option object is not present in the `options` array.
 <<< @/.vuepress/components/ReducedWithNoMatchingOption.vue
 
 In the example above, the component was supplied with an ID that doesn't exist in the `options`
-array. When `value` changes, Vue Select searches the supplied options, running each one
+array. When `modelValue` changes, Vue Select searches the supplied options, running each one
 through `reduce` until the corresponding option is found. When that option doesn't exist, Vue Select
 will end up displaying the `value` supplied.
 
 ::: warning
 
-When providing Vue Select with a _reduced_ `value` - the object that the value was reduced from must
+When providing Vue Select with a _reduced_ `modelValue` - the object that the value was reduced from must
 exist in the `options` array.
 
 :::
@@ -148,7 +142,6 @@ exist in the `options` array.
 To allow input that's not present within the options, set the `taggable` prop to true.
 
 ```html
-
 <v-select taggable multiple />
 ```
 
@@ -157,7 +150,6 @@ To allow input that's not present within the options, set the `taggable` prop to
 If you want added tags to be pushed to the options array, set `push-tags` to true.
 
 ```html
-
 <v-select taggable multiple push-tags />
 ```
 
@@ -194,7 +186,6 @@ const options = [
 ```
 
 ```html
-
 <v-select
     taggable
     multiple

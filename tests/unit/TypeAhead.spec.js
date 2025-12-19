@@ -1,19 +1,19 @@
+import { nextTick } from "vue"
 import { shallowMount } from '@vue/test-utils'
-import VueSelect from '../../src/components/Select'
+import VueSelect from '../../src/components/Select.vue'
 import { mountDefault, mountWithoutTestUtils } from '../helpers'
 import typeAheadMixin from '../../src/mixins/typeAheadPointer'
-import Vue from 'vue'
 
 describe('Moving the Typeahead Pointer', () => {
   it('should set the pointer to zero when the filteredOptions watcher is called', async () => {
     const Select = shallowMount(VueSelect, {
-      propsData: { options: ['one', 'two', 'three'] },
+      props: { options: ['one', 'two', 'three'] },
       sync: false,
     })
 
     Select.vm.search = 'one'
 
-    await Select.vm.$nextTick()
+    await nextTick()
     expect(Select.vm.typeAheadPointer).toEqual(0)
   })
 
@@ -23,7 +23,7 @@ describe('Moving the Typeahead Pointer', () => {
     Select.vm.open = true
     Select.vm.typeAheadPointer = 1
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.up')
+    Select.find('.vs__search').trigger('keydown.up')
 
     expect(Select.vm.typeAheadPointer).toEqual(0)
   })
@@ -34,7 +34,7 @@ describe('Moving the Typeahead Pointer', () => {
     Select.vm.open = true
     Select.vm.typeAheadPointer = 1
 
-    Select.findComponent({ ref: 'search' }).trigger('keydown.down')
+    Select.find('.vs__search').trigger('keydown.down')
 
     expect(Select.vm.typeAheadPointer).toEqual(2)
   })
@@ -49,23 +49,23 @@ describe('Moving the Typeahead Pointer', () => {
 
   it('will set the pointer to the selected option when opening', async () => {
     const Select = shallowMount(VueSelect, {
-      propsData: {
-        value: 'three',
+      props: {
+        modelValue: 'three',
         options: ['one', 'two', 'three'],
       },
     })
 
-    Select.findComponent({ ref: 'search' }).trigger('focus')
-    await Select.vm.$nextTick()
+    Select.find('.vs__search').trigger('focus')
+    await nextTick()
 
     expect(Select.vm.typeAheadPointer).toEqual(2)
   })
 
   it('will set the pointer to the reduced selected option when opening', async () => {
     const Select = shallowMount(VueSelect, {
-      propsData: {
-        value: 3,
-        reduce: ({ value }) => value,
+      props: {
+        modelValue: 3,
+        reduce: (option) => option.value,
         options: [
           { label: 'one', value: 1 },
           { label: 'two', value: 2 },
@@ -74,8 +74,8 @@ describe('Moving the Typeahead Pointer', () => {
       },
     })
 
-    Select.findComponent({ ref: 'search' }).trigger('focus')
-    await Select.vm.$nextTick()
+    Select.find('.vs__search').trigger('focus')
+    await nextTick()
 
     expect(Select.vm.typeAheadPointer).toEqual(2)
   })
@@ -86,7 +86,7 @@ it('should not move the pointer visually up the list on up arrow keyUp when drop
 
   Select.vm.typeAheadPointer = 1
 
-  Select.findComponent({ ref: 'search' }).trigger('keydown.up')
+  Select.find('.vs__search').trigger('keydown.up')
 
   expect(Select.vm.typeAheadPointer).toEqual(1)
 })
@@ -96,7 +96,7 @@ it('should not move the pointer visually down the list on down arrow keyUp when 
 
   Select.vm.typeAheadPointer = 1
 
-  Select.findComponent({ ref: 'search' }).trigger('keydown.down')
+  Select.find('.vs__search').trigger('keydown.down')
 
   expect(Select.vm.typeAheadPointer).toEqual(1)
 })
