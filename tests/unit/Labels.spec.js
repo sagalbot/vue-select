@@ -64,23 +64,23 @@ describe('Labels', () => {
      * @see https://github.com/vuejs/vue/issues/10224
      * @see https://github.com/vuejs/vue/pull/10229
      */
-    // it('will not call getOptionLabel if both scoped option slots are used and a filter is provided', () => {
-    //   const spy = spyOn(VueSelect.props.getOptionLabel, 'default')
-    //   const Select = shallowMount(VueSelect, {
-    //     props: {
-    //       options: [{ name: 'one' }],
-    //       filter: () => {},
-    //     },
-    //     scopedSlots: {
-    //       option: '<span class="option">{{ props.name }}</span>',
-    //       'selected-option': '<span class="selected">{{ props.name }}</span>',
-    //     },
-    //   })
-    //
-    //   Select.vm.select({ name: 'one' })
-    //
-    //   expect(spy).toHaveBeenCalledTimes(0)
-    //   expect(Select.find('.selected').exists()).toBeTruthy()
-    // })
+    it.skip('will not call getOptionLabel if both scoped option slots are used and a filter is provided', () => {
+      const spy = spyOn(VueSelect.props.getOptionLabel, 'default')
+      const Select = shallowMount(VueSelect, {
+        props: {
+          options: [{ name: 'one' }],
+          filter: () => {},
+        },
+        scopedSlots: {
+          option: '<span class="option">{{ props.name }}</span>',
+          'selected-option': '<span class="selected">{{ props.name }}</span>',
+        },
+      })
+
+      Select.vm.select({ name: 'one' })
+
+      expect(spy).toHaveBeenCalledTimes(0)
+      expect(Select.find('.selected').exists()).toBeTruthy()
+    })
   })
 })

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <style>
 @import '../css/vue-select.css';
 </style>
@@ -135,7 +136,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import pointerScroll from '@/mixins/pointerScroll.js'
 import typeAheadPointer from '@/mixins/typeAheadPointer.js'
 import ajax from '@/mixins/ajax.js'
@@ -183,7 +184,6 @@ export default {
      * with the 'input' event.
      * @type {Object|String|Array|null}
      */
-    // eslint-disable-next-line vue/require-default-prop,vue/require-prop-types
     modelValue: {},
 
     /**
@@ -338,7 +338,7 @@ export default {
      */
     selectable: {
       type: Function,
-      default: (option) => true,
+      default: () => true,
     },
 
     /**
@@ -561,7 +561,6 @@ export default {
      * @type {String}
      * @default {null}
      */
-    // eslint-disable-next-line vue/require-default-prop
     inputId: {
       type: String,
     },
@@ -623,7 +622,7 @@ export default {
        * @param vm {VueSelect}
        * @return {Object}
        */
-      default: (map, vm) => map,
+      default: (map) => map,
     },
 
     /**
@@ -1056,7 +1055,7 @@ export default {
      * @param  {Object|String} option
      * @return {void}
      */
-    onAfterSelect(option) {
+    onAfterSelect() {
       if (this.closeOnSelect) {
         this.open = !this.open
         this.searchEl.blur()
@@ -1334,11 +1333,11 @@ export default {
 
       const defaults = {
         //  backspace
-        8: (e) => this.maybeDeleteValue(),
+        8: () => this.maybeDeleteValue(),
         //  tab
-        9: (e) => this.onTab(),
+        9: () => this.onTab(),
         //  esc
-        27: (e) => this.onEscape(),
+        27: () => this.onEscape(),
         //  up.prevent
         38: (e) => {
           e.preventDefault()

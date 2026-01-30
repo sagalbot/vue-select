@@ -1,10 +1,10 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script lang="ts" setup>
 import StyledComboBox from '@/components/ComboBox/StyledComboBox.vue'
 import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
 import ComboBox from '@/components/ComboBox/ComboBox.vue'
 import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
 import ComboBoxButton from '@/components/ComboBox/ComboBoxButton.vue'
-import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
 import { countriesAndCodes } from '@docs/assets/static/data'
 import { ref } from 'vue'
 

@@ -23,7 +23,7 @@ import {
             aria-hidden="true"
             src="~/assets/img/blur-cyan.png"
             decoding="async"
-            class="absolute bottom-full right-full -mr-72 -mb-56 opacity-50"
+            class="absolute bottom-full right-full -mr-72 -mb-56 opacity-50 pointer-events-none"
             width="530"
             height="530"
           />
@@ -62,14 +62,14 @@ import {
               alt=""
               src="~/assets/img/blur-cyan.png"
               decoding="async"
-              class="absolute -top-64 -right-64"
+              class="absolute -top-64 -right-64 pointer-events-none"
               width="530"
               height="530"
             /><img
               alt=""
               src="~/assets/img/blur-indigo.png"
               decoding="async"
-              class="absolute -bottom-40 -right-44"
+              class="absolute -bottom-40 -right-44 pointer-events-none"
               width="567"
               height="567"
             />
@@ -94,19 +94,19 @@ import {
                     class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-0.5 text-sm font-medium text-gray-400"
                   >
                     <ArrowDownTrayIcon class="w-3 h-3 mr-1" />
-                    960k installs/month
+                    +1m downloads/month
                   </span>
                   <span
                     class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-0.5 text-sm font-medium text-gray-400"
                   >
                     <SparklesIcon class="w-3 h-3 mr-1" />
-                    4.5k stars
+                    4.7k stars
                   </span>
                   <span
                     class="inline-flex items-center rounded-md bg-slate-800 px-2.5 py-0.5 text-sm font-medium text-gray-400"
                   >
                     <RocketLaunchIcon class="w-3 h-3 mr-1" />
-                    Vue 3
+                    Composable, Fully Typed
                   </span>
                 </div>
 

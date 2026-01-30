@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/color-mode',
     '@nuxt/content',
-    '@nuxtjs/google-fonts',
+    '@nuxt/fonts',
+    '@nuxt/eslint',
     'nuxt-svgo',
   ],
 
@@ -38,10 +39,14 @@ export default defineNuxtConfig({
     defaultImport: 'component',
   },
 
-  googleFonts: {
-    families: {
-      'Public+Sans': [300, 400, 500, 600],
-    },
+  fonts: {
+    families: [
+      {
+        name: 'Public Sans',
+        provider: 'bunny',
+        weights: [300, 400, 500, 600],
+      },
+    ],
   },
 
   vite: {

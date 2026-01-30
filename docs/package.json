@@ -4,30 +4,33 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "devDependencies": {
-    "@nuxt/content": "^3.3.0",
-    "@nuxt/eslint-config": "^1.2.0",
-    "@nuxtjs/color-mode": "^3.5.2",
-    "@nuxtjs/google-fonts": "^3.2.0",
-    "@tailwindcss/typography": "^0.5.16",
-    "@vue/eslint-config-prettier": "^10.2.0",
-    "@vue/eslint-config-typescript": "^14.5.0",
-    "autoprefixer": "^10.4.21",
+    "@nuxt/content": "^3.8.2",
+    "@nuxt/eslint": "^1.10.0",
+    "@nuxt/fonts": "^0.12.1",
+    "@nuxtjs/color-mode": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "autoprefixer": "^10.4.22",
     "eslint": "^9.22.0",
-    "eslint-plugin-prettier": "^5.2.3",
-    "eslint-plugin-vue": "^10.0.0",
-    "nuxt": "3.16.0",
-    "nuxt-svgo": "^4.0.15",
-    "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11"
+    "eslint-plugin-prettier": "^5.5.4",
+    "nuxt": "^4.2.1",
+    "nuxt-svgo": "^4.2.6",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.7.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.2.2",
+    "vue": "^3.5.24"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
-    "@tailwindcss/vite": "^4.0.14",
-    "@vueuse/core": "^13.0.0",
-    "tailwindcss": "^4.0.14"
+    "@tailwindcss/vite": "^4.1.17",
+    "@vueuse/core": "^14.0.0",
+    "tailwindcss": "^4.1.17"
   }
 }

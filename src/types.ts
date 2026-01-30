@@ -1,4 +1,4 @@
-import { ComputedRef, PropType } from 'vue'
+import { PropType } from 'vue'
 
 export type VueSelectValue = PropType<unknown>
 export type VueSelectOption = PropType<unknown>

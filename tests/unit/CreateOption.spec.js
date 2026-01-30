@@ -7,7 +7,7 @@ describe('CreateOption When Tagging Is Enabled', () => {
       taggable: true,
       multiple: true,
       options: ['one', 'two'],
-      createOption: (option) => 'four',
+      createOption: () => 'four',
     })
 
     await selectTag(Select, 'three')

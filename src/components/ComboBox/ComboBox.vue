@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ListBoxKey } from '@/keys'
-import type { ComputedRef } from 'vue'
 import {
   provide,
   computed,
@@ -15,7 +14,6 @@ import type {
   InjectedListBoxProps,
   ListBoxProps,
   ResolvedListBoxProps,
-  VueSelectValue,
 } from '@/types'
 
 const emit = defineEmits(['update:modelValue', 'update:open', 'open', 'close'])
