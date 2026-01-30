@@ -34,3 +34,4 @@ dist-ssr
 *.local
 .netlify
 docs/.vuepress/dist
+.claude/settings.local.json
