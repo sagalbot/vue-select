@@ -35,3 +35,4 @@ dist-ssr
 .netlify
 docs/.vuepress/dist
 .claude/settings.local.json
+/.pnpm-store
