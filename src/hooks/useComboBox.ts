@@ -20,9 +20,13 @@ export function useComboBox(
 
   const selectedValue = computed<OptionValue[]>(() => {
     const v = props.modelValue
-    if (Array.isArray(v)) return v
-    if (v != null) return [v]
-    return []
+    const values = Array.isArray(v) ? v : v != null ? [v] : []
+
+    if (!props.reduce) return values as OptionValue[]
+
+    // When reduce is in use, modelValue contains reduced values.
+    // Map them back to full option objects.
+    return values.map((val) => findOptionFromReducedValue(val) ?? val as OptionValue)
   })
 
   const isValueEmpty = computed(() => selectedValue.value.length === 0)
@@ -121,6 +125,16 @@ export function useComboBox(
     return maybeAddTaggableOption(filtered)
   })
 
+  // --- Reduce helpers ---
+
+  function findOptionFromReducedValue(reducedValue: unknown): OptionValue | undefined {
+    const opts = optionList.value
+    return opts.find((option) => {
+      const reduced = props.reduce ? props.reduce(option) : option
+      return JSON.stringify(reduced) === JSON.stringify(reducedValue)
+    })
+  }
+
   // --- Open state ---
 
   function setOpen(value: boolean) {
@@ -142,14 +156,15 @@ export function useComboBox(
 
   function select(option: OptionValue) {
     emit('option:selecting', option)
+    const emitValue = props.reduce ? props.reduce(option) : option
     if (props.multiple) {
       const current = Array.isArray(props.modelValue)
         ? [...props.modelValue]
         : []
-      current.push(option)
+      current.push(emitValue)
       emit('update:modelValue', current)
     } else {
-      emit('update:modelValue', option)
+      emit('update:modelValue', emitValue)
     }
     emit('option:selected', option)
   }
@@ -159,9 +174,13 @@ export function useComboBox(
     const current = Array.isArray(props.modelValue)
       ? [...props.modelValue]
       : []
-    const filtered = current.filter(
-      (v) => getOptionKey(v) !== getOptionKey(option)
-    )
+    const reducedKey = props.reduce
+      ? JSON.stringify(props.reduce(option))
+      : getOptionKey(option)
+    const filtered = current.filter((v) => {
+      const vKey = props.reduce ? JSON.stringify(v) : getOptionKey(v as OptionValue)
+      return vKey !== reducedKey
+    })
     emit('update:modelValue', filtered)
     emit('option:deselected', option)
   }

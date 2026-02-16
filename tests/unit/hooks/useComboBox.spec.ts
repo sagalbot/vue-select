@@ -303,4 +303,68 @@ describe('useComboBox', () => {
       expect(isOptionHighlighted(1)).toBe(false)
     })
   })
+
+  describe('reduce', () => {
+    it('emits the reduced value on select', () => {
+      const { select, emit } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }],
+        reduce: (opt: any) => opt.code,
+      })
+      select({ label: 'Canada', code: 'CA' })
+      expect(emit).toHaveBeenCalledWith('update:modelValue', 'CA')
+    })
+
+    it('selectedValue still contains the full option objects', () => {
+      const { selectedValue } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }, { label: 'USA', code: 'US' }],
+        reduce: (opt: any) => opt.code,
+        modelValue: 'CA',
+      })
+      expect(selectedValue.value).toEqual([{ label: 'Canada', code: 'CA' }])
+    })
+
+    it('handles reduced multi-select values', () => {
+      const { selectedValue } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }, { label: 'USA', code: 'US' }],
+        reduce: (opt: any) => opt.code,
+        multiple: true,
+        modelValue: ['CA', 'US'],
+      })
+      expect(selectedValue.value).toEqual([
+        { label: 'Canada', code: 'CA' },
+        { label: 'USA', code: 'US' },
+      ])
+    })
+
+    it('isOptionSelected works with reduced values', () => {
+      const { isOptionSelected } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }],
+        reduce: (opt: any) => opt.code,
+        modelValue: 'CA',
+      })
+      expect(isOptionSelected({ label: 'Canada', code: 'CA' })).toBe(true)
+    })
+
+    it('deselect works with reduced values in multi mode', () => {
+      const { deselect, emit } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }, { label: 'USA', code: 'US' }],
+        reduce: (opt: any) => opt.code,
+        multiple: true,
+        modelValue: ['CA', 'US'],
+      })
+      deselect({ label: 'Canada', code: 'CA' })
+      expect(emit).toHaveBeenCalledWith('update:modelValue', ['US'])
+    })
+
+    it('clearSelection emits null (single) or empty array (multi) with reduce', () => {
+      const { clearSelection, emit } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }],
+        reduce: (opt: any) => opt.code,
+        modelValue: 'CA',
+      })
+      clearSelection()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+  })
+
 })
