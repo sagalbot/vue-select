@@ -1,72 +1,61 @@
 <script setup lang="ts">
-import { ListBoxKey } from '@/keys'
-import type { ComputedRef } from 'vue'
-import {
-  provide,
-  computed,
-  reactive,
-  watch,
-  onMounted,
-  ref,
-  onUnmounted,
-} from 'vue'
+import { provide, ref, onMounted, onUnmounted } from 'vue'
+import { useComboBox } from '@/hooks/useComboBox'
 import { useClickAway } from '@/hooks/useClickAway'
-import type {
-  InjectedListBoxProps,
-  ListBoxProps,
-  ResolvedListBoxProps,
-  VueSelectValue,
-} from '@/types'
+import { ComboBoxKey } from '@/keys'
+import type { ComboBoxProps } from '@/types'
 
-const emit = defineEmits(['update:modelValue', 'update:open', 'open', 'close'])
-
-const props = withDefaults(defineProps<ListBoxProps>(), {
-  open: undefined,
+const props = withDefaults(defineProps<ComboBoxProps>(), {
+  options: () => [],
+  multiple: false,
+  filterable: true,
+  taggable: false,
+  pushTags: false,
+  clearable: true,
+  closeOnSelect: true,
+  clearSearchOnSelect: true,
+  disabled: false,
+  label: 'label',
+  loading: false,
+  noDrop: false,
+  deselectFromDropdown: false,
+  autoscroll: true,
+  placeholder: '',
 })
 
+const emit = defineEmits<{
+  'update:modelValue': [value: unknown]
+  'update:open': [value: boolean]
+  open: []
+  close: []
+  search: [search: string, toggleLoading: (value?: boolean) => void]
+  'option:created': [option: unknown]
+  'option:selecting': [option: unknown]
+  'option:selected': [option: unknown]
+  'option:deselecting': [option: unknown]
+  'option:deselected': [option: unknown]
+}>()
+
+const ctx = useComboBox(props, emit)
+provide(ComboBoxKey, ctx)
+
+// Click-away to close
 const el = ref<HTMLElement>()
-const state = reactive<{
-  open: boolean
-}>({
-  open: props.open === undefined ? false : props.open,
+const { addClickAwayListener, removeClickAwayListener } = useClickAway(() => {
+  ctx.setOpen(false)
 })
-
-watch(
-  () => state.open,
-  (open) => emit('update:open', open),
-)
-
-const inputText = ref('')
-
-const isOpen = computed<boolean>(() => {
-  if (props.open !== undefined) {
-    return props.open
-  }
-  return state.open
-})
-
-const { addClickAwayListener, removeClickAwayListener } = useClickAway(
-  () => (state.open = false),
-)
-
 onMounted(() => addClickAwayListener(el.value))
 onUnmounted(() => removeClickAwayListener(el.value))
-
-provide<InjectedListBoxProps>(
-  ListBoxKey,
-  computed<ResolvedListBoxProps>(() => ({
-    open: isOpen.value,
-    modelValue: props.modelValue,
-    inputText: inputText.value,
-    toggleOpen: () => (state.open = !state.open),
-    setModelValue: (modelValue) => emit('update:modelValue', modelValue),
-    setInputText: (value: string) => (inputText.value = value),
-  })),
-)
 </script>
 
 <template>
-  <div tabindex="0" role="combobox" ref="el">
-    <slot></slot>
+  <div
+    ref="el"
+    role="combobox"
+    :aria-expanded="String(ctx.open.value)"
+    :aria-owns="`vs-${ctx.uid.value}-listbox`"
+    :aria-label="placeholder || undefined"
+  >
+    <slot />
   </div>
 </template>
