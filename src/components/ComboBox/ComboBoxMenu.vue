@@ -2,13 +2,14 @@
 import { inject, ref, watch, nextTick } from 'vue'
 import { ComboBoxKey } from '@/keys'
 
-const ctx = inject(ComboBoxKey)!
+const ctx = inject(ComboBoxKey)
+if (!ctx) throw new Error('ComboBoxMenu must be used inside a ComboBox component')
 const menuEl = ref<HTMLElement>()
 
 // Auto-scroll to keep highlighted option visible
 watch(() => ctx.typeAheadPointer.value, async (pointer) => {
   await nextTick()
-  if (!menuEl.value || pointer < 0) return
+  if (!ctx.autoscroll.value || !menuEl.value || pointer < 0) return
   const option = menuEl.value.children[pointer] as HTMLElement | undefined
   if (!option) return
 

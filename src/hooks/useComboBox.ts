@@ -1,5 +1,7 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { ComboBoxProps, ComboBoxContext, OptionValue } from '@/types'
+
+let uidCounter = 0
 
 export function useComboBox(
   props: ComboBoxProps,
@@ -7,14 +9,24 @@ export function useComboBox(
 ): ComboBoxContext {
   // --- State ---
 
-  const open = ref(false)
+  const open = ref(props.open ?? false)
   const search = ref('')
   const typeAheadPointer = ref(-1)
   const isLoading = ref(props.loading ?? false)
   const pushedTags = ref<OptionValue[]>([])
 
-  // Generate a stable uid once per instance
-  const stableUid = String(Math.random()).slice(2, 8)
+  // Generate a stable uid once per instance using a counter
+  const stableUid = String(++uidCounter)
+
+  // Sync controlled open prop
+  watch(() => props.open, (val) => {
+    if (val !== undefined) open.value = val
+  })
+
+  // Sync loading prop
+  watch(() => props.loading, (val) => {
+    if (val !== undefined) isLoading.value = val
+  })
 
   // --- Computed ---
 
@@ -39,6 +51,8 @@ export function useComboBox(
   const taggable = computed(() => props.taggable ?? false)
   const placeholder = computed(() => props.placeholder ?? '')
   const uid = computed(() => props.uid ?? stableUid)
+  const deselectFromDropdown = computed(() => props.deselectFromDropdown ?? false)
+  const autoscroll = computed(() => props.autoscroll ?? true)
 
   // --- Option helpers ---
 
@@ -118,9 +132,9 @@ export function useComboBox(
   const filteredOptions = computed<OptionValue[]>(() => {
     const opts = optionList.value
 
-    // Custom filter function takes priority
+    // Custom filter function takes priority, but still add taggable option
     if (props.filter) {
-      return props.filter(opts, search.value)
+      return maybeAddTaggableOption(props.filter(opts, search.value))
     }
 
     // If not filterable or no search, return all
@@ -151,7 +165,9 @@ export function useComboBox(
   // --- Open state ---
 
   function setOpen(value: boolean) {
+    if (open.value === value) return
     open.value = value
+    emit('update:open', value)
     emit(value ? 'open' : 'close')
   }
 
@@ -163,6 +179,7 @@ export function useComboBox(
 
   function setSearch(value: string) {
     search.value = value
+    typeAheadPointer.value = -1
     emit('search', value, toggleLoading)
   }
 
@@ -180,15 +197,24 @@ export function useComboBox(
     emit('option:selecting', option)
     const emitValue = props.reduce ? props.reduce(option) : option
     if (props.multiple) {
-      const current = Array.isArray(props.modelValue)
-        ? [...props.modelValue]
-        : []
-      current.push(emitValue)
-      emit('update:modelValue', current)
+      if (!isOptionSelected(option)) {
+        const current = Array.isArray(props.modelValue)
+          ? [...props.modelValue]
+          : []
+        current.push(emitValue)
+        emit('update:modelValue', current)
+      }
     } else {
       emit('update:modelValue', emitValue)
     }
     emit('option:selected', option)
+
+    if (props.clearSearchOnSelect !== false) {
+      search.value = ''
+    }
+    if (props.closeOnSelect !== false) {
+      setOpen(false)
+    }
   }
 
   function deselect(option: OptionValue) {
@@ -218,15 +244,18 @@ export function useComboBox(
     if (opts.length === 0) return
 
     let next = typeAheadPointer.value + 1
-    // Wrap around
     if (next >= opts.length) next = 0
 
-    // Find next selectable option (with wrap protection)
-    const start = next
     let checked = 0
     while (!isOptionSelectable(opts[next]) && checked < opts.length) {
       next = (next + 1) % opts.length
       checked++
+    }
+
+    // If we checked all options and none are selectable, reset to -1
+    if (checked >= opts.length) {
+      typeAheadPointer.value = -1
+      return
     }
 
     typeAheadPointer.value = next
@@ -237,15 +266,18 @@ export function useComboBox(
     if (opts.length === 0) return
 
     let prev = typeAheadPointer.value - 1
-    // Wrap around
     if (prev < 0) prev = opts.length - 1
 
-    // Find previous selectable option (with wrap protection)
     let checked = 0
     while (!isOptionSelectable(opts[prev]) && checked < opts.length) {
       prev = prev - 1
       if (prev < 0) prev = opts.length - 1
       checked++
+    }
+
+    if (checked >= opts.length) {
+      typeAheadPointer.value = -1
+      return
     }
 
     typeAheadPointer.value = prev
@@ -283,6 +315,8 @@ export function useComboBox(
     isValueEmpty,
     isSearching,
     uid,
+    deselectFromDropdown,
+    autoscroll,
 
     // Methods
     select,

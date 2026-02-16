@@ -62,6 +62,8 @@ export interface ComboBoxContext {
   isValueEmpty: ComputedRef<boolean>
   isSearching: ComputedRef<boolean>
   uid: ComputedRef<string>
+  deselectFromDropdown: ComputedRef<boolean>
+  autoscroll: ComputedRef<boolean>
 
   // Methods
   select: (option: OptionValue) => void

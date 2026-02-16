@@ -2,7 +2,8 @@
 import { inject } from 'vue'
 import { ComboBoxKey } from '@/keys'
 
-const ctx = inject(ComboBoxKey)!
+const ctx = inject(ComboBoxKey)
+if (!ctx) throw new Error('ComboBoxClear must be used inside a ComboBox component')
 </script>
 
 <template>

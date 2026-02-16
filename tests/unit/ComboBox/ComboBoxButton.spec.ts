@@ -23,6 +23,8 @@ function createMockContext(overrides = {}): ComboBoxContext {
     isValueEmpty: computed(() => true),
     isSearching: computed(() => false),
     uid: computed(() => 'test'),
+    deselectFromDropdown: computed(() => false),
+    autoscroll: computed(() => true),
     select: vi.fn(),
     deselect: vi.fn(),
     clearSelection: vi.fn(),

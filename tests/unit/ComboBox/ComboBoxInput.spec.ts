@@ -23,6 +23,8 @@ function createMockContext(overrides = {}): ComboBoxContext {
     isValueEmpty: computed(() => true),
     isSearching: computed(() => false),
     uid: computed(() => 'test'),
+    deselectFromDropdown: computed(() => false),
+    autoscroll: computed(() => true),
     select: vi.fn(),
     deselect: vi.fn(),
     clearSelection: vi.fn(),
@@ -64,7 +66,9 @@ describe('ComboBoxInput', () => {
   it('has correct ARIA attributes', () => {
     const { wrapper } = mountInput()
     const input = wrapper.find('input')
+    expect(input.attributes('role')).toBe('combobox')
     expect(input.attributes('aria-autocomplete')).toBe('list')
+    expect(input.attributes('aria-expanded')).toBe('false')
     expect(input.attributes('aria-controls')).toBe('vs-test-listbox')
     expect(input.attributes('autocomplete')).toBe('off')
   })

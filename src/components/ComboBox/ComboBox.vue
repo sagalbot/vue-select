@@ -49,13 +49,7 @@ onUnmounted(() => removeClickAwayListener(el.value))
 </script>
 
 <template>
-  <div
-    ref="el"
-    role="combobox"
-    :aria-expanded="String(ctx.open.value)"
-    :aria-owns="`vs-${ctx.uid.value}-listbox`"
-    :aria-label="placeholder || undefined"
-  >
+  <div ref="el">
     <slot />
   </div>
 </template>

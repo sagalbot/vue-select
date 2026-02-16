@@ -201,7 +201,7 @@ describe('ComboBox integration', () => {
     expect(listbox.exists()).toBe(true)
     expect(options).toHaveLength(2)
 
-    // The combobox owns the listbox
-    expect(combobox.attributes('aria-owns')).toBe(listbox.attributes('id'))
+    // The combobox (input) controls the listbox
+    expect(combobox.attributes('aria-controls')).toBe(listbox.attributes('id'))
   })
 })

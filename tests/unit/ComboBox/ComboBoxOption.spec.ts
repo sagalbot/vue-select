@@ -23,6 +23,8 @@ function createMockContext(overrides = {}): ComboBoxContext {
     isValueEmpty: computed(() => true),
     isSearching: computed(() => false),
     uid: computed(() => 'test'),
+    deselectFromDropdown: computed(() => false),
+    autoscroll: computed(() => true),
     select: vi.fn(),
     deselect: vi.fn(),
     clearSelection: vi.fn(),
@@ -74,9 +76,9 @@ describe('ComboBoxOption', () => {
     expect(wrapper.attributes('aria-selected')).toBe('true')
   })
 
-  it('does not set aria-selected when not selected', () => {
+  it('sets aria-selected="false" when not selected', () => {
     const { wrapper } = mountOption()
-    expect(wrapper.attributes('aria-selected')).toBeUndefined()
+    expect(wrapper.attributes('aria-selected')).toBe('false')
   })
 
   it('sets aria-disabled when not selectable', () => {
@@ -90,10 +92,23 @@ describe('ComboBoxOption', () => {
     expect(ctx.select).toHaveBeenCalledWith('test')
   })
 
-  it('click calls deselect when already selected', async () => {
-    const { wrapper, ctx } = mountOption({}, { isOptionSelected: () => true })
+  it('click calls deselect when already selected and deselectFromDropdown is true', async () => {
+    const { wrapper, ctx } = mountOption({}, {
+      isOptionSelected: () => true,
+      deselectFromDropdown: computed(() => true),
+    })
     await wrapper.trigger('click')
     expect(ctx.deselect).toHaveBeenCalledWith('test')
+  })
+
+  it('click does nothing when already selected and deselectFromDropdown is false', async () => {
+    const { wrapper, ctx } = mountOption({}, {
+      isOptionSelected: () => true,
+      deselectFromDropdown: computed(() => false),
+    })
+    await wrapper.trigger('click')
+    expect(ctx.select).not.toHaveBeenCalled()
+    expect(ctx.deselect).not.toHaveBeenCalled()
   })
 
   it('click does nothing when disabled', async () => {

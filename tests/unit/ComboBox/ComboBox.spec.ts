@@ -30,14 +30,14 @@ describe('ComboBox', () => {
     expect(reader.vm.ctx.open.value).toBe(false)
   })
 
-  it('renders a root element with role=combobox', () => {
+  it('does not have role=combobox on wrapper (role is on input)', () => {
     const wrapper = mountComboBox()
-    expect(wrapper.attributes('role')).toBe('combobox')
+    expect(wrapper.attributes('role')).toBeUndefined()
   })
 
-  it('sets aria-expanded based on open state', () => {
+  it('does not have aria-expanded on wrapper (managed by input)', () => {
     const wrapper = mountComboBox()
-    expect(wrapper.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.attributes('aria-expanded')).toBeUndefined()
   })
 
   it('emits update:modelValue when selection changes', () => {

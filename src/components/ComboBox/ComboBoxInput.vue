@@ -2,14 +2,16 @@
 import { inject, ref, computed } from 'vue'
 import { ComboBoxKey } from '@/keys'
 
-const ctx = inject(ComboBoxKey)!
+const ctx = inject(ComboBoxKey)
+if (!ctx) throw new Error('ComboBoxInput must be used inside a ComboBox component')
 const isComposing = ref(false)
 
 const attrs = computed(() => ({
   type: 'search',
-  role: 'searchbox',
+  role: 'combobox',
   autocomplete: 'off',
   'aria-autocomplete': 'list' as const,
+  'aria-expanded': String(ctx.open.value),
   'aria-controls': `vs-${ctx.uid.value}-listbox`,
   'aria-activedescendant':
     ctx.typeAheadPointer.value > -1
