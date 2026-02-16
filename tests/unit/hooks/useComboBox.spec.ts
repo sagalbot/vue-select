@@ -160,4 +160,66 @@ describe('useComboBox', () => {
       expect(isOptionSelectable('two')).toBe(false)
     })
   })
+
+  describe('filtering', () => {
+    it('filteredOptions returns all options when search is empty', () => {
+      const { filteredOptions } = createComboBox({ options: ['one', 'two', 'three'] })
+      expect(filteredOptions.value).toEqual(['one', 'two', 'three'])
+    })
+
+    it('filteredOptions filters by search text (case-insensitive)', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: ['One', 'Two', 'Three'],
+      })
+      setSearch('tw')
+      expect(filteredOptions.value).toEqual(['Two'])
+    })
+
+    it('does not filter when filterable is false', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: ['one', 'two', 'three'],
+        filterable: false,
+      })
+      setSearch('tw')
+      expect(filteredOptions.value).toEqual(['one', 'two', 'three'])
+    })
+
+    it('uses custom filter function when provided', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: ['one', 'two', 'three'],
+        filter: (opts: string[], search: string) => opts.filter((o) => o === search),
+      })
+      setSearch('two')
+      expect(filteredOptions.value).toEqual(['two'])
+    })
+
+    it('uses custom filterBy when provided', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: [{ label: 'one', code: '1' }, { label: 'two', code: '2' }],
+        label: 'label',
+        filterBy: (option: any, label: string, search: string) => option.code.includes(search),
+      })
+      setSearch('2')
+      expect(filteredOptions.value).toEqual([{ label: 'two', code: '2' }])
+    })
+
+    it('filteredOptions includes taggable option when taggable and search has no match', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: ['one', 'two'],
+        taggable: true,
+      })
+      setSearch('new-tag')
+      expect(filteredOptions.value).toContain('new-tag')
+    })
+
+    it('filteredOptions does not include duplicate tag when option already exists', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: ['one', 'two'],
+        taggable: true,
+      })
+      setSearch('one')
+      const count = filteredOptions.value.filter((o) => o === 'one').length
+      expect(count).toBe(1)
+    })
+  })
 })

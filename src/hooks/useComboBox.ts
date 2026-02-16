@@ -11,6 +11,7 @@ export function useComboBox(
   const search = ref('')
   const typeAheadPointer = ref(-1)
   const isLoading = ref(false)
+  const pushedTags = ref<OptionValue[]>([])
 
   // Generate a stable uid once per instance
   const stableUid = String(Math.random()).slice(2, 8)
@@ -34,10 +35,6 @@ export function useComboBox(
   const taggable = computed(() => props.taggable ?? false)
   const placeholder = computed(() => props.placeholder ?? '')
   const uid = computed(() => props.uid ?? stableUid)
-
-  // Stubs for filtering -- expanded in Task 4
-  const filteredOptions = computed<OptionValue[]>(() => props.options ?? [])
-  const optionList = computed<OptionValue[]>(() => props.options ?? [])
 
   // --- Option helpers ---
 
@@ -71,6 +68,58 @@ export function useComboBox(
   function isOptionHighlighted(index: number): boolean {
     return typeAheadPointer.value === index
   }
+
+  // --- Filtering helpers ---
+
+  function defaultFilterBy(option: OptionValue, label: string, search: string): boolean {
+    return label.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+  }
+
+  function maybeAddTaggableOption(options: OptionValue[]): OptionValue[] {
+    if (!taggable.value || !search.value) return options
+
+    // Create the tag option
+    const tagOption = props.createOption
+      ? props.createOption(search.value)
+      : search.value
+
+    // Don't add if an option with the same key already exists
+    const tagKey = getOptionKey(tagOption)
+    const alreadyExists = options.some((o) => getOptionKey(o) === tagKey)
+
+    if (alreadyExists) return options
+    return [tagOption, ...options]
+  }
+
+  // --- Filtering computeds ---
+
+  const optionList = computed<OptionValue[]>(() => [
+    ...(props.options ?? []),
+    ...pushedTags.value,
+  ])
+
+  const filteredOptions = computed<OptionValue[]>(() => {
+    const opts = optionList.value
+
+    // Custom filter function takes priority
+    if (props.filter) {
+      return props.filter(opts, search.value)
+    }
+
+    // If not filterable or no search, return all
+    if (!filterable.value || !search.value) {
+      return maybeAddTaggableOption(opts)
+    }
+
+    // Default filtering logic
+    const filterFn = props.filterBy ?? defaultFilterBy
+    const filtered = opts.filter((option) => {
+      const label = getOptionLabel(option)
+      return filterFn(option, label, search.value)
+    })
+
+    return maybeAddTaggableOption(filtered)
+  })
 
   // --- Open state ---
 
