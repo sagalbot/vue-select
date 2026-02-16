@@ -16,6 +16,89 @@
 
 ---
 
+## Branching Strategy
+
+All headless primitives work happens on **feature branches** off `@beta/dev`. Each logical unit of work gets its own branch, is completed with passing tests, and merged back into `@beta/dev`.
+
+**Branch naming:**
+```
+@beta/dev                              ← integration branch (canonical)
+  └── feat/combobox-types              ← Task 2: types + keys
+  └── fix/use-click-away               ← Task 1: bugfix
+  └── feat/use-combobox-core           ← Tasks 3-7: composable
+  └── feat/combobox-components         ← Tasks 8-12: primitive components
+  └── feat/combobox-exports            ← Task 13: package exports
+  └── test/combobox-integration        ← Task 14: integration tests
+```
+
+**Merge strategy:** Each feature branch is merged into `@beta/dev` via fast-forward or merge commit. No squash -- we want the semantic commit history preserved for `semantic-release`.
+
+**Before creating a branch:**
+```bash
+git checkout @beta/dev
+git pull origin @beta/dev
+git checkout -b <branch-name>
+```
+
+**After completing work on a branch:**
+```bash
+git checkout @beta/dev
+git merge <branch-name>
+```
+
+## Commit Conventions
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) with `cz-conventional-changelog` and `semantic-release`. Every commit message MUST follow this format:
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types:**
+- `feat` — new feature (triggers MINOR version bump)
+- `fix` — bug fix (triggers PATCH version bump)
+- `test` — adding or updating tests (no release)
+- `refactor` — code change that neither fixes a bug nor adds a feature (no release)
+- `chore` — build, CI, dependency changes (no release)
+- `docs` — documentation only (no release)
+
+**Scopes for this plan:**
+- `useClickAway` — the click-away hook
+- `types` — TypeScript type definitions
+- `useComboBox` — the core composable
+- `ComboBox` — the root provider component
+- `ComboBoxInput` — the search input primitive
+- `ComboBoxMenu` — the dropdown menu primitive
+- `ComboBoxOption` — the option primitive
+- `ComboBoxButton` — the toggle button primitive
+- `ComboBoxClear` — the clear button primitive
+
+**Breaking changes:** Any commit that introduces a breaking change MUST include a `BREAKING CHANGE:` footer in the commit body. This triggers a MAJOR version bump via `semantic-release`.
+
+```
+feat(ComboBox)!: replace ListBoxKey injection with ComboBoxKey
+
+BREAKING CHANGE: The provide/inject key has been renamed from
+ListBoxKey to ComboBoxKey. Any code injecting ListBoxKey must
+update to use ComboBoxKey instead.
+```
+
+**Known breaking changes to track:**
+- `ListBoxKey` renamed to `ComboBoxKey` (injection key)
+- `ListBoxProps` / `ResolvedListBoxProps` types replaced by `ComboBoxProps` / `ComboBoxContext`
+- `ComboBoxOption` now requires an `index` prop
+- `StyledComboBox` API will change once primitives are finalized
+- The `value` prop was already renamed to `modelValue` in a prior beta (documented in #1597)
+- SCSS was already removed in a prior beta (documented in #1597)
+
+These breaking changes are acceptable within the `beta` prerelease channel. They will be collected into the v4 upgrade guide (Plan 3, Phase C).
+
+---
+
 ## Task 1: Fix useClickAway Bug + Add Tests
 
 The current `useClickAway.ts` has a critical bug: `removeClickAwayListener` creates a new arrow function each call, so `document.removeEventListener` never actually removes the listener. The handler reference must be stored.
@@ -123,7 +206,14 @@ Expected: All 4 tests PASS
 
 ```bash
 git add src/hooks/useClickAway.ts tests/unit/hooks/useClickAway.spec.ts
-git commit -m "fix(useClickAway): store handler reference so removeEventListener works"
+git commit -m "$(cat <<'EOF'
+fix(useClickAway): store handler reference so removeEventListener works
+
+The previous implementation created a new arrow function in
+removeClickAwayListener, so document.removeEventListener never
+matched the original handler. Now the handler is stored and reused.
+EOF
+)"
 ```
 
 ---
@@ -304,7 +394,14 @@ Expected: May have errors in existing ComboBox files that reference old types. T
 
 ```bash
 git add src/types.ts src/keys.ts
-git commit -m "feat(types): define ComboBoxProps and ComboBoxContext interfaces"
+git commit -m "$(cat <<'EOF'
+feat(types): define ComboBoxProps and ComboBoxContext interfaces
+
+BREAKING CHANGE: ListBoxProps and ResolvedListBoxProps types are
+replaced by ComboBoxProps and ComboBoxContext. The ListBoxKey
+injection key is replaced by ComboBoxKey.
+EOF
+)"
 ```
 
 ---
@@ -1009,7 +1106,14 @@ onUnmounted(() => removeClickAwayListener(el.value))
 
 ```bash
 git add src/components/ComboBox/ComboBox.vue tests/unit/ComboBox/ComboBox.spec.ts
-git commit -m "feat(ComboBox): wire up useComboBox composable with provide/inject"
+git commit -m "$(cat <<'EOF'
+feat(ComboBox): wire up useComboBox composable with provide/inject
+
+BREAKING CHANGE: ComboBox now provides ComboBoxContext (via ComboBoxKey)
+instead of the previous ResolvedListBoxProps (via ListBoxKey). Child
+components must inject ComboBoxKey to access the expanded context.
+EOF
+)"
 ```
 
 ---
@@ -1131,7 +1235,14 @@ function onBlur() {
 
 ```bash
 git add src/components/ComboBox/ComboBoxInput.vue tests/unit/ComboBox/ComboBoxInput.spec.ts
-git commit -m "feat(ComboBoxInput): full keyboard nav, ARIA, and IME support"
+git commit -m "$(cat <<'EOF'
+feat(ComboBoxInput): full keyboard nav, ARIA, and IME support
+
+BREAKING CHANGE: ComboBoxInput now renders a fully controlled input
+with ARIA attributes and keyboard handlers. The previous uncontrolled
+input with no bindings is replaced.
+EOF
+)"
 ```
 
 ---
@@ -1269,7 +1380,15 @@ function onClick() {
 
 ```bash
 git add src/components/ComboBox/ComboBoxOption.vue tests/unit/ComboBox/ComboBoxOption.spec.ts
-git commit -m "feat(ComboBoxOption): ARIA option with selection, highlight, and disabled states"
+git commit -m "$(cat <<'EOF'
+feat(ComboBoxOption)!: add ARIA, highlight, and disabled states
+
+BREAKING CHANGE: ComboBoxOption now requires an `index` prop for
+ARIA and typeahead pointer tracking. The `value` prop type is
+narrowed to OptionValue. Slot bindings now include isHighlighted
+and isDisabled alongside isSelected.
+EOF
+)"
 ```
 
 ---
