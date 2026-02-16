@@ -18,7 +18,7 @@ export default defineConfig({
   build: {
     target: 'es2015',
     lib: {
-      entry: resolve(__dirname, 'src/index.js'),
+      entry: resolve(__dirname, 'src/index.ts'),
       name: 'vue-select',
       fileName: (format) => `vue-select.${format}.js`,
     },
