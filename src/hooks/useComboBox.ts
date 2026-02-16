@@ -170,11 +170,55 @@ export function useComboBox(
     emit('update:modelValue', props.multiple ? [] : null)
   }
 
-  // --- Stubs for later tasks ---
+  // --- TypeAhead navigation ---
 
-  function typeAheadUp() {}
-  function typeAheadDown() {}
-  function typeAheadSelect() {}
+  function typeAheadDown() {
+    const opts = filteredOptions.value
+    if (opts.length === 0) return
+
+    let next = typeAheadPointer.value + 1
+    // Wrap around
+    if (next >= opts.length) next = 0
+
+    // Find next selectable option (with wrap protection)
+    const start = next
+    let checked = 0
+    while (!isOptionSelectable(opts[next]) && checked < opts.length) {
+      next = (next + 1) % opts.length
+      checked++
+    }
+
+    typeAheadPointer.value = next
+  }
+
+  function typeAheadUp() {
+    const opts = filteredOptions.value
+    if (opts.length === 0) return
+
+    let prev = typeAheadPointer.value - 1
+    // Wrap around
+    if (prev < 0) prev = opts.length - 1
+
+    // Find previous selectable option (with wrap protection)
+    let checked = 0
+    while (!isOptionSelectable(opts[prev]) && checked < opts.length) {
+      prev = prev - 1
+      if (prev < 0) prev = opts.length - 1
+      checked++
+    }
+
+    typeAheadPointer.value = prev
+  }
+
+  function typeAheadSelect() {
+    const opts = filteredOptions.value
+    if (typeAheadPointer.value >= 0 && typeAheadPointer.value < opts.length) {
+      const option = opts[typeAheadPointer.value]
+      if (isOptionSelectable(option)) {
+        select(option)
+      }
+    }
+  }
 
   function toggleLoading(value?: boolean) {
     isLoading.value = value ?? !isLoading.value

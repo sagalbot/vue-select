@@ -222,4 +222,85 @@ describe('useComboBox', () => {
       expect(count).toBe(1)
     })
   })
+
+  describe('typeAheadPointer', () => {
+    it('starts at -1', () => {
+      const { typeAheadPointer } = createComboBox()
+      expect(typeAheadPointer.value).toBe(-1)
+    })
+
+    it('typeAheadDown moves to the next selectable option', () => {
+      const { typeAheadPointer, typeAheadDown } = createComboBox({
+        options: ['one', 'two', 'three'],
+      })
+      typeAheadDown()
+      expect(typeAheadPointer.value).toBe(0)
+      typeAheadDown()
+      expect(typeAheadPointer.value).toBe(1)
+    })
+
+    it('typeAheadDown wraps to beginning', () => {
+      const { typeAheadPointer, typeAheadDown } = createComboBox({
+        options: ['one', 'two'],
+      })
+      typeAheadDown() // 0
+      typeAheadDown() // 1
+      typeAheadDown() // wraps to 0
+      expect(typeAheadPointer.value).toBe(0)
+    })
+
+    it('typeAheadDown skips non-selectable options', () => {
+      const { typeAheadPointer, typeAheadDown } = createComboBox({
+        options: ['one', 'two', 'three'],
+        selectable: (opt: string) => opt !== 'two',
+      })
+      typeAheadDown() // 0 (one)
+      typeAheadDown() // skips 1 (two), lands on 2 (three)
+      expect(typeAheadPointer.value).toBe(2)
+    })
+
+    it('typeAheadUp moves to the previous selectable option', () => {
+      const { typeAheadPointer, typeAheadDown, typeAheadUp } = createComboBox({
+        options: ['one', 'two', 'three'],
+      })
+      typeAheadDown() // 0
+      typeAheadDown() // 1
+      typeAheadUp()   // 0
+      expect(typeAheadPointer.value).toBe(0)
+    })
+
+    it('typeAheadUp wraps to end', () => {
+      const { typeAheadPointer, typeAheadUp } = createComboBox({
+        options: ['one', 'two', 'three'],
+      })
+      typeAheadUp() // wraps to 2
+      expect(typeAheadPointer.value).toBe(2)
+    })
+
+    it('typeAheadSelect selects the highlighted option', () => {
+      const { typeAheadDown, typeAheadSelect, emit } = createComboBox({
+        options: ['one', 'two'],
+      })
+      typeAheadDown() // highlight 'one'
+      typeAheadSelect()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', 'one')
+    })
+
+    it('typeAheadSelect does nothing when pointer is -1', () => {
+      const { typeAheadSelect, emit } = createComboBox({
+        options: ['one', 'two'],
+      })
+      typeAheadSelect()
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', expect.anything())
+    })
+
+    it('isOptionHighlighted returns true for the highlighted index', () => {
+      const { typeAheadDown, isOptionHighlighted } = createComboBox({
+        options: ['one', 'two'],
+      })
+      typeAheadDown()
+      expect(isOptionHighlighted(0)).toBe(true)
+      expect(isOptionHighlighted(1)).toBe(false)
+    })
+  })
 })
