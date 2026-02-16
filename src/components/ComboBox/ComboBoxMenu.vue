@@ -1,21 +1,37 @@
 <script setup lang="ts">
-import { defineProps, inject } from 'vue'
-import { ListBoxKey } from '@/keys'
+import { inject, ref, watch, nextTick } from 'vue'
+import { ComboBoxKey } from '@/keys'
 
-withDefaults(
-  defineProps<{
-    as?: string
-  }>(),
-  {
-    as: 'div',
-  },
-)
+const ctx = inject(ComboBoxKey)!
+const menuEl = ref<HTMLElement>()
 
-const listBoxProps = inject(ListBoxKey)
+// Auto-scroll to keep highlighted option visible
+watch(() => ctx.typeAheadPointer.value, async (pointer) => {
+  await nextTick()
+  if (!menuEl.value || pointer < 0) return
+  const option = menuEl.value.children[pointer] as HTMLElement | undefined
+  if (!option) return
+
+  const menuRect = menuEl.value.getBoundingClientRect()
+  const optionRect = option.getBoundingClientRect()
+
+  if (optionRect.bottom > menuRect.bottom) {
+    menuEl.value.scrollTop += optionRect.bottom - menuRect.bottom
+  } else if (optionRect.top < menuRect.top) {
+    menuEl.value.scrollTop -= menuRect.top - optionRect.top
+  }
+})
 </script>
 
 <template>
-  <Component :is="as" v-show="listBoxProps.open">
-    <slot></slot>
-  </Component>
+  <div
+    v-show="ctx.open.value && !ctx.noDrop.value"
+    ref="menuEl"
+    :id="`vs-${ctx.uid.value}-listbox`"
+    role="listbox"
+    tabindex="-1"
+    @mousedown.prevent
+  >
+    <slot />
+  </div>
 </template>
