@@ -367,4 +367,60 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('tagging', () => {
+    it('select creates a new option from search text when taggable', () => {
+      const { select, setSearch, emit } = createComboBox({
+        options: ['one', 'two'],
+        taggable: true,
+      })
+      setSearch('new-tag')
+      select('new-tag')
+      expect(emit).toHaveBeenCalledWith('option:created', 'new-tag')
+      expect(emit).toHaveBeenCalledWith('update:modelValue', 'new-tag')
+    })
+
+    it('pushTags adds created tag to optionList', () => {
+      const { select, setSearch, optionList } = createComboBox({
+        options: ['one', 'two'],
+        taggable: true,
+        pushTags: true,
+      })
+      setSearch('new-tag')
+      select('new-tag')
+      expect(optionList.value).toContain('new-tag')
+    })
+
+    it('uses custom createOption when provided', () => {
+      const { select, setSearch, emit } = createComboBox({
+        options: [],
+        taggable: true,
+        label: 'label',
+        createOption: (search: string) => ({ label: search, custom: true }),
+      })
+      setSearch('new')
+      select({ label: 'new', custom: true })
+      expect(emit).toHaveBeenCalledWith('option:created', { label: 'new', custom: true })
+    })
+  })
+
+  describe('loading', () => {
+    it('isLoading reflects the loading prop', () => {
+      const { isLoading } = createComboBox({ loading: true })
+      expect(isLoading.value).toBe(true)
+    })
+
+    it('toggleLoading flips the internal loading state', () => {
+      const { isLoading, toggleLoading } = createComboBox()
+      expect(isLoading.value).toBe(false)
+      toggleLoading(true)
+      expect(isLoading.value).toBe(true)
+    })
+
+    it('emits search event when search changes', () => {
+      const { setSearch, emit } = createComboBox()
+      setSearch('hello')
+      expect(emit).toHaveBeenCalledWith('search', 'hello', expect.any(Function))
+    })
+  })
+
 })

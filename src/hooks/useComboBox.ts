@@ -10,7 +10,7 @@ export function useComboBox(
   const open = ref(false)
   const search = ref('')
   const typeAheadPointer = ref(-1)
-  const isLoading = ref(false)
+  const isLoading = ref(props.loading ?? false)
   const pushedTags = ref<OptionValue[]>([])
 
   // Generate a stable uid once per instance
@@ -71,6 +71,19 @@ export function useComboBox(
 
   function isOptionHighlighted(index: number): boolean {
     return typeAheadPointer.value === index
+  }
+
+  // --- Tagging helpers ---
+
+  /**
+   * Checks if the option is a new tag candidate — i.e., its key doesn't exist
+   * in the original options list (props.options) or in pushedTags.
+   */
+  function isNewTagCandidate(option: OptionValue): boolean {
+    const opts = props.options ?? []
+    const optKey = getOptionKey(option)
+    return !opts.some((o) => getOptionKey(o) === optKey) &&
+      !pushedTags.value.some((o) => getOptionKey(o) === optKey)
   }
 
   // --- Filtering helpers ---
@@ -150,11 +163,20 @@ export function useComboBox(
 
   function setSearch(value: string) {
     search.value = value
+    emit('search', value, toggleLoading)
   }
 
   // --- Selection ---
 
   function select(option: OptionValue) {
+    // Check if this is a new tag (not in the original options or pushedTags)
+    if (taggable.value && isNewTagCandidate(option)) {
+      emit('option:created', option)
+      if (props.pushTags) {
+        pushedTags.value = [...pushedTags.value, option]
+      }
+    }
+
     emit('option:selecting', option)
     const emitValue = props.reduce ? props.reduce(option) : option
     if (props.multiple) {
