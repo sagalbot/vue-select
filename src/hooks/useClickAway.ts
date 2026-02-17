@@ -13,7 +13,7 @@ export function useClickAway(callback: () => void) {
     document.addEventListener('click', handler)
   }
 
-  function removeClickAwayListener(_el: HTMLElement | undefined) {
+  function removeClickAwayListener() {
     if (handler) {
       document.removeEventListener('click', handler)
       handler = null

@@ -53,7 +53,7 @@ function mountOption(props = {}, ctxOverrides = {}) {
       provide: { [ComboBoxKey as symbol]: ctx },
     },
     slots: {
-      default: (slotProps: any) =>
+      default: (slotProps: { isSelected: boolean; isHighlighted: boolean; isDisabled: boolean }) =>
         `selected:${slotProps.isSelected},highlighted:${slotProps.isHighlighted},disabled:${slotProps.isDisabled}`,
     },
   })

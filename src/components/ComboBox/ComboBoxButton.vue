@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, computed } from 'vue'
+import { inject } from 'vue'
 import { ComboBoxKey } from '@/keys'
 
 const ctx = inject(ComboBoxKey)

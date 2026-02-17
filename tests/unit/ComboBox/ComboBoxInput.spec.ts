@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { defineComponent, h, provide, ref, computed } from 'vue'
+import { ref, computed } from 'vue'
 import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
 import { ComboBoxKey } from '@/keys'
 import type { ComboBoxContext, OptionValue } from '@/types'

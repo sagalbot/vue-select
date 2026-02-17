@@ -3,7 +3,6 @@ import { ref, watch } from 'vue'
 import ComboBox from '@/components/ComboBox/ComboBox.vue'
 import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
 import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
-import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
 import ComboBoxButton from '@/components/ComboBox/ComboBoxButton.vue'
 import type { VueSelectOption } from '@/types'
 

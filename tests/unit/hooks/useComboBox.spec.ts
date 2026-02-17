@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { useComboBox } from '@/hooks/useComboBox'
+import type { OptionValue } from '@/types'
 
 function createComboBox(overrides = {}) {
   const emit = vi.fn()
@@ -197,7 +198,7 @@ describe('useComboBox', () => {
       const { filteredOptions, setSearch } = createComboBox({
         options: [{ label: 'one', code: '1' }, { label: 'two', code: '2' }],
         label: 'label',
-        filterBy: (option: any, label: string, search: string) => option.code.includes(search),
+        filterBy: (option: OptionValue, _label: string, search: string) => (option as Record<string, unknown>).code === search,
       })
       setSearch('2')
       expect(filteredOptions.value).toEqual([{ label: 'two', code: '2' }])
@@ -308,7 +309,7 @@ describe('useComboBox', () => {
     it('emits the reduced value on select', () => {
       const { select, emit } = createComboBox({
         options: [{ label: 'Canada', code: 'CA' }],
-        reduce: (opt: any) => opt.code,
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
       })
       select({ label: 'Canada', code: 'CA' })
       expect(emit).toHaveBeenCalledWith('update:modelValue', 'CA')
@@ -317,7 +318,7 @@ describe('useComboBox', () => {
     it('selectedValue still contains the full option objects', () => {
       const { selectedValue } = createComboBox({
         options: [{ label: 'Canada', code: 'CA' }, { label: 'USA', code: 'US' }],
-        reduce: (opt: any) => opt.code,
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
         modelValue: 'CA',
       })
       expect(selectedValue.value).toEqual([{ label: 'Canada', code: 'CA' }])
@@ -326,7 +327,7 @@ describe('useComboBox', () => {
     it('handles reduced multi-select values', () => {
       const { selectedValue } = createComboBox({
         options: [{ label: 'Canada', code: 'CA' }, { label: 'USA', code: 'US' }],
-        reduce: (opt: any) => opt.code,
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
         multiple: true,
         modelValue: ['CA', 'US'],
       })
@@ -339,7 +340,7 @@ describe('useComboBox', () => {
     it('isOptionSelected works with reduced values', () => {
       const { isOptionSelected } = createComboBox({
         options: [{ label: 'Canada', code: 'CA' }],
-        reduce: (opt: any) => opt.code,
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
         modelValue: 'CA',
       })
       expect(isOptionSelected({ label: 'Canada', code: 'CA' })).toBe(true)
@@ -348,7 +349,7 @@ describe('useComboBox', () => {
     it('deselect works with reduced values in multi mode', () => {
       const { deselect, emit } = createComboBox({
         options: [{ label: 'Canada', code: 'CA' }, { label: 'USA', code: 'US' }],
-        reduce: (opt: any) => opt.code,
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
         multiple: true,
         modelValue: ['CA', 'US'],
       })
@@ -359,7 +360,7 @@ describe('useComboBox', () => {
     it('clearSelection emits null (single) or empty array (multi) with reduce', () => {
       const { clearSelection, emit } = createComboBox({
         options: [{ label: 'Canada', code: 'CA' }],
-        reduce: (opt: any) => opt.code,
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
         modelValue: 'CA',
       })
       clearSelection()

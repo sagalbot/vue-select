@@ -5,7 +5,7 @@ let uidCounter = 0
 
 export function useComboBox(
   props: ComboBoxProps,
-  emit: (...args: any[]) => void
+  emit: (event: string, ...args: unknown[]) => void
 ): ComboBoxContext {
   // --- State ---
 

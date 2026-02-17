@@ -10,6 +10,7 @@ import {
   ComboBoxClear,
 } from '@/index'
 import { ComboBoxKey } from '@/keys'
+import type { OptionValue } from '@/types'
 
 /**
  * A helper component that injects ComboBoxContext and renders
@@ -23,7 +24,7 @@ const FilteredOptionList = defineComponent({
     return { ctx }
   },
   render() {
-    return this.ctx.filteredOptions.value.map((opt: any, i: number) =>
+    return this.ctx.filteredOptions.value.map((opt: OptionValue, i: number) =>
       h(
         ComboBoxOption,
         { value: opt, index: i, key: this.ctx.getOptionKey(opt) },
