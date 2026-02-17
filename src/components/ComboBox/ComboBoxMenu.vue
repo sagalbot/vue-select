@@ -10,7 +10,7 @@ const menuEl = ref<HTMLElement>()
 watch(() => ctx.typeAheadPointer.value, async (pointer) => {
   await nextTick()
   if (!ctx.autoscroll.value || !menuEl.value || pointer < 0) return
-  const option = menuEl.value.children[pointer] as HTMLElement | undefined
+  const option = menuEl.value.querySelector<HTMLElement>(`#vs-${ctx.uid.value}-option-${pointer}`)
   if (!option) return
 
   const menuRect = menuEl.value.getBoundingClientRect()
