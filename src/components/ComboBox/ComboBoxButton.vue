@@ -1,28 +1,21 @@
 <script setup lang="ts">
 import { inject } from 'vue'
-import { ListBoxKey } from '@/keys'
+import { ComboBoxKey } from '@/keys'
 
-withDefaults(
-  defineProps<{
-    as?: string
-  }>(),
-  {
-    as: 'button',
-  },
-)
-
-const listBoxProps = inject(ListBoxKey)
+const ctx = inject(ComboBoxKey)
+if (!ctx) throw new Error('ComboBoxButton must be used inside a ComboBox component')
 </script>
 
 <template>
-  <Component
-    :is="as"
-    tabindex="0"
+  <button
     type="button"
-    aria-haspopup="true"
-    :aria-expanded="listBoxProps.open"
-    @click="listBoxProps.toggleOpen"
+    aria-haspopup="listbox"
+    :aria-expanded="String(ctx.open.value)"
+    :aria-controls="`vs-${ctx.uid.value}-listbox`"
+    :disabled="ctx.disabled.value || undefined"
+    @click="ctx.toggleOpen()"
+    @mousedown.prevent
   >
-    <slot></slot>
-  </Component>
+    <slot />
+  </button>
 </template>
