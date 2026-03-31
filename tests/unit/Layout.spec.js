@@ -16,7 +16,7 @@ describe('Single value options', () => {
 
 	it('should not reset the search input on focus lost when clearSearchOnSelect is false', () => {
 		const Select = shallowMount(VueSelect, {
-			propsData: { value: 'foo', clearSearchOnSelect: false },
+			props: { modelValue: 'foo', clearSearchOnSelect: false },
 		})
 
 		expect(Select.vm.clearSearchOnSelect).toEqual(false)

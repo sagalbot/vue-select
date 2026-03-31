@@ -18,7 +18,7 @@ describe('CreateOption When Tagging Is Enabled', () => {
 		const Select = selectWithProps({
 			taggable: true,
 			multiple: false,
-			value: null,
+			modelValue: null,
 			options: [],
 			label: 'name',
 			createOption: (title) => ({ name: title }),
@@ -33,7 +33,7 @@ describe('CreateOption When Tagging Is Enabled', () => {
 		const Select = selectWithProps({
 			taggable: true,
 			multiple: false,
-			value: null,
+			modelValue: null,
 			options: [],
 			label: 'name',
 			createOption(value) {

@@ -4,7 +4,8 @@ import { selectWithProps } from '../helpers.js'
 
 describe('Components API', () => {
 	it('swap the Deselect component', () => {
-		const Deselect = defineComponent('Deselect', {
+		const Deselect = defineComponent({
+			name: 'Deselect',
 			render() {
 				return h('button', 'remove')
 			},
@@ -12,11 +13,12 @@ describe('Components API', () => {
 
 		const Select = selectWithProps({ components: { Deselect } })
 
-		expect(Select.find(Deselect)).toBeTruthy()
+		expect(Select.findComponent(Deselect).exists()).toBe(true)
 	})
 
 	it('swap the OpenIndicator component', () => {
-		const OpenIndicator = defineComponent('OpenIndicator', {
+		const OpenIndicator = defineComponent({
+			name: 'OpenIndicator',
 			render() {
 				return h('i', '^')
 			},
@@ -24,6 +26,6 @@ describe('Components API', () => {
 
 		const Select = selectWithProps({ components: { OpenIndicator } })
 
-		expect(Select.find(OpenIndicator)).toBeTruthy()
+		expect(Select.findComponent(OpenIndicator).exists()).toBe(true)
 	})
 })
