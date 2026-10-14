@@ -39,6 +39,8 @@ export function createMockContext(
     setSearch: vi.fn(),
     typeAheadUp: vi.fn(),
     typeAheadDown: vi.fn(),
+    typeAheadFirst: vi.fn(),
+    typeAheadLast: vi.fn(),
     typeAheadSelect: vi.fn(),
     toggleLoading: vi.fn(),
     getOptionLabel: (opt: OptionValue) => String(opt),

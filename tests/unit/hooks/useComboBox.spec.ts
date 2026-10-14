@@ -679,6 +679,40 @@ describe('useComboBox', () => {
       expect(typeAheadPointer.value).toBe(2)
     })
 
+    it('typeAheadDown(false) stays on the last option', () => {
+      const { typeAheadDown, typeAheadPointer } = createComboBox()
+      typeAheadPointer.value = 2
+      typeAheadDown(false)
+      expect(typeAheadPointer.value).toBe(2)
+    })
+
+    it('typeAheadUp(false) stays on the first option', () => {
+      const { typeAheadUp, typeAheadPointer } = createComboBox()
+      typeAheadPointer.value = 0
+      typeAheadUp(false)
+      expect(typeAheadPointer.value).toBe(0)
+    })
+
+    it('typeAheadDown(false) skips unselectable options but not past the end', () => {
+      const { typeAheadDown, typeAheadPointer } = createComboBox({
+        selectable: (o: OptionValue) => o !== 'three',
+      })
+      typeAheadPointer.value = 1
+      typeAheadDown(false)
+      expect(typeAheadPointer.value).toBe(1)
+    })
+
+    it('typeAheadFirst and typeAheadLast skip unselectable options', () => {
+      const { typeAheadFirst, typeAheadLast, typeAheadPointer } = createComboBox({
+        options: ['a', 'b', 'c', 'd'],
+        selectable: (o: OptionValue) => o !== 'a' && o !== 'd',
+      })
+      typeAheadFirst()
+      expect(typeAheadPointer.value).toBe(1)
+      typeAheadLast()
+      expect(typeAheadPointer.value).toBe(2)
+    })
+
     it('typeAheadSelect selects the highlighted option', () => {
       const { typeAheadDown, typeAheadSelect, emit } = createComboBox({
         options: ['one', 'two'],

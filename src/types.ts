@@ -168,8 +168,12 @@ export interface ComboBoxContext {
   toggleOpen: () => void
   setOpen: (value: boolean) => void
   setSearch: (value: string) => void
-  typeAheadUp: () => void
-  typeAheadDown: () => void
+  /** Move the highlight up; wraps around unless `wrap` is false. */
+  typeAheadUp: (wrap?: boolean) => void
+  /** Move the highlight down; wraps around unless `wrap` is false. */
+  typeAheadDown: (wrap?: boolean) => void
+  typeAheadFirst: () => void
+  typeAheadLast: () => void
   typeAheadSelect: () => void
   toggleLoading: (value?: boolean) => void
   getOptionLabel: (option: OptionValue) => string

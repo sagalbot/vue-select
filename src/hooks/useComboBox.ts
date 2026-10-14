@@ -427,48 +427,52 @@ export function useComboBox(
   watch(open, (isOpen) => isOpen && typeAheadToLastSelected(), { flush: 'sync' })
   watch(selectedValue, () => open.value && typeAheadToLastSelected(), { flush: 'sync' })
 
-  function typeAheadDown() {
+  /**
+   * Index of the first selectable option from `from` in direction `step`,
+   * wrapping around the list if `wrap`. -1 if there is none.
+   */
+  function findSelectable(from: number, step: 1 | -1, wrap: boolean): number {
     const opts = filteredOptions.value
-    if (opts.length === 0) return
-
-    let next = typeAheadPointer.value + 1
-    if (next >= opts.length) next = 0
-
-    let checked = 0
-    while (!isOptionSelectable(opts[next]) && checked < opts.length) {
-      next = (next + 1) % opts.length
-      checked++
+    const count = opts.length
+    for (let i = 0; i < count; i++) {
+      let index = from + step * i
+      if (wrap) index = ((index % count) + count) % count
+      else if (index < 0 || index >= count) return -1
+      if (isOptionSelectable(opts[index])) return index
     }
-
-    // If we checked all options and none are selectable, reset to -1
-    if (checked >= opts.length) {
-      typeAheadPointer.value = -1
-      return
-    }
-
-    typeAheadPointer.value = next
+    return -1
   }
 
-  function typeAheadUp() {
-    const opts = filteredOptions.value
-    if (opts.length === 0) return
+  /**
+   * Highlight the next selectable option. With `wrap` (the default, as in
+   * the APG editable combobox) the last option moves to the first;
+   * without it (APG select-only) the highlight stays put.
+   */
+  function typeAheadDown(wrap = true) {
+    if (filteredOptions.value.length === 0) return
+    const next = findSelectable(typeAheadPointer.value + 1, 1, wrap)
+    if (next !== -1 || wrap) typeAheadPointer.value = next
+  }
 
-    let prev = typeAheadPointer.value - 1
-    if (prev < 0) prev = opts.length - 1
+  /** Highlight the previous selectable option. See `typeAheadDown`. */
+  function typeAheadUp(wrap = true) {
+    const count = filteredOptions.value.length
+    if (count === 0) return
+    const from = typeAheadPointer.value < 0 ? count - 1 : typeAheadPointer.value - 1
+    const prev = findSelectable(from, -1, wrap)
+    if (prev !== -1 || wrap) typeAheadPointer.value = prev
+  }
 
-    let checked = 0
-    while (!isOptionSelectable(opts[prev]) && checked < opts.length) {
-      prev = prev - 1
-      if (prev < 0) prev = opts.length - 1
-      checked++
-    }
+  /** Highlight the first selectable option. */
+  function typeAheadFirst() {
+    const first = findSelectable(0, 1, false)
+    if (first !== -1) typeAheadPointer.value = first
+  }
 
-    if (checked >= opts.length) {
-      typeAheadPointer.value = -1
-      return
-    }
-
-    typeAheadPointer.value = prev
+  /** Highlight the last selectable option. */
+  function typeAheadLast() {
+    const last = findSelectable(filteredOptions.value.length - 1, -1, false)
+    if (last !== -1) typeAheadPointer.value = last
   }
 
   function typeAheadSelect() {
@@ -519,6 +523,8 @@ export function useComboBox(
     setSearch,
     typeAheadUp,
     typeAheadDown,
+    typeAheadFirst,
+    typeAheadLast,
     typeAheadSelect,
     toggleLoading,
     getOptionLabel,
