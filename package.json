@@ -46,7 +46,7 @@
     "url": "https://github.com/sagalbot/vue-select.git"
   },
   "peerDependencies": {
-    "vue": "3.x"
+    "vue": "^3.5.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.11.0",

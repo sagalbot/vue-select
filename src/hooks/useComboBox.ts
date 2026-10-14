@@ -1,7 +1,8 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, getCurrentInstance, useId } from 'vue'
 import type { ComboBoxProps, ComboBoxContext, OptionKey, OptionValue } from '@/types'
 import sortAndStringify from '@/utility/sortAndStringify'
 
+// Fallback for calls outside a component (e.g. unit tests), where useId() is unavailable.
 let uidCounter = 0
 
 export function useComboBox(
@@ -16,8 +17,8 @@ export function useComboBox(
   const isLoading = ref(props.loading ?? false)
   const pushedTags = ref<OptionValue[]>([])
 
-  // Generate a stable uid once per instance using a counter
-  const stableUid = String(++uidCounter)
+  // useId() matches between server render and hydration
+  const stableUid = getCurrentInstance() ? useId() : String(++uidCounter)
 
   // Sync controlled open prop
   watch(() => props.open, (val) => {

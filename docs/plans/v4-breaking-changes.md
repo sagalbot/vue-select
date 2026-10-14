@@ -2,14 +2,14 @@
 
 Running list of every breaking change between v3.20.4 and v4.0. This is the source for the v4 upgrade guide (Plan 3, Phase C). Add an entry in the same commit as the change.
 
-Status: **shipped** = on `@beta/dev` and in a published beta. **planned** = in `2026-10-14-styled-wrapper.md`, not implemented yet.
+Status: **shipped** = on `@beta/dev` and in a published beta. **done** = implemented on a v4 branch, not released yet. **planned** = in `2026-10-14-styled-wrapper.md`, not implemented yet.
 
 ## Platform and packaging
 
 | Change | Migration | Status |
 |--------|-----------|--------|
 | Vue 2 support dropped | Stay on 3.x for Vue 2. | shipped |
-| Peer dependency `vue: ^3.5` | Upgrade Vue. Needed for SSR-safe ids (`useId()`). | planned (T3) |
+| Peer dependency `vue: ^3.5.0` | Upgrade Vue. Needed for SSR-safe ids (`useId()`). | done (T3) |
 | SCSS sources removed | Use the CSS custom properties (available since 3.18). | shipped |
 | `mixins` export removed | Use the headless primitives or `useComboBox`. | shipped |
 | Build files renamed: `dist/vue-select.js` is now `dist/vue-select.umd.js` and `dist/vue-select.es.js` | Import from `vue-select`, not a `dist/` path. `vue-select/dist/vue-select.css` is unchanged. | shipped |
@@ -45,6 +45,7 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **planned** = in `
 
 | Change | Migration | Status |
 |--------|-----------|--------|
+| Deselecting in single-select mode sets the value to `null`. v3 set it to `[]`. | Remove any `[]` checks for an empty single-select value. | done (T1) |
 | Clear button also shows in multi-select | Set `:clearable="false"` to hide it. | planned |
 | Template refs expose only `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur` | Use props, events and slots instead of other internals. | planned |
 
