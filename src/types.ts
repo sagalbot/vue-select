@@ -54,6 +54,8 @@ export interface ComboBoxProps {
    * first; groups appear in the order of their first option.
    */
   groupBy?: (option: OptionValue) => string | null | undefined
+  /** In multi-select, remove selected options from the dropdown. */
+  hideSelected?: boolean
   disabled?: boolean
   open?: boolean
   label?: string

@@ -194,7 +194,10 @@ export function useComboBox(
   })
 
   const groupedOptions = computed<OptionGroup[]>(() => {
-    const opts = matchingOptions.value
+    const opts =
+      props.hideSelected && multiple.value
+        ? matchingOptions.value.filter((option) => !isOptionSelected(option))
+        : matchingOptions.value
     const ungrouped: OptionValue[] = []
     const groups = new Map<string, OptionValue[]>()
 

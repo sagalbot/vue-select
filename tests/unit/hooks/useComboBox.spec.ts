@@ -372,6 +372,38 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('hideSelected', () => {
+    it('removes selected options from the list in multi-select', () => {
+      const { filteredOptions } = createComboBox({
+        multiple: true,
+        hideSelected: true,
+        modelValue: ['two'],
+      })
+      expect(filteredOptions.value).toEqual(['one', 'three'])
+    })
+
+    it('works with reduced values', () => {
+      const { filteredOptions } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }, { label: 'USA', code: 'US' }],
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
+        multiple: true,
+        hideSelected: true,
+        modelValue: ['US'],
+      })
+      expect(filteredOptions.value).toEqual([{ label: 'Canada', code: 'CA' }])
+    })
+
+    it('has no effect in single-select', () => {
+      const { filteredOptions } = createComboBox({ hideSelected: true, modelValue: 'two' })
+      expect(filteredOptions.value).toEqual(['one', 'two', 'three'])
+    })
+
+    it('shows selected options by default', () => {
+      const { filteredOptions } = createComboBox({ multiple: true, modelValue: ['two'] })
+      expect(filteredOptions.value).toEqual(['one', 'two', 'three'])
+    })
+  })
+
   describe('groupBy', () => {
     // Deliberately interleaved so group order differs from options order.
     const fruit = [
