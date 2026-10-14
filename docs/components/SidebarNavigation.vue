@@ -69,6 +69,7 @@ if (import.meta.dev) {
     links: [
       { href: '/plans/playground', title: 'Headless Playground' },
       { href: '/plans/vue-select-v4', title: 'VueSelect v4 vs beta' },
+      { href: '/plans/icon-options', title: 'Icon options' },
       { href: '/plans/2026-10-14-styled-wrapper', title: 'Styled Wrapper Plan' },
       { href: '/plans/v4-breaking-changes', title: 'Breaking Changes' },
       { href: '/plans/2026-02-16-v4-release-design', title: 'Release Design' },
