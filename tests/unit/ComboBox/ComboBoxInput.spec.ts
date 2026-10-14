@@ -304,4 +304,19 @@ describe('ComboBoxInput', () => {
       expect(ctx.setOpen).toHaveBeenCalledWith(true)
     })
   })
+
+  describe('placeholder', () => {
+    it('shows while nothing is selected', () => {
+      const { wrapper } = mountInput({ placeholder: computed(() => 'Pick one') })
+      expect(wrapper.find('input').attributes('placeholder')).toBe('Pick one')
+    })
+
+    it('hides once something is selected', () => {
+      const { wrapper } = mountInput({
+        placeholder: computed(() => 'Pick one'),
+        isValueEmpty: computed(() => false),
+      })
+      expect(wrapper.find('input').attributes('placeholder')).toBeUndefined()
+    })
+  })
 })

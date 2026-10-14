@@ -36,7 +36,8 @@ const inputAttrs = computed(() => ({
   'aria-autocomplete': 'list' as const,
   disabled: ctx.disabled.value || undefined,
   value: ctx.search.value,
-  placeholder: ctx.placeholder.value || undefined,
+  // Like v3: the selection takes the placeholder's place
+  placeholder: (ctx.isValueEmpty.value && ctx.placeholder.value) || undefined,
 }))
 
 // Select-only combobox (WAI-ARIA APG): focusable, not editable.
