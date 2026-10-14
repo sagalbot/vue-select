@@ -95,6 +95,46 @@ export interface ComboBoxProps {
 }
 
 /**
+ * Text for the accessible names `VueSelect` renders. Defaults are English.
+ */
+export interface AriaLabels {
+  /** The search input. Only used when the input has no id, aria-label or aria-labelledby. */
+  search?: string
+  /** The clear button. */
+  clear?: string
+  /** A selected tag's deselect button. */
+  deselect?: (label: string, option: OptionValue) => string
+}
+
+/**
+ * Position a teleported dropdown (see `appendTo`). Return a function to
+ * clean up when the dropdown closes.
+ */
+export type CalculatePosition = (
+  menu: HTMLElement,
+  ctx: ComboBoxContext,
+  position: { width: string; top: string; left: string }
+) => void | (() => void)
+
+/**
+ * Props accepted by the styled `VueSelect` component.
+ */
+export interface VueSelectProps extends Omit<ComboBoxProps, 'uid'> {
+  /** Text direction: 'ltr', 'rtl' or 'auto'. */
+  dir?: 'ltr' | 'rtl' | 'auto'
+  /** Name of the Vue transition applied to the dropdown. */
+  transition?: string
+  /** Attributes for the search input, e.g. `{ id }` for a `<label for>`. */
+  inputAttrs?: Record<string, unknown>
+  /** Teleport the dropdown to this element or selector, e.g. 'body'. */
+  appendTo?: string | HTMLElement
+  /** Positions the dropdown when `appendTo` is set. */
+  calculatePosition?: CalculatePosition
+  /** Accessible names for the controls VueSelect renders. */
+  ariaLabels?: AriaLabels
+}
+
+/**
  * The resolved context provided to child components via inject.
  */
 export interface ComboBoxContext {

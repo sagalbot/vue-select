@@ -1,6 +1,9 @@
 // src/index.ts
 import Select from './components/Select.vue'
 
+// v4 styled component, built on the headless primitives
+export { default as VueSelect } from './components/VueSelect.vue'
+
 // Headless primitives
 export { default as ComboBox } from './components/ComboBox/ComboBox.vue'
 export { default as ComboBoxInput } from './components/ComboBox/ComboBoxInput.vue'
@@ -22,6 +25,9 @@ export type {
   OptionGroup,
   OptionKey,
   OptionValue,
+  VueSelectProps,
+  AriaLabels,
+  CalculatePosition,
 } from './types'
 
 // Default export: the batteries-included component
