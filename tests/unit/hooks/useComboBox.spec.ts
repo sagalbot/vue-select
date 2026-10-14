@@ -282,6 +282,39 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('without v-model', () => {
+    it('tracks the selection internally', () => {
+      const { select, selectedValue, emit } = createComboBox()
+      select('two')
+      expect(selectedValue.value).toEqual(['two'])
+      expect(emit).toHaveBeenCalledWith('update:modelValue', 'two')
+    })
+
+    it('tracks multi-select and deselect internally', () => {
+      const { select, deselect, selectedValue } = createComboBox({ multiple: true })
+      select('one')
+      select('three')
+      deselect('one')
+      expect(selectedValue.value).toEqual(['three'])
+    })
+
+    it('follows v-model again once it is bound', async () => {
+      const props = reactive<Record<string, unknown>>({ options: ['one', 'two'] })
+      const { select, selectedValue } = useComboBox(props, vi.fn())
+      select('one')
+      props.modelValue = 'two'
+      expect(selectedValue.value).toEqual(['two'])
+    })
+  })
+
+  describe('empty values', () => {
+    it('treats an empty string as no selection', () => {
+      const { selectedValue, isValueEmpty } = createComboBox({ modelValue: '' })
+      expect(selectedValue.value).toEqual([])
+      expect(isValueEmpty.value).toBe(true)
+    })
+  })
+
   describe('selection - multiple', () => {
     it('select appends to existing values', () => {
       const { select, emit } = createComboBox({
@@ -799,6 +832,16 @@ describe('useComboBox', () => {
       expect(emit).toHaveBeenCalledWith('update:modelValue', 'new-tag')
     })
 
+
+    it('creates an object with the label key when options are objects', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: [{ name: 'Canada' }],
+        label: 'name',
+        taggable: true,
+      })
+      setSearch('Mexico')
+      expect(filteredOptions.value[0]).toEqual({ name: 'Mexico' })
+    })
 
     it('uses custom createOption when provided', () => {
       const { select, setSearch, emit } = createComboBox({

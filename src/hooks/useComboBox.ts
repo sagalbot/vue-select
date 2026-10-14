@@ -4,6 +4,7 @@ import type {
   ComboBoxContext,
   KeydownHandlers,
   OptionGroup,
+  ModelValue,
   OptionKey,
   OptionValue,
 } from '@/types'
@@ -28,6 +29,23 @@ export function useComboBox(
   const typeAheadPointer = ref(-1)
   const isLoading = ref(props.loading ?? false)
 
+  // Selection when no v-model is bound (modelValue undefined)
+  const internalValue = ref<ModelValue>(null)
+  const currentValue = computed<ModelValue | undefined>(() =>
+    props.modelValue !== undefined ? props.modelValue : internalValue.value
+  )
+  watch(
+    () => props.modelValue,
+    (value, old) => {
+      if (value === undefined && old !== undefined) internalValue.value = null
+    }
+  )
+
+  function updateValue(value: unknown) {
+    if (props.modelValue === undefined) internalValue.value = value as ModelValue
+    emit('update:modelValue', value)
+  }
+
   // Full option objects for reduced values, so a selection keeps its label
   // after the option leaves `options` (e.g. AJAX search results change).
   const knownOptions = new Map<string, OptionValue>()
@@ -49,8 +67,8 @@ export function useComboBox(
   // --- Computed ---
 
   const selectedValue = computed<OptionValue[]>(() => {
-    const v = props.modelValue
-    const values = Array.isArray(v) ? v : v != null ? [v] : []
+    const v = currentValue.value
+    const values = Array.isArray(v) ? v : v != null && v !== '' ? [v] : []
 
     if (!props.reduce) return values as OptionValue[]
 
@@ -145,13 +163,21 @@ export function useComboBox(
     return label.toLocaleLowerCase().includes(search.toLocaleLowerCase())
   }
 
+  // Match the shape of existing options, as v3 does
+  function defaultCreateOption(text: string): OptionValue {
+    const first = props.options?.[0]
+    return typeof first === 'object' && first !== null
+      ? { [props.label ?? 'label']: text }
+      : text
+  }
+
   function maybeAddTaggableOption(options: OptionValue[]): OptionValue[] {
     if (!taggable.value || !search.value) return options
 
     // Create the tag option
     const tagOption = props.createOption
       ? props.createOption(search.value)
-      : search.value
+      : defaultCreateOption(search.value)
 
     // Don't add if an option with the same key already exists
     const tagKey = getOptionKey(tagOption)
@@ -285,10 +311,10 @@ export function useComboBox(
       const emitValue = props.reduce ? props.reduce(option) : option
       if (props.reduce) knownOptions.set(JSON.stringify(emitValue), option)
       if (props.multiple) {
-        const current = Array.isArray(props.modelValue) ? [...props.modelValue] : []
-        emit('update:modelValue', [...current, emitValue])
+        const current = Array.isArray(currentValue.value) ? [...currentValue.value] : []
+        updateValue([...current, emitValue])
       } else {
-        emit('update:modelValue', emitValue)
+        updateValue(emitValue)
       }
       emit('option:selected', option)
     } else if (isOptionDeselectable(option)) {
@@ -309,13 +335,13 @@ export function useComboBox(
     emit('option:deselecting', option)
 
     if (!props.multiple) {
-      emit('update:modelValue', null)
+      updateValue(null)
       emit('option:deselected', option)
       return
     }
 
-    const current = Array.isArray(props.modelValue)
-      ? [...props.modelValue]
+    const current = Array.isArray(currentValue.value)
+      ? [...currentValue.value]
       : []
     const reducedKey = props.reduce
       ? JSON.stringify(props.reduce(option))
@@ -324,12 +350,12 @@ export function useComboBox(
       const vKey = props.reduce ? JSON.stringify(v) : getOptionKey(v as OptionValue)
       return vKey !== reducedKey
     })
-    emit('update:modelValue', filtered)
+    updateValue(filtered)
     emit('option:deselected', option)
   }
 
   function resetSelection() {
-    emit('update:modelValue', props.multiple ? [] : null)
+    updateValue(props.multiple ? [] : null)
   }
 
   /** Clear the selection on the user's behalf (e.g. the clear button). */
