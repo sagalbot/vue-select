@@ -53,15 +53,21 @@ describe('ComboBoxInput', () => {
     expect(ctx.setSearch).toHaveBeenCalledWith('hello')
   })
 
-  it('ArrowDown calls typeAheadDown and opens dropdown', async () => {
+  it('ArrowDown opens a closed dropdown without moving the highlight', async () => {
     const { wrapper, ctx } = mountInput()
     await wrapper.find('input').trigger('keydown', { key: 'ArrowDown' })
-    expect(ctx.typeAheadDown).toHaveBeenCalled()
     expect(ctx.setOpen).toHaveBeenCalledWith(true)
+    expect(ctx.typeAheadDown).not.toHaveBeenCalled()
   })
 
-  it('ArrowUp calls typeAheadUp', async () => {
-    const { wrapper, ctx } = mountInput()
+  it('ArrowDown calls typeAheadDown when open', async () => {
+    const { wrapper, ctx } = mountInput({ open: ref(true) })
+    await wrapper.find('input').trigger('keydown', { key: 'ArrowDown' })
+    expect(ctx.typeAheadDown).toHaveBeenCalled()
+  })
+
+  it('ArrowUp calls typeAheadUp when open', async () => {
+    const { wrapper, ctx } = mountInput({ open: ref(true) })
     await wrapper.find('input').trigger('keydown', { key: 'ArrowUp' })
     expect(ctx.typeAheadUp).toHaveBeenCalled()
   })
@@ -291,7 +297,7 @@ describe('ComboBoxInput', () => {
     it('passes events that drive the combobox', async () => {
       const { wrapper, ctx } = mountWithSlot()
       await wrapper.find('input').trigger('keydown', { key: 'ArrowDown' })
-      expect(ctx.typeAheadDown).toHaveBeenCalled()
+      expect(ctx.setOpen).toHaveBeenCalledWith(true)
     })
 
     it('includes attributes and listeners given to ComboBoxInput', async () => {

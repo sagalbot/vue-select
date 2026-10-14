@@ -93,16 +93,10 @@ function openOr(whenOpen: () => void) {
 }
 
 const searchHandlers: KeydownHandlers = {
-  ArrowDown: (e) => {
-    e.preventDefault()
-    ctx.typeAheadDown()
-    if (!ctx.open.value) ctx.setOpen(true)
-  },
-  ArrowUp: (e) => {
-    e.preventDefault()
-    ctx.typeAheadUp()
-    if (!ctx.open.value) ctx.setOpen(true)
-  },
+  // On a closed dropdown, arrows only open it (the highlight goes to the
+  // selected option); the next press moves.
+  ArrowDown: openOr(() => ctx.typeAheadDown()),
+  ArrowUp: openOr(() => ctx.typeAheadUp()),
   Enter: (e) => {
     e.preventDefault()
     if (ctx.open.value) ctx.typeAheadSelect()

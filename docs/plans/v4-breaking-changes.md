@@ -51,6 +51,10 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **done** = impleme
 | `searchable: false` renders a focusable `div[role=combobox]` (ARIA select-only combobox) instead of a read-only `<input>` | Style `.vs--unsearchable .vs__search` as before; don't rely on it being an `<input>`. | done |
 | The search input has `role="combobox"` (ARIA 1.2). v3 put it on `.vs__dropdown-toggle` with `aria-owns`. | Update selectors or tests that look for the role on the toggle. | done |
 | Options' `aria-selected` reflects selection. v3 set it on the highlighted option. | Use `.vs__dropdown-option--highlight` / `aria-activedescendant` for the highlighted option. | done |
+| Escape on an empty search closes the dropdown and keeps focus on the input. v3 blurred the input. | None for users; keyboard focus no longer drops to the page. | done |
+| Arrow keys on a closed dropdown only open it; the next press moves the highlight. | None (matches v3 3.20.x). | done |
+| `vs--searching` is set whenever there is search text, including with `:open="false"`. v3 suppressed it with `noDrop`. | Combine with `.vs--open` in custom CSS if needed. | done |
+| Element ids come from Vue's `useId()`, unique within one app. | Pages that mount several Vue apps should give each app a distinct `app.config.idPrefix`. | done |
 | Clear button also shows in multi-select | Set `:clearable="false"` to hide it. | done |
 | Template refs expose only `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur` | Use props, events and slots instead of other internals. | done |
 

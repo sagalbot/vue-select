@@ -140,8 +140,10 @@ describe('Toggling Dropdown', () => {
     expect(isOpen(Select)).toEqual(false)
   })
 
-  // V4-DIFF: v3's onEscape with an empty search called $refs.search.blur(); v4 closes the dropdown but keeps focus on the input.
-  it.skip('blurs the search input on escape, if search is empty', async () => {
+  // v4 change (accessibility): v3 blurred the input on Escape with an empty
+  // search, dropping keyboard focus to the page. v4 keeps focus on the
+  // combobox, as the WAI-ARIA combobox pattern expects.
+  it('keeps focus on the search input on escape, if search is empty', async () => {
     Select = selectWithProps({}, { attachTo: document.body })
     const input = searchInput(Select).element
 
@@ -150,7 +152,9 @@ describe('Toggling Dropdown', () => {
     expect(document.activeElement).toBe(input)
     await pressKey(Select, 'Escape')
 
-    expect(document.activeElement).not.toBe(input)
+    expect(document.activeElement).toBe(input)
+    expect(isOpen(Select)).toBe(false)
+    Select.unmount()
   })
 
   it('should remove existing search text on escape keydown', async () => {
@@ -195,15 +199,17 @@ describe('Toggling Dropdown', () => {
     expect(Select.classes('vs--open')).toBeFalsy()
   })
 
-  // V4-DIFF: v3 suppressed vs--searching when noDrop was set; v4 with `open: false` still adds vs--searching while search text is present.
-  it.skip('should not add the searching state class when noDrop is true', async () => {
+  // v4 change: noDrop is gone. vs--searching means "there is search text",
+  // also when the dropdown is held closed with :open="false".
+  it('adds the searching state class when the dropdown is held closed', async () => {
     Select = selectWithProps({
       open: false,
     })
 
     await typeSearch(Select, 'Canada')
 
-    expect(Select.classes('vs--searching')).toBeFalsy()
+    expect(Select.classes('vs--searching')).toBe(true)
+    expect(Select.classes('vs--open')).toBe(false)
   })
 
   it('can be opened with dropdownShouldOpen', () => {
