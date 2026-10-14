@@ -142,7 +142,12 @@ const noOptionsScope = computed(() => ({
   searching: ctx.isSearching.value,
 }))
 
-const openIndicatorAttrs = { role: 'presentation', class: 'vs__open-indicator' }
+// Decorative: the combobox already exposes its expanded state
+const openIndicatorAttrs = {
+  role: 'presentation',
+  'aria-hidden': 'true',
+  class: 'vs__open-indicator',
+}
 
 // --- Interaction ---
 
@@ -152,8 +157,9 @@ function searchEl(): HTMLElement | null {
 
 /**
  * Clicking anywhere on the toggle opens and focuses; clicking it again
- * (outside the search input) closes. Deselect and clear buttons handle
- * their own clicks.
+ * closes. Clicks on the search input itself are handled by ComboBoxInput
+ * (opens the editable input, toggles the select-only one). Deselect and
+ * clear buttons handle their own clicks.
  */
 function onToggleMousedown(event: MouseEvent) {
   const target = event.target as HTMLElement
@@ -164,10 +170,10 @@ function onToggleMousedown(event: MouseEvent) {
     return
   }
 
-  const targetIsSearch = target === input
-  if (!targetIsSearch) event.preventDefault()
+  if (target === input) return
+  event.preventDefault()
 
-  if (ctx.open.value && !targetIsSearch) {
+  if (ctx.open.value) {
     input?.blur()
   } else if (!props.disabled) {
     ctx.setOpen(true)
