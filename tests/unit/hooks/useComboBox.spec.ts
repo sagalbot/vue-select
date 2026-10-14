@@ -44,6 +44,52 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('controlled open', () => {
+    it('only requests a change through update:open', async () => {
+      const props = reactive<Record<string, unknown>>({ options: ['one'], open: false })
+      const emit = vi.fn()
+      const { open, setOpen } = useComboBox(props, emit)
+
+      setOpen(true)
+      expect(emit).toHaveBeenCalledWith('update:open', true)
+      expect(open.value).toBe(false)
+      expect(emit).not.toHaveBeenCalledWith('open')
+    })
+
+    it('follows the prop and emits open/close when it changes', async () => {
+      const props = reactive<Record<string, unknown>>({ options: ['one'], open: false })
+      const emit = vi.fn()
+      const { open } = useComboBox(props, emit)
+
+      props.open = true
+      await nextTick()
+      expect(open.value).toBe(true)
+      expect(emit).toHaveBeenCalledWith('open')
+
+      props.open = false
+      await nextTick()
+      expect(open.value).toBe(false)
+      expect(emit).toHaveBeenCalledWith('close')
+    })
+
+    it('does not open when disabled', () => {
+      const { open, setOpen, emit } = createComboBox({ disabled: true })
+      setOpen(true)
+      expect(open.value).toBe(false)
+      expect(emit).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('searchable', () => {
+    it('defaults to true', () => {
+      expect(createComboBox().searchable.value).toBe(true)
+    })
+
+    it('reflects the prop', () => {
+      expect(createComboBox({ searchable: false }).searchable.value).toBe(false)
+    })
+  })
+
   describe('search state', () => {
     it('starts with empty search', () => {
       const { search } = createComboBox()

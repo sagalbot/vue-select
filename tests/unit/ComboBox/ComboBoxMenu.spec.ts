@@ -42,10 +42,6 @@ describe('ComboBoxMenu', () => {
     expect(wrapper.isVisible()).toBe(false)
   })
 
-  it('is hidden when noDrop is true even if open', () => {
-    const { wrapper } = mountMenu({ open: ref(true), noDrop: computed(() => true) })
-    expect(wrapper.isVisible()).toBe(false)
-  })
 
   it('renders slot content', () => {
     const { wrapper } = mountMenu({ open: ref(true) }, 'Test options')

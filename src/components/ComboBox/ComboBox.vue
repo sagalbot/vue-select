@@ -17,7 +17,9 @@ const props = withDefaults(defineProps<ComboBoxProps>(), {
   disabled: false,
   label: 'label',
   loading: false,
-  noDrop: false,
+  searchable: true,
+  // undefined = uncontrolled; bind `open` (or v-model:open) to control it
+  open: undefined,
   deselectFromDropdown: false,
   autoscroll: true,
   placeholder: '',

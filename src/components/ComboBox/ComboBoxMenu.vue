@@ -26,7 +26,7 @@ watch(() => ctx.typeAheadPointer.value, async (pointer) => {
 
 <template>
   <div
-    v-show="ctx.open.value && !ctx.noDrop.value"
+    v-show="ctx.open.value"
     ref="menuEl"
     :id="`vs-${ctx.uid.value}-listbox`"
     role="listbox"

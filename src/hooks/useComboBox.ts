@@ -11,7 +11,12 @@ export function useComboBox(
 ): ComboBoxContext {
   // --- State ---
 
-  const open = ref(props.open ?? false)
+  // Uncontrolled open state; ignored while the `open` prop is bound.
+  const internalOpen = ref(false)
+  const isOpenControlled = () => props.open !== undefined
+  const open = computed(() =>
+    isOpenControlled() ? Boolean(props.open) : internalOpen.value
+  )
   const search = ref('')
   const typeAheadPointer = ref(-1)
   const isLoading = ref(props.loading ?? false)
@@ -24,9 +29,10 @@ export function useComboBox(
   // useId() matches between server render and hydration
   const stableUid = getCurrentInstance() ? useId() : String(++uidCounter)
 
-  // Sync controlled open prop
-  watch(() => props.open, (val) => {
-    if (val !== undefined) open.value = val
+  // A bound `open` prop is the source of truth: report its changes.
+  watch(() => props.open, (val, old) => {
+    if (val === undefined || old === undefined || val === old) return
+    emit(val ? 'open' : 'close')
   })
 
   // Sync loading prop
@@ -58,7 +64,7 @@ export function useComboBox(
   const disabled = computed(() => props.disabled ?? false)
   const multiple = computed(() => props.multiple ?? false)
   const filterable = computed(() => props.filterable ?? true)
-  const noDrop = computed(() => props.noDrop ?? false)
+  const searchable = computed(() => props.searchable ?? true)
   const clearable = computed(() => props.clearable ?? true)
   const taggable = computed(() => props.taggable ?? false)
   const placeholder = computed(() => props.placeholder ?? '')
@@ -188,9 +194,11 @@ export function useComboBox(
   // --- Open state ---
 
   function setOpen(value: boolean) {
+    if (value && disabled.value) return
     if (open.value === value) return
-    open.value = value
     emit('update:open', value)
+    if (isOpenControlled()) return
+    internalOpen.value = value
     emit(value ? 'open' : 'close')
   }
 
@@ -354,7 +362,7 @@ export function useComboBox(
     disabled,
     multiple,
     filterable,
-    noDrop,
+    searchable,
     clearable,
     taggable,
     placeholder,

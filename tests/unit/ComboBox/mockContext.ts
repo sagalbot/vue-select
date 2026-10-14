@@ -19,7 +19,7 @@ export function createMockContext(
     disabled: computed(() => false),
     multiple: computed(() => false),
     filterable: computed(() => true),
-    noDrop: computed(() => false),
+    searchable: computed(() => true),
     clearable: computed(() => true),
     taggable: computed(() => false),
     placeholder: computed(() => ''),

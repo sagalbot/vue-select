@@ -108,4 +108,62 @@ describe('ComboBoxInput', () => {
     const { wrapper } = mountInput({ disabled: computed(() => true) })
     expect(wrapper.find('input').attributes('disabled')).toBeDefined()
   })
+
+  describe('when not searchable', () => {
+    const fruit = ['Apple', 'Banana', 'Blueberry', 'Cherry']
+
+    function mountSelectOnly(overrides = {}) {
+      return mountInput({
+        searchable: computed(() => false),
+        filteredOptions: computed(() => fruit),
+        ...overrides,
+      })
+    }
+
+    it('renders a focusable combobox instead of a text input', () => {
+      const { wrapper } = mountSelectOnly()
+      expect(wrapper.find('input').exists()).toBe(false)
+      const el = wrapper.find('[role="combobox"]')
+      expect(el.element.tagName).toBe('DIV')
+      expect(el.attributes('tabindex')).toBe('0')
+      expect(el.attributes('aria-autocomplete')).toBeUndefined()
+    })
+
+    it('is removed from the tab order when disabled', () => {
+      const { wrapper } = mountSelectOnly({ disabled: computed(() => true) })
+      const el = wrapper.find('[role="combobox"]')
+      expect(el.attributes('tabindex')).toBe('-1')
+      expect(el.attributes('aria-disabled')).toBe('true')
+    })
+
+    it('Space and Enter open the dropdown when closed', async () => {
+      const { wrapper, ctx } = mountSelectOnly()
+      await wrapper.trigger('keydown', { key: ' ' })
+      expect(ctx.setOpen).toHaveBeenCalledWith(true)
+      await wrapper.trigger('keydown', { key: 'Enter' })
+      expect(ctx.setOpen).toHaveBeenCalledTimes(2)
+      expect(ctx.typeAheadSelect).not.toHaveBeenCalled()
+    })
+
+    it('typing a character highlights the first matching option', async () => {
+      const typeAheadPointer = ref(-1)
+      const { wrapper } = mountSelectOnly({ typeAheadPointer })
+      await wrapper.trigger('keydown', { key: 'b' })
+      expect(typeAheadPointer.value).toBe(1)
+    })
+
+    it('typing quickly matches the whole typed prefix', async () => {
+      const typeAheadPointer = ref(-1)
+      const { wrapper } = mountSelectOnly({ typeAheadPointer })
+      await wrapper.trigger('keydown', { key: 'b' })
+      await wrapper.trigger('keydown', { key: 'l' })
+      expect(typeAheadPointer.value).toBe(2)
+    })
+
+    it('does not open on focus', async () => {
+      const { wrapper, ctx } = mountSelectOnly()
+      await wrapper.trigger('focus')
+      expect(ctx.setOpen).not.toHaveBeenCalled()
+    })
+  })
 })

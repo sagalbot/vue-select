@@ -41,7 +41,11 @@ export interface ComboBoxProps {
   loading?: boolean
   uid?: string
   placeholder?: string
-  noDrop?: boolean
+  /**
+   * When false, the input is a select-only combobox: it can be focused and
+   * navigated with the keyboard, but not typed into.
+   */
+  searchable?: boolean
   deselectFromDropdown?: boolean
   autoscroll?: boolean
   /**
@@ -63,7 +67,7 @@ export interface ComboBoxProps {
  */
 export interface ComboBoxContext {
   // State (readonly)
-  open: Ref<boolean>
+  open: Readonly<Ref<boolean>>
   search: Ref<string>
   selectedValue: ComputedRef<OptionValue[]>
   filteredOptions: ComputedRef<OptionValue[]>
@@ -72,7 +76,7 @@ export interface ComboBoxContext {
   disabled: ComputedRef<boolean>
   multiple: ComputedRef<boolean>
   filterable: ComputedRef<boolean>
-  noDrop: ComputedRef<boolean>
+  searchable: ComputedRef<boolean>
   clearable: ComputedRef<boolean>
   taggable: ComputedRef<boolean>
   placeholder: ComputedRef<string>

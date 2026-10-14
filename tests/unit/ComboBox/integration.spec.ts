@@ -58,8 +58,10 @@ const TestSelect = defineComponent({
     modelValue: { type: [String, Number, Object, Array], default: undefined },
     multiple: { type: Boolean, default: false },
     taggable: { type: Boolean, default: false },
+    open: { type: Boolean, default: undefined },
+    searchable: { type: Boolean, default: true },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'update:open'],
   setup(props, { emit }) {
     return () =>
       h(
@@ -67,6 +69,7 @@ const TestSelect = defineComponent({
         {
           ...props,
           'onUpdate:modelValue': (v: unknown) => emit('update:modelValue', v),
+          'onUpdate:open': (v: boolean) => emit('update:open', v),
         },
         {
           default: () => [
@@ -204,5 +207,39 @@ describe('ComboBox integration', () => {
 
     // The combobox (input) controls the listbox
     expect(combobox.attributes('aria-controls')).toBe(listbox.attributes('id'))
+  })
+
+  it('stays closed when open is bound to false', async () => {
+    const wrapper = mount(TestSelect, {
+      props: { options: ['a', 'b'], open: false },
+      attachTo: document.body,
+    })
+    await wrapper.find('input').trigger('focus')
+    await wrapper.find('button').trigger('click')
+    await waitForUpdate()
+    expect(isListboxVisible(wrapper)).toBe(false)
+    expect(wrapper.emitted('update:open')).toEqual([[true], [true]])
+    wrapper.unmount()
+  })
+
+  it('opens when a bound open prop becomes true', async () => {
+    const wrapper = mount(TestSelect, { props: { options: ['a'], open: false } })
+    await wrapper.setProps({ open: true })
+    await waitForUpdate()
+    expect(isListboxVisible(wrapper)).toBe(true)
+  })
+
+  it('select-only: keyboard opens, navigates and selects', async () => {
+    const wrapper = mount(TestSelect, {
+      props: { options: ['apple', 'banana'], searchable: false },
+    })
+    const combobox = wrapper.find('[role="combobox"]')
+    await combobox.trigger('keydown', { key: ' ' })
+    await waitForUpdate()
+    expect(isListboxVisible(wrapper)).toBe(true)
+    await combobox.trigger('keydown', { key: 'ArrowDown' })
+    await combobox.trigger('keydown', { key: 'ArrowDown' })
+    await combobox.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.emitted('update:modelValue')).toEqual([['banana']])
   })
 })
