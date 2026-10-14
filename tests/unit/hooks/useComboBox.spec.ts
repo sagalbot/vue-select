@@ -366,6 +366,84 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('groupBy', () => {
+    // Deliberately interleaved so group order differs from options order.
+    const fruit = [
+      { label: 'Banana', type: 'tropical' },
+      { label: 'Apple', type: 'orchard' },
+      { label: 'Mango', type: 'tropical' },
+      { label: 'Lemon' },
+      { label: 'Pear', type: 'orchard' },
+    ]
+    const groupBy = (o: OptionValue) => (o as { type?: string }).type
+    const labels = (opts: OptionValue[]) => opts.map((o) => (o as { label: string }).label)
+
+    it('is one ungrouped group without groupBy', () => {
+      const { groupedOptions } = createComboBox({ options: ['a', 'b'] })
+      expect(groupedOptions.value).toEqual([
+        { label: null, options: [{ option: 'a', index: 0 }, { option: 'b', index: 1 }] },
+      ])
+    })
+
+    it('puts ungrouped options first, then groups in order of first appearance', () => {
+      const { groupedOptions } = createComboBox({ options: fruit, groupBy })
+      expect(
+        groupedOptions.value.map((g) => [g.label, labels(g.options.map((o) => o.option))])
+      ).toEqual([
+        [null, ['Lemon']],
+        ['tropical', ['Banana', 'Mango']],
+        ['orchard', ['Apple', 'Pear']],
+      ])
+    })
+
+    it('numbers options in rendered order and reorders filteredOptions to match', () => {
+      const { groupedOptions, filteredOptions } = createComboBox({ options: fruit, groupBy })
+      const flat = groupedOptions.value.flatMap((g) => g.options)
+      expect(flat.map((o) => o.index)).toEqual([0, 1, 2, 3, 4])
+      expect(labels(filteredOptions.value)).toEqual(['Lemon', 'Banana', 'Mango', 'Apple', 'Pear'])
+    })
+
+    it('keyboard navigation follows group order', () => {
+      const { typeAheadDown, typeAheadSelect, emit } = createComboBox({ options: fruit, groupBy })
+      typeAheadDown()
+      typeAheadDown()
+      typeAheadDown()
+      typeAheadDown()
+      typeAheadSelect()
+      // Fourth in group order (Lemon, Banana, Mango, Apple); Lemon in options order
+      expect(emit).toHaveBeenCalledWith('update:modelValue', fruit[1])
+    })
+
+    it('hides groups with no matching options', () => {
+      const { groupedOptions, setSearch } = createComboBox({ options: fruit, groupBy })
+      setSearch('an')
+      expect(groupedOptions.value.map((g) => g.label)).toEqual(['tropical'])
+      expect(labels(groupedOptions.value[0].options.map((o) => o.option))).toEqual([
+        'Banana',
+        'Mango',
+      ])
+    })
+
+    it('is empty when nothing matches', () => {
+      const { groupedOptions, setSearch } = createComboBox({ options: fruit, groupBy })
+      setSearch('zzz')
+      expect(groupedOptions.value).toEqual([])
+    })
+
+    it('keeps a new tag ungrouped at the top', () => {
+      const { groupedOptions, setSearch } = createComboBox({
+        options: ['apple', 'avocado'],
+        taggable: true,
+        groupBy: (o: OptionValue) => String(o)[0],
+      })
+      setSearch('apricot')
+      expect(groupedOptions.value[0]).toEqual({
+        label: null,
+        options: [{ option: 'apricot', index: 0 }],
+      })
+    })
+  })
+
   describe('typeAheadPointer', () => {
     it('starts at -1', () => {
       const { typeAheadPointer } = createComboBox()

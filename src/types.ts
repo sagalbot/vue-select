@@ -16,6 +16,16 @@ export type OptionKey = string | number
 export type ModelValue = OptionValue | OptionValue[] | null
 
 /**
+ * A run of options rendered under one group header. `label` is null for
+ * options without a group. `index` is the option's position in
+ * `filteredOptions`, which is what `ComboBoxOption` expects.
+ */
+export interface OptionGroup {
+  label: string | null
+  options: { option: OptionValue; index: number }[]
+}
+
+/**
  * Keyboard handlers for the search input, keyed by `KeyboardEvent.key`.
  */
 export type KeydownHandlers = Record<string, (e: KeyboardEvent) => void>
@@ -38,6 +48,12 @@ export interface ComboBoxProps {
    * single-select when `clearSearchOnSelect` is true, otherwise false.
    */
   clearSearchOnBlur?: boolean
+  /**
+   * Group options under headers. Returns the group label for an option, or
+   * null/undefined for options without a group. Ungrouped options render
+   * first; groups appear in the order of their first option.
+   */
+  groupBy?: (option: OptionValue) => string | null | undefined
   disabled?: boolean
   open?: boolean
   label?: string
@@ -95,6 +111,7 @@ export interface ComboBoxContext {
   searchable: ComputedRef<boolean>
   mapKeydown: (handlers: KeydownHandlers) => KeydownHandlers
   clearSearchOnBlur: ComputedRef<boolean>
+  groupedOptions: ComputedRef<OptionGroup[]>
   clearable: ComputedRef<boolean>
   taggable: ComputedRef<boolean>
   placeholder: ComputedRef<string>

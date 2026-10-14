@@ -22,6 +22,7 @@ export function createMockContext(
     searchable: computed(() => true),
     mapKeydown: (map) => map,
     clearSearchOnBlur: computed(() => true),
+    groupedOptions: computed(() => []),
     clearable: computed(() => true),
     taggable: computed(() => false),
     placeholder: computed(() => ''),

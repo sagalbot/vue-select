@@ -8,6 +8,7 @@ import {
   ComboBoxOption,
   ComboBoxButton,
   ComboBoxClear,
+  ComboBoxGroup,
 } from '@/index'
 import { ComboBoxKey } from '@/keys'
 import type { OptionValue } from '@/types'
@@ -273,5 +274,40 @@ describe('ComboBox integration', () => {
     await waitForUpdate()
     expect((input.element as HTMLInputElement).value).toBe('ban')
     expect(isListboxVisible(wrapper)).toBe(false)
+  })
+
+  it('grouped options: keyboard highlight follows the rendered order', async () => {
+    const options = ['banana', 'apple', 'blueberry']
+    const GroupedList = defineComponent({
+      setup() {
+        const ctx = inject(ComboBoxKey)!
+        return () =>
+          ctx.groupedOptions.value.map((group) =>
+            h(ComboBoxGroup, { label: String(group.label), key: String(group.label) }, () =>
+              group.options.map(({ option, index }) =>
+                h(ComboBoxOption, { value: option, index, key: String(option) }, () =>
+                  String(option)
+                )
+              )
+            )
+          )
+      },
+    })
+    const wrapper = mount(ComboBox, {
+      props: { options, groupBy: (o: OptionValue) => String(o)[0] },
+      slots: { default: () => [h(ComboBoxInput), h(ComboBoxMenu, () => h(GroupedList))] },
+    })
+
+    expect(wrapper.findAll('[role="group"]').map((g) => g.text())).toEqual([
+      'bbananablueberry',
+      'aapple',
+    ])
+
+    const input = wrapper.find('input')
+    await input.trigger('focus')
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    const active = input.attributes('aria-activedescendant')
+    expect(wrapper.find(`[id="${active}"]`).text()).toBe('blueberry')
   })
 })

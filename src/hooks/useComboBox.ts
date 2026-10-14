@@ -3,6 +3,7 @@ import type {
   ComboBoxProps,
   ComboBoxContext,
   KeydownHandlers,
+  OptionGroup,
   OptionKey,
   OptionValue,
 } from '@/types'
@@ -169,7 +170,7 @@ export function useComboBox(
     ...pushedTags.value,
   ])
 
-  const filteredOptions = computed<OptionValue[]>(() => {
+  const matchingOptions = computed<OptionValue[]>(() => {
     const opts = optionList.value
 
     // Custom filter function takes priority, but still add taggable option
@@ -191,6 +192,42 @@ export function useComboBox(
 
     return maybeAddTaggableOption(filtered)
   })
+
+  const groupedOptions = computed<OptionGroup[]>(() => {
+    const opts = matchingOptions.value
+    const ungrouped: OptionValue[] = []
+    const groups = new Map<string, OptionValue[]>()
+
+    for (const option of opts) {
+      // New tags stay ungrouped so they remain at the top
+      const label =
+        props.groupBy && !(taggable.value && isNewTagCandidate(option))
+          ? props.groupBy(option)
+          : null
+      if (!label) {
+        ungrouped.push(option)
+      } else {
+        if (!groups.has(label)) groups.set(label, [])
+        groups.get(label)!.push(option)
+      }
+    }
+
+    let index = 0
+    const number = (options: OptionValue[]) =>
+      options.map((option) => ({ option, index: index++ }))
+
+    const result: OptionGroup[] = []
+    if (ungrouped.length) result.push({ label: null, options: number(ungrouped) })
+    for (const [label, options] of groups) {
+      result.push({ label, options: number(options) })
+    }
+    return result
+  })
+
+  // Options in rendered order: keyboard navigation and option indices follow it.
+  const filteredOptions = computed<OptionValue[]>(() =>
+    groupedOptions.value.flatMap((group) => group.options.map(({ option }) => option))
+  )
 
   // --- Reduce helpers ---
 
@@ -407,6 +444,7 @@ export function useComboBox(
     optionList,
     mapKeydown,
     clearSearchOnBlur,
+    groupedOptions,
   }
 
   return context
