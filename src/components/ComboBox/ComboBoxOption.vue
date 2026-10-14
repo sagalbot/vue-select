@@ -16,12 +16,7 @@ const isHighlighted = computed(() => ctx.isOptionHighlighted(props.index))
 const isDisabled = computed(() => !ctx.isOptionSelectable(props.value))
 
 function onClick() {
-  if (isDisabled.value) return
-  if (isSelected.value && ctx.deselectFromDropdown.value) {
-    ctx.deselect(props.value)
-  } else if (!isSelected.value) {
-    ctx.select(props.value)
-  }
+  if (!isDisabled.value) ctx.select(props.value)
 }
 </script>
 

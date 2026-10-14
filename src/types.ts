@@ -39,7 +39,6 @@ export interface ComboBoxProps {
   multiple?: boolean
   filterable?: boolean
   taggable?: boolean
-  pushTags?: boolean
   clearable?: boolean
   closeOnSelect?: boolean
   clearSearchOnSelect?: boolean
@@ -64,7 +63,6 @@ export interface ComboBoxProps {
   getOptionLabel?: (option: OptionValue) => string
   getOptionKey?: (option: OptionValue) => OptionKey
   filter?: (options: OptionValue[], search: string) => OptionValue[]
-  filterBy?: (option: OptionValue, label: string, search: string) => boolean
   createOption?: (search: string) => OptionValue
   loading?: boolean
   uid?: string
@@ -138,6 +136,7 @@ export interface ComboBoxContext {
   getOptionKey: (option: OptionValue) => OptionKey
   isOptionSelected: (option: OptionValue) => boolean
   isOptionSelectable: (option: OptionValue) => boolean
+  isOptionDeselectable: (option: OptionValue) => boolean
   isOptionHighlighted: (index: number) => boolean
   optionList: ComputedRef<OptionValue[]>
 }

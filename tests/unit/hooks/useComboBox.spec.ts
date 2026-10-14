@@ -217,6 +217,71 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('selecting an already selected option', () => {
+    it('deselects it with deselectFromDropdown', () => {
+      const { select, emit } = createComboBox({ modelValue: 'one', deselectFromDropdown: true })
+      select('one')
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+      expect(emit).toHaveBeenCalledWith('option:deselected', 'one')
+    })
+
+    it('does not empty the value when not clearable', () => {
+      const { select, emit } = createComboBox({
+        modelValue: 'one',
+        deselectFromDropdown: true,
+        clearable: false,
+      })
+      select('one')
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', expect.anything())
+      expect(emit).not.toHaveBeenCalledWith('option:deselected', 'one')
+    })
+
+    it('deselects one of several in multi-select even when not clearable', () => {
+      const { select, emit } = createComboBox({
+        multiple: true,
+        modelValue: ['one', 'two'],
+        deselectFromDropdown: true,
+        clearable: false,
+      })
+      select('one')
+      expect(emit).toHaveBeenCalledWith('update:modelValue', ['two'])
+    })
+
+    it('keeps the last one in multi-select when not clearable', () => {
+      const { select, emit } = createComboBox({
+        multiple: true,
+        modelValue: ['one'],
+        deselectFromDropdown: true,
+        clearable: false,
+      })
+      select('one')
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', expect.anything())
+    })
+
+    it('leaves the value alone without deselectFromDropdown, but still closes', () => {
+      const { select, setOpen, open, emit } = createComboBox({
+        multiple: true,
+        modelValue: ['one'],
+      })
+      setOpen(true)
+      emit.mockClear()
+      select('one')
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', expect.anything())
+      expect(emit).not.toHaveBeenCalledWith('option:selected', 'one')
+      expect(open.value).toBe(false)
+    })
+
+    it('is reachable from the keyboard', () => {
+      const { typeAheadDown, typeAheadSelect, emit } = createComboBox({
+        modelValue: 'one',
+        deselectFromDropdown: true,
+      })
+      typeAheadDown()
+      typeAheadSelect()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+  })
+
   describe('selection - multiple', () => {
     it('select appends to existing values', () => {
       const { select, emit } = createComboBox({
@@ -342,15 +407,6 @@ describe('useComboBox', () => {
       expect(filteredOptions.value).toEqual(['two'])
     })
 
-    it('uses custom filterBy when provided', () => {
-      const { filteredOptions, setSearch } = createComboBox({
-        options: [{ label: 'one', code: '1' }, { label: 'two', code: '2' }],
-        label: 'label',
-        filterBy: (option: OptionValue, _label: string, search: string) => (option as Record<string, unknown>).code === search,
-      })
-      setSearch('2')
-      expect(filteredOptions.value).toEqual([{ label: 'two', code: '2' }])
-    })
 
     it('filteredOptions includes taggable option when taggable and search has no match', () => {
       const { filteredOptions, setSearch } = createComboBox({
@@ -743,16 +799,6 @@ describe('useComboBox', () => {
       expect(emit).toHaveBeenCalledWith('update:modelValue', 'new-tag')
     })
 
-    it('pushTags adds created tag to optionList', () => {
-      const { select, setSearch, optionList } = createComboBox({
-        options: ['one', 'two'],
-        taggable: true,
-        pushTags: true,
-      })
-      setSearch('new-tag')
-      select('new-tag')
-      expect(optionList.value).toContain('new-tag')
-    })
 
     it('uses custom createOption when provided', () => {
       const { select, setSearch, emit } = createComboBox({

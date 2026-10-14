@@ -98,6 +98,36 @@ describe('ComboBoxInput', () => {
     expect(ctx.deselect).toHaveBeenCalledWith(lastOption)
   })
 
+  it('Backspace deselects the value in single-select', async () => {
+    const { wrapper, ctx } = mountInput({
+      isValueEmpty: computed(() => false),
+      selectedValue: computed(() => ['one']),
+    })
+    await wrapper.find('input').trigger('keydown', { key: 'Backspace' })
+    expect(ctx.deselect).toHaveBeenCalledWith('one')
+  })
+
+  it('Backspace does nothing when not clearable', async () => {
+    const { wrapper, ctx } = mountInput({
+      multiple: computed(() => true),
+      clearable: computed(() => false),
+      isValueEmpty: computed(() => false),
+      selectedValue: computed(() => ['one', 'two']),
+    })
+    await wrapper.find('input').trigger('keydown', { key: 'Backspace' })
+    expect(ctx.deselect).not.toHaveBeenCalled()
+  })
+
+  it('Backspace edits the search text instead when there is any', async () => {
+    const { wrapper, ctx } = mountInput({
+      search: ref('o'),
+      isValueEmpty: computed(() => false),
+      selectedValue: computed(() => ['one']),
+    })
+    await wrapper.find('input').trigger('keydown', { key: 'Backspace' })
+    expect(ctx.deselect).not.toHaveBeenCalled()
+  })
+
   it('focus opens the dropdown', async () => {
     const { wrapper, ctx } = mountInput()
     await wrapper.find('input').trigger('focus')

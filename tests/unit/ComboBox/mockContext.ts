@@ -45,6 +45,7 @@ export function createMockContext(
     getOptionKey: (opt: OptionValue) => JSON.stringify(opt),
     isOptionSelected: () => false,
     isOptionSelectable: () => true,
+    isOptionDeselectable: () => false,
     isOptionHighlighted: () => false,
     optionList: computed(() => []),
     ...overrides,

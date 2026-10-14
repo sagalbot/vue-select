@@ -67,7 +67,7 @@ const searchHandlers: KeydownHandlers = {
     else ctx.setOpen(false)
   },
   Backspace: () => {
-    if (!ctx.search.value && ctx.multiple.value && !ctx.isValueEmpty.value) {
+    if (!ctx.search.value && !ctx.isValueEmpty.value && ctx.clearable.value) {
       const last = ctx.selectedValue.value[ctx.selectedValue.value.length - 1]
       ctx.deselect(last)
     }

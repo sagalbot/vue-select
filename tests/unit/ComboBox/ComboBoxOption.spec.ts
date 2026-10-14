@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
 import { ComboBoxKey } from '@/keys'
 import { createMockContext } from './mockContext'
@@ -52,23 +52,10 @@ describe('ComboBoxOption', () => {
     expect(ctx.select).toHaveBeenCalledWith('test')
   })
 
-  it('click calls deselect when already selected and deselectFromDropdown is true', async () => {
-    const { wrapper, ctx } = mountOption({}, {
-      isOptionSelected: () => true,
-      deselectFromDropdown: computed(() => true),
-    })
+  it('click on a selected option calls select, which decides whether to deselect', async () => {
+    const { wrapper, ctx } = mountOption({}, { isOptionSelected: () => true })
     await wrapper.trigger('click')
-    expect(ctx.deselect).toHaveBeenCalledWith('test')
-  })
-
-  it('click does nothing when already selected and deselectFromDropdown is false', async () => {
-    const { wrapper, ctx } = mountOption({}, {
-      isOptionSelected: () => true,
-      deselectFromDropdown: computed(() => false),
-    })
-    await wrapper.trigger('click')
-    expect(ctx.select).not.toHaveBeenCalled()
-    expect(ctx.deselect).not.toHaveBeenCalled()
+    expect(ctx.select).toHaveBeenCalledWith('test')
   })
 
   it('click does nothing when disabled', async () => {

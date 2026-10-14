@@ -10,7 +10,6 @@ const props = withDefaults(defineProps<ComboBoxProps>(), {
   multiple: false,
   filterable: true,
   taggable: false,
-  pushTags: false,
   clearable: true,
   closeOnSelect: true,
   clearSearchOnSelect: true,

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
 import { ComboBoxKey } from '@/keys'
 import { createMockContext } from './mockContext'

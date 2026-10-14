@@ -27,7 +27,6 @@ export function useComboBox(
   const search = ref('')
   const typeAheadPointer = ref(-1)
   const isLoading = ref(props.loading ?? false)
-  const pushedTags = ref<OptionValue[]>([])
 
   // Full option objects for reduced values, so a selection keeps its label
   // after the option leaves `options` (e.g. AJAX search results change).
@@ -132,18 +131,17 @@ export function useComboBox(
 
   /**
    * Checks if the option is a new tag candidate — i.e., its key doesn't exist
-   * in the original options list (props.options) or in pushedTags.
+   * in props.options.
    */
   function isNewTagCandidate(option: OptionValue): boolean {
     const opts = props.options ?? []
     const optKey = getOptionKey(option)
-    return !opts.some((o) => getOptionKey(o) === optKey) &&
-      !pushedTags.value.some((o) => getOptionKey(o) === optKey)
+    return !opts.some((o) => getOptionKey(o) === optKey)
   }
 
   // --- Filtering helpers ---
 
-  function defaultFilterBy(option: OptionValue, label: string, search: string): boolean {
+  function defaultFilterBy(label: string, search: string): boolean {
     return label.toLocaleLowerCase().includes(search.toLocaleLowerCase())
   }
 
@@ -167,7 +165,6 @@ export function useComboBox(
 
   const optionList = computed<OptionValue[]>(() => [
     ...(props.options ?? []),
-    ...pushedTags.value,
   ])
 
   const matchingOptions = computed<OptionValue[]>(() => {
@@ -184,11 +181,9 @@ export function useComboBox(
     }
 
     // Default filtering logic
-    const filterFn = props.filterBy ?? defaultFilterBy
-    const filtered = opts.filter((option) => {
-      const label = getOptionLabel(option)
-      return filterFn(option, label, search.value)
-    })
+    const filtered = opts.filter((option) =>
+      defaultFilterBy(getOptionLabel(option), search.value)
+    )
 
     return maybeAddTaggableOption(filtered)
   })
@@ -268,30 +263,37 @@ export function useComboBox(
 
   // --- Selection ---
 
-  function select(option: OptionValue) {
-    // Check if this is a new tag (not in the original options or pushedTags)
-    if (taggable.value && isNewTagCandidate(option)) {
-      emit('option:created', option)
-      if (props.pushTags) {
-        pushedTags.value = [...pushedTags.value, option]
-      }
-    }
+  /**
+   * Whether selecting an already selected option deselects it. Never
+   * empties the value when the selection is not clearable.
+   */
+  function isOptionDeselectable(option: OptionValue): boolean {
+    return (
+      isOptionSelected(option) &&
+      deselectFromDropdown.value &&
+      (clearable.value || (multiple.value && selectedValue.value.length > 1))
+    )
+  }
 
+  function select(option: OptionValue) {
     emit('option:selecting', option)
-    const emitValue = props.reduce ? props.reduce(option) : option
-    if (props.reduce) knownOptions.set(JSON.stringify(emitValue), option)
-    if (props.multiple) {
-      if (!isOptionSelected(option)) {
-        const current = Array.isArray(props.modelValue)
-          ? [...props.modelValue]
-          : []
-        current.push(emitValue)
-        emit('update:modelValue', current)
+
+    if (!isOptionSelected(option)) {
+      if (taggable.value && isNewTagCandidate(option)) {
+        emit('option:created', option)
       }
-    } else {
-      emit('update:modelValue', emitValue)
+      const emitValue = props.reduce ? props.reduce(option) : option
+      if (props.reduce) knownOptions.set(JSON.stringify(emitValue), option)
+      if (props.multiple) {
+        const current = Array.isArray(props.modelValue) ? [...props.modelValue] : []
+        emit('update:modelValue', [...current, emitValue])
+      } else {
+        emit('update:modelValue', emitValue)
+      }
+      emit('option:selected', option)
+    } else if (isOptionDeselectable(option)) {
+      deselect(option)
     }
-    emit('option:selected', option)
 
     if (props.clearSearchOnSelect !== false) {
       search.value = ''
@@ -449,6 +451,7 @@ export function useComboBox(
     getOptionKey,
     isOptionSelected,
     isOptionSelectable,
+    isOptionDeselectable,
     isOptionHighlighted,
     optionList,
     mapKeydown,
