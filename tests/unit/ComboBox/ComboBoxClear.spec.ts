@@ -1,49 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import ComboBoxClear from '@/components/ComboBox/ComboBoxClear.vue'
 import { ComboBoxKey } from '@/keys'
-import type { ComboBoxContext, OptionValue } from '@/types'
-
-function createMockContext(overrides = {}): ComboBoxContext {
-  return {
-    open: ref(false),
-    search: ref(''),
-    selectedValue: computed(() => []),
-    filteredOptions: computed(() => []),
-    typeAheadPointer: ref(-1),
-    isLoading: ref(false),
-    disabled: computed(() => false),
-    multiple: computed(() => false),
-    filterable: computed(() => true),
-    noDrop: computed(() => false),
-    clearable: computed(() => true),
-    taggable: computed(() => false),
-    placeholder: computed(() => ''),
-    isValueEmpty: computed(() => true),
-    isSearching: computed(() => false),
-    uid: computed(() => 'test'),
-    deselectFromDropdown: computed(() => false),
-    autoscroll: computed(() => true),
-    select: vi.fn(),
-    deselect: vi.fn(),
-    clearSelection: vi.fn(),
-    toggleOpen: vi.fn(),
-    setOpen: vi.fn(),
-    setSearch: vi.fn(),
-    typeAheadUp: vi.fn(),
-    typeAheadDown: vi.fn(),
-    typeAheadSelect: vi.fn(),
-    toggleLoading: vi.fn(),
-    getOptionLabel: (opt: OptionValue) => String(opt),
-    getOptionKey: (opt: OptionValue) => JSON.stringify(opt),
-    isOptionSelected: () => false,
-    isOptionSelectable: () => true,
-    isOptionHighlighted: () => false,
-    optionList: computed(() => []),
-    ...overrides,
-  }
-}
+import { createMockContext } from './mockContext'
 
 function mountClear(ctxOverrides = {}) {
   const ctx = createMockContext(ctxOverrides)
