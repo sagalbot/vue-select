@@ -156,14 +156,35 @@ describe('useComboBox', () => {
       expect(getOptionLabel({ name: 'Canada' })).toBe('Canada')
     })
 
-    it('getOptionKey returns JSON.stringify by default', () => {
+    it('getOptionKey returns strings and numbers as-is', () => {
       const { getOptionKey } = createComboBox()
-      expect(getOptionKey('hello')).toBe(JSON.stringify('hello'))
+      expect(getOptionKey('hello')).toBe('hello')
+      expect(getOptionKey(1)).toBe(1)
+    })
+
+    it('getOptionKey keeps 1 and "1" distinct', () => {
+      const { isOptionSelected } = createComboBox({ options: [1, '1'], modelValue: 1 })
+      expect(isOptionSelected(1)).toBe(true)
+      expect(isOptionSelected('1')).toBe(false)
     })
 
     it('getOptionKey returns option.id if present', () => {
       const { getOptionKey } = createComboBox()
-      expect(getOptionKey({ id: 42, label: 'x' })).toBe('42')
+      expect(getOptionKey({ id: 42, label: 'x' })).toBe(42)
+    })
+
+    it('getOptionKey ignores object key order', () => {
+      const { getOptionKey, isOptionSelected } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }],
+        modelValue: { code: 'CA', label: 'Canada' },
+      })
+      expect(getOptionKey({ b: 1, a: 2 })).toBe(getOptionKey({ a: 2, b: 1 }))
+      expect(isOptionSelected({ label: 'Canada', code: 'CA' })).toBe(true)
+    })
+
+    it('getOptionKey still distinguishes objects with different values', () => {
+      const { getOptionKey } = createComboBox()
+      expect(getOptionKey({ a: 1, b: 2 })).not.toBe(getOptionKey({ a: 2, b: 1 }))
     })
 
     it('isOptionSelected returns true for selected options', () => {

@@ -141,7 +141,7 @@ import typeAheadPointer from '@/mixins/typeAheadPointer.js'
 import ajax from '@/mixins/ajax.js'
 import childComponents from '@/components/childComponents.js'
 import appendToBody from '@/directives/appendToBody.js'
-import sortAndStringify from '@/utility/sortAndStringify.js'
+import sortAndStringify from '@/utility/sortAndStringify'
 import uniqueId from '@/utility/uniqueId.js'
 
 /**

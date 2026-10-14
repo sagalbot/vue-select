@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue'
-import type { ComboBoxProps, ComboBoxContext, OptionValue } from '@/types'
+import type { ComboBoxProps, ComboBoxContext, OptionKey, OptionValue } from '@/types'
+import sortAndStringify from '@/utility/sortAndStringify'
 
 let uidCounter = 0
 
@@ -65,12 +66,23 @@ export function useComboBox(
     return String(option)
   }
 
-  function getOptionKey(option: OptionValue): string {
+  function getOptionKey(option: OptionValue): OptionKey {
     if (props.getOptionKey) return props.getOptionKey(option)
-    if (typeof option === 'object' && option !== null && 'id' in option) {
-      return String((option as Record<string, unknown>).id)
+    if (typeof option !== 'object' || option === null) return option
+    if ('id' in option) return option.id as OptionKey
+
+    try {
+      return sortAndStringify(option)
+    } catch (e) {
+      console.warn(
+        '[vue-select warn]: Could not stringify this option to generate a ' +
+          "unique key. Provide a 'getOptionKey' prop that returns a unique " +
+          'key for each option.',
+        option,
+        e
+      )
+      return ''
     }
-    return JSON.stringify(option)
   }
 
   function isOptionSelected(option: OptionValue): boolean {

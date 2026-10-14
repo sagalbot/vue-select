@@ -6,6 +6,11 @@ import type { ComputedRef, Ref } from 'vue'
 export type OptionValue = string | number | Record<string, unknown>
 
 /**
+ * A unique key identifying an option. See `getOptionKey`.
+ */
+export type OptionKey = string | number
+
+/**
  * The modelValue can be a single option, an array (multi-select), or null.
  */
 export type ModelValue = OptionValue | OptionValue[] | null
@@ -29,7 +34,7 @@ export interface ComboBoxProps {
   reduce?: (option: OptionValue) => unknown
   selectable?: (option: OptionValue) => boolean
   getOptionLabel?: (option: OptionValue) => string
-  getOptionKey?: (option: OptionValue) => string
+  getOptionKey?: (option: OptionValue) => OptionKey
   filter?: (options: OptionValue[], search: string) => OptionValue[]
   filterBy?: (option: OptionValue, label: string, search: string) => boolean
   createOption?: (search: string) => OptionValue
@@ -77,7 +82,7 @@ export interface ComboBoxContext {
   typeAheadSelect: () => void
   toggleLoading: (value?: boolean) => void
   getOptionLabel: (option: OptionValue) => string
-  getOptionKey: (option: OptionValue) => string
+  getOptionKey: (option: OptionValue) => OptionKey
   isOptionSelected: (option: OptionValue) => boolean
   isOptionSelectable: (option: OptionValue) => boolean
   isOptionHighlighted: (index: number) => boolean
