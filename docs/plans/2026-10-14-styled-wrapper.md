@@ -109,26 +109,28 @@ Each task: failing test first, then the fix, in `src/hooks/useComboBox.ts`, `src
 - v3 hides the menu while `loading` (its default `dropdownShouldOpen`). The primitives don't; `VueSelect` should keep the v3 behavior in its own template.
 - The docs dev server caches the prop types `ComboBox.vue` resolves from `types.ts`. After adding a prop to `ComboBoxProps`, restart the docs server.
 
-## Phase 2: Build `VueSelect`
+## Phase 2: Build `VueSelect` (first version done 2026-10-14; parity check in Phase 3)
 
 File: `src/components/VueSelect.vue`, `<script setup lang="ts" generic="Option">`.
 
-- **T12 `fix`: the six missing 3.x fixes.** Each one gets a test in the new suite, ported from the commit on master that introduced it:
+- 🟡 **T12 `fix`: the six missing 3.x fixes.** Done: CSS variable and `:host` (`c88a55f`), Space opens (T7), aria-controls (ComboBoxInput). Focus after select and tag focus with `:open="false"` get tests in Phase 3. Each one gets a test in the new suite, ported from the commit on master that introduced it:
   - Focus stays on the input after selecting (#1727, `26f0827`).
   - Space opens the closed dropdown (#1735, `795feab`).
   - `aria-controls` on the toggle (#1802, `db9e899`).
   - `--vs-search-input-bg` CSS variable (3.20.0, `f69a026`).
   - `:host` on the CSS variable definitions, for shadow DOM (#1811, `77e52c1`).
   - Input keeps focus after adding a tag with the dropdown disabled (#755, `2427064`). In v4 this applies to `:open="false"`.
-- **T13 skeleton:** compose `ComboBox`, `ComboBoxInput`, `ComboBoxMenu`, `ComboBoxOption`, `ComboBoxButton`, `ComboBoxClear`, `ComboBoxGroup`. Same markup tree and classes as v3: `vs__dropdown-toggle`, `vs__selected-options`, `vs__actions`, `vs__dropdown-menu`, `vs__dropdown-option--highlight/--selected/--disabled/--deselect`, and state classes `vs--open`, `vs--single`, `vs--multiple`, `vs--searching`, `vs--searchable`, `vs--unsearchable`, `vs--loading`, `vs--disabled`, plus `dir` for RTL.
-- **T14 selected values:** tags with deselect buttons, single-select display, `Deselect` and `OpenIndicator` as slot defaults.
-- **T15 slots:** every v3 slot with the same scope shape (`header`, `selected-option-container`, `selected-option`, `search`, `open-indicator`, `spinner`, `list-header`, `option`, `no-options`, `list-footer`, `footer`), plus new `clear`, `deselect` and `group-header`. Slot props typed through the `Option` generic.
-- **T16 events:** the full v3 `emits` list (`open`, `close`, `update:modelValue`, `search`, `search:focus`, `search:blur`, `search:keydown`, `search:input`, `search:compositionstart`, `search:compositionend`, `option:created`, `option:selecting`, `option:selected`, `option:deselecting`, `option:deselected`) plus `clear` and `update:open`.
-- **T17 positioning:** `appendTo` via `<Teleport>`, `calculatePosition`, `transition`.
-- **T18 accessibility:** `ariaLabels` prop object for the search input, listbox, clear button, and per-tag deselect button (`(option) => string`). Defaults match v3 English text. Include `aria-multiselectable` (PR #1726). `inputAttrs` bound to the input.
-- **T19 instance API:** `defineExpose` the members people reach for through template refs in v3: `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur`.
+- ✅ **T13 skeleton:** compose `ComboBox`, `ComboBoxInput`, `ComboBoxMenu`, `ComboBoxOption`, `ComboBoxButton`, `ComboBoxClear`, `ComboBoxGroup`. Same markup tree and classes as v3: `vs__dropdown-toggle`, `vs__selected-options`, `vs__actions`, `vs__dropdown-menu`, `vs__dropdown-option--highlight/--selected/--disabled/--deselect`, and state classes `vs--open`, `vs--single`, `vs--multiple`, `vs--searching`, `vs--searchable`, `vs--unsearchable`, `vs--loading`, `vs--disabled`, plus `dir` for RTL.
+- ✅ **T14 selected values:** tags with deselect buttons, single-select display, `Deselect` and `OpenIndicator` as slot defaults.
+- ✅ **T15 slots:** every v3 slot with the same scope shape (`header`, `selected-option-container`, `selected-option`, `search`, `open-indicator`, `spinner`, `list-header`, `option`, `no-options`, `list-footer`, `footer`), plus new `clear`, `deselect` and `group-header`. Slot props typed through the `Option` generic.
+- ✅ **T16 events:** the full v3 `emits` list (`open`, `close`, `update:modelValue`, `search`, `search:focus`, `search:blur`, `search:keydown`, `search:input`, `search:compositionstart`, `search:compositionend`, `option:created`, `option:selecting`, `option:selected`, `option:deselecting`, `option:deselected`) plus `clear` and `update:open`.
+- ✅ **T17 positioning:** `appendTo` via `<Teleport>`, `calculatePosition`, `transition`.
+- ✅ **T18 accessibility:** `ariaLabels` prop object for the search input, listbox, clear button, and per-tag deselect button (`(option) => string`). Defaults match v3 English text. Include `aria-multiselectable` (PR #1726). `inputAttrs` bound to the input.
+- ✅ **T19 instance API:** `defineExpose` the members people reach for through template refs in v3: `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur`.
 
-## Phase 3: Compatibility harness
+## Phase 3: Compatibility harness (in progress)
+
+The v3 specs are copied to `tests/unit/v3-compat/` and rewritten to use only the public interface (props, events, slots, DOM, template-ref API) through `tests/unit/v3-compat/helpers.js`. Tests that still fail on a real behavior difference are skipped with a `// V4-DIFF:` comment until the component is fixed. The original `tests/unit/*.spec.js` keep testing `Select.vue` until the cutover.
 
 - **T20 harness:** rewrite `tests/helpers.js` to drive the DOM (type into the input, press keys) instead of mutating `vm.search` and `$refs`. Point all legacy specs at `VueSelect`, updating only the props removed by the audit. Each other failing assertion either gets fixed or gets an entry in `docs/plans/v4-breaking-changes.md` with a migration note.
 - **T21 new coverage:** grouped options keyboard navigation, `appendTo` teleport cleanup on unmount, SSR hydration of `VueSelect`, controlled `open`.
