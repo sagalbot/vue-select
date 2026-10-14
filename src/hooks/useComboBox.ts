@@ -1,5 +1,11 @@
 import { ref, computed, watch, getCurrentInstance, useId } from 'vue'
-import type { ComboBoxProps, ComboBoxContext, OptionKey, OptionValue } from '@/types'
+import type {
+  ComboBoxProps,
+  ComboBoxContext,
+  KeydownHandlers,
+  OptionKey,
+  OptionValue,
+} from '@/types'
 import sortAndStringify from '@/utility/sortAndStringify'
 
 // Fallback for calls outside a component (e.g. unit tests), where useId() is unavailable.
@@ -351,7 +357,11 @@ export function useComboBox(
     isLoading.value = value ?? !isLoading.value
   }
 
-  return {
+  function mapKeydown(handlers: KeydownHandlers): KeydownHandlers {
+    return props.mapKeydown ? props.mapKeydown(handlers, context) : handlers
+  }
+
+  const context: ComboBoxContext = {
     // State
     open,
     search,
@@ -389,5 +399,8 @@ export function useComboBox(
     isOptionSelectable,
     isOptionHighlighted,
     optionList,
+    mapKeydown,
   }
+
+  return context
 }

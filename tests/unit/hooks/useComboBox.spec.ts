@@ -80,6 +80,21 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('mapKeydown', () => {
+    it('passes the handlers and the context to the prop', () => {
+      const mapKeydown = vi.fn((map) => map)
+      const ctx = createComboBox({ mapKeydown })
+      const handlers = { Enter: () => {} }
+      expect(ctx.mapKeydown(handlers)).toBe(handlers)
+      expect(mapKeydown.mock.calls[0][1].select).toBe(ctx.select)
+    })
+
+    it('returns the handlers unchanged without the prop', () => {
+      const handlers = { Enter: () => {} }
+      expect(createComboBox().mapKeydown(handlers)).toBe(handlers)
+    })
+  })
+
   describe('searchable', () => {
     it('defaults to true', () => {
       expect(createComboBox().searchable.value).toBe(true)

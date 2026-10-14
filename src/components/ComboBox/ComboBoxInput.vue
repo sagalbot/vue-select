@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { inject, ref, computed } from 'vue'
 import { ComboBoxKey } from '@/keys'
+import type { KeydownHandlers } from '@/types'
 
 const ctx = inject(ComboBoxKey)
 if (!ctx) throw new Error('ComboBoxInput must be used inside a ComboBox component')
@@ -46,9 +47,7 @@ function openOr(whenOpen: () => void) {
   }
 }
 
-type KeyHandler = (e: KeyboardEvent) => void
-
-const searchHandlers: Record<string, KeyHandler> = {
+const searchHandlers: KeydownHandlers = {
   ArrowDown: (e) => {
     e.preventDefault()
     ctx.typeAheadDown()
@@ -73,9 +72,15 @@ const searchHandlers: Record<string, KeyHandler> = {
       ctx.deselect(last)
     }
   },
+  // Space opens a closed dropdown instead of typing (#1735)
+  ' ': (e) => {
+    if (ctx.open.value) return
+    e.preventDefault()
+    ctx.setOpen(true)
+  },
 }
 
-const selectOnlyHandlers: Record<string, KeyHandler> = {
+const selectOnlyHandlers: KeydownHandlers = {
   ArrowDown: searchHandlers.ArrowDown,
   ArrowUp: searchHandlers.ArrowUp,
   Enter: openOr(() => ctx.typeAheadSelect()),
@@ -118,7 +123,7 @@ function onKeydown(e: KeyboardEvent) {
   if (isComposing.value) return
 
   const searchable = ctx.searchable.value
-  const handler = (searchable ? searchHandlers : selectOnlyHandlers)[e.key]
+  const handler = ctx.mapKeydown(searchable ? searchHandlers : selectOnlyHandlers)[e.key]
   if (handler) return handler(e)
 
   if (!searchable && e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {

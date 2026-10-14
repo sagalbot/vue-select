@@ -60,6 +60,7 @@ const TestSelect = defineComponent({
     taggable: { type: Boolean, default: false },
     open: { type: Boolean, default: undefined },
     searchable: { type: Boolean, default: true },
+    mapKeydown: { type: Function, default: undefined },
   },
   emits: ['update:modelValue', 'update:open'],
   setup(props, { emit }) {
@@ -241,5 +242,23 @@ describe('ComboBox integration', () => {
     await combobox.trigger('keydown', { key: 'ArrowDown' })
     await combobox.trigger('keydown', { key: 'Enter' })
     expect(wrapper.emitted('update:modelValue')).toEqual([['banana']])
+  })
+
+  it('mapKeydown: comma creates a tag', async () => {
+    const wrapper = mount(TestSelect, {
+      props: {
+        options: ['a'],
+        taggable: true,
+        multiple: true,
+        modelValue: [],
+        mapKeydown: (map: Record<string, unknown>) => ({ ...map, ',': map.Enter }),
+      },
+    })
+    const input = wrapper.find('input')
+    await input.trigger('focus')
+    await input.setValue('new')
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    await input.trigger('keydown', { key: ',' })
+    expect(wrapper.emitted('update:modelValue')).toEqual([[['new']]])
   })
 })

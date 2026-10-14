@@ -16,6 +16,11 @@ export type OptionKey = string | number
 export type ModelValue = OptionValue | OptionValue[] | null
 
 /**
+ * Keyboard handlers for the search input, keyed by `KeyboardEvent.key`.
+ */
+export type KeydownHandlers = Record<string, (e: KeyboardEvent) => void>
+
+/**
  * Props accepted by the ComboBox root component.
  */
 export interface ComboBoxProps {
@@ -46,6 +51,12 @@ export interface ComboBoxProps {
    * navigated with the keyboard, but not typed into.
    */
   searchable?: boolean
+  /**
+   * Customize keyboard handling. Receives the default handlers keyed by
+   * `KeyboardEvent.key` and the combobox context; returns the handlers to use.
+   * Example, select with comma: `(map) => ({ ...map, ',': map.Enter })`
+   */
+  mapKeydown?: (handlers: KeydownHandlers, ctx: ComboBoxContext) => KeydownHandlers
   deselectFromDropdown?: boolean
   autoscroll?: boolean
   /**
@@ -77,6 +88,7 @@ export interface ComboBoxContext {
   multiple: ComputedRef<boolean>
   filterable: ComputedRef<boolean>
   searchable: ComputedRef<boolean>
+  mapKeydown: (handlers: KeydownHandlers) => KeydownHandlers
   clearable: ComputedRef<boolean>
   taggable: ComputedRef<boolean>
   placeholder: ComputedRef<string>

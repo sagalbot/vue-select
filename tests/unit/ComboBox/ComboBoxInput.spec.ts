@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref, computed } from 'vue'
 import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
@@ -163,6 +163,47 @@ describe('ComboBoxInput', () => {
     it('does not open on focus', async () => {
       const { wrapper, ctx } = mountSelectOnly()
       await wrapper.trigger('focus')
+      expect(ctx.setOpen).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Space (#1735)', () => {
+    it('opens a closed dropdown instead of typing a space', async () => {
+      const { wrapper, ctx } = mountInput()
+      const event = new KeyboardEvent('keydown', { key: ' ', cancelable: true })
+      wrapper.find('input').element.dispatchEvent(event)
+      expect(ctx.setOpen).toHaveBeenCalledWith(true)
+      expect(event.defaultPrevented).toBe(true)
+    })
+
+    it('types a space when the dropdown is open', async () => {
+      const { wrapper, ctx } = mountInput({ open: ref(true) })
+      const event = new KeyboardEvent('keydown', { key: ' ', cancelable: true })
+      wrapper.find('input').element.dispatchEvent(event)
+      expect(ctx.setOpen).not.toHaveBeenCalled()
+      expect(event.defaultPrevented).toBe(false)
+    })
+  })
+
+  describe('mapKeydown', () => {
+    it('receives the default handlers and can add a key', async () => {
+      const mapKeydown = vi.fn((map) => ({ ...map, ',': map.Enter }))
+      const { wrapper, ctx } = mountInput({ open: ref(true), mapKeydown })
+      await wrapper.find('input').trigger('keydown', { key: ',' })
+      expect(Object.keys(mapKeydown.mock.calls[0][0])).toEqual(
+        expect.arrayContaining(['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Backspace', ' '])
+      )
+      expect(ctx.typeAheadSelect).toHaveBeenCalled()
+    })
+
+    it('can remove a default handler', async () => {
+      const mapKeydown = (map: Record<string, unknown>) => {
+        const { Escape, ...rest } = map
+        void Escape
+        return rest
+      }
+      const { wrapper, ctx } = mountInput({ open: ref(true), mapKeydown })
+      await wrapper.find('input').trigger('keydown', { key: 'Escape' })
       expect(ctx.setOpen).not.toHaveBeenCalled()
     })
   })
