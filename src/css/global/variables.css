@@ -55,7 +55,8 @@
     --vs-dropdown-option-padding: 3px 20px;
 
     /* Active State */
-    --vs-dropdown-option--active-bg: #5897fb;
+    /* 4.6:1 with the default white text (WCAG AA); was #5897fb (2.9:1) */
+    --vs-dropdown-option--active-bg: #136cfb;
     --vs-dropdown-option--active-color: #fff;
 
     /* Deselect State */
