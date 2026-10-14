@@ -2,6 +2,16 @@
 import { inject, ref, watch, nextTick } from 'vue'
 import { ComboBoxKey } from '@/keys'
 
+const props = withDefaults(
+  defineProps<{
+    /** Element to render, e.g. 'ul'. */
+    as?: string
+    /** Override visibility. Defaults to the combobox's open state. */
+    show?: boolean
+  }>(),
+  { as: 'div', show: undefined }
+)
+
 const ctx = inject(ComboBoxKey)
 if (!ctx) throw new Error('ComboBoxMenu must be used inside a ComboBox component')
 const menuEl = ref<HTMLElement>()
@@ -25,8 +35,9 @@ watch(() => ctx.typeAheadPointer.value, async (pointer) => {
 </script>
 
 <template>
-  <div
-    v-show="ctx.open.value"
+  <component
+    :is="as"
+    v-show="props.show ?? ctx.open.value"
     ref="menuEl"
     :id="`vs-${ctx.uid.value}-listbox`"
     role="listbox"
@@ -34,5 +45,5 @@ watch(() => ctx.typeAheadPointer.value, async (pointer) => {
     @mousedown.prevent
   >
     <slot />
-  </div>
+  </component>
 </template>

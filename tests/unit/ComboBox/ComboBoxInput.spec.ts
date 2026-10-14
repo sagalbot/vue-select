@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { h } from 'vue'
 import { ref, computed } from 'vue'
 import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
 import { ComboBoxKey } from '@/keys'
@@ -251,6 +252,56 @@ describe('ComboBoxInput', () => {
       await wrapper.find('input').trigger('blur')
       expect(ctx.setOpen).toHaveBeenCalledWith(false)
       expect(ctx.setSearch).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('input slot', () => {
+    function mountWithSlot(attrs = {}) {
+      const ctx = createMockContext()
+      const wrapper = mount(ComboBoxInput, {
+        attrs,
+        global: { provide: { [ComboBoxKey as symbol]: ctx } },
+        slots: {
+          input: ({ attributes, events }: { attributes: object; events: object }) =>
+            h('input', { class: 'custom', ...attributes, ...toListeners(events) }),
+        },
+      })
+      return { wrapper, ctx }
+    }
+
+    // v-on="events" equivalent for a render function
+    function toListeners(events: object) {
+      return Object.fromEntries(
+        Object.entries(events).map(([name, fn]) => [
+          'on' + name[0].toUpperCase() + name.slice(1),
+          fn,
+        ])
+      )
+    }
+
+    it('renders the slot instead of the default input, with combobox attributes', () => {
+      const { wrapper } = mountWithSlot()
+      const inputs = wrapper.findAll('input')
+      expect(inputs).toHaveLength(1)
+      expect(inputs[0].classes()).toContain('custom')
+      expect(inputs[0].attributes('role')).toBe('combobox')
+      expect(inputs[0].attributes('aria-controls')).toBe('vs-test-listbox')
+    })
+
+    it('passes events that drive the combobox', async () => {
+      const { wrapper, ctx } = mountWithSlot()
+      await wrapper.find('input').trigger('keydown', { key: 'ArrowDown' })
+      expect(ctx.typeAheadDown).toHaveBeenCalled()
+    })
+
+    it('includes attributes and listeners given to ComboBoxInput', async () => {
+      const onFocus = vi.fn()
+      const { wrapper, ctx } = mountWithSlot({ id: 'country', onFocus })
+      const input = wrapper.find('input')
+      expect(input.attributes('id')).toBe('country')
+      await input.trigger('focus')
+      expect(onFocus).toHaveBeenCalledTimes(1)
+      expect(ctx.setOpen).toHaveBeenCalledWith(true)
     })
   })
 })

@@ -81,4 +81,26 @@ describe('ComboBoxOption', () => {
     expect(wrapper.text()).toContain('highlighted:true')
     expect(wrapper.text()).toContain('disabled:false')
   })
+
+  it('renders the element given by as', () => {
+    const { wrapper } = mountOption({ as: 'li' })
+    expect(wrapper.element.tagName).toBe('LI')
+  })
+
+  it('mouseover highlights a selectable option', async () => {
+    const typeAheadPointer = ref(-1)
+    const { wrapper } = mountOption({ index: 3 }, { typeAheadPointer })
+    await wrapper.trigger('mouseover')
+    expect(typeAheadPointer.value).toBe(3)
+  })
+
+  it('mouseover does not highlight a disabled option', async () => {
+    const typeAheadPointer = ref(-1)
+    const { wrapper } = mountOption(
+      { index: 3 },
+      { typeAheadPointer, isOptionSelectable: () => false }
+    )
+    await wrapper.trigger('mouseover')
+    expect(typeAheadPointer.value).toBe(-1)
+  })
 })

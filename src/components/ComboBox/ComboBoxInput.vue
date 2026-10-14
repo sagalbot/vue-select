@@ -1,10 +1,22 @@
 <script setup lang="ts">
-import { inject, ref, computed } from 'vue'
+import { inject, ref, computed, useAttrs } from 'vue'
 import { ComboBoxKey } from '@/keys'
 import type { KeydownHandlers } from '@/types'
 
+defineOptions({ inheritAttrs: false })
+defineSlots<{
+  /** Content of the select-only element (`searchable: false`). */
+  default?: () => unknown
+  /** Render your own input: bind `attributes` and `events` (`v-bind`/`v-on`). */
+  input?: (props: {
+    attributes: Record<string, unknown>
+    events: Record<string, (e: Event) => void>
+  }) => unknown
+}>()
+
 const ctx = inject(ComboBoxKey)
 if (!ctx) throw new Error('ComboBoxInput must be used inside a ComboBox component')
+const attrs = useAttrs()
 const isComposing = ref(false)
 
 const ariaAttrs = computed(() => ({
@@ -33,6 +45,38 @@ const selectOnlyAttrs = computed(() => ({
   tabindex: ctx.disabled.value ? -1 : 0,
   'aria-disabled': ctx.disabled.value || undefined,
 }))
+
+const ownEvents: Record<string, (e: Event) => void> = {
+  input: (e) => onInput(e),
+  keydown: (e) => onKeydown(e as KeyboardEvent),
+  focus: () => onFocus(),
+  blur: () => onBlur(),
+  compositionstart: () => (isComposing.value = true),
+  compositionend: () => (isComposing.value = false),
+}
+
+// For the input slot: our attributes and handlers, merged with whatever
+// was passed to ComboBoxInput (`id`, `class`, `@focus`, ...).
+const slotProps = computed(() => {
+  const attributes: Record<string, unknown> = { ...inputAttrs.value }
+  const events = { ...ownEvents }
+  for (const [key, value] of Object.entries(attrs)) {
+    const match = /^on([A-Z].*)$/.exec(key)
+    if (!match || typeof value !== 'function') {
+      attributes[key] = value
+      continue
+    }
+    const name = match[1][0].toLowerCase() + match[1].slice(1)
+    const own = events[name]
+    events[name] = own
+      ? (e: Event) => {
+          own(e)
+          ;(value as (e: Event) => void)(e)
+        }
+      : (value as (e: Event) => void)
+  }
+  return { attributes, events }
+})
 
 function onInput(e: Event) {
   ctx.setSearch((e.target as HTMLInputElement).value)
@@ -142,9 +186,14 @@ function onBlur() {
 </script>
 
 <template>
+  <slot
+    v-if="ctx.searchable.value && $slots.input"
+    name="input"
+    v-bind="slotProps"
+  />
   <input
-    v-if="ctx.searchable.value"
-    v-bind="inputAttrs"
+    v-else-if="ctx.searchable.value"
+    v-bind="{ ...$attrs, ...inputAttrs }"
     @input="onInput"
     @keydown="onKeydown"
     @focus="onFocus"
@@ -154,7 +203,7 @@ function onBlur() {
   />
   <div
     v-else
-    v-bind="selectOnlyAttrs"
+    v-bind="{ ...$attrs, ...selectOnlyAttrs }"
     @keydown="onKeydown"
     @blur="onBlur"
   >

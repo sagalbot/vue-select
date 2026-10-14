@@ -5,9 +5,10 @@ import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
 import { ComboBoxKey } from '@/keys'
 import { createMockContext } from './mockContext'
 
-function mountMenu(ctxOverrides = {}, slotContent?: string) {
+function mountMenu(ctxOverrides = {}, slotContent?: string, props = {}) {
   const ctx = createMockContext(ctxOverrides)
   const wrapper = mount(ComboBoxMenu, {
+    props,
     global: {
       provide: { [ComboBoxKey as symbol]: ctx },
     },
@@ -46,5 +47,16 @@ describe('ComboBoxMenu', () => {
   it('renders slot content', () => {
     const { wrapper } = mountMenu({ open: ref(true) }, 'Test options')
     expect(wrapper.text()).toContain('Test options')
+  })
+
+  it('renders the element given by as', () => {
+    const { wrapper } = mountMenu({}, undefined, { as: 'ul' })
+    expect(wrapper.find('[role="listbox"]').element.tagName).toBe('UL')
+  })
+
+  it('show overrides the open state', () => {
+    const { wrapper } = mountMenu({ open: ref(true) }, undefined, { show: false })
+    const el = wrapper.find('[role="listbox"]').element as HTMLElement
+    expect(el.style.display).toBe('none')
   })
 })
