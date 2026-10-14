@@ -207,4 +207,20 @@ describe('ComboBoxInput', () => {
       expect(ctx.setOpen).not.toHaveBeenCalled()
     })
   })
+
+  describe('blur', () => {
+    it('closes and clears the search when clearSearchOnBlur is true', async () => {
+      const { wrapper, ctx } = mountInput({ clearSearchOnBlur: computed(() => true) })
+      await wrapper.find('input').trigger('blur')
+      expect(ctx.setOpen).toHaveBeenCalledWith(false)
+      expect(ctx.setSearch).toHaveBeenCalledWith('')
+    })
+
+    it('keeps the search when clearSearchOnBlur is false', async () => {
+      const { wrapper, ctx } = mountInput({ clearSearchOnBlur: computed(() => false) })
+      await wrapper.find('input').trigger('blur')
+      expect(ctx.setOpen).toHaveBeenCalledWith(false)
+      expect(ctx.setSearch).not.toHaveBeenCalled()
+    })
+  })
 })

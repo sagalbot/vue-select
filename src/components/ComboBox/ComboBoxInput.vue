@@ -137,7 +137,7 @@ function onFocus() {
 
 function onBlur() {
   ctx.setOpen(false)
-  if (ctx.searchable.value) ctx.setSearch('')
+  if (ctx.searchable.value && ctx.clearSearchOnBlur.value) ctx.setSearch('')
 }
 </script>
 

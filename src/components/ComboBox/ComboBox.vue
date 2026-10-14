@@ -18,6 +18,8 @@ const props = withDefaults(defineProps<ComboBoxProps>(), {
   label: 'label',
   loading: false,
   searchable: true,
+  // undefined = derive from clearSearchOnSelect and multiple
+  clearSearchOnBlur: undefined,
   // undefined = uncontrolled; bind `open` (or v-model:open) to control it
   open: undefined,
   deselectFromDropdown: false,

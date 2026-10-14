@@ -261,4 +261,17 @@ describe('ComboBox integration', () => {
     await input.trigger('keydown', { key: ',' })
     expect(wrapper.emitted('update:modelValue')).toEqual([[['new']]])
   })
+
+  it('multi-select keeps the search text on blur', async () => {
+    const wrapper = mount(TestSelect, {
+      props: { options: ['apple', 'banana'], multiple: true, modelValue: [] },
+    })
+    const input = wrapper.find('input')
+    await input.trigger('focus')
+    await input.setValue('ban')
+    await input.trigger('blur')
+    await waitForUpdate()
+    expect((input.element as HTMLInputElement).value).toBe('ban')
+    expect(isListboxVisible(wrapper)).toBe(false)
+  })
 })

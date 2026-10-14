@@ -95,6 +95,29 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('clearSearchOnBlur', () => {
+    it('defaults to true for single-select', () => {
+      expect(createComboBox().clearSearchOnBlur.value).toBe(true)
+    })
+
+    it('defaults to false for multi-select', () => {
+      expect(createComboBox({ multiple: true }).clearSearchOnBlur.value).toBe(false)
+    })
+
+    it('defaults to false when clearSearchOnSelect is false', () => {
+      expect(
+        createComboBox({ clearSearchOnSelect: false }).clearSearchOnBlur.value
+      ).toBe(false)
+    })
+
+    it('uses the prop when set', () => {
+      expect(
+        createComboBox({ multiple: true, clearSearchOnBlur: true }).clearSearchOnBlur.value
+      ).toBe(true)
+      expect(createComboBox({ clearSearchOnBlur: false }).clearSearchOnBlur.value).toBe(false)
+    })
+  })
+
   describe('searchable', () => {
     it('defaults to true', () => {
       expect(createComboBox().searchable.value).toBe(true)
@@ -115,6 +138,18 @@ describe('useComboBox', () => {
       const { search, setSearch } = createComboBox()
       setSearch('hello')
       expect(search.value).toBe('hello')
+    })
+
+    it('typing opens a closed dropdown', () => {
+      const { open, setSearch } = createComboBox()
+      setSearch('o')
+      expect(open.value).toBe(true)
+    })
+
+    it('clearing the search does not open the dropdown', () => {
+      const { open, setSearch } = createComboBox()
+      setSearch('')
+      expect(open.value).toBe(false)
     })
 
     it('isSearching reflects search state', () => {

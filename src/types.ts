@@ -33,6 +33,11 @@ export interface ComboBoxProps {
   clearable?: boolean
   closeOnSelect?: boolean
   clearSearchOnSelect?: boolean
+  /**
+   * Clear the search text when the input loses focus. Defaults to true for
+   * single-select when `clearSearchOnSelect` is true, otherwise false.
+   */
+  clearSearchOnBlur?: boolean
   disabled?: boolean
   open?: boolean
   label?: string
@@ -89,6 +94,7 @@ export interface ComboBoxContext {
   filterable: ComputedRef<boolean>
   searchable: ComputedRef<boolean>
   mapKeydown: (handlers: KeydownHandlers) => KeydownHandlers
+  clearSearchOnBlur: ComputedRef<boolean>
   clearable: ComputedRef<boolean>
   taggable: ComputedRef<boolean>
   placeholder: ComputedRef<string>

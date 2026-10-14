@@ -71,6 +71,11 @@ export function useComboBox(
   const multiple = computed(() => props.multiple ?? false)
   const filterable = computed(() => props.filterable ?? true)
   const searchable = computed(() => props.searchable ?? true)
+  const clearSearchOnBlur = computed(
+    () =>
+      props.clearSearchOnBlur ??
+      (props.clearSearchOnSelect !== false && !props.multiple)
+  )
   const clearable = computed(() => props.clearable ?? true)
   const taggable = computed(() => props.taggable ?? false)
   const placeholder = computed(() => props.placeholder ?? '')
@@ -218,6 +223,7 @@ export function useComboBox(
     search.value = value
     typeAheadPointer.value = -1
     emit('search', value, toggleLoading)
+    if (value && !open.value) setOpen(true)
   }
 
   // --- Selection ---
@@ -400,6 +406,7 @@ export function useComboBox(
     isOptionHighlighted,
     optionList,
     mapKeydown,
+    clearSearchOnBlur,
   }
 
   return context
