@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import { reactive } from 'vue'
 import { useComboBox } from '@/hooks/useComboBox'
 import type { OptionValue } from '@/types'
 
@@ -400,6 +401,49 @@ describe('useComboBox', () => {
       })
       deselect({ label: 'Canada', code: 'CA' })
       expect(emit).toHaveBeenCalledWith('update:modelValue', ['US'])
+    })
+
+    it('keeps the selected option after it leaves options', () => {
+      const canada = { label: 'Canada', code: 'CA' }
+      const props = reactive<Record<string, unknown>>({
+        options: [canada, { label: 'USA', code: 'US' }],
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
+        modelValue: 'CA',
+      })
+      const ctx = useComboBox(props, vi.fn())
+      expect(ctx.getOptionLabel(ctx.selectedValue.value[0])).toBe('Canada')
+
+      // e.g. an AJAX search replaced the options
+      props.options = [{ label: 'Mexico', code: 'MX' }]
+      expect(ctx.selectedValue.value).toEqual([canada])
+    })
+
+    it('keeps an option selected through the dropdown after options change', () => {
+      const mexico = { label: 'Mexico', code: 'MX' }
+      const props = reactive<Record<string, unknown>>({
+        options: [mexico],
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
+        multiple: true,
+        modelValue: [],
+      })
+      const ctx = useComboBox(props, (event: string, value: unknown) => {
+        if (event === 'update:modelValue') props.modelValue = value
+      })
+      ctx.select(mexico)
+      props.options = []
+      expect(ctx.selectedValue.value).toEqual([mexico])
+    })
+
+    it('falls back to the reduced value when the option was never seen', () => {
+      const ctx = useComboBox(
+        reactive({
+          options: [],
+          reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
+          modelValue: 'CA',
+        }),
+        vi.fn()
+      )
+      expect(ctx.selectedValue.value).toEqual(['CA'])
     })
 
     it('clearSelection emits null (single) or empty array (multi) with reduce', () => {

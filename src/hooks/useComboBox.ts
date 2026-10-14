@@ -17,6 +17,10 @@ export function useComboBox(
   const isLoading = ref(props.loading ?? false)
   const pushedTags = ref<OptionValue[]>([])
 
+  // Full option objects for reduced values, so a selection keeps its label
+  // after the option leaves `options` (e.g. AJAX search results change).
+  const knownOptions = new Map<string, OptionValue>()
+
   // useId() matches between server render and hydration
   const stableUid = getCurrentInstance() ? useId() : String(++uidCounter)
 
@@ -40,7 +44,13 @@ export function useComboBox(
 
     // When reduce is in use, modelValue contains reduced values.
     // Map them back to full option objects.
-    return values.map((val) => findOptionFromReducedValue(val) ?? val as OptionValue)
+    return values.map((val) => {
+      const key = JSON.stringify(val)
+      const option = findOptionFromReducedValue(val) ?? knownOptions.get(key)
+      if (option === undefined) return val as OptionValue
+      knownOptions.set(key, option)
+      return option
+    })
   })
 
   const isValueEmpty = computed(() => selectedValue.value.length === 0)
@@ -209,6 +219,7 @@ export function useComboBox(
 
     emit('option:selecting', option)
     const emitValue = props.reduce ? props.reduce(option) : option
+    if (props.reduce) knownOptions.set(JSON.stringify(emitValue), option)
     if (props.multiple) {
       if (!isOptionSelected(option)) {
         const current = Array.isArray(props.modelValue)
