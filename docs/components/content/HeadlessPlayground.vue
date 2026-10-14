@@ -13,6 +13,7 @@ const multiple = ref(false)
 const taggable = ref(false)
 const useReduce = ref(false)
 const deselectFromDropdown = ref(false)
+const searchable = ref(true)
 
 const value = ref<ModelValue>(null)
 const events = ref<string[]>([])
@@ -50,6 +51,9 @@ function log(name: string, ...args: unknown[]) {
         <input v-model="deselectFromDropdown" type="checkbox" />
         deselectFromDropdown
       </label>
+      <label class="flex items-center gap-2">
+        <input v-model="searchable" type="checkbox" /> searchable
+      </label>
     </div>
 
     <ComboBox
@@ -60,6 +64,7 @@ function log(name: string, ...args: unknown[]) {
       :taggable="taggable"
       :reduce="useReduce ? reduce : undefined"
       :deselect-from-dropdown="deselectFromDropdown"
+      :searchable="searchable"
       class="relative w-full max-w-md"
       @open="log('open')"
       @close="log('close')"
@@ -75,6 +80,7 @@ function log(name: string, ...args: unknown[]) {
           <PlaygroundSelected />
           <ComboBoxInput
             class="min-w-0 flex-1 bg-transparent py-1 text-slate-900 outline-none dark:text-white"
+            :class="{ 'h-8 cursor-pointer': !searchable }"
           />
           <ComboBoxClear class="px-1 text-slate-400 hover:text-slate-700">
             ✕
