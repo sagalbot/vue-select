@@ -180,6 +180,12 @@ describe('useComboBox', () => {
       expect(emit).toHaveBeenCalledWith('option:selected', 'one')
     })
 
+    it('clearSelection emits clear', () => {
+      const { clearSelection, emit } = createComboBox({ modelValue: 'one' })
+      clearSelection()
+      expect(emit).toHaveBeenCalledWith('clear')
+    })
+
     it('clearSelection resets to null and emits', () => {
       const { clearSelection, emit } = createComboBox({ modelValue: 'one' })
       clearSelection()
@@ -654,6 +660,8 @@ describe('useComboBox', () => {
       props.options = ['three']
       await nextTick()
       expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+      // clear is for the user clearing, not for resets
+      expect(emit).not.toHaveBeenCalledWith('clear')
     })
 
     it('clears to an empty array in multi-select', async () => {

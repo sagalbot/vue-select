@@ -323,8 +323,14 @@ export function useComboBox(
     emit('option:deselected', option)
   }
 
-  function clearSelection() {
+  function resetSelection() {
     emit('update:modelValue', props.multiple ? [] : null)
+  }
+
+  /** Clear the selection on the user's behalf (e.g. the clear button). */
+  function clearSelection() {
+    resetSelection()
+    emit('clear')
   }
 
   watch(
@@ -336,7 +342,7 @@ export function useComboBox(
         typeof reset === 'function'
           ? reset(newOptions ?? [], oldOptions ?? [], selectedValue.value)
           : reset
-      if (shouldReset) clearSelection()
+      if (shouldReset) resetSelection()
     }
   )
 

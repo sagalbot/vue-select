@@ -33,6 +33,7 @@ const emit = defineEmits<{
   'update:open': [value: boolean]
   open: []
   close: []
+  clear: []
   search: [search: string, toggleLoading: (value?: boolean) => void]
   'option:created': [option: unknown]
   'option:selecting': [option: unknown]

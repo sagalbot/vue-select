@@ -63,7 +63,7 @@ const TestSelect = defineComponent({
     searchable: { type: Boolean, default: true },
     mapKeydown: { type: Function, default: undefined },
   },
-  emits: ['update:modelValue', 'update:open'],
+  emits: ['update:modelValue', 'update:open', 'clear'],
   setup(props, { emit }) {
     return () =>
       h(
@@ -72,6 +72,7 @@ const TestSelect = defineComponent({
           ...props,
           'onUpdate:modelValue': (v: unknown) => emit('update:modelValue', v),
           'onUpdate:open': (v: boolean) => emit('update:open', v),
+          onClear: () => emit('clear'),
         },
         {
           default: () => [
@@ -309,5 +310,12 @@ describe('ComboBox integration', () => {
     await input.trigger('keydown', { key: 'ArrowDown' })
     const active = input.attributes('aria-activedescendant')
     expect(wrapper.find(`[id="${active}"]`).text()).toBe('blueberry')
+  })
+
+  it('clear button emits clear', async () => {
+    const wrapper = mount(TestSelect, { props: { options: ['a'], modelValue: 'a' } })
+    await wrapper.findAll('button').find((b) => b.text() === 'Clear')!.trigger('click')
+    expect(wrapper.emitted('clear')).toHaveLength(1)
+    expect(wrapper.emitted('update:modelValue')).toEqual([[null]])
   })
 })
