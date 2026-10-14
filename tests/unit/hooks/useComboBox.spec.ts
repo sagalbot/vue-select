@@ -572,6 +572,44 @@ describe('useComboBox', () => {
   })
 
   describe('typeAheadPointer', () => {
+    it('highlights the first match while typing, so Enter selects it', () => {
+      const { typeAheadPointer, setSearch, typeAheadSelect, emit } = createComboBox()
+      setSearch('t')
+      expect(typeAheadPointer.value).toBe(0)
+      typeAheadSelect()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', 'two')
+    })
+
+    it('skips unselectable options when highlighting the first match', () => {
+      const { typeAheadPointer, setSearch } = createComboBox({
+        selectable: (o: OptionValue) => o !== 'two',
+      })
+      setSearch('t')
+      expect(typeAheadPointer.value).toBe(1)
+    })
+
+    it('clears the highlight when nothing matches', () => {
+      const { typeAheadPointer, setSearch } = createComboBox()
+      setSearch('t')
+      setSearch('zzz')
+      expect(typeAheadPointer.value).toBe(-1)
+    })
+
+    it('highlights the selected option when opening', () => {
+      const { typeAheadPointer, setOpen } = createComboBox({ modelValue: 'three' })
+      setOpen(true)
+      expect(typeAheadPointer.value).toBe(2)
+    })
+
+    it('highlights the last selected option when opening a multi-select', () => {
+      const { typeAheadPointer, setOpen } = createComboBox({
+        multiple: true,
+        modelValue: ['three', 'one'],
+      })
+      setOpen(true)
+      expect(typeAheadPointer.value).toBe(0)
+    })
+
     it('starts at -1', () => {
       const { typeAheadPointer } = createComboBox()
       expect(typeAheadPointer.value).toBe(-1)

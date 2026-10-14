@@ -281,10 +281,11 @@ export function useComboBox(
   // --- Search ---
 
   function setSearch(value: string) {
-    search.value = value
-    typeAheadPointer.value = -1
-    emit('search', value, toggleLoading)
+    // Open first, so the highlight lands on the first match, not on the
+    // last selected option.
     if (value && !open.value) setOpen(true)
+    search.value = value
+    emit('search', value, toggleLoading)
   }
 
   // --- Selection ---
@@ -378,6 +379,33 @@ export function useComboBox(
   )
 
   // --- TypeAhead navigation ---
+
+  // As in v3: highlight the first selectable match whenever the list
+  // changes, so typing then Enter selects it.
+  watch(
+    filteredOptions,
+    (opts) => {
+      typeAheadPointer.value = opts.findIndex((option) => isOptionSelectable(option))
+    },
+    { flush: 'sync' }
+  )
+
+  // On open, and when the selection changes while open, highlight the
+  // last selected option (or nothing).
+  function typeAheadToLastSelected() {
+    const last = selectedValue.value[selectedValue.value.length - 1]
+    if (last === undefined) {
+      typeAheadPointer.value = -1
+      return
+    }
+    const key = getOptionKey(last)
+    typeAheadPointer.value = filteredOptions.value.findIndex(
+      (option) => getOptionKey(option) === key
+    )
+  }
+
+  watch(open, (isOpen) => isOpen && typeAheadToLastSelected(), { flush: 'sync' })
+  watch(selectedValue, () => open.value && typeAheadToLastSelected(), { flush: 'sync' })
 
   function typeAheadDown() {
     const opts = filteredOptions.value
