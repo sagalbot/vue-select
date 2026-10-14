@@ -1,4 +1,4 @@
-import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef, Ref, ShallowRef } from 'vue'
 
 /**
  * A single option can be a string, number, or object.
@@ -55,6 +55,12 @@ export interface ComboBoxProps {
   groupBy?: (option: OptionValue) => string | null | undefined
   /** In multi-select, remove selected options from the dropdown. */
   hideSelected?: boolean
+  /**
+   * Open the dropdown when the input receives focus (including focus from a
+   * click). Off by default: the dropdown opens on typing, Down Arrow, or
+   * the toggle button, as in the WAI-ARIA APG examples.
+   */
+  openOnFocus?: boolean
   disabled?: boolean
   open?: boolean
   label?: string
@@ -98,6 +104,8 @@ export interface ComboBoxProps {
  * Text for the accessible names `VueSelect` renders. Defaults are English.
  */
 export interface AriaLabels {
+  /** The toggle (open indicator) button. */
+  toggle?: string
   /** The search input. Only used when the input has no id, aria-label or aria-labelledby. */
   search?: string
   /** The clear button. */
@@ -151,6 +159,11 @@ export interface ComboBoxContext {
   searchable: ComputedRef<boolean>
   mapKeydown: (handlers: KeydownHandlers) => KeydownHandlers
   clearSearchOnBlur: ComputedRef<boolean>
+  openOnFocus: ComputedRef<boolean>
+  /** The element registered by ComboBoxInput (input or select-only element). */
+  inputEl: ShallowRef<HTMLElement | null>
+  /** Move focus to the input, e.g. after using the toggle button. */
+  focusInput: () => void
   groupedOptions: ComputedRef<OptionGroup[]>
   clearable: ComputedRef<boolean>
   taggable: ComputedRef<boolean>

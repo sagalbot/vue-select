@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h } from 'vue'
-import { ref, computed } from 'vue'
+import { ref, computed, shallowRef } from 'vue'
 import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
 import { ComboBoxKey } from '@/keys'
 import { createMockContext } from './mockContext'
@@ -186,11 +186,26 @@ describe('ComboBoxInput', () => {
     expect(ctx.setOpen).not.toHaveBeenCalled()
   })
 
-  it('click opens the dropdown', async () => {
-    const { wrapper, ctx } = mountInput({ open: ref(true) })
+  it('click does not open the dropdown', async () => {
+    const { wrapper, ctx } = mountInput()
+    await wrapper.find('input').trigger('click')
+    expect(ctx.setOpen).not.toHaveBeenCalled()
+    expect(ctx.toggleOpen).not.toHaveBeenCalled()
+  })
+
+  it('focus and click open the dropdown with openOnFocus', async () => {
+    const { wrapper, ctx } = mountInput({ openOnFocus: computed(() => true) })
+    await wrapper.find('input').trigger('focus')
+    expect(ctx.setOpen).toHaveBeenCalledWith(true)
+    ctx.setOpen = vi.fn()
     await wrapper.find('input').trigger('click')
     expect(ctx.setOpen).toHaveBeenCalledWith(true)
-    expect(ctx.toggleOpen).not.toHaveBeenCalled()
+  })
+
+  it('registers its element so the context can focus it', () => {
+    const inputEl = shallowRef<HTMLElement | null>(null)
+    const { wrapper } = mountInput({ inputEl })
+    expect(inputEl.value).toBe(wrapper.find('input').element)
   })
 
   it('is disabled when context is disabled', () => {
@@ -429,8 +444,7 @@ describe('ComboBoxInput', () => {
       expect(input.attributes('id')).toBe('country')
       await input.trigger('focus')
       expect(onFocus).toHaveBeenCalledTimes(1)
-      await input.trigger('click')
-      expect(ctx.setOpen).toHaveBeenCalledWith(true)
+      expect(ctx.inputEl.value).toBe(input.element)
     })
   })
 

@@ -24,3 +24,19 @@
 .vs--loading .vs__open-indicator {
     opacity: 0;
 }
+
+/* Toggle button wrapping the indicator */
+
+.vs__open-indicator-button {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.vs--disabled .vs__open-indicator-button {
+    cursor: var(--vs-disabled-cursor);
+}

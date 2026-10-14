@@ -1,4 +1,4 @@
-import { ref, computed, watch, getCurrentInstance, useId } from 'vue'
+import { ref, shallowRef, computed, watch, getCurrentInstance, useId } from 'vue'
 import type {
   ComboBoxProps,
   ComboBoxContext,
@@ -95,6 +95,12 @@ export function useComboBox(
   const multiple = computed(() => props.multiple ?? false)
   const filterable = computed(() => props.filterable ?? true)
   const searchable = computed(() => props.searchable ?? true)
+  const openOnFocus = computed(() => props.openOnFocus ?? false)
+  const inputEl = shallowRef<HTMLElement | null>(null)
+
+  function focusInput() {
+    inputEl.value?.focus()
+  }
   const clearSearchOnBlur = computed(
     () =>
       props.clearSearchOnBlur ??
@@ -537,6 +543,9 @@ export function useComboBox(
     mapKeydown,
     clearSearchOnBlur,
     groupedOptions,
+    openOnFocus,
+    inputEl,
+    focusInput,
   }
 
   return context

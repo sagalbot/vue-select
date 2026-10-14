@@ -47,8 +47,14 @@ const selectOnlyAttrs = computed(() => ({
   'aria-disabled': ctx.disabled.value || undefined,
 }))
 
+/** Register the rendered element so the context can focus it. */
+function setEl(el: unknown) {
+  ctx.inputEl.value = (el as HTMLElement | null) ?? null
+}
+
 const ownEvents: Record<string, (e: Event) => void> = {
   input: (e) => onInput(e),
+  focus: () => onFocus(),
   keydown: (e) => onKeydown(e as KeyboardEvent),
   click: () => onClick(),
   blur: () => onBlur(),
@@ -59,7 +65,7 @@ const ownEvents: Record<string, (e: Event) => void> = {
 // For the input slot: our attributes and handlers, merged with whatever
 // was passed to ComboBoxInput (`id`, `class`, `@focus`, ...).
 const slotProps = computed(() => {
-  const attributes: Record<string, unknown> = { ...inputAttrs.value }
+  const attributes: Record<string, unknown> = { ...inputAttrs.value, ref: setEl }
   const events = { ...ownEvents }
   for (const [key, value] of Object.entries(attrs)) {
     const match = /^on([A-Z].*)$/.exec(key)
@@ -240,12 +246,17 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
-// Focus alone does not open the dropdown (neither APG example does, and
-// opening on Tab interrupts screen readers announcing the field). A click
-// does: it opens the editable input, and toggles the select-only element.
+// By default neither focus nor a click opens the editable dropdown: typing,
+// Down Arrow or the toggle button do (WAI-ARIA APG; opening on Tab also
+// interrupts screen readers announcing the field). `openOnFocus` opts in.
+// The select-only element is the control itself, so a click toggles it.
+function onFocus() {
+  if (ctx.openOnFocus.value) ctx.setOpen(true)
+}
+
 function onClick() {
-  if (ctx.searchable.value) ctx.setOpen(true)
-  else ctx.toggleOpen()
+  if (!ctx.searchable.value) ctx.toggleOpen()
+  else if (ctx.openOnFocus.value) ctx.setOpen(true)
 }
 
 function onBlur() {
@@ -262,9 +273,11 @@ function onBlur() {
   />
   <input
     v-else-if="ctx.searchable.value"
+    :ref="setEl"
     v-bind="{ ...$attrs, ...inputAttrs }"
     @input="onInput"
     @keydown="onKeydown"
+    @focus="onFocus"
     @click="onClick"
     @blur="onBlur"
     @compositionstart="isComposing = true"
@@ -272,8 +285,10 @@ function onBlur() {
   />
   <div
     v-else
+    :ref="setEl"
     v-bind="{ ...$attrs, ...selectOnlyAttrs }"
     @keydown="onKeydown"
+    @focus="onFocus"
     @click="onClick"
     @blur="onBlur"
   >

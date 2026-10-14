@@ -32,15 +32,68 @@ describe('VueSelect (v4)', () => {
     })
   })
 
-  it('hides the decorative open indicator from assistive tech', () => {
-    const wrapper = mount(VueSelect, { props: { options: ['a'] } })
-    expect(wrapper.get('.vs__open-indicator').attributes('aria-hidden')).toBe('true')
+  describe('toggle button', () => {
+    it('is a labelled button outside the tab order that controls the listbox', () => {
+      const wrapper = mount(VueSelect, { props: { options: ['a'] } })
+      const button = wrapper.get('button.vs__open-indicator-button')
+      const listbox = wrapper.get('[role="listbox"]')
+      expect(button.attributes('aria-label')).toBe('Toggle options')
+      expect(button.attributes('tabindex')).toBe('-1')
+      expect(button.attributes('aria-controls')).toBe(listbox.attributes('id'))
+      expect(button.attributes('aria-expanded')).toBe('false')
+      // the icon inside is decorative
+      expect(wrapper.get('.vs__open-indicator').attributes('aria-hidden')).toBe('true')
+    })
+
+    it('toggles the dropdown and moves focus to the input', async () => {
+      const wrapper = mount(VueSelect, {
+        props: { options: ['a'] },
+        attachTo: document.body,
+      })
+      await press(wrapper.get('.vs__open-indicator-button'))
+      expect(wrapper.classes()).toContain('vs--open')
+      expect(wrapper.get('.vs__open-indicator-button').attributes('aria-expanded')).toBe('true')
+      expect(document.activeElement).toBe(wrapper.get('.vs__search').element)
+      await press(wrapper.get('.vs__open-indicator-button'))
+      expect(wrapper.classes()).not.toContain('vs--open')
+      wrapper.unmount()
+    })
+
+    it('takes its label from ariaLabels.toggle', () => {
+      const wrapper = mount(VueSelect, {
+        props: { options: ['a'], ariaLabels: { toggle: 'Optionen anzeigen' } },
+      })
+      expect(wrapper.get('.vs__open-indicator-button').attributes('aria-label')).toBe(
+        'Optionen anzeigen'
+      )
+    })
+
+    it('is not rendered in select-only mode, where the field itself toggles', () => {
+      const wrapper = mount(VueSelect, { props: { options: ['a'], searchable: false } })
+      expect(wrapper.find('.vs__open-indicator-button').exists()).toBe(false)
+      expect(wrapper.get('.vs__open-indicator').attributes('aria-hidden')).toBe('true')
+    })
   })
 
-  it('does not open when the input receives focus', async () => {
-    const wrapper = mount(VueSelect, { props: { options: ['a'] } })
-    await wrapper.get('.vs__search').trigger('focus')
-    expect(wrapper.classes()).not.toContain('vs--open')
+  describe('opening', () => {
+    it('does not open when the input is focused or clicked', async () => {
+      const wrapper = mount(VueSelect, { props: { options: ['a'] } })
+      await wrapper.get('.vs__search').trigger('focus')
+      await press(wrapper.get('.vs__search'))
+      expect(wrapper.classes()).not.toContain('vs--open')
+    })
+
+    it('opens on focus with openOnFocus', async () => {
+      const wrapper = mount(VueSelect, { props: { options: ['a'], openOnFocus: true } })
+      await wrapper.get('.vs__search').trigger('focus')
+      expect(wrapper.classes()).toContain('vs--open')
+    })
+
+    it('opens on typing', async () => {
+      const wrapper = mount(VueSelect, { props: { options: ['apple'] } })
+      await wrapper.get('.vs__search').setValue('ap')
+      expect(wrapper.classes()).toContain('vs--open')
+    })
   })
 
   describe('option groups', () => {
@@ -98,7 +151,7 @@ describe('VueSelect (v4)', () => {
         attachTo: document.body,
         global,
       })
-      await press(wrapper.get('.vs__search'))
+      await press(wrapper.get('.vs__open-indicator-button'))
       await nextTick()
 
       const menu = [...document.body.children].find((el) =>
@@ -121,7 +174,7 @@ describe('VueSelect (v4)', () => {
         attachTo: document.body,
         global,
       })
-      await press(wrapper.get('.vs__search'))
+      await press(wrapper.get('.vs__open-indicator-button'))
       await nextTick()
       wrapper.vm.open = false
       await nextTick()

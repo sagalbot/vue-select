@@ -36,9 +36,10 @@ describe('Scoped Slots', () => {
       expect(Select.get('.vs__selected').text()).toEqual('one')
     })
 
+    // v4: clicking the field opens only with openOnFocus (see Dropdown.spec)
     it('opens the dropdown when clicking an option in selected-option slot', () => {
       const Select = mountDefault(
-        { modelValue: 'one' },
+        { modelValue: 'one', openOnFocus: true },
         {
           slots: {
             'selected-option': (slotProps) =>

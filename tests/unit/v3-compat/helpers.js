@@ -22,12 +22,16 @@ export const mountDefault = (props = {}, options = {}) =>
 export const searchInput = (wrapper) => wrapper.get('.vs__search')
 
 /**
- * Focus the search input and click it, which opens the dropdown. (In v4,
- * focus alone does not open it, following the WAI-ARIA APG examples.)
+ * Focus the search input and open the dropdown. In v4 neither focus nor a
+ * click in the input opens it by default (WAI-ARIA APG): the toggle button
+ * does. Select-only fields toggle on click.
  */
 export const searchFocus = async (wrapper) => {
-  await searchInput(wrapper).trigger('focus')
-  await searchInput(wrapper).trigger('click')
+  const input = searchInput(wrapper)
+  await input.trigger('focus')
+  const toggle = wrapper.find('.vs__open-indicator-button')
+  if (toggle.exists()) await toggle.trigger('click')
+  else await input.trigger('click')
   await nextTick()
 }
 

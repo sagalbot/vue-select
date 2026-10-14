@@ -111,8 +111,8 @@ describe('ComboBox integration', () => {
       props: { options: ['one', 'two', 'three'] },
     })
 
-    // Click the input to open (focus alone doesn't)
-    await wrapper.find('input').trigger('click')
+    // The toggle button opens it (clicking or focusing the input doesn't)
+    await wrapper.find('button').trigger('click')
     await waitForUpdate()
     expect(isListboxVisible(wrapper)).toBe(true)
 
@@ -161,7 +161,7 @@ describe('ComboBox integration', () => {
       props: { options: ['one', 'two', 'three'] },
     })
 
-    await wrapper.find('input').trigger('click')
+    await wrapper.find('button').trigger('click')
     await waitForUpdate()
     expect(isListboxVisible(wrapper)).toBe(true)
 
@@ -221,7 +221,8 @@ describe('ComboBox integration', () => {
     await wrapper.find('button').trigger('click')
     await waitForUpdate()
     expect(isListboxVisible(wrapper)).toBe(false)
-    expect(wrapper.emitted('update:open')).toEqual([[true], [true]])
+    // only the toggle button asks to open; clicking the input doesn't
+    expect(wrapper.emitted('update:open')).toEqual([[true]])
     wrapper.unmount()
   })
 

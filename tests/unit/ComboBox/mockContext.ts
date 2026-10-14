@@ -1,5 +1,5 @@
 import { vi } from 'vitest'
-import { ref, computed } from 'vue'
+import { ref, computed, shallowRef } from 'vue'
 import type { ComboBoxContext, OptionValue } from '@/types'
 
 /**
@@ -23,6 +23,9 @@ export function createMockContext(
     mapKeydown: (map) => map,
     clearSearchOnBlur: computed(() => true),
     groupedOptions: computed(() => []),
+    openOnFocus: computed(() => false),
+    inputEl: shallowRef(null),
+    focusInput: vi.fn(),
     clearable: computed(() => true),
     taggable: computed(() => false),
     placeholder: computed(() => ''),

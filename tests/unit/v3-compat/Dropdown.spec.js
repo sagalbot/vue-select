@@ -37,39 +37,44 @@ describe('Toggling Dropdown', () => {
     expect(Select.vm.open).toEqual(false)
   })
 
-  it('should open the dropdown when the el is clicked', async () => {
-    Select = selectWithProps({
-      modelValue: [{ label: 'one' }],
-      options: [{ label: 'one' }],
-    })
+  // v4 change: clicking the field focuses the input without opening the
+  // dropdown; the toggle button opens it (WAI-ARIA APG / Headless UI model).
+  // `openOnFocus` restores v3's click-to-open.
+  it('focuses without opening when the el is clicked', async () => {
+    Select = selectWithProps(
+      { modelValue: [{ label: 'one' }], options: [{ label: 'one' }] },
+      { attachTo: document.body }
+    )
 
     await press(Select, '.vs__search')
-    expect(isOpen(Select)).toEqual(true)
+    await mousedown(Select, '.vs__selected')
+    expect(isOpen(Select)).toEqual(false)
+    expect(document.activeElement).toBe(searchInput(Select).element)
   })
 
-  it('should open the dropdown when the selected tag is clicked', async () => {
-    Select = selectWithProps({
-      modelValue: [{ label: 'one' }],
-      options: [{ label: 'one' }],
-    })
+  it('should open the dropdown when the el is clicked with openOnFocus', async () => {
+    Select = selectWithProps(
+      { modelValue: [{ label: 'one' }], options: [{ label: 'one' }], openOnFocus: true },
+      { attachTo: document.body }
+    )
 
     await mousedown(Select, '.vs__selected')
     expect(isOpen(Select)).toEqual(true)
   })
 
-  it('can close the dropdown when the el is clicked', async () => {
+  it('can open and close the dropdown with the toggle button', async () => {
     Select = selectWithProps({}, { attachTo: document.body })
     const input = searchInput(Select).element
 
     // First click opens and focuses the search input
-    await mousedown(Select, '.vs__dropdown-toggle')
+    await press(Select, '.vs__open-indicator-button')
     expect(isOpen(Select)).toEqual(true)
     expect(document.activeElement).toBe(input)
 
-    // Second click blurs the search input, which closes the dropdown
-    await mousedown(Select, '.vs__dropdown-toggle')
-    expect(document.activeElement).not.toBe(input)
+    // Second click closes it, keeping focus in the input
+    await press(Select, '.vs__open-indicator-button')
     expect(isOpen(Select)).toEqual(false)
+    expect(document.activeElement).toBe(input)
   })
 
   it('closes the dropdown when an option is selected, multiple is true, and closeOnSelect option is true', async () => {
@@ -129,14 +134,19 @@ describe('Toggling Dropdown', () => {
 
   // v4 change (accessibility): focus alone no longer opens the dropdown,
   // following the WAI-ARIA APG combobox examples. A click opens it.
-  it('emits search:focus on focus without opening, and opens on click', async () => {
+  it('emits search:focus on focus without opening', async () => {
     Select = selectWithProps()
 
     await searchInput(Select).trigger('focus')
     expect(Select.emitted('search:focus')).toHaveLength(1)
     expect(isOpen(Select)).toEqual(false)
+  })
 
-    await searchInput(Select).trigger('click')
+  it('opens on focus with openOnFocus', async () => {
+    Select = selectWithProps({ openOnFocus: true })
+
+    await searchInput(Select).trigger('focus')
+    expect(Select.emitted('search:focus')).toHaveLength(1)
     expect(isOpen(Select)).toEqual(true)
   })
 
@@ -205,7 +215,7 @@ describe('Toggling Dropdown', () => {
       options: ['one'],
     })
 
-    await press(Select, '.vs__search')
+    await press(Select, '.vs__open-indicator-button')
 
     expect(Select.emitted('update:open')).toEqual([[true]])
     expect(Select.vm.open).toEqual(false)

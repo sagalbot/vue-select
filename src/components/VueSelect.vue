@@ -20,6 +20,7 @@ import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
 import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
 import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
 import ComboBoxGroup from '@/components/ComboBox/ComboBoxGroup.vue'
+import ComboBoxButton from '@/components/ComboBox/ComboBoxButton.vue'
 import Deselect from '@/components/Deselect.vue'
 import OpenIndicator from '@/components/OpenIndicator.vue'
 import type { CalculatePosition, OptionValue, VueSelectProps } from '@/types'
@@ -41,6 +42,7 @@ const props = withDefaults(defineProps<VueSelectProps>(), {
   resetOnOptionsChange: false,
   searchable: true,
   hideSelected: false,
+  openOnFocus: false,
   // undefined = uncontrolled; bind `open` (or v-model:open) to control it
   open: undefined,
   // undefined = derive from clearSearchOnSelect and multiple
@@ -94,6 +96,7 @@ function normalizeOptionForSlot(option: OptionValue) {
 const label = (option: OptionValue) => ctx.getOptionLabel(option)
 
 const clearLabel = computed(() => props.ariaLabels.clear ?? 'Clear Selected')
+const toggleLabel = computed(() => props.ariaLabels.toggle ?? 'Toggle options')
 
 function deselectLabel(option: OptionValue) {
   return props.ariaLabels.deselect
@@ -152,33 +155,27 @@ const openIndicatorAttrs = {
 // --- Interaction ---
 
 function searchEl(): HTMLElement | null {
-  return toggleEl.value?.querySelector<HTMLElement>('[role="combobox"]') ?? null
+  return ctx.inputEl.value
 }
 
 /**
- * Clicking anywhere on the toggle opens and focuses; clicking it again
- * closes. Clicks on the search input itself are handled by ComboBoxInput
- * (opens the editable input, toggles the select-only one). Deselect and
- * clear buttons handle their own clicks.
+ * Clicks on the field around the input. Editable: focus the input; the
+ * dropdown opens from typing, Down Arrow or the toggle button (or here,
+ * with openOnFocus). Select-only: the whole field is the control, so a
+ * click toggles. Clicks on the input itself are handled by ComboBoxInput;
+ * the toggle, clear and deselect buttons handle their own.
  */
 function onToggleMousedown(event: MouseEvent) {
   const target = event.target as HTMLElement
   const input = searchEl()
 
-  if (target.closest('.vs__deselect, .vs__clear')) {
-    event.preventDefault()
-    return
-  }
-
   if (target === input) return
   event.preventDefault()
+  if (props.disabled || target.closest('button')) return
 
-  if (ctx.open.value) {
-    input?.blur()
-  } else if (!props.disabled) {
-    ctx.setOpen(true)
-    input?.focus()
-  }
+  input?.focus()
+  if (!ctx.searchable.value) ctx.toggleOpen()
+  else if (ctx.openOnFocus.value) ctx.setOpen(true)
 }
 
 // --- Teleported dropdown positioning ---
@@ -326,7 +323,18 @@ defineExpose({
           <slot name="clear"><Deselect /></slot>
         </button>
 
-        <slot name="open-indicator" :attributes="openIndicatorAttrs">
+        <ComboBoxButton
+          v-if="ctx.searchable.value"
+          class="vs__open-indicator-button"
+          :aria-label="toggleLabel"
+          :title="toggleLabel"
+        >
+          <slot name="open-indicator" :attributes="openIndicatorAttrs">
+            <OpenIndicator v-bind="openIndicatorAttrs" />
+          </slot>
+        </ComboBoxButton>
+        <!-- Select-only: the whole field toggles; the indicator is decoration -->
+        <slot v-else name="open-indicator" :attributes="openIndicatorAttrs">
           <OpenIndicator v-bind="openIndicatorAttrs" />
         </slot>
 

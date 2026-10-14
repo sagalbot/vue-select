@@ -32,6 +32,17 @@ describe('ComboBoxButton', () => {
     expect(wrapper.attributes('aria-controls')).toBe('vs-test-listbox')
   })
 
+  it('is out of the tab order', () => {
+    const { wrapper } = mountButton()
+    expect(wrapper.attributes('tabindex')).toBe('-1')
+  })
+
+  it('click moves focus to the input', async () => {
+    const { wrapper, ctx } = mountButton()
+    await wrapper.trigger('click')
+    expect(ctx.focusInput).toHaveBeenCalled()
+  })
+
   it('click calls toggleOpen', async () => {
     const { wrapper, ctx } = mountButton()
     await wrapper.trigger('click')
