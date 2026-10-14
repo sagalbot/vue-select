@@ -146,7 +146,12 @@ Nextcloud forked v3 in 2023, ported it to Vue 3, and shipped `@nextcloud/vue-sel
 | `a7ccfe1` | `limit` prop caps rendered options | Prefer virtual scrolling (T25); a `filter` slice already does this |
 | `9bfce3f` | Teleported dropdown width off by a scrollbar | Not applicable: v4 measures the toggle, and the menu is never inside the scroll container |
 
-## Phase 3: Compatibility harness (in progress)
+## Phase 3: Compatibility harness (done 2026-10-14, one open decision)
+
+Result: the v3 suite (164 tests) runs against `VueSelect` as 164 tests: 163 pass, 1 skipped (below). Two `noDrop` tests with no v4 equivalent were removed, one Escape test was split in two, and one test v3 had commented out for a Vue 2 bug was revived. Differences found and resolved:
+- Fixed to match v3: deselect events for unselected options, switching `multiple` clears the value, tagging filters with `filterable: false`, `null` as a reduced value, the missing-label warning, arrow keys on a closed dropdown.
+- Kept as intended v4 behavior (tests now assert it): Escape keeps focus; `vs--searching` without `noDrop`.
+- **Open:** v4 arrow keys wrap around at the ends of the list; v3 stopped. `TypeAhead.spec.js` keeps the v3 expectation skipped until decided.
 
 The v3 specs are copied to `tests/unit/v3-compat/` and rewritten to use only the public interface (props, events, slots, DOM, template-ref API) through `tests/unit/v3-compat/helpers.js`. Tests that still fail on a real behavior difference are skipped with a `// V4-DIFF:` comment until the component is fixed. The original `tests/unit/*.spec.js` keep testing `Select.vue` until the cutover.
 
