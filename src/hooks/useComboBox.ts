@@ -218,7 +218,16 @@ export function useComboBox(
   }
 
   function deselect(option: OptionValue) {
+    if (!isOptionSelected(option)) return
+
     emit('option:deselecting', option)
+
+    if (!props.multiple) {
+      emit('update:modelValue', null)
+      emit('option:deselected', option)
+      return
+    }
+
     const current = Array.isArray(props.modelValue)
       ? [...props.modelValue]
       : []

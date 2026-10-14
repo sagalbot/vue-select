@@ -88,6 +88,30 @@ describe('useComboBox', () => {
       clearSelection()
       expect(emit).toHaveBeenCalledWith('update:modelValue', null)
     })
+
+    it('deselect emits null', () => {
+      const { deselect, emit } = createComboBox({ modelValue: 'one' })
+      deselect('one')
+      expect(emit).toHaveBeenCalledWith('option:deselecting', 'one')
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+      expect(emit).toHaveBeenCalledWith('option:deselected', 'one')
+    })
+
+    it('deselect emits null with reduce', () => {
+      const { deselect, emit } = createComboBox({
+        options: [{ label: 'Canada', code: 'CA' }],
+        reduce: (opt: OptionValue) => (opt as Record<string, unknown>).code,
+        modelValue: 'CA',
+      })
+      deselect({ label: 'Canada', code: 'CA' })
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+
+    it('deselect ignores an option that is not selected', () => {
+      const { deselect, emit } = createComboBox({ modelValue: 'one' })
+      deselect('two')
+      expect(emit).not.toHaveBeenCalled()
+    })
   })
 
   describe('selection - multiple', () => {
