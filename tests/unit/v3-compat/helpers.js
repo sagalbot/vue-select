@@ -21,9 +21,13 @@ export const mountDefault = (props = {}, options = {}) =>
 /** The search input (or select-only element). */
 export const searchInput = (wrapper) => wrapper.get('.vs__search')
 
-/** Focus the search input, which opens the dropdown. */
+/**
+ * Focus the search input and click it, which opens the dropdown. (In v4,
+ * focus alone does not open it, following the WAI-ARIA APG examples.)
+ */
 export const searchFocus = async (wrapper) => {
   await searchInput(wrapper).trigger('focus')
+  await searchInput(wrapper).trigger('click')
   await nextTick()
 }
 

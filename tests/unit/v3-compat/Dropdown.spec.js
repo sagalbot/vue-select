@@ -16,6 +16,12 @@ const mousedown = async (wrapper, selector) => {
   await nextTick()
 }
 
+// A real click on an element: mousedown, then click
+const press = async (wrapper, selector) => {
+  await mousedown(wrapper, selector)
+  await wrapper.get(selector).trigger('click')
+}
+
 describe('Toggling Dropdown', () => {
   let Select
   afterEach(() => {
@@ -37,7 +43,7 @@ describe('Toggling Dropdown', () => {
       options: [{ label: 'one' }],
     })
 
-    await mousedown(Select, '.vs__search')
+    await press(Select, '.vs__search')
     expect(isOpen(Select)).toEqual(true)
   })
 
@@ -121,13 +127,17 @@ describe('Toggling Dropdown', () => {
     expect(Select.emitted('search:blur')).toHaveLength(1)
   })
 
-  it('will open the dropdown and emit the search:focus event from onSearchFocus', async () => {
+  // v4 change (accessibility): focus alone no longer opens the dropdown,
+  // following the WAI-ARIA APG combobox examples. A click opens it.
+  it('emits search:focus on focus without opening, and opens on click', async () => {
     Select = selectWithProps()
 
-    await searchFocus(Select)
-
-    expect(isOpen(Select)).toEqual(true)
+    await searchInput(Select).trigger('focus')
     expect(Select.emitted('search:focus')).toHaveLength(1)
+    expect(isOpen(Select)).toEqual(false)
+
+    await searchInput(Select).trigger('click')
+    expect(isOpen(Select)).toEqual(true)
   })
 
   it('will close the dropdown on escape, if search is empty', async () => {
@@ -165,6 +175,12 @@ describe('Toggling Dropdown', () => {
 
     await typeSearch(Select, 'foo')
     expect(Select.vm.search).toEqual('foo')
+
+    // v4 change (WAI-ARIA APG): the first Escape closes the dropdown, a
+    // second one clears the search text. v3 cleared the text first.
+    await pressKey(Select, 'Escape')
+    expect(isOpen(Select)).toEqual(false)
+    expect(Select.vm.search).toEqual('foo')
     await pressKey(Select, 'Escape')
 
     expect(Select.vm.search).toEqual('')
@@ -189,7 +205,7 @@ describe('Toggling Dropdown', () => {
       options: ['one'],
     })
 
-    await mousedown(Select, '.vs__search')
+    await press(Select, '.vs__search')
 
     expect(Select.emitted('update:open')).toEqual([[true]])
     expect(Select.vm.open).toEqual(false)

@@ -50,7 +50,7 @@ const selectOnlyAttrs = computed(() => ({
 const ownEvents: Record<string, (e: Event) => void> = {
   input: (e) => onInput(e),
   keydown: (e) => onKeydown(e as KeyboardEvent),
-  focus: () => onFocus(),
+  click: () => onClick(),
   blur: () => onBlur(),
   compositionstart: () => (isComposing.value = true),
   compositionend: () => (isComposing.value = false),
@@ -92,18 +92,38 @@ function openOr(whenOpen: () => void) {
   }
 }
 
+/**
+ * Open a closed dropdown. Opening highlights the selected option; with
+ * nothing selected, highlight `fallback` (unless Alt is held, which opens
+ * without moving the highlight).
+ */
+function openThen(e: KeyboardEvent, fallback: () => void) {
+  ctx.setOpen(true)
+  if (!e.altKey && ctx.typeAheadPointer.value === -1) fallback()
+}
+
+// Editable combobox, following the WAI-ARIA APG "List Autocomplete" example.
 const searchHandlers: KeydownHandlers = {
-  // On a closed dropdown, arrows only open it (the highlight goes to the
-  // selected option); the next press moves.
-  ArrowDown: openOr(() => ctx.typeAheadDown()),
-  ArrowUp: openOr(() => ctx.typeAheadUp()),
+  ArrowDown: (e) => {
+    e.preventDefault()
+    if (ctx.open.value) ctx.typeAheadDown()
+    else openThen(e, ctx.typeAheadFirst)
+  },
+  ArrowUp: (e) => {
+    e.preventDefault()
+    if (ctx.open.value) ctx.typeAheadUp()
+    else openThen(e, ctx.typeAheadLast)
+  },
   Enter: (e) => {
     e.preventDefault()
-    if (ctx.open.value) ctx.typeAheadSelect()
-  },
-  Escape: () => {
-    if (ctx.isSearching.value) ctx.setSearch('')
+    if (!ctx.open.value) return
+    if (ctx.typeAheadPointer.value > -1) ctx.typeAheadSelect()
     else ctx.setOpen(false)
+  },
+  // Close first; once closed, clear the search text.
+  Escape: () => {
+    if (ctx.open.value) ctx.setOpen(false)
+    else if (ctx.isSearching.value) ctx.setSearch('')
   },
   Backspace: () => {
     if (!ctx.search.value && !ctx.isValueEmpty.value && ctx.clearable.value) {
@@ -119,16 +139,64 @@ const searchHandlers: KeydownHandlers = {
   },
 }
 
+/** Move the highlight `steps` options without wrapping. */
+function step(steps: number, down: boolean) {
+  for (let i = 0; i < steps; i++) {
+    if (down) ctx.typeAheadDown(false)
+    else ctx.typeAheadUp(false)
+  }
+}
+
+const PAGE_SIZE = 10
+
+// Select-only combobox, following the WAI-ARIA APG "Select-Only" example.
+// The highlight does not wrap at the ends.
 const selectOnlyHandlers: KeydownHandlers = {
-  ArrowDown: searchHandlers.ArrowDown,
-  ArrowUp: searchHandlers.ArrowUp,
+  ArrowDown: openOr(() => ctx.typeAheadDown(false)),
+  ArrowUp: (e) => {
+    e.preventDefault()
+    if (!ctx.open.value) {
+      ctx.setOpen(true)
+      ctx.typeAheadFirst()
+    } else if (e.altKey) {
+      ctx.typeAheadSelect()
+      ctx.setOpen(false)
+    } else {
+      ctx.typeAheadUp(false)
+    }
+  },
+  Home: (e) => {
+    e.preventDefault()
+    ctx.setOpen(true)
+    ctx.typeAheadFirst()
+  },
+  End: (e) => {
+    e.preventDefault()
+    ctx.setOpen(true)
+    ctx.typeAheadLast()
+  },
+  PageDown: (e) => {
+    if (!ctx.open.value) return
+    e.preventDefault()
+    step(PAGE_SIZE, true)
+  },
+  PageUp: (e) => {
+    if (!ctx.open.value) return
+    e.preventDefault()
+    step(PAGE_SIZE, false)
+  },
   Enter: openOr(() => ctx.typeAheadSelect()),
   ' ': openOr(() => ctx.typeAheadSelect()),
+  // Select the highlighted option and let focus move on
+  Tab: () => {
+    if (ctx.open.value) ctx.typeAheadSelect()
+  },
   Escape: () => ctx.setOpen(false),
 }
 
-// Type-to-highlight for select-only mode: typed characters within
-// TYPEAHEAD_RESET_MS of each other build up a prefix to match.
+// Type-to-highlight for select-only mode: characters typed within
+// TYPEAHEAD_RESET_MS of each other build up a prefix to match. Repeating
+// one character cycles through the options starting with it.
 const TYPEAHEAD_RESET_MS = 500
 let typed = ''
 let lastTypedAt = 0
@@ -138,12 +206,14 @@ function highlightByTypedText(char: string) {
   typed = now - lastTypedAt > TYPEAHEAD_RESET_MS ? char : typed + char
   lastTypedAt = now
 
-  const options = ctx.filteredOptions.value
-  const prefix = typed.toLocaleLowerCase()
-  // A new prefix searches after the highlighted option; a longer one
-  // re-checks the highlighted option first.
-  const start = typed.length === 1 ? ctx.typeAheadPointer.value + 1 : Math.max(ctx.typeAheadPointer.value, 0)
+  const repeated = [...typed].every((c) => c === typed[0])
+  const prefix = (repeated ? typed[0] : typed).toLocaleLowerCase()
+  // A single (or repeated) character searches after the highlighted
+  // option; a longer prefix re-checks the highlighted option first.
+  const pointer = ctx.typeAheadPointer.value
+  const start = repeated ? pointer + 1 : Math.max(pointer, 0)
 
+  const options = ctx.filteredOptions.value
   for (let i = 0; i < options.length; i++) {
     const index = (start + i) % options.length
     const option = options[index]
@@ -151,8 +221,8 @@ function highlightByTypedText(char: string) {
       ctx.isOptionSelectable(option) &&
       ctx.getOptionLabel(option).toLocaleLowerCase().startsWith(prefix)
     ) {
-      ctx.typeAheadPointer.value = index
       if (!ctx.open.value) ctx.setOpen(true)
+      ctx.typeAheadPointer.value = index
       return
     }
   }
@@ -170,8 +240,12 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
-function onFocus() {
+// Focus alone does not open the dropdown (neither APG example does, and
+// opening on Tab interrupts screen readers announcing the field). A click
+// does: it opens the editable input, and toggles the select-only element.
+function onClick() {
   if (ctx.searchable.value) ctx.setOpen(true)
+  else ctx.toggleOpen()
 }
 
 function onBlur() {
@@ -191,7 +265,7 @@ function onBlur() {
     v-bind="{ ...$attrs, ...inputAttrs }"
     @input="onInput"
     @keydown="onKeydown"
-    @focus="onFocus"
+    @click="onClick"
     @blur="onBlur"
     @compositionstart="isComposing = true"
     @compositionend="isComposing = false"
@@ -200,6 +274,7 @@ function onBlur() {
     v-else
     v-bind="{ ...$attrs, ...selectOnlyAttrs }"
     @keydown="onKeydown"
+    @click="onClick"
     @blur="onBlur"
   >
     <slot />

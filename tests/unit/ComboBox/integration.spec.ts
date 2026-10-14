@@ -111,8 +111,8 @@ describe('ComboBox integration', () => {
       props: { options: ['one', 'two', 'three'] },
     })
 
-    // Focus input to open
-    await wrapper.find('input').trigger('focus')
+    // Click the input to open (focus alone doesn't)
+    await wrapper.find('input').trigger('click')
     await waitForUpdate()
     expect(isListboxVisible(wrapper)).toBe(true)
 
@@ -161,7 +161,7 @@ describe('ComboBox integration', () => {
       props: { options: ['one', 'two', 'three'] },
     })
 
-    await wrapper.find('input').trigger('focus')
+    await wrapper.find('input').trigger('click')
     await waitForUpdate()
     expect(isListboxVisible(wrapper)).toBe(true)
 
@@ -217,7 +217,7 @@ describe('ComboBox integration', () => {
       props: { options: ['a', 'b'], open: false },
       attachTo: document.body,
     })
-    await wrapper.find('input').trigger('focus')
+    await wrapper.find('input').trigger('click')
     await wrapper.find('button').trigger('click')
     await waitForUpdate()
     expect(isListboxVisible(wrapper)).toBe(false)

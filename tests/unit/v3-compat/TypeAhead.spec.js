@@ -51,9 +51,23 @@ describe('Moving the Typeahead Pointer', () => {
     expect(highlightedIndex(Select)).toEqual(2)
   })
 
-  // V4-DIFF: v3 kept the pointer on the last option on ArrowDown; v4 wraps around to the first option (pointer 0)
-  it.skip('should not move the pointer past the end of the list', async () => {
+  // v4 change (WAI-ARIA APG): in the editable combobox the highlight wraps
+  // from the last option to the first, as in the APG "List Autocomplete"
+  // example. v3 stopped at the end.
+  it('wraps from the last option to the first', async () => {
     const Select = mountDefault()
+
+    await searchFocus(Select)
+    await hoverOption(Select, 2)
+    expect(highlightedIndex(Select)).toEqual(2)
+
+    await pressKey(Select, 'ArrowDown')
+    expect(highlightedIndex(Select)).toEqual(0)
+  })
+
+  // The select-only combobox stops at the end, as in the APG example.
+  it('does not move the pointer past the end of the list when not searchable', async () => {
+    const Select = mountDefault({ searchable: false })
 
     await searchFocus(Select)
     await hoverOption(Select, 2)

@@ -72,20 +72,65 @@ describe('ComboBoxInput', () => {
     expect(ctx.typeAheadUp).toHaveBeenCalled()
   })
 
-  it('Enter calls typeAheadSelect when open', async () => {
-    const { wrapper, ctx } = mountInput({ open: ref(true) })
+  it('Enter calls typeAheadSelect when open with an option highlighted', async () => {
+    const { wrapper, ctx } = mountInput({ open: ref(true), typeAheadPointer: ref(0) })
     await wrapper.find('input').trigger('keydown', { key: 'Enter' })
     expect(ctx.typeAheadSelect).toHaveBeenCalled()
   })
 
-  it('Escape clears search when searching', async () => {
-    const search = ref('hello')
+  it('Enter closes the dropdown when nothing is highlighted', async () => {
+    const { wrapper, ctx } = mountInput({ open: ref(true) })
+    await wrapper.find('input').trigger('keydown', { key: 'Enter' })
+    expect(ctx.typeAheadSelect).not.toHaveBeenCalled()
+    expect(ctx.setOpen).toHaveBeenCalledWith(false)
+  })
+
+  it('Escape closes an open dropdown and keeps the search text', async () => {
     const { wrapper, ctx } = mountInput({
-      search,
-      isSearching: computed(() => search.value.length > 0),
+      open: ref(true),
+      search: ref('hello'),
+      isSearching: computed(() => true),
+    })
+    await wrapper.find('input').trigger('keydown', { key: 'Escape' })
+    expect(ctx.setOpen).toHaveBeenCalledWith(false)
+    expect(ctx.setSearch).not.toHaveBeenCalled()
+  })
+
+  it('Escape clears the search text once the dropdown is closed', async () => {
+    const { wrapper, ctx } = mountInput({
+      search: ref('hello'),
+      isSearching: computed(() => true),
     })
     await wrapper.find('input').trigger('keydown', { key: 'Escape' })
     expect(ctx.setSearch).toHaveBeenCalledWith('')
+  })
+
+  it('ArrowDown on a closed dropdown with nothing selected highlights the first option', async () => {
+    const { wrapper, ctx } = mountInput()
+    await wrapper.find('input').trigger('keydown', { key: 'ArrowDown' })
+    expect(ctx.typeAheadFirst).toHaveBeenCalled()
+  })
+
+  it('ArrowUp on a closed dropdown with nothing selected highlights the last option', async () => {
+    const { wrapper, ctx } = mountInput()
+    await wrapper.find('input').trigger('keydown', { key: 'ArrowUp' })
+    expect(ctx.setOpen).toHaveBeenCalledWith(true)
+    expect(ctx.typeAheadLast).toHaveBeenCalled()
+  })
+
+  it('ArrowDown on a closed dropdown keeps the selected option highlighted', async () => {
+    // opening highlighted the selected option (pointer 1)
+    const { wrapper, ctx } = mountInput({ typeAheadPointer: ref(1) })
+    await wrapper.find('input').trigger('keydown', { key: 'ArrowDown' })
+    expect(ctx.typeAheadFirst).not.toHaveBeenCalled()
+    expect(ctx.typeAheadDown).not.toHaveBeenCalled()
+  })
+
+  it('Alt+ArrowDown opens without moving the highlight', async () => {
+    const { wrapper, ctx } = mountInput()
+    await wrapper.find('input').trigger('keydown', { key: 'ArrowDown', altKey: true })
+    expect(ctx.setOpen).toHaveBeenCalledWith(true)
+    expect(ctx.typeAheadFirst).not.toHaveBeenCalled()
   })
 
   it('Escape closes dropdown when not searching', async () => {
@@ -135,10 +180,17 @@ describe('ComboBoxInput', () => {
     expect(ctx.deselect).not.toHaveBeenCalled()
   })
 
-  it('focus opens the dropdown', async () => {
+  it('focus does not open the dropdown', async () => {
     const { wrapper, ctx } = mountInput()
     await wrapper.find('input').trigger('focus')
+    expect(ctx.setOpen).not.toHaveBeenCalled()
+  })
+
+  it('click opens the dropdown', async () => {
+    const { wrapper, ctx } = mountInput({ open: ref(true) })
+    await wrapper.find('input').trigger('click')
     expect(ctx.setOpen).toHaveBeenCalledWith(true)
+    expect(ctx.toggleOpen).not.toHaveBeenCalled()
   })
 
   it('is disabled when context is disabled', () => {
@@ -202,6 +254,72 @@ describe('ComboBoxInput', () => {
       await wrapper.trigger('focus')
       expect(ctx.setOpen).not.toHaveBeenCalled()
     })
+
+    it('click toggles the dropdown', async () => {
+      const { wrapper, ctx } = mountSelectOnly()
+      await wrapper.trigger('click')
+      expect(ctx.toggleOpen).toHaveBeenCalled()
+    })
+
+    it('arrows do not wrap at the ends', async () => {
+      const { wrapper, ctx } = mountSelectOnly({ open: ref(true) })
+      await wrapper.trigger('keydown', { key: 'ArrowDown' })
+      await wrapper.trigger('keydown', { key: 'ArrowUp' })
+      expect(ctx.typeAheadDown).toHaveBeenCalledWith(false)
+      expect(ctx.typeAheadUp).toHaveBeenCalledWith(false)
+    })
+
+    it('ArrowUp on a closed dropdown opens and highlights the first option', async () => {
+      const { wrapper, ctx } = mountSelectOnly()
+      await wrapper.trigger('keydown', { key: 'ArrowUp' })
+      expect(ctx.setOpen).toHaveBeenCalledWith(true)
+      expect(ctx.typeAheadFirst).toHaveBeenCalled()
+    })
+
+    it('Home and End highlight the first and last option', async () => {
+      const { wrapper, ctx } = mountSelectOnly({ open: ref(true) })
+      await wrapper.trigger('keydown', { key: 'Home' })
+      expect(ctx.typeAheadFirst).toHaveBeenCalled()
+      await wrapper.trigger('keydown', { key: 'End' })
+      expect(ctx.typeAheadLast).toHaveBeenCalled()
+    })
+
+    it('PageDown moves ten options without wrapping', async () => {
+      const { wrapper, ctx } = mountSelectOnly({ open: ref(true) })
+      await wrapper.trigger('keydown', { key: 'PageDown' })
+      expect(ctx.typeAheadDown).toHaveBeenCalledTimes(10)
+      expect(ctx.typeAheadDown).toHaveBeenCalledWith(false)
+    })
+
+    it('Tab selects the highlighted option when open', async () => {
+      const { wrapper, ctx } = mountSelectOnly({ open: ref(true) })
+      await wrapper.trigger('keydown', { key: 'Tab' })
+      expect(ctx.typeAheadSelect).toHaveBeenCalled()
+    })
+
+    it('Tab does nothing when closed', async () => {
+      const { wrapper, ctx } = mountSelectOnly()
+      await wrapper.trigger('keydown', { key: 'Tab' })
+      expect(ctx.typeAheadSelect).not.toHaveBeenCalled()
+    })
+
+    it('Alt+ArrowUp selects and closes', async () => {
+      const { wrapper, ctx } = mountSelectOnly({ open: ref(true) })
+      await wrapper.trigger('keydown', { key: 'ArrowUp', altKey: true })
+      expect(ctx.typeAheadSelect).toHaveBeenCalled()
+      expect(ctx.setOpen).toHaveBeenCalledWith(false)
+    })
+
+    it('repeating a character cycles through options starting with it', async () => {
+      const typeAheadPointer = ref(-1)
+      const { wrapper } = mountSelectOnly({ typeAheadPointer })
+      await wrapper.trigger('keydown', { key: 'b' })
+      expect(typeAheadPointer.value).toBe(1) // Banana
+      await wrapper.trigger('keydown', { key: 'b' })
+      expect(typeAheadPointer.value).toBe(2) // Blueberry
+      await wrapper.trigger('keydown', { key: 'b' })
+      expect(typeAheadPointer.value).toBe(1) // back to Banana
+    })
   })
 
   describe('Space (#1735)', () => {
@@ -225,7 +343,11 @@ describe('ComboBoxInput', () => {
   describe('mapKeydown', () => {
     it('receives the default handlers and can add a key', async () => {
       const mapKeydown = vi.fn((map) => ({ ...map, ',': map.Enter }))
-      const { wrapper, ctx } = mountInput({ open: ref(true), mapKeydown })
+      const { wrapper, ctx } = mountInput({
+        open: ref(true),
+        typeAheadPointer: ref(0),
+        mapKeydown,
+      })
       await wrapper.find('input').trigger('keydown', { key: ',' })
       expect(Object.keys(mapKeydown.mock.calls[0][0])).toEqual(
         expect.arrayContaining(['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Backspace', ' '])
@@ -307,6 +429,7 @@ describe('ComboBoxInput', () => {
       expect(input.attributes('id')).toBe('country')
       await input.trigger('focus')
       expect(onFocus).toHaveBeenCalledTimes(1)
+      await input.trigger('click')
       expect(ctx.setOpen).toHaveBeenCalledWith(true)
     })
   })

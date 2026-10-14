@@ -51,8 +51,11 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **done** = impleme
 | `searchable: false` renders a focusable `div[role=combobox]` (ARIA select-only combobox) instead of a read-only `<input>` | Style `.vs--unsearchable .vs__search` as before; don't rely on it being an `<input>`. | done |
 | The search input has `role="combobox"` (ARIA 1.2). v3 put it on `.vs__dropdown-toggle` with `aria-owns`. | Update selectors or tests that look for the role on the toggle. | done |
 | Options' `aria-selected` reflects selection. v3 set it on the highlighted option. | Use `.vs__dropdown-option--highlight` / `aria-activedescendant` for the highlighted option. | done |
-| Escape on an empty search closes the dropdown and keeps focus on the input. v3 blurred the input. | None for users; keyboard focus no longer drops to the page. | done |
-| Arrow keys on a closed dropdown only open it; the next press moves the highlight. | None (matches v3 3.20.x). | done |
+| Focusing the input no longer opens the dropdown (WAI-ARIA APG; opening on Tab interrupts screen readers). Clicking, typing, ↓ and Alt+↓ open it. | Call `ref.open = true` on focus if you need the old behavior. | done |
+| Keyboard follows the WAI-ARIA APG combobox examples. Editable: Escape closes first, then clears the search (v3 cleared first); ↓/↑ on a closed dropdown with nothing selected highlight the first/last option; the highlight wraps at the ends (v3 stopped); Enter with nothing highlighted closes. Select-only (`searchable: false`): no wrapping; Home/End, PageUp/PageDown, Tab and Alt+↑ select; repeating a letter cycles matches. | Use `mapKeydown` to restore specific keys. | done |
+| Escape keeps focus on the input. v3 blurred it on an empty search. | None for users; keyboard focus no longer drops to the page. | done |
+| The open indicator is `aria-hidden`. | None. | done |
+| Default highlight color `--vs-dropdown-option--active-bg` is `#136cfb` (4.6:1 with white, WCAG AA). v3 used `#5897fb` (2.9:1). | Set the variable to restore the old color. | done |
 | `vs--searching` is set whenever there is search text, including with `:open="false"`. v3 suppressed it with `noDrop`. | Combine with `.vs--open` in custom CSS if needed. | done |
 | Element ids come from Vue's `useId()`, unique within one app. | Pages that mount several Vue apps should give each app a distinct `app.config.idPrefix`. | done |
 | Clear button also shows in multi-select | Set `:clearable="false"` to hide it. | done |
