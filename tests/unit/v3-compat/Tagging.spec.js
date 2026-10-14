@@ -208,9 +208,7 @@ describe('When Tagging Is Enabled', () => {
     expect(lastEmittedValue(Select)).toEqual(two)
     expect(selectedLabels(Select)).toEqual(['two'])
   })
-
-  // V4-DIFF: v3 still filtered by search when taggable (even with filterable: false), so Enter on 'two' selected {label:'two'}; v4 shows all options unfiltered, highlights the first, and Enter selects {label:'one'}
-  it.skip('should select an existing option if the search string matches an objects label from options when filter-options is false', async () => {
+  it('should select an existing option if the search string matches an objects label from options when filter-options is false', async () => {
     const two = { label: 'two' }
     const Select = selectWithProps({
       taggable: true,

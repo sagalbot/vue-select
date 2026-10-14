@@ -210,10 +210,12 @@ describe('useComboBox', () => {
       expect(emit).toHaveBeenCalledWith('update:modelValue', null)
     })
 
-    it('deselect ignores an option that is not selected', () => {
+    it('deselecting an option that is not selected keeps the value', () => {
       const { deselect, emit } = createComboBox({ modelValue: 'one' })
       deselect('two')
-      expect(emit).not.toHaveBeenCalled()
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', expect.anything())
+      // v3 emits the events either way
+      expect(emit).toHaveBeenCalledWith('option:deselected', 'two')
     })
   })
 
@@ -279,6 +281,20 @@ describe('useComboBox', () => {
       typeAheadDown()
       typeAheadSelect()
       expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+  })
+
+  describe('switching multiple', () => {
+    it('clears the value', async () => {
+      const props = reactive<Record<string, unknown>>({
+        options: ['one', 'two'],
+        modelValue: 'one',
+      })
+      const emit = vi.fn()
+      useComboBox(props, emit)
+      props.multiple = true
+      await nextTick()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', [])
     })
   })
 

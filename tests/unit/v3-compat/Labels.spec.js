@@ -18,9 +18,7 @@ describe('Labels', () => {
     })
     expect(Select.find('.vs__selected').text()).toBe('Foo')
   })
-
-  // V4-DIFF: v3's default getOptionLabel console.warn'ed when an object option lacked the label key; v4 silently renders ''
-  it.skip('will console.warn when options contain objects without a valid label key', async () => {
+  it('will console.warn when options contain objects without a valid label key', async () => {
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const Select = selectWithProps({
       options: [{}],

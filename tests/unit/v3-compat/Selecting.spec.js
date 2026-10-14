@@ -360,9 +360,7 @@ describe('VS - Selecting Values', () => {
       Select.vm.deselect('foo')
       expect(Select.emitted('option:deselected')[0]).toEqual(['foo'])
     })
-
-    // V4-DIFF: v3 deselect() emitted option:deselected even for an unselected option ('bar'); v4 deselect() returns early, so only [['foo']] is emitted
-    it.skip('will trigger the option:deselected event regardless of current value', () => {
+    it('will trigger the option:deselected event regardless of current value', () => {
       const Select = mount(VueSelect, {
         props: { modelValue: ['foo'], options: ['foo', 'bar'] },
       })
@@ -370,9 +368,7 @@ describe('VS - Selecting Values', () => {
       Select.vm.deselect('bar')
       expect(Select.emitted('option:deselected')).toEqual([['foo'], ['bar']])
     })
-
-    // V4-DIFF: v3 deselect('bar') emitted option:deselected although only 'foo' was selected; v4 emits nothing (emitted('option:deselected') is undefined)
-    it.skip('will trigger the option:selected event with current selected item when multiple is true', () => {
+    it('will trigger the option:selected event with current selected item when multiple is true', () => {
       const Select = mount(VueSelect, {
         props: { multiple: true, modelValue: ['foo'], options: ['foo', 'bar'] },
       })

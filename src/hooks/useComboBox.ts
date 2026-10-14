@@ -70,6 +70,12 @@ export function useComboBox(
     const v = currentValue.value
     const values = Array.isArray(v) ? v : v != null && v !== '' ? [v] : []
 
+    // With reduce, null can be a real value: an option that reduces to null
+    if (props.reduce && v === null) {
+      const option = findOptionFromReducedValue(null)
+      if (option !== undefined) return [option]
+    }
+
     if (!props.reduce) return values as OptionValue[]
 
     // When reduce is in use, modelValue contains reduced values.
@@ -107,6 +113,14 @@ export function useComboBox(
     if (props.getOptionLabel) return props.getOptionLabel(option)
     if (typeof option === 'object' && option !== null) {
       const key = props.label ?? 'label'
+      if (!(key in option)) {
+        console.warn(
+          `[vue-select warn]: Label key "option.${key}" does not exist in ` +
+            `options object ${JSON.stringify(option)}.\n` +
+            'https://vue-select.org/api/props.html#getoptionlabel'
+        )
+        return ''
+      }
       return String((option as Record<string, unknown>)[key] ?? '')
     }
     return String(option)
@@ -196,20 +210,15 @@ export function useComboBox(
   const matchingOptions = computed<OptionValue[]>(() => {
     const opts = optionList.value
 
-    // Custom filter function takes priority, but still add taggable option
-    if (props.filter) {
-      return maybeAddTaggableOption(props.filter(opts, search.value))
-    }
-
-    // If not filterable or no search, return all
-    if (!filterable.value || !search.value) {
+    // As in v3: tagging filters even when filterable is false, and filter
+    // functions only run while there is search text.
+    if ((!filterable.value && !taggable.value) || !search.value) {
       return maybeAddTaggableOption(opts)
     }
 
-    // Default filtering logic
-    const filtered = opts.filter((option) =>
-      defaultFilterBy(getOptionLabel(option), search.value)
-    )
+    const filtered = props.filter
+      ? props.filter(opts, search.value)
+      : opts.filter((option) => defaultFilterBy(getOptionLabel(option), search.value))
 
     return maybeAddTaggableOption(filtered)
   })
@@ -331,9 +340,14 @@ export function useComboBox(
   }
 
   function deselect(option: OptionValue) {
-    if (!isOptionSelected(option)) return
-
     emit('option:deselecting', option)
+
+    // As in v3, the events fire either way; the value only changes when the
+    // option is selected (so a single-select never clears another value).
+    if (!isOptionSelected(option)) {
+      emit('option:deselected', option)
+      return
+    }
 
     if (!props.multiple) {
       updateValue(null)
@@ -364,6 +378,12 @@ export function useComboBox(
     resetSelection()
     emit('clear')
   }
+
+  // As in v3, switching between single and multi-select clears the value
+  watch(
+    () => props.multiple,
+    () => resetSelection()
+  )
 
   watch(
     () => props.options,

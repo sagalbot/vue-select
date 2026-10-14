@@ -241,9 +241,7 @@ describe('When reduce prop is defined', () => {
     await openDropdown(Select)
     expect(selectedOptionLabels(Select)).toEqual(['No'])
   })
-
-  // V4-DIFF: v3 treated a reduced value of null as the selection of the option reducing to null ([option]); v4 treats modelValue null as empty (no .vs__selected, option not --selected)
-  it.skip('works with null values', async () => {
+  it('works with null values', async () => {
     const option = { value: null, label: 'No' }
     const Select = mount(VueSelect, {
       props: {
