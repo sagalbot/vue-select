@@ -6,6 +6,7 @@ import ComboBoxButton from '@/components/ComboBox/ComboBoxButton.vue'
 import ComboBoxClear from '@/components/ComboBox/ComboBoxClear.vue'
 import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
 import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
+import ComboBoxGroup from '@/components/ComboBox/ComboBoxGroup.vue'
 import { countriesAndCodes } from '~/assets/static/data'
 import type { ModelValue, OptionValue } from '@/types'
 
@@ -14,6 +15,7 @@ const taggable = ref(false)
 const useReduce = ref(false)
 const deselectFromDropdown = ref(false)
 const searchable = ref(true)
+const grouped = ref(false)
 
 const value = ref<ModelValue>(null)
 const events = ref<string[]>([])
@@ -22,6 +24,9 @@ watch([multiple, useReduce], () => {
   value.value = multiple.value ? [] : null
   events.value = []
 })
+
+const groupByLetter = (option: OptionValue) =>
+  typeof option === 'object' ? String(option.label)[0] : null
 
 const reduce = (option: OptionValue) =>
   typeof option === 'object' ? (option as { value: string }).value : option
@@ -54,6 +59,9 @@ function log(name: string, ...args: unknown[]) {
       <label class="flex items-center gap-2">
         <input v-model="searchable" type="checkbox" /> searchable
       </label>
+      <label class="flex items-center gap-2">
+        <input v-model="grouped" type="checkbox" /> group by first letter
+      </label>
     </div>
 
     <ComboBox
@@ -65,6 +73,7 @@ function log(name: string, ...args: unknown[]) {
       :reduce="useReduce ? reduce : undefined"
       :deselect-from-dropdown="deselectFromDropdown"
       :searchable="searchable"
+      :group-by="grouped ? groupByLetter : undefined"
       class="relative w-full max-w-md"
       @open="log('open')"
       @close="log('close')"
@@ -164,9 +173,7 @@ const PlaygroundSelected = defineComponent({
 const PlaygroundOptions = defineComponent({
   setup() {
     const ctx = inject(ComboBoxKey)!
-    return () =>
-      ctx.filteredOptions.value.length
-        ? ctx.filteredOptions.value.map((option, index) =>
+    const renderOption = (option: OptionValue, index: number) =>
             h(
               ComboBoxOption,
               { key: String(ctx.getOptionKey(option)), value: option, index },
@@ -191,7 +198,29 @@ const PlaygroundOptions = defineComponent({
                     `${isSelected ? '✓ ' : ''}${ctx.getOptionLabel(option)}`,
                   ),
               },
-            ),
+            )
+    return () =>
+      ctx.groupedOptions.value.length
+        ? ctx.groupedOptions.value.map((group) =>
+            group.label === null
+              ? group.options.map(({ option, index }) => renderOption(option, index))
+              : h(
+                  ComboBoxGroup,
+                  { key: group.label, label: group.label },
+                  {
+                    label: ({ label }: { label: string }) =>
+                      h(
+                        'div',
+                        {
+                          class:
+                            'px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-slate-400',
+                        },
+                        label,
+                      ),
+                    default: () =>
+                      group.options.map(({ option, index }) => renderOption(option, index)),
+                  },
+                ),
           )
         : h('div', { class: 'px-3 py-1.5 text-sm text-slate-400' }, 'No options')
   },
