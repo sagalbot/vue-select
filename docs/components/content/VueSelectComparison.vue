@@ -14,6 +14,7 @@ const flags = ref({
   searchable: true,
   grouped: false,
   appendToBody: false,
+  openOnFocus: false,
 })
 
 const legacyValue = ref<unknown>(null)
@@ -36,6 +37,7 @@ const shared = computed(() => ({
 const v4Only = computed(() => ({
   groupBy: flags.value.grouped ? groupByLetter : undefined,
   appendTo: flags.value.appendToBody ? 'body' : undefined,
+  openOnFocus: flags.value.openOnFocus,
 }))
 
 function reset() {
@@ -50,7 +52,7 @@ function reset() {
       <label v-for="(_, name) in flags" :key="name" class="flex items-center gap-2">
         <input v-model="flags[name]" type="checkbox" @change="name === 'multiple' && reset()" />
         {{ name }}
-        <span v-if="name === 'grouped' || name === 'appendToBody'" class="text-xs text-sky-600">
+        <span v-if="['grouped', 'appendToBody', 'openOnFocus'].includes(name)" class="text-xs text-sky-600">
           v4 only
         </span>
       </label>

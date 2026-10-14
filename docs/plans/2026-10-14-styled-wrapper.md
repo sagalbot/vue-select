@@ -35,7 +35,7 @@
 
 ## Prop audit (proposal, review before Phase 2)
 
-v3 has 41 props (39 in `Select.vue`, plus `loading` and `autoscroll` from mixins). This proposal removes 14 and adds 6, for 33.
+v3 has 41 props (39 in `Select.vue`, plus `loading` and `autoscroll` from mixins). This proposal removes 14 and adds 7, for 34.
 
 **Kept unchanged (24):** `modelValue`, `options`, `multiple`, `disabled`, `placeholder`, `label`, `reduce`, `selectable`, `getOptionLabel`, `getOptionKey`, `taggable`, `createOption`, `filter`, `filterable`, `searchable`, `loading`, `clearable`, `closeOnSelect`, `clearSearchOnSelect`, `deselectFromDropdown`, `resetOnOptionsChange`, `autoscroll`, `dir`, `transition`.
 
@@ -62,7 +62,9 @@ v3 has 41 props (39 in `Select.vue`, plus `loading` and `autoscroll` from mixins
 | `uid` | None needed. IDs come from `useId()` and are SSR-safe. Target the element through `inputAttrs.id` or your own attributes. |
 | `appendToBody` | `appendTo` (D4). |
 
-**Added (6):** `open` (`v-model:open`), `inputAttrs`, `appendTo`, `groupBy`, `hideSelected`, `ariaLabels`.
+**Added (7):** `open` (`v-model:open`), `inputAttrs`, `appendTo`, `groupBy`, `hideSelected`, `ariaLabels`, `openOnFocus` (added 2026-10-14: the APG allows opening on focus; Headless UI has the same option as `immediate`).
+
+**Opening (decided 2026-10-14):** by default the dropdown opens on typing, ↓/Alt+↓ and the toggle button; clicking or focusing the input only focuses it (Headless UI model, allowed by the APG pattern, which leaves triggers to the implementation). The toggle button is a real button outside the tab order, as in the APG example, so touch and screen-reader users can open the list. Select-only fields toggle on click.
 
 **Behavior change:** the clear button now also shows in multi-select (#978, #1383, PR #1853). v3 hid it there.
 
