@@ -16,7 +16,9 @@
 .vs__deselect {
     display: inline-flex;
     appearance: none;
-    margin-left: 4px;
+    /* balance the icon's own whitespace against the label's left padding */
+    margin-left: 2px;
+    margin-right: -4px;
     padding: 0;
     border: 0;
     cursor: pointer;
