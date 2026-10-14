@@ -21,6 +21,7 @@ const props = withDefaults(defineProps<ComboBoxProps>(), {
   deselectFromDropdown: false,
   autoscroll: true,
   placeholder: '',
+  resetOnOptionsChange: false,
 })
 
 const emit = defineEmits<{

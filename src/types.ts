@@ -44,6 +44,18 @@ export interface ComboBoxProps {
   noDrop?: boolean
   deselectFromDropdown?: boolean
   autoscroll?: boolean
+  /**
+   * Clear the selection when `options` changes. A function receives the new
+   * options, the old options and the selected options, and returns whether
+   * to clear. Ignored when `taggable` is true.
+   */
+  resetOnOptionsChange?:
+    | boolean
+    | ((
+        newOptions: OptionValue[],
+        oldOptions: OptionValue[],
+        selected: OptionValue[]
+      ) => boolean)
 }
 
 /**

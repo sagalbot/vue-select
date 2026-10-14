@@ -270,6 +270,19 @@ export function useComboBox(
     emit('update:modelValue', props.multiple ? [] : null)
   }
 
+  watch(
+    () => props.options,
+    (newOptions, oldOptions) => {
+      if (taggable.value) return
+      const reset = props.resetOnOptionsChange
+      const shouldReset =
+        typeof reset === 'function'
+          ? reset(newOptions ?? [], oldOptions ?? [], selectedValue.value)
+          : reset
+      if (shouldReset) clearSelection()
+    }
+  )
+
   // --- TypeAhead navigation ---
 
   function typeAheadDown() {

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { reactive } from 'vue'
+import { nextTick, reactive } from 'vue'
 import { useComboBox } from '@/hooks/useComboBox'
 import type { OptionValue } from '@/types'
 
@@ -454,6 +454,66 @@ describe('useComboBox', () => {
       })
       clearSelection()
       expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+  })
+
+  describe('resetOnOptionsChange', () => {
+    function setup(overrides: Record<string, unknown>) {
+      const props = reactive<Record<string, unknown>>({
+        options: ['one', 'two'],
+        modelValue: 'one',
+        ...overrides,
+      })
+      const emit = vi.fn()
+      return { props, emit, ctx: useComboBox(props, emit) }
+    }
+
+    it('keeps the value when options change by default', async () => {
+      const { props, emit } = setup({})
+      props.options = ['three']
+      await nextTick()
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', null)
+    })
+
+    it('clears the value when true', async () => {
+      const { props, emit } = setup({ resetOnOptionsChange: true })
+      props.options = ['three']
+      await nextTick()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+
+    it('clears to an empty array in multi-select', async () => {
+      const { props, emit } = setup({
+        resetOnOptionsChange: true,
+        multiple: true,
+        modelValue: ['one'],
+      })
+      props.options = ['three']
+      await nextTick()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', [])
+    })
+
+    it('passes new options, old options and the selection to a function', async () => {
+      const resetOnOptionsChange = vi.fn(() => false)
+      const { props, emit } = setup({ resetOnOptionsChange })
+      props.options = ['three']
+      await nextTick()
+      expect(resetOnOptionsChange).toHaveBeenCalledWith(['three'], ['one', 'two'], ['one'])
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', null)
+    })
+
+    it('clears the value when the function returns true', async () => {
+      const { props, emit } = setup({ resetOnOptionsChange: () => true })
+      props.options = ['three']
+      await nextTick()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+
+    it('never clears when taggable', async () => {
+      const { props, emit } = setup({ resetOnOptionsChange: true, taggable: true })
+      props.options = ['three']
+      await nextTick()
+      expect(emit).not.toHaveBeenCalled()
     })
   })
 
