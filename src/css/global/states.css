@@ -9,7 +9,8 @@
  * components.
  */
 
-:root {
+:root,
+:host {
     --vs-disabled-bg: var(--vs-state-disabled-bg);
     --vs-disabled-color: var(--vs-state-disabled-color);
     --vs-disabled-cursor: var(--vs-state-disabled-cursor);

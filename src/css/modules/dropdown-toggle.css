@@ -14,7 +14,7 @@
     appearance: none;
     display: flex;
     padding: 0 0 4px 0;
-    background: none;
+    background: var(--vs-search-input-bg);
     border: var(--vs-border-width) var(--vs-border-style) var(--vs-border-color);
     border-radius: var(--vs-border-radius);
     white-space: normal;
