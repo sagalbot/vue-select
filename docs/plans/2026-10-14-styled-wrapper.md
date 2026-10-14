@@ -78,27 +78,36 @@ The other two open review threads on #1877 (`clearSearchOnBlur`, `search:focus`/
 
 ---
 
-## Phase 1: Close primitive gaps
+## Phase 1: Close primitive gaps (done 2026-10-14, branch `fix/combobox-core`)
 
 Each task: failing test first, then the fix, in `src/hooks/useComboBox.ts`, `src/types.ts`, or `src/components/ComboBox/*`, with tests in `tests/unit/hooks/` or `tests/unit/ComboBox/`.
 
-- **T1 `fix(useComboBox)`:** single-select `deselect()` emits `null`.
-- **T2 `fix(useComboBox)`:** default `getOptionKey` matches v3: return primitives as-is, `id` if present, otherwise `sortAndStringify`. Move `src/utility/sortAndStringify.js` to TypeScript.
-- **T3 `fix(useComboBox)!`:** replace `uidCounter` with `useId()`. Add an SSR test (`renderToString` + hydrate in jsdom, assert no mismatch warning). `BREAKING CHANGE:` requires Vue 3.5+.
-- **T4 `fix(useComboBox)`:** remember full option objects for selected values. With `reduce` plus async or changing `options`, the selected label currently falls back to the raw reduced value once the option leaves `options`.
-- **T5 `feat(useComboBox)`:** `resetOnOptionsChange` (boolean or function, same signature as v3).
-- **T6 `feat(useComboBox)`:** `searchable`, and controlled `open` that fully replaces `noDrop`/`dropdownShouldOpen`: the component only requests changes through `update:open` and never opens itself while `open` is bound.
-- **T7 `feat(ComboBoxInput)!`:** `mapKeydown` keyed by `KeyboardEvent.key`, receiving the default handler map and the context.
-- **T8 `feat(ComboBoxInput)`:** `clearSearchOnBlur` as a boolean with the v3 default. Blur no longer always clears the search.
-- **T9 `feat(ComboBoxGroup)`:** option groups.
+- ✅ **T1 `fix(useComboBox)`:** single-select `deselect()` emits `null`.
+- ✅ **T2 `fix(useComboBox)`:** default `getOptionKey` matches v3: return primitives as-is, `id` if present, otherwise `sortAndStringify`. Move `src/utility/sortAndStringify.js` to TypeScript.
+- ✅ **T3 `fix(useComboBox)!`:** replace `uidCounter` with `useId()`. Add an SSR test (`renderToString` + hydrate in jsdom, assert no mismatch warning). `BREAKING CHANGE:` requires Vue 3.5+.
+- ✅ **T4 `fix(useComboBox)`:** remember full option objects for selected values. With `reduce` plus async or changing `options`, the selected label currently falls back to the raw reduced value once the option leaves `options`.
+- ✅ **T5 `feat(useComboBox)`:** `resetOnOptionsChange` (boolean or function, same signature as v3).
+- ✅ **T6 `feat(useComboBox)`:** `searchable`, and controlled `open` that fully replaces `noDrop`/`dropdownShouldOpen`: the component only requests changes through `update:open` and never opens itself while `open` is bound.
+- ✅ **T7 `feat(ComboBoxInput)!`:** `mapKeydown` keyed by `KeyboardEvent.key`, receiving the default handler map and the context.
+- ✅ **T8 `feat(ComboBoxInput)`:** `clearSearchOnBlur` as a boolean with the v3 default. Blur no longer always clears the search.
+- ✅ **T9 `feat(ComboBoxGroup)`:** option groups.
   - `groupBy?: (option) => string | null | undefined`. The return value is both the group key and its label. Options returning `null`/`undefined` are ungrouped and render first, without a header.
   - Order: filter first, then group. Groups appear in the order their first option appears in `options`; empty groups are hidden. Keyboard order, the `typeAheadPointer` index and option ids follow the rendered order, so arrow keys never jump around visually.
   - New tags (taggable) are ungrouped, so they stay at the top.
   - Context gains `groupedOptions: { key, label, options: { option, index }[] }[]`. `index` is the flat index used by `ComboBoxOption`.
   - `ComboBoxGroup` renders `role="group"` with `aria-labelledby` pointing at its header (`role="presentation"`). It takes a `label` prop and a default slot.
   - Replaces the common workaround of inserting fake "heading" options and disabling them with `selectable`, which screen readers announce as disabled options rather than group labels.
-- **T10 `feat(useComboBox)`:** emit `clear` from `clearSelection()`.
-- **T11 `feat(useComboBox)`:** `hideSelected` removes selected options from `filteredOptions` in multi-select.
+- ✅ **T10 `feat(useComboBox)`:** emit `clear` from `clearSelection()`.
+- ✅ **T11 `feat(useComboBox)`:** `hideSelected` removes selected options from `filteredOptions` in multi-select.
+- ✅ **Added during Phase 1:**
+  - Deselect rules now match v3: selecting a selected option deselects it only with `deselectFromDropdown`, and never empties a non-clearable value. Enter goes through the same path as a click. Backspace requires `clearable` and works in single-select; it emits `option:deselected`, which v3 did not (#1430).
+  - `pushTags` and `filterBy` removed from the primitives, matching the prop audit.
+  - Typing into the search reopens a closed dropdown (v3 behavior the primitives lacked).
+  - Component tests share one mock context (`tests/unit/ComboBox/mockContext.ts`).
+
+**Notes for Phase 2:**
+- v3 hides the menu while `loading` (its default `dropdownShouldOpen`). The primitives don't; `VueSelect` should keep the v3 behavior in its own template.
+- The docs dev server caches the prop types `ComboBox.vue` resolves from `types.ts`. After adding a prop to `ComboBoxProps`, restart the docs server.
 
 ## Phase 2: Build `VueSelect`
 
@@ -126,7 +135,7 @@ File: `src/components/VueSelect.vue`, `<script setup lang="ts" generic="Option">
 
 ## Phase 4: Cutover
 
-- **T22 `feat!`:** default export becomes `VueSelect`. Restore the named `VueSelect` export that the beta dropped, so `import { VueSelect } from 'vue-select'` keeps working. Delete `Select.vue`, `src/mixins/`, `src/directives/appendToBody.js`, `src/components/childComponents.js`, `src/scss/`, `StyledComboBox.vue`, `useModelValue.ts`, and the deprecated `ListBox*` types and keys. `pnpm exec eslint .` passes with zero errors (the 22 current errors are in `Select.vue`, `Deselect.vue`, `dev/`, `postcss.config.js`, and three legacy specs).
+- **T22 `feat!`:** default export becomes `VueSelect`. Restore the named `VueSelect` export that the beta dropped, so `import { VueSelect } from 'vue-select'` keeps working. Delete `Select.vue`, `src/mixins/`, `src/directives/appendToBody.js`, `src/components/childComponents.js`, `src/scss/`, `StyledComboBox.vue`, `useModelValue.ts`, and the deprecated `ListBox*` types and keys. `pnpm exec eslint .` passes with zero errors (the 22 current errors are in `Select.vue`, `Deselect.vue`, `dev/`, `postcss.config.js`, three legacy specs, and `useModelValue.ts`). `pnpm typecheck` (strict, `tsconfig.vitest.json`) passes: it currently reports 33 errors, mostly `ctx` possibly undefined in primitive templates.
 - **T23 `build`:** `exports` map with `types`, `import`, and `require` conditions plus `./style.css`, keeping `./dist/vue-select.css` working. Emit `.d.ts` files. Set `output.exports: 'named'` to fix the mixed-export build warning. Update the bundlewatch limits.
 - **T24 `chore(dev)`:** update the `dev/` playground to show `VueSelect` and a headless composition side by side.
 
