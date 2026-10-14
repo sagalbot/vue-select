@@ -128,6 +128,24 @@ File: `src/components/VueSelect.vue`, `<script setup lang="ts" generic="Option">
 - ✅ **T18 accessibility:** `ariaLabels` prop object for the search input, listbox, clear button, and per-tag deselect button (`(option) => string`). Defaults match v3 English text. Include `aria-multiselectable` (PR #1726). `inputAttrs` bound to the input.
 - ✅ **T19 instance API:** `defineExpose` the members people reach for through template refs in v3: `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur`.
 
+## Phase 2b: Fixes from `@nextcloud/vue-select`
+
+Nextcloud forked v3 in 2023, ported it to Vue 3, and shipped `@nextcloud/vue-select` 4.0/4.1 (April 2026). Audit of their non-dependency commits since our split (`https://github.com/nextcloud-libraries/vue-select`):
+
+| Fork commit | Fix | v4 status / proposal |
+|---|---|---|
+| `864a7e9` | ARIA attributes on the input, not the wrapper | Already the v4 design (ComboBoxInput is the combobox) |
+| `74d22e6` | Don't open the dropdown on keyboard focus (WCAG 3.2.1); hide the decorative chevron from assistive tech | **Decision needed.** Proposal: adopt. Mouse users are unaffected (clicking the toggle still opens); Tab no longer pops the list open before the field name is read. Mark `.vs__open-indicator` `aria-hidden`. |
+| `73e0b04` | Darker highlight color (`--vs-dropdown-option--active-bg` `#5897fb` → `#136cfb`) for WCAG AA contrast with white text | **Decision needed** (visible change). Proposal: adopt. |
+| `ac01c0f` | Highlight on `mousemove` instead of `mouseover`, so a list scrolling under a still pointer doesn't steal the keyboard highlight | Adopt in ComboBoxOption |
+| `12466c9`, `aab477b`, `89a6f98` | Keyboard focus returns to the input after clear; after a keyboard deselect, focus moves to the next/previous tag's deselect button | Adopt in VueSelect |
+| `71dd57d` | Long selected labels overflow the toggle (`min-width: 0`, `max-width: 100%`) (#754) | Adopt in CSS |
+| `26e2e59` / `4d8f668` | Throwing from `createOption` rejects the tag (input validation, e.g. email addresses) | Adopt in useComboBox |
+| `5baaa76` | Dropdown not opening after closing (PR #1742) | Covered: v4 ArrowDown/Space open a closed dropdown |
+| `eb042bb` | `resetFocusOnOptionsChange: false` keeps the highlight when options change | Consider; overlaps with the new highlight rules |
+| `a7ccfe1` | `limit` prop caps rendered options | Prefer virtual scrolling (T25); a `filter` slice already does this |
+| `9bfce3f` | Teleported dropdown width off by a scrollbar | Not applicable: v4 measures the toggle, and the menu is never inside the scroll container |
+
 ## Phase 3: Compatibility harness (in progress)
 
 The v3 specs are copied to `tests/unit/v3-compat/` and rewritten to use only the public interface (props, events, slots, DOM, template-ref API) through `tests/unit/v3-compat/helpers.js`. Tests that still fail on a real behavior difference are skipped with a `// V4-DIFF:` comment until the component is fixed. The original `tests/unit/*.spec.js` keep testing `Select.vue` until the cutover.
