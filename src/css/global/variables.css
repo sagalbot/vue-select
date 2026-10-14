@@ -31,7 +31,10 @@
 
     /* Component Controls: Clear, Open Indicator */
     --vs-controls-color: var(--vs-colors--light);
+    /* Scales the toggle and clear icons (1 = 1.25rem / 20px) */
     --vs-controls-size: 1;
+    --vs-controls-icon-size: calc(1.25rem * var(--vs-controls-size));
+    --vs-deselect-icon-size: 1rem;
     --vs-controls--deselect-text-shadow: 0 1px 0 #fff;
 
     /* Selected */

@@ -60,7 +60,7 @@ interface Variant {
 }
 
 const variants: Variant[] = [
-  { name: 'Current', note: 'Filled 14×10 / 10×10 shapes, scaled with CSS transforms.' },
+  { name: 'Default', note: 'Option A, chosen 2026-10-14. (v3 used filled 14×10 / 10×10 shapes scaled with CSS transforms.)' },
   {
     name: 'A — Heroicons mini (solid 20)',
     note: 'Chevron-down that rotates when open, 20px x-mark to clear, 16px x-mark on tags.',

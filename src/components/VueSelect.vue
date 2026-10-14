@@ -21,8 +21,9 @@ import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
 import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
 import ComboBoxGroup from '@/components/ComboBox/ComboBoxGroup.vue'
 import ComboBoxButton from '@/components/ComboBox/ComboBoxButton.vue'
-import Deselect from '@/components/Deselect.vue'
-import OpenIndicator from '@/components/OpenIndicator.vue'
+import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue'
+import XMarkIcon from '@/components/icons/XMarkIcon.vue'
+import XMarkSmallIcon from '@/components/icons/XMarkSmallIcon.vue'
 import type { CalculatePosition, OptionValue, VueSelectProps } from '@/types'
 
 const props = withDefaults(defineProps<VueSelectProps>(), {
@@ -284,7 +285,7 @@ defineExpose({
                 @click="ctx.deselect(option)"
               >
                 <slot name="deselect" :option="normalizeOptionForSlot(option)">
-                  <Deselect />
+                  <XMarkSmallIcon />
                 </slot>
               </button>
             </span>
@@ -320,7 +321,7 @@ defineExpose({
           :aria-label="clearLabel"
           @click="ctx.clearSelection()"
         >
-          <slot name="clear"><Deselect /></slot>
+          <slot name="clear"><XMarkIcon /></slot>
         </button>
 
         <ComboBoxButton
@@ -330,12 +331,12 @@ defineExpose({
           :title="toggleLabel"
         >
           <slot name="open-indicator" :attributes="openIndicatorAttrs">
-            <OpenIndicator v-bind="openIndicatorAttrs" />
+            <ChevronDownIcon v-bind="openIndicatorAttrs" />
           </slot>
         </ComboBoxButton>
         <!-- Select-only: the whole field toggles; the indicator is decoration -->
         <slot v-else name="open-indicator" :attributes="openIndicatorAttrs">
-          <OpenIndicator v-bind="openIndicatorAttrs" />
+          <ChevronDownIcon v-bind="openIndicatorAttrs" />
         </slot>
 
         <slot name="spinner" :loading="ctx.isLoading.value">
