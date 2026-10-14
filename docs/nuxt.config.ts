@@ -24,6 +24,17 @@ export default defineNuxtConfig({
   // https://content.nuxtjs.org/api/configuration
   content: {
     documentDriven: true,
+    // v4 work-in-progress pages (plans, breaking changes, playground), dev server only
+    sources:
+      process.env.NODE_ENV === 'production'
+        ? {}
+        : {
+            plans: {
+              driver: 'fs',
+              prefix: '/plans',
+              base: resolve(__dirname, 'plans'),
+            },
+          },
     // https://content.nuxtjs.org/api/configuration/#highlighttheme
     highlight: {
       theme: {
