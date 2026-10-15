@@ -22,27 +22,36 @@ const ariaAttrs = computed(() => ({
   role: 'combobox',
   'aria-expanded': ctx.open.value,
   'aria-controls': `vs-${ctx.uid.value}-listbox`,
+  // Only while open: a closed listbox has no active option
   'aria-activedescendant':
-    ctx.typeAheadPointer.value > -1
+    ctx.open.value && ctx.typeAheadPointer.value > -1
       ? `vs-${ctx.uid.value}-option-${ctx.typeAheadPointer.value}`
       : undefined,
 }))
 
-const inputAttrs = computed(() => ({
-  ...ariaAttrs.value,
+// Defaults that attributes passed to ComboBoxInput (e.g. VueSelect's
+// inputAttrs) may override.
+const inputDefaults = computed(() => ({
   type: 'search',
   autocomplete: 'off',
-  'aria-autocomplete': 'list' as const,
-  disabled: ctx.disabled.value || undefined,
-  value: ctx.search.value,
   // Like v3: the selection takes the placeholder's place
   placeholder: (ctx.isValueEmpty.value && ctx.placeholder.value) || undefined,
 }))
 
+// State the combobox owns; attributes can't override these.
+const inputAttrs = computed(() => ({
+  ...ariaAttrs.value,
+  'aria-autocomplete': 'list' as const,
+  disabled: ctx.disabled.value || undefined,
+  value: ctx.search.value,
+}))
+
 // Select-only combobox (WAI-ARIA APG): focusable, not editable.
+const selectOnlyDefaults = computed(() => ({
+  tabindex: ctx.disabled.value ? -1 : 0,
+}))
 const selectOnlyAttrs = computed(() => ({
   ...ariaAttrs.value,
-  tabindex: ctx.disabled.value ? -1 : 0,
   'aria-disabled': ctx.disabled.value || undefined,
 }))
 
@@ -64,7 +73,7 @@ const ownEvents: Record<string, (e: Event) => void> = {
 // For the input slot: our attributes and handlers, merged with whatever
 // was passed to ComboBoxInput (`id`, `class`, `@focus`, ...).
 const slotProps = computed(() => {
-  const attributes: Record<string, unknown> = { ...inputAttrs.value, ref: setEl }
+  const attributes: Record<string, unknown> = { ...inputDefaults.value }
   const events = { ...ownEvents }
   for (const [key, value] of Object.entries(attrs)) {
     const match = /^on([A-Z].*)$/.exec(key)
@@ -81,6 +90,7 @@ const slotProps = computed(() => {
         }
       : (value as (e: Event) => void)
   }
+  Object.assign(attributes, inputAttrs.value, { ref: setEl })
   return { attributes, events }
 })
 
@@ -120,15 +130,29 @@ const searchHandlers: KeydownHandlers = {
     else openThen(e, ctx.typeAheadLast)
   },
   Enter: (e) => {
+    if (!ctx.open.value) {
+      // A closed tagging input (e.g. :open="false") still creates the tag;
+      // otherwise Enter does its default, such as submitting the form.
+      if (ctx.taggable.value && ctx.isSearching.value) {
+        e.preventDefault()
+        ctx.typeAheadSelect()
+      }
+      return
+    }
     e.preventDefault()
-    if (!ctx.open.value) return
     if (ctx.typeAheadPointer.value > -1) ctx.typeAheadSelect()
     else ctx.setOpen(false)
   },
-  // Close first; once closed, clear the search text.
-  Escape: () => {
-    if (ctx.open.value) ctx.setOpen(false)
-    else if (ctx.isSearching.value) ctx.setSearch('')
+  // Close first; once closed, clear the search text. preventDefault stops
+  // browsers from also clearing a type="search" input on the first press.
+  Escape: (e) => {
+    if (ctx.open.value) {
+      e.preventDefault()
+      ctx.setOpen(false)
+    } else if (ctx.isSearching.value) {
+      e.preventDefault()
+      ctx.setSearch('')
+    }
   },
   Backspace: () => {
     if (!ctx.search.value && !ctx.isValueEmpty.value && ctx.clearable.value) {
@@ -136,9 +160,10 @@ const searchHandlers: KeydownHandlers = {
       ctx.deselect(last)
     }
   },
-  // Space opens a closed dropdown instead of typing (#1735)
+  // Space on an empty, closed input opens the dropdown instead of typing
+  // (#1735). With search text it types a space, e.g. in "New York".
   ' ': (e) => {
-    if (ctx.open.value) return
+    if (ctx.open.value || ctx.isSearching.value) return
     e.preventDefault()
     ctx.setOpen(true)
   },
@@ -273,7 +298,7 @@ function onBlur() {
   <input
     v-else-if="ctx.searchable.value"
     :ref="setEl"
-    v-bind="{ ...$attrs, ...inputAttrs }"
+    v-bind="{ ...inputDefaults, ...$attrs, ...inputAttrs }"
     @input="onInput"
     @keydown="onKeydown"
     @focus="onFocus"
@@ -285,7 +310,7 @@ function onBlur() {
   <div
     v-else
     :ref="setEl"
-    v-bind="{ ...$attrs, ...selectOnlyAttrs }"
+    v-bind="{ ...selectOnlyDefaults, ...$attrs, ...selectOnlyAttrs }"
     @keydown="onKeydown"
     @focus="onFocus"
     @click="onClick"

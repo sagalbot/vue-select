@@ -35,7 +35,7 @@ describe('ComboBoxInput', () => {
   })
 
   it('sets aria-activedescendant when pointer is active', () => {
-    const { wrapper } = mountInput({ typeAheadPointer: ref(2) })
+    const { wrapper } = mountInput({ open: ref(true), typeAheadPointer: ref(2) })
     const input = wrapper.find('input')
     expect(input.attributes('aria-activedescendant')).toBe('vs-test-option-2')
   })
@@ -460,6 +460,82 @@ describe('ComboBoxInput', () => {
         isValueEmpty: computed(() => false),
       })
       expect(wrapper.find('input').attributes('placeholder')).toBeUndefined()
+    })
+  })
+
+  describe('docs-review fixes', () => {
+    function keydown(el: Element, key: string) {
+      const event = new KeyboardEvent('keydown', { key, cancelable: true })
+      el.dispatchEvent(event)
+      return event
+    }
+
+    it('Enter on a closed dropdown lets the form submit', () => {
+      const { wrapper, ctx } = mountInput({ typeAheadPointer: ref(0) })
+      const event = keydown(wrapper.find('input').element, 'Enter')
+      expect(event.defaultPrevented).toBe(false)
+      expect(ctx.typeAheadSelect).not.toHaveBeenCalled()
+    })
+
+    it('Enter on a closed dropdown creates a tag from the search text', () => {
+      const { wrapper, ctx } = mountInput({
+        taggable: computed(() => true),
+        search: ref('new'),
+        isSearching: computed(() => true),
+        typeAheadPointer: ref(0),
+      })
+      const event = keydown(wrapper.find('input').element, 'Enter')
+      expect(ctx.typeAheadSelect).toHaveBeenCalled()
+      expect(event.defaultPrevented).toBe(true)
+    })
+
+    it('Escape prevents the browser from also clearing a search input', () => {
+      const { wrapper, ctx } = mountInput({ open: ref(true), search: ref('x') })
+      const event = keydown(wrapper.find('input').element, 'Escape')
+      expect(event.defaultPrevented).toBe(true)
+      expect(ctx.setSearch).not.toHaveBeenCalled()
+    })
+
+    it('Space types a space once there is search text, even when closed', () => {
+      const { wrapper, ctx } = mountInput({ search: ref('new'), isSearching: computed(() => true) })
+      const event = keydown(wrapper.find('input').element, ' ')
+      expect(event.defaultPrevented).toBe(false)
+      expect(ctx.setOpen).not.toHaveBeenCalled()
+    })
+
+    it('drops aria-activedescendant while closed', () => {
+      const { wrapper } = mountInput({ typeAheadPointer: ref(1) })
+      expect(wrapper.find('input').attributes('aria-activedescendant')).toBeUndefined()
+    })
+
+    it('lets attributes override autocomplete, type and placeholder, but not ARIA state', () => {
+      const { wrapper } = mountInput({ open: ref(true) })
+      const ctx = createMockContext({ open: ref(true) })
+      const w = mount(ComboBoxInput, {
+        attrs: { autocomplete: 'country-name', placeholder: 'Mine', role: 'textbox', 'aria-expanded': 'false' },
+        global: { provide: { [ComboBoxKey as symbol]: ctx } },
+      })
+      const input = w.find('input')
+      expect(input.attributes('autocomplete')).toBe('country-name')
+      expect(input.attributes('placeholder')).toBe('Mine')
+      expect(input.attributes('role')).toBe('combobox')
+      expect(input.attributes('aria-expanded')).toBe('true')
+      wrapper.unmount()
+    })
+
+    it('gives the input slot the same precedence', () => {
+      const ctx = createMockContext({ open: ref(true) })
+      const w = mount(ComboBoxInput, {
+        attrs: { autocomplete: 'country-name', role: 'textbox' },
+        global: { provide: { [ComboBoxKey as symbol]: ctx } },
+        slots: {
+          input: ({ attributes }: { attributes: Record<string, unknown> }) =>
+            h('input', { ...attributes }),
+        },
+      })
+      const input = w.find('input')
+      expect(input.attributes('autocomplete')).toBe('country-name')
+      expect(input.attributes('role')).toBe('combobox')
     })
   })
 })

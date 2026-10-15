@@ -284,6 +284,57 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('search events', () => {
+    it('emits search when selecting clears the search text', () => {
+      const { setSearch, select, emit } = createComboBox()
+      setSearch('t')
+      emit.mockClear()
+      select('two')
+      expect(emit).toHaveBeenCalledWith('search', '', expect.any(Function))
+    })
+
+    it('does not emit search when the text does not change', () => {
+      const { setSearch, emit } = createComboBox()
+      setSearch('')
+      expect(emit).not.toHaveBeenCalledWith('search', '', expect.any(Function))
+    })
+  })
+
+  describe('select guards', () => {
+    it('ignores options that are not selectable', () => {
+      const { select, emit } = createComboBox({ selectable: (o: OptionValue) => o !== 'two' })
+      select('two')
+      expect(emit).not.toHaveBeenCalledWith('update:modelValue', expect.anything())
+    })
+  })
+
+  describe('highlight with a bound open prop', () => {
+    it('keeps the first match highlighted when open arrives after typing', async () => {
+      const props = reactive<Record<string, unknown>>({ options: ['one', 'two', 'three'], open: false })
+      const ctx = useComboBox(props, (event: string, value: unknown) => {
+        // like v-model, the parent's update arrives after the current tick
+        if (event === 'update:open') Promise.resolve().then(() => (props.open = value))
+      })
+      ctx.setSearch('t')
+      await Promise.resolve()
+      await nextTick()
+      expect(props.open).toBe(true)
+      expect(ctx.typeAheadPointer.value).toBe(0)
+    })
+  })
+
+  describe('resetOnOptionsChange with mutation', () => {
+    it('reacts to options being pushed', async () => {
+      const options = ['one', 'two']
+      const props = reactive<Record<string, unknown>>({ options, modelValue: 'one', resetOnOptionsChange: true })
+      const emit = vi.fn()
+      useComboBox(props, emit)
+      ;(props.options as string[]).push('three')
+      await nextTick()
+      expect(emit).toHaveBeenCalledWith('update:modelValue', null)
+    })
+  })
+
   describe('switching multiple', () => {
     it('clears the value', async () => {
       const props = reactive<Record<string, unknown>>({

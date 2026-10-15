@@ -302,6 +302,7 @@ export function useComboBox(
   // --- Search ---
 
   function setSearch(value: string) {
+    if (value === search.value) return
     // Open first, so the highlight lands on the first match, not on the
     // last selected option.
     if (value && !open.value) setOpen(true)
@@ -324,6 +325,7 @@ export function useComboBox(
   }
 
   function select(option: OptionValue) {
+    if (!isOptionSelectable(option)) return
     emit('option:selecting', option)
 
     if (!isOptionSelected(option)) {
@@ -344,7 +346,7 @@ export function useComboBox(
     }
 
     if (props.clearSearchOnSelect !== false) {
-      search.value = ''
+      setSearch('')
     }
     if (props.closeOnSelect !== false) {
       setOpen(false)
@@ -397,6 +399,7 @@ export function useComboBox(
     () => resetSelection()
   )
 
+  // deep: 1 also reacts to options being pushed or spliced in place
   watch(
     () => props.options,
     (newOptions, oldOptions) => {
@@ -407,7 +410,8 @@ export function useComboBox(
           ? reset(newOptions ?? [], oldOptions ?? [], selectedValue.value)
           : reset
       if (shouldReset) resetSelection()
-    }
+    },
+    { deep: 1 }
   )
 
   // --- TypeAhead navigation ---
@@ -427,7 +431,11 @@ export function useComboBox(
   function typeAheadToLastSelected() {
     const last = selectedValue.value[selectedValue.value.length - 1]
     if (last === undefined) {
-      typeAheadPointer.value = -1
+      // Typing may have opened the dropdown (a bound `open` arrives after
+      // the search): keep the first match highlighted.
+      typeAheadPointer.value = isSearching.value
+        ? filteredOptions.value.findIndex((option) => isOptionSelectable(option))
+        : -1
       return
     }
     const key = getOptionKey(last)

@@ -29,11 +29,11 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **done** = impleme
 
 | Removed or changed | Migration | Status |
 |--------------------|-----------|--------|
-| `onTab`, `selectOnTab` | `:map-keydown="map => ({ ...map, Tab: map.Enter })"` | done |
+| `onTab`, `selectOnTab` | `:map-keydown="(map, ctx) => ({ ...map, Tab: () => ctx.open.value && ctx.typeAheadSelect() })"`. Don't map Tab to `map.Enter`: Enter prevents the default, which would trap focus. | done |
 | `selectOnKeyCodes` | `:map-keydown="map => ({ ...map, ',': map.Enter })"` | done |
 | `mapKeydown` keys are `KeyboardEvent.key` names instead of key codes; second argument is the combobox context instead of the component instance | Replace `13` with `'Enter'`, `9` with `'Tab'`, `188` with `','`, etc. | done |
 | `searchInputQuerySelector` | Not needed: bind the attributes from the `search` slot to your input. | done |
-| `noDrop` | `:open="false"` | done |
+| `noDrop` | `:open="false"`. Tagging still works: Enter creates the tag while the dropdown is held closed. | done |
 | `dropdownShouldOpen` | `v-model:open`, deciding in your `@update:open` handler. | done |
 | `pushTags` | `@option:created="tag => options.push(tag)"` | done |
 | `filter` receives `(options, search)`; v3 also passed the component instance | Use the arguments; there is no instance. | done |
@@ -58,6 +58,8 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **done** = impleme
 | The open indicator is wrapped in a toggle button (`button.vs__open-indicator-button`, `tabindex="-1"`, `aria-label` from `ariaLabels.toggle`, `aria-expanded`, `aria-controls`). | Custom `open-indicator` slot content renders inside the button; avoid nesting another button. | done |
 | Keyboard follows the WAI-ARIA APG combobox examples. Editable: Escape closes first, then clears the search (v3 cleared first); ↓/↑ on a closed dropdown with nothing selected highlight the first/last option; the highlight wraps at the ends (v3 stopped); Enter with nothing highlighted closes. Select-only (`searchable: false`): no wrapping; Home/End, PageUp/PageDown, Tab and Alt+↑ select; repeating a letter cycles matches. | Use `mapKeydown` to restore specific keys. | done |
 | Escape keeps focus on the input. v3 blurred it on an empty search. | None for users; keyboard focus no longer drops to the page. | done |
+| Enter on a closed dropdown does its default (e.g. submits the form) instead of selecting the highlighted option; with `taggable` and search text it still creates the tag. | None for most forms. Handle `Enter` in `mapKeydown` to select instead. | done |
+| `toggleDropdown()` on a template ref takes no event argument. | Call it without arguments. | done |
 | The open indicator icon is `aria-hidden`; the toggle button carries the name and state. | None. | done |
 | New icons: Heroicons 20px chevron-down (toggle) and x-mark (clear), 16px x-mark on tags, sized with CSS (`--vs-controls-icon-size`, `--vs-deselect-icon-size`). `--vs-controls-size` now scales them through their size instead of a `transform: scale()`. | Custom CSS that targeted the old SVG dimensions or the `scale()` transform may need adjusting. Use the `open-indicator`, `clear` and `deselect` slots to supply your own icons. | done |
 | Default highlight color `--vs-dropdown-option--active-bg` is `#136cfb` (4.6:1 with white, WCAG AA). v3 used `#5897fb` (2.9:1). | Set the variable to restore the old color. | done |
