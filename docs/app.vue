@@ -3,6 +3,7 @@ import Hero from '~/components/Hero.vue'
 import ApplicationHeader from '~/components/ApplicationHeader.vue'
 import SidebarNavigation from '~/components/SidebarNavigation.vue'
 import PageContent from '~/components/PageContent.vue'
+import VersionBanner from '~/components/VersionBanner.vue'
 import '../src/css/vue-select.css'
 
 const { page } = useContent()
@@ -20,6 +21,7 @@ useHead({
 <template>
   <div>
     <ApplicationHeader />
+    <VersionBanner />
     <Hero v-if="page?.hero" />
     <div
       class="relative mx-auto flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12"

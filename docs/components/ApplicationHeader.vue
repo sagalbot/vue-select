@@ -19,7 +19,7 @@ const isScrolled = computed(() => y.value !== 0)
         : 'dark:bg-transparent',
     ]"
   >
-    <div class="mr-6 flex lg:hidden">
+    <div class="mr-4 flex sm:mr-6 lg:hidden">
       <button type="button" class="relative" aria-label="Open navigation">
         <svg
           aria-hidden="true"
@@ -80,12 +80,12 @@ const isScrolled = computed(() => y.value !== 0)
         </svg>
 
         <span
-          class="font-bold font-display tracking-tight text-sky-900 dark:text-sky-50"
+          class="whitespace-nowrap font-bold font-display tracking-tight text-sky-900 dark:text-sky-50"
           >Vue Select</span
         >
       </NuxtLink>
     </div>
-    <div class="-my-5 mr-6 sm:mr-8 md:mr-0">
+    <div class="-my-5 mr-4 sm:mr-8 md:mr-0">
       <button
         type="button"
         class="group flex h-6 w-6 items-center justify-center sm:justify-start md:h-auto md:w-80 md:flex-none md:rounded-lg md:py-2.5 md:pl-4 md:pr-3.5 md:text-sm md:ring-1 md:ring-slate-200 md:hover:ring-slate-300 dark:md:bg-slate-800/75 dark:md:ring-inset dark:md:ring-white/5 dark:md:hover:bg-slate-700/40 dark:md:hover:ring-slate-500 lg:w-96"
@@ -113,7 +113,7 @@ const isScrolled = computed(() => y.value !== 0)
       </button>
     </div>
     <div
-      class="relative flex basis-0 items-center justify-end gap-6 sm:gap-8 md:grow"
+      class="relative flex basis-0 items-center justify-end gap-4 sm:gap-8 md:grow"
     >
       <VersionSwitcher />
       <ColorThemeSwitcher />
@@ -134,7 +134,7 @@ const isScrolled = computed(() => y.value !== 0)
         </svg>
       </a>
       <a
-        class="group"
+        class="group hidden sm:block"
         aria-label="Springloaded"
         target="_blank"
         href="https://springloaded.co"

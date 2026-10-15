@@ -11,19 +11,14 @@ const latestHref = computed(() => {
   <div
     v-if="!version.latest"
     role="note"
-    class="mb-9 rounded-2xl bg-amber-50 p-5 text-sm leading-6 text-amber-900 dark:bg-slate-800/60 dark:text-slate-300 dark:ring-1 dark:ring-slate-300/10"
+    class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-center text-sm text-slate-600 dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-400"
   >
-    <p>
-      You're reading the archived docs for <strong>Vue Select {{ version.release }}</strong>,
-      which supports {{ version.vue }}. Examples on these pages are shown as code only.
-    </p>
-    <p class="mt-2 flex flex-wrap gap-x-6 gap-y-1 font-semibold">
-      <NuxtLink :to="latestHref" class="text-amber-900 underline dark:text-sky-400">
-        Go to the {{ latestVersion.id }} docs →
-      </NuxtLink>
-      <NuxtLink to="/guide/upgrade" class="text-amber-900 underline dark:text-sky-400">
-        Upgrade to {{ latestVersion.id }} →
-      </NuxtLink>
-    </p>
+    You're viewing the docs for Vue Select {{ version.release }} ({{ version.vue }}).
+    <NuxtLink
+      :to="latestHref"
+      class="ml-1 whitespace-nowrap font-medium text-sky-600 hover:text-sky-500 dark:text-sky-400"
+    >
+      Go to {{ latestVersion.id }} <span aria-hidden="true">→</span>
+    </NuxtLink>
   </div>
 </template>

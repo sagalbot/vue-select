@@ -2,7 +2,6 @@
 import ContentFooterNavigation from '~/components/PageContentFooterNavigation.vue'
 import PageContentHeader from '~/components/PageContentHeader.vue'
 import PageTableOfContents from '~/components/PageTableOfContents.vue'
-import VersionBanner from '~/components/VersionBanner.vue'
 </script>
 
 <template>
@@ -11,7 +10,6 @@ import VersionBanner from '~/components/VersionBanner.vue'
   >
     <article>
       <PageContentHeader />
-      <VersionBanner />
       <div
         :class="[
           'prose prose-slate max-w-none dark:prose-invert dark:text-slate-400',
