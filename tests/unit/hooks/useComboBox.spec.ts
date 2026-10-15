@@ -323,6 +323,23 @@ describe('useComboBox', () => {
     })
   })
 
+  describe('highlight with reduce and async options', () => {
+    it('highlights the first result when new options arrive while searching', async () => {
+      const props = reactive<Record<string, unknown>>({
+        options: [{ label: 'Canada', code: 'CA' }],
+        reduce: (o: OptionValue) => (o as Record<string, unknown>).code,
+        modelValue: 'CA',
+      })
+      const ctx = useComboBox(props, vi.fn())
+      ctx.setOpen(true)
+      ctx.setSearch('m')
+      // e.g. an AJAX search replaces the options
+      props.options = [{ label: 'Mexico', code: 'MX' }, { label: 'Malta', code: 'MT' }]
+      await nextTick()
+      expect(ctx.typeAheadPointer.value).toBe(0)
+    })
+  })
+
   describe('resetOnOptionsChange with mutation', () => {
     it('reacts to options being pushed', async () => {
       const options = ['one', 'two']

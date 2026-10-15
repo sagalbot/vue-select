@@ -445,7 +445,13 @@ export function useComboBox(
   }
 
   watch(open, (isOpen) => isOpen && typeAheadToLastSelected(), { flush: 'sync' })
-  watch(selectedValue, () => open.value && typeAheadToLastSelected(), { flush: 'sync' })
+  // Watch the selection's keys, not the array: with reduce, the array is
+  // rebuilt whenever options change, which isn't a selection change.
+  watch(
+    () => selectedValue.value.map((option) => getOptionKey(option)).join('\u0000'),
+    () => open.value && typeAheadToLastSelected(),
+    { flush: 'sync' }
+  )
 
   /**
    * Index of the first selectable option from `from` in direction `step`,
