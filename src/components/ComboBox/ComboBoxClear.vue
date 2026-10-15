@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { useComboBoxContext } from '@/keys'
+import { useComboBoxContext } from '../../keys'
 
 const ctx = useComboBoxContext('ComboBoxClear')
 </script>

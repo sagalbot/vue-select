@@ -14,17 +14,17 @@ import {
   watch,
   type FunctionalComponent,
 } from 'vue'
-import { useComboBox } from '@/hooks/useComboBox'
-import { ComboBoxKey } from '@/keys'
-import ComboBoxInput from '@/components/ComboBox/ComboBoxInput.vue'
-import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
-import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
-import ComboBoxGroup from '@/components/ComboBox/ComboBoxGroup.vue'
-import ComboBoxButton from '@/components/ComboBox/ComboBoxButton.vue'
-import ChevronDownIcon from '@/components/icons/ChevronDownIcon.vue'
-import XMarkIcon from '@/components/icons/XMarkIcon.vue'
-import XMarkSmallIcon from '@/components/icons/XMarkSmallIcon.vue'
-import type { CalculatePosition, OptionValue, VueSelectProps } from '@/types'
+import { useComboBox } from '../hooks/useComboBox'
+import { ComboBoxKey } from '../keys'
+import ComboBoxInput from './ComboBox/ComboBoxInput.vue'
+import ComboBoxMenu from './ComboBox/ComboBoxMenu.vue'
+import ComboBoxOption from './ComboBox/ComboBoxOption.vue'
+import ComboBoxGroup from './ComboBox/ComboBoxGroup.vue'
+import ComboBoxButton from './ComboBox/ComboBoxButton.vue'
+import ChevronDownIcon from './icons/ChevronDownIcon.vue'
+import XMarkIcon from './icons/XMarkIcon.vue'
+import XMarkSmallIcon from './icons/XMarkSmallIcon.vue'
+import type { CalculatePosition, OptionValue, VueSelectProps } from '../types'
 
 const props = withDefaults(defineProps<VueSelectProps>(), {
   options: () => [],

@@ -7,8 +7,8 @@ import type {
   ModelValue,
   OptionKey,
   OptionValue,
-} from '@/types'
-import sortAndStringify from '@/utility/sortAndStringify'
+} from '../types'
+import sortAndStringify from '../utility/sortAndStringify'
 
 // Fallback for calls outside a component (e.g. unit tests), where useId() is unavailable.
 let uidCounter = 0

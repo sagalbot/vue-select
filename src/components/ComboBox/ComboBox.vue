@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, provide, ref, onMounted, onUnmounted } from 'vue'
-import { useComboBox } from '@/hooks/useComboBox'
-import { useClickAway } from '@/hooks/useClickAway'
-import { ComboBoxKey } from '@/keys'
-import type { ComboBoxProps } from '@/types'
+import { useComboBox } from '../../hooks/useComboBox'
+import { useClickAway } from '../../hooks/useClickAway'
+import { ComboBoxKey } from '../../keys'
+import type { ComboBoxProps } from '../../types'
 
 const props = withDefaults(defineProps<ComboBoxProps>(), {
   options: () => [],

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
-import { useComboBoxContext } from '@/keys'
+import { useComboBoxContext } from '../../keys'
 
 const props = withDefaults(
   defineProps<{

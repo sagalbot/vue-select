@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, useAttrs } from 'vue'
-import { useComboBoxContext } from '@/keys'
-import type { KeydownHandlers } from '@/types'
+import { useComboBoxContext } from '../../keys'
+import type { KeydownHandlers } from '../../types'
 
 defineOptions({ inheritAttrs: false })
 defineSlots<{

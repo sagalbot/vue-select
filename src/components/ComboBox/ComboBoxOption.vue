@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useComboBoxContext } from '@/keys'
-import type { OptionValue } from '@/types'
+import { useComboBoxContext } from '../../keys'
+import type { OptionValue } from '../../types'
 
 const props = withDefaults(
   defineProps<{

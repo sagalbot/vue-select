@@ -1,5 +1,5 @@
 import { inject, type InjectionKey } from 'vue'
-import type { ComboBoxContext } from '@/types'
+import type { ComboBoxContext } from './types'
 
 export const ComboBoxKey: InjectionKey<ComboBoxContext> = Symbol('ComboBoxContext')
 
