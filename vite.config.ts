@@ -16,15 +16,17 @@ export default defineConfig({
     },
   },
   build: {
-    target: 'es2015',
+    target: 'es2020',
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'vue-select',
+      // UMD global, as in v3: VueSelect.default / VueSelect.VueSelect
+      name: 'VueSelect',
       fileName: (format) => `vue-select.${format}.js`,
     },
     rollupOptions: {
       external: ['vue'],
       output: {
+        exports: 'named',
         globals: { vue: 'Vue' },
         assetFileNames(chunk): string {
           if (chunk.name === 'style.css') {

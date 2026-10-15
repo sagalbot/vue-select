@@ -13,17 +13,19 @@
   ],
   "main": "./dist/vue-select.umd.js",
   "module": "./dist/vue-select.es.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/vue-select.es.js",
       "require": "./dist/vue-select.umd.js"
     },
-    "./dist/vue-select.css": {
-      "style": "./dist/vue-select.css",
-      "import": "./dist/vue-select.css",
-      "require": "./dist/vue-select.css"
-    }
+    "./style.css": "./dist/vue-select.css",
+    "./dist/vue-select.css": "./dist/vue-select.css"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "private": false,
   "license": "MIT",
   "prepare": "npm run build",
@@ -33,7 +35,7 @@
     "semantic-release": "semantic-release",
     "commit": "git-cz",
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build && vue-tsc -p tsconfig.build.json",
     "preview": "vite preview --port 5050",
     "test": "vitest --environment jsdom",
     "coverage": "vitest --run --coverage --environment jsdom --silent",
@@ -78,7 +80,7 @@
     "vite-plugin-vue-devtools": "^7.7.2",
     "vitest": "^3.0.8",
     "vue": "^3.5.13",
-    "vue-tsc": "^2.2.8"
+    "vue-tsc": "^3.3.13"
   },
   "config": {
     "commitizen": {
@@ -90,17 +92,17 @@
       {
         "path": "./dist/vue-select.es.js",
         "compression": "gzip",
-        "maxSize": "8 KB"
+        "maxSize": "10 KB"
       },
       {
         "path": "./dist/vue-select.umd.js",
         "compression": "gzip",
-        "maxSize": "7 KB"
+        "maxSize": "8.5 KB"
       },
       {
         "path": "./dist/vue-select.css",
         "compression": "gzip",
-        "maxSize": "2 KB"
+        "maxSize": "2.25 KB"
       }
     ]
   }

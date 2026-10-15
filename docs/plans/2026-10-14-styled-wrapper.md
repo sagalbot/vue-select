@@ -160,10 +160,10 @@ The v3 specs are copied to `tests/unit/v3-compat/` and rewritten to use only the
 - ✅ **T20 harness:** rewrite `tests/helpers.js` to drive the DOM (type into the input, press keys) instead of mutating `vm.search` and `$refs`. Point all legacy specs at `VueSelect`, updating only the props removed by the audit. Each other failing assertion either gets fixed or gets an entry in `docs/plans/v4-breaking-changes.md` with a migration note.
 - ✅ **T21 new coverage:** grouped options keyboard navigation, `appendTo` teleport cleanup on unmount, SSR hydration of `VueSelect`, controlled `open`.
 
-## Phase 4: Cutover (T22 and T24 done 2026-10-15; T23 next)
+## Phase 4: Cutover (done 2026-10-15)
 
 - ✅ **T22 `feat!`:** default export becomes `VueSelect`. Restore the named `VueSelect` export that the beta dropped, so `import { VueSelect } from 'vue-select'` keeps working. Delete `Select.vue`, `src/mixins/`, `src/directives/appendToBody.js`, `src/components/childComponents.js`, `src/scss/`, `StyledComboBox.vue`, `useModelValue.ts`, and the deprecated `ListBox*` types and keys. `pnpm exec eslint .` passes with zero errors (the 22 current errors are in `Select.vue`, `Deselect.vue`, `dev/`, `postcss.config.js`, three legacy specs, and `useModelValue.ts`). `pnpm typecheck` (strict, `tsconfig.vitest.json`) passes: it currently reports 33 errors, mostly `ctx` possibly undefined in primitive templates.
-- **T23 `build`:** `exports` map with `types`, `import`, and `require` conditions plus `./style.css`, keeping `./dist/vue-select.css` working. Emit `.d.ts` files. Set `output.exports: 'named'` to fix the mixed-export build warning. Update the bundlewatch limits.
+- ✅ **T23 `build`:** `exports` map with `types`, `import`, and `require` conditions plus `./style.css`, keeping `./dist/vue-select.css` working. Emit `.d.ts` files. Set `output.exports: 'named'` to fix the mixed-export build warning. Update the bundlewatch limits.
 - ✅ **T24 `chore(dev)`:** update the `dev/` playground to show `VueSelect` and a headless composition side by side.
 
 ## Phase 5: Stretch

@@ -15,6 +15,8 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **done** = impleme
 | The default export (and named `VueSelect` export) is the new component built on the headless primitives; the Options API `Select.vue` is gone | Most templates work unchanged; see the props, behavior and template-ref rows below. | done |
 | Build files renamed: `dist/vue-select.js` is now `dist/vue-select.umd.js` and `dist/vue-select.es.js` | Import from `vue-select`, not a `dist/` path. `vue-select/dist/vue-select.css` is unchanged. | shipped |
 | `exports` map blocks deep imports (`vue-select/src/...`) | Import from the package root. | shipped |
+| Build target is ES2020 (v3 targeted ES5 through Babel) | None for browsers Vue 3 supports. | done |
+| Types ship with the package (`dist/types`); CSS is also exported as `vue-select/style.css` | Remove `@types/vue-select` (#1843). `vue-select/dist/vue-select.css` still works. | done |
 
 ## v-model
 
