@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Sponsor } from '~/server/utils/github'
+import SpringloadedLogo from '~/assets/svg/springloaded-logo.svg'
 
 const props = defineProps<{ status: 'current' | 'past' }>()
 
@@ -23,11 +24,31 @@ const since = (date: string) => month.format(new Date(date))
 <template>
   <div class="not-prose mt-6">
     <template v-if="props.status === 'current'">
-      <ul
-        v-if="current.length"
-        role="list"
-        class="grid grid-cols-1 gap-6 sm:grid-cols-2"
-      >
+      <ul role="list" class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <!-- Springloaded supports Vue Select directly, outside GitHub Sponsors -->
+        <li>
+          <a
+            href="https://springloaded.co?ref=vue-select"
+            class="flex items-center gap-4 rounded-2xl p-3 ring-1 ring-slate-200 hover:bg-slate-50 dark:ring-slate-800 dark:hover:bg-slate-800/60"
+          >
+            <span
+              class="flex h-16 w-16 flex-none items-center justify-center rounded-full bg-slate-900 dark:bg-white"
+            >
+              <SpringloadedLogo
+                class="h-8 w-8 fill-white dark:fill-slate-900"
+                aria-hidden="true"
+              />
+            </span>
+            <span>
+              <span class="block font-semibold text-slate-900 dark:text-white">
+                Springloaded
+              </span>
+              <span class="block text-sm text-slate-500 dark:text-slate-400">
+                springloaded.co
+              </span>
+            </span>
+          </a>
+        </li>
         <li v-for="sponsor in current" :key="sponsor.login">
           <a
             :href="sponsor.url"
@@ -51,9 +72,6 @@ const since = (date: string) => month.format(new Date(date))
           </a>
         </li>
       </ul>
-      <p v-else class="text-slate-500 dark:text-slate-400">
-        No current sponsors yet. You could be the first!
-      </p>
     </template>
 
     <ul v-else role="list" class="flex flex-wrap gap-3">
