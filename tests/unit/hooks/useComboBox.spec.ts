@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { nextTick, reactive } from 'vue'
 import { useComboBox } from '@/hooks/useComboBox'
-import type { OptionValue } from '@/types'
+import type { ComboBoxContext, KeydownHandlers, OptionValue } from '@/types'
 
 function createComboBox(overrides = {}) {
   const emit = vi.fn()
@@ -82,7 +82,7 @@ describe('useComboBox', () => {
 
   describe('mapKeydown', () => {
     it('passes the handlers and the context to the prop', () => {
-      const mapKeydown = vi.fn((map) => map)
+      const mapKeydown = vi.fn((...args: [KeydownHandlers, ComboBoxContext]) => args[0])
       const ctx = createComboBox({ mapKeydown })
       const handlers = { Enter: () => {} }
       expect(ctx.mapKeydown(handlers)).toBe(handlers)

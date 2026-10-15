@@ -69,7 +69,7 @@ const TestSelect = defineComponent({
       h(
         ComboBox,
         {
-          ...props,
+          ...(props as Record<string, unknown>),
           'onUpdate:modelValue': (v: unknown) => emit('update:modelValue', v),
           'onUpdate:open': (v: boolean) => emit('update:open', v),
           onClear: () => emit('clear'),

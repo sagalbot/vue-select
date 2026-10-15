@@ -64,8 +64,14 @@ describe('ComboBox', () => {
     const wrapper = mount(ComboBox, {
       props: { options: ['one', 'two', 'three'], modelValue: 'two', open: true },
       slots: {
-        default: (state: { open: boolean; filteredOptions: string[]; selected: string[] }) =>
-          h('div', `${state.open}|${state.filteredOptions.join(',')}|${state.selected.join(',')}`),
+        default: (state: Record<string, unknown>) => {
+          const { open, filteredOptions, selected } = state as {
+            open: boolean
+            filteredOptions: string[]
+            selected: string[]
+          }
+          return h('div', `${open}|${filteredOptions.join(',')}|${selected.join(',')}`)
+        },
       },
     })
     expect(wrapper.text()).toBe('true|one,two,three|two')
