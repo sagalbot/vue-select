@@ -25,6 +25,36 @@
         cursor: var(--vs-disabled-cursor);
         background-color: var(--vs-disabled-bg);
     }
+
+    .vs__search,
+    .vs__selected {
+        color: var(--vs-disabled-color);
+    }
+
+    .vs__clear,
+    .vs__deselect,
+    .vs__open-indicator {
+        fill: var(--vs-state-disabled-controls-color);
+    }
+}
+
+/*
+ * Focus
+ *
+ * The search input drops its own outline; the whole field shows focus
+ * instead. Buttons inside it show a ring when focused from the keyboard.
+ */
+.vs__dropdown-toggle:focus-within {
+    border-color: var(--vs-focus-color);
+    box-shadow: var(--vs-focus-ring);
+}
+
+.vs__deselect:focus-visible,
+.vs__clear:focus-visible,
+.vs__open-indicator-button:focus-visible {
+    outline: 2px solid var(--vs-focus-color);
+    outline-offset: 1px;
+    border-radius: 2px;
 }
 
 /*

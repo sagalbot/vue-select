@@ -53,7 +53,6 @@
     --vs-dropdown-box-shadow: 0px 3px 6px 0px var(--vs-colors--darkest);
 
     /* Options */
-    --vs-dropdown-option-bg: #000;
     --vs-dropdown-option-color: var(--vs-dropdown-color);
     --vs-dropdown-option-padding: 3px 20px;
 
@@ -66,7 +65,15 @@
     --vs-dropdown-option--deselect-bg: #fb5858;
     --vs-dropdown-option--deselect-color: #fff;
 
-    /* Transitions */
-    --vs-transition-timing-function: cubic-bezier(1, -0.115, 0.975, 0.855);
+    /* Transitions (the values v3 actually applied: animations.css used to
+       redefine these after this file) */
+    --vs-transition-timing-function: cubic-bezier(1, 0.5, 0.8, 1);
     --vs-transition-duration: 150ms;
+
+    /* Spinner (scale; defaults to the controls size) */
+    --vs-controls--spinner-size: var(--vs-controls-size);
+
+    /* Focus: ring around the field while it has focus */
+    --vs-focus-color: #136cfb;
+    --vs-focus-ring: 0 0 0 1px var(--vs-focus-color);
 }
