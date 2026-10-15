@@ -54,3 +54,8 @@
         text-align: right;
     }
 }
+
+/* A teleported dropdown (appendTo) carries the direction itself */
+.vs__dropdown-menu[dir='rtl'] {
+    text-align: right;
+}

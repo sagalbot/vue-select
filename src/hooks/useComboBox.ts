@@ -123,7 +123,7 @@ export function useComboBox(
         console.warn(
           `[vue-select warn]: Label key "option.${key}" does not exist in ` +
             `options object ${JSON.stringify(option)}.\n` +
-            'https://vue-select.org/api/props.html#getoptionlabel'
+            'https://vue-select.org/api/props#getoptionlabel'
         )
         return ''
       }

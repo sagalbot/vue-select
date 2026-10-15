@@ -8,6 +8,7 @@ import {
   h,
   nextTick,
   onBeforeUnmount,
+  onMounted,
   provide,
   ref,
   useSlots,
@@ -97,6 +98,23 @@ function normalizeOptionForSlot(option: OptionValue) {
 const label = (option: OptionValue) => ctx.getOptionLabel(option)
 
 const clearLabel = computed(() => props.ariaLabels.clear ?? 'Clear Selected')
+const listboxLabel = computed(() => props.ariaLabels.listbox ?? 'Options')
+
+/**
+ * Scope for the selected-option-container slot. Slots receive string
+ * options wrapped as { [label]: value }; deselect maps that wrapper back to
+ * the real option, so deselect(option) works for strings too.
+ */
+function selectedOptionScope(option: OptionValue) {
+  const normalized = normalizeOptionForSlot(option)
+  return {
+    option: normalized,
+    deselect: (target: OptionValue) =>
+      ctx.deselect(target === normalized ? option : target),
+    multiple: props.multiple,
+    disabled: props.disabled,
+  }
+}
 const toggleLabel = computed(() => props.ariaLabels.toggle ?? 'Toggle options')
 
 function deselectLabel(option: OptionValue) {
@@ -207,6 +225,9 @@ async function onDeselectClick(option: OptionValue, event: MouseEvent) {
 
 // --- Teleported dropdown positioning ---
 
+const mounted = ref(false)
+onMounted(() => (mounted.value = true))
+
 let cleanupPosition: (() => void) | void
 
 function releasePosition() {
@@ -225,6 +246,7 @@ watch(dropdownOpen, async (isOpen) => {
     width: `${width}px`,
     top: `${window.scrollY + top + height}px`,
     left: `${window.scrollX + left}px`,
+    toggle: toggleEl.value,
   })
 })
 
@@ -290,13 +312,7 @@ defineExpose({
           v-for="option in ctx.selectedValue.value"
           :key="ctx.getOptionKey(option)"
         >
-          <slot
-            name="selected-option-container"
-            :option="normalizeOptionForSlot(option)"
-            :deselect="ctx.deselect"
-            :multiple="multiple"
-            :disabled="disabled"
-          >
+          <slot name="selected-option-container" v-bind="selectedOptionScope(option)">
             <span class="vs__selected">
               <slot name="selected-option" v-bind="normalizeOptionForSlot(option)">
                 {{ label(option) }}
@@ -371,13 +387,17 @@ defineExpose({
       </div>
     </div>
 
-    <Teleport :to="appendTo ?? 'body'" :disabled="!appendTo">
+    <!-- Teleport only after mount: the server and the hydrating client
+         render the menu in place, so SSR hydration matches -->
+    <Teleport :to="appendTo ?? 'body'" :disabled="!appendTo || !mounted">
       <Transition :name="transition">
         <ComboBoxMenu
           ref="menuComponent"
           as="ul"
           class="vs__dropdown-menu"
           :show="dropdownOpen"
+          :aria-label="listboxLabel"
+          :dir="appendTo ? dir : undefined"
         >
           <slot name="list-header" v-bind="listSlotScope" />
           <template v-for="group in ctx.groupedOptions.value" :key="group.label ?? ''">

@@ -55,4 +55,10 @@ describe('ComboBoxClear', () => {
     const { wrapper } = mountClear({ isValueEmpty: computed(() => false) })
     expect(wrapper.attributes('aria-label')).toBe('Clear selection')
   })
+
+  it('moves focus to the input after clearing', async () => {
+    const { wrapper, ctx } = mountClear({ isValueEmpty: computed(() => false) })
+    await wrapper.trigger('click')
+    expect(ctx.focusInput).toHaveBeenCalled()
+  })
 })

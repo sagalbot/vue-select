@@ -105,8 +105,10 @@ export interface ComboBoxProps {
  * Text for the accessible names `VueSelect` renders. Defaults are English.
  */
 export interface AriaLabels {
-  /** The toggle (open indicator) button. */
+  /** The toggle (open indicator) button. Default: 'Toggle options'. */
   toggle?: string
+  /** The listbox of options. Default: 'Options'. */
+  listbox?: string
   /** The search input. Only used when the input has no id, aria-label or aria-labelledby. */
   search?: string
   /** The clear button. */
@@ -122,7 +124,8 @@ export interface AriaLabels {
 export type CalculatePosition = (
   menu: HTMLElement,
   ctx: ComboBoxContext,
-  position: { width: string; top: string; left: string }
+  /** Pixel values from the toggle's position; `toggle` is the toggle element. */
+  position: { width: string; top: string; left: string; toggle: HTMLElement }
 ) => void | (() => void)
 
 /**

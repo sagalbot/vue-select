@@ -10,7 +10,7 @@ const ctx = useComboBoxContext('ComboBoxClear')
     v-show="!ctx.isValueEmpty.value && ctx.clearable.value"
     type="button"
     aria-label="Clear selection"
-    @click="ctx.clearSelection()"
+    @click="ctx.clearSelection(), ctx.focusInput()"
     @mousedown.prevent
   >
     <slot />

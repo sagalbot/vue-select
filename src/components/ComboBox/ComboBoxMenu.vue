@@ -40,6 +40,7 @@ watch(() => ctx.typeAheadPointer.value, async (pointer) => {
     ref="menuEl"
     :id="`vs-${ctx.uid.value}-listbox`"
     role="listbox"
+    :aria-multiselectable="ctx.multiple.value || undefined"
     tabindex="-1"
     @mousedown.prevent
   >

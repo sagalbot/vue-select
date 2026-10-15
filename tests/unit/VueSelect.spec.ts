@@ -163,7 +163,7 @@ describe('VueSelect (v4)', () => {
       expect(calculatePosition).toHaveBeenCalledTimes(1)
       const [element, , position] = calculatePosition.mock.calls[0]
       expect(element === menu).toBe(true)
-      expect(Object.keys(position).sort()).toEqual(['left', 'top', 'width'])
+      expect(Object.keys(position).sort()).toEqual(['left', 'toggle', 'top', 'width'])
       wrapper.unmount()
     })
 
@@ -263,6 +263,73 @@ describe('VueSelect (v4)', () => {
       await clear.trigger('click')
       expect(document.activeElement).toBe(wrapper.get('.vs__search').element)
       wrapper.unmount()
+    })
+  })
+
+  describe('docs-review fixes', () => {
+    it('passes the toggle element to calculatePosition', async () => {
+      const calculatePosition = vi.fn()
+      const wrapper = mount(VueSelect, {
+        props: { options: ['a'], appendTo: 'body', calculatePosition },
+        attachTo: document.body,
+        global: { stubs: { transition: false } },
+      })
+      await press(wrapper.get('.vs__open-indicator-button'))
+      await nextTick()
+      const position = calculatePosition.mock.calls[0][2]
+      expect(position.toggle === wrapper.get('.vs__dropdown-toggle').element).toBe(true)
+      wrapper.unmount()
+    })
+
+    it('lets slots deselect string options', async () => {
+      const wrapper = mount(VueSelect, {
+        props: { options: ['a', 'b'], multiple: true, modelValue: ['a', 'b'] },
+        slots: {
+          'selected-option-container': ({ option, deselect }: { option: { label: string }; deselect: (o: unknown) => void }) =>
+            h('button', { class: 'custom-deselect', onClick: () => deselect(option) }, option.label),
+        },
+      })
+      await wrapper.findAll('.custom-deselect')[0].trigger('click')
+      expect(wrapper.emitted('update:modelValue')).toEqual([[['b']]])
+    })
+
+    it('hydrates with appendTo without mismatches', async () => {
+      const App = { render: () => h(VueSelect, { options: ['a'], appendTo: 'body' }) }
+      const html = await renderToString(createSSRApp(App))
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
+      const error = vi.spyOn(console, 'error').mockImplementation(() => {})
+      const container = document.createElement('div')
+      container.innerHTML = html
+      document.body.appendChild(container)
+      createSSRApp(App).mount(container)
+      const messages = [...warn.mock.calls, ...error.mock.calls].flat().join('\n')
+      expect(messages).not.toMatch(/hydration/i)
+    })
+
+    it('keeps the text direction on a teleported dropdown', async () => {
+      const wrapper = mount(VueSelect, {
+        props: { options: ['a'], appendTo: 'body', dir: 'rtl' },
+        attachTo: document.body,
+      })
+      await nextTick()
+      const menu = [...document.body.querySelectorAll('.vs__dropdown-menu')].find(
+        (el) => !wrapper.element.contains(el)
+      )
+      expect(menu?.getAttribute('dir')).toBe('rtl')
+      wrapper.unmount()
+    })
+
+    it('labels the listbox and marks it multiselectable', () => {
+      const multi = mount(VueSelect, { props: { options: ['a'], multiple: true } })
+      const listbox = multi.get('[role="listbox"]')
+      expect(listbox.attributes('aria-label')).toBe('Options')
+      expect(listbox.attributes('aria-multiselectable')).toBe('true')
+
+      const single = mount(VueSelect, {
+        props: { options: ['a'], ariaLabels: { listbox: 'Länder' } },
+      })
+      expect(single.get('[role="listbox"]').attributes('aria-label')).toBe('Länder')
+      expect(single.get('[role="listbox"]').attributes('aria-multiselectable')).toBeUndefined()
     })
   })
 

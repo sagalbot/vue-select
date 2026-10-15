@@ -43,7 +43,7 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **done** = impleme
 | `uid` | Not needed: ids are generated with `useId()`. Use `inputAttrs.id` to target the input. | done |
 | `appendToBody` | `append-to="body"` | done |
 | `clearSearchOnBlur` takes a boolean instead of a function | Pass the boolean your function returned. | done |
-| `calculatePosition` receives the combobox context instead of the component instance | Read state from the context argument. | done |
+| `calculatePosition` receives the combobox context instead of the component instance | Read state from the context argument; the toggle element is `position.toggle` (v3: `component.$refs.toggle`). | done |
 
 ## Behavior
 

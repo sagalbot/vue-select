@@ -28,7 +28,7 @@ describe('Labels', () => {
 
     expect(spy).toHaveBeenCalledWith(
       '[vue-select warn]: Label key "option.label" does not exist in options object {}.' +
-        '\nhttps://vue-select.org/api/props.html#getoptionlabel'
+        '\nhttps://vue-select.org/api/props#getoptionlabel'
     )
     spy.mockRestore()
   })
