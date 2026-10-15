@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Prepares an Amp orb for the v4 (pnpm) line: pnpm 9 plus workspace dependencies.
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+step() {
+  local label="$1"
+  shift
+  local start=$SECONDS
+  echo "==> $label"
+  "$@"
+  echo "<== $label ($((SECONDS - start))s)"
+}
+
+# CI pins pnpm 9 (.github/actions/install); the lockfile is v9. Corepack's pnpm is
+# unreliable in orbs, so install pnpm 9 into ~/.local/bin, which precedes
+# /usr/local/bin on the orb's login PATH.
+pnpm_prefix="$HOME/.local"
+install_pnpm() {
+  if [[ "$("$pnpm_prefix/bin/pnpm" --version 2>/dev/null)" == 9.* ]]; then
+    echo "pnpm $("$pnpm_prefix/bin/pnpm" --version) already installed"
+    return
+  fi
+  npm install --global --prefix "$pnpm_prefix" --no-fund --no-audit pnpm@9
+}
+
+step "node $(node --version)" true
+step "install pnpm 9" install_pnpm
+export PATH="$pnpm_prefix/bin:$PATH"
+step "pnpm install" pnpm install --frozen-lockfile
