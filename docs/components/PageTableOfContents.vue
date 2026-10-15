@@ -7,7 +7,7 @@ const shouldRender = computed(() => page.value?.hideToc !== true)
 
 <template>
   <div
-    v-if="shouldRender && toc?.links"
+    v-if="shouldRender && toc?.links?.length"
     class="hidden xl:sticky xl:top-[4.5rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.5rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6"
   >
     <nav aria-labelledby="on-this-page-title" class="w-56">

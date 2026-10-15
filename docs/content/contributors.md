@@ -1,10 +1,12 @@
 ---
-sidebarDepth: 0
+title: Contributors
+section: Community
+description: The people who have contributed to Vue Select.
+hideToc: true
 ---
 
-# Contributors
+Vue Select is supported by a community of awesome contributors! Without their contributions, the
+package would not be what it is today. [Contribute on GitHub](https://github.com/sagalbot/vue-select).
 
-Vue Select is supported by a community of awesome contributors! Without their contributions,
-the package would not be what it is today.
-
-<Contributors />
+::contributor-list
+::
