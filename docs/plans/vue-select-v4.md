@@ -1,8 +1,8 @@
 ---
-title: VueSelect v4 vs current beta
+title: VueSelect v4 playground
 ---
 
-The current beta component (`Select.vue`, Options API) next to the v4 `VueSelect` built on the headless primitives. Both get the same props, so differences in look or behavior show up side by side. Both load from the working tree.
+The v4 `VueSelect` with its main props as toggles, loaded from the working tree. (Until the cutover this page showed the v3-era beta component side by side; that component has been removed.)
 
 ::vue-select-comparison
 ::

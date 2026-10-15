@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { inject, computed } from 'vue'
-import { ComboBoxKey } from '@/keys'
+import { computed } from 'vue'
+import { useComboBoxContext } from '@/keys'
 import type { OptionValue } from '@/types'
 
 const props = withDefaults(
@@ -13,8 +13,7 @@ const props = withDefaults(
   { as: 'div' }
 )
 
-const ctx = inject(ComboBoxKey)
-if (!ctx) throw new Error('ComboBoxOption must be used inside a ComboBox component')
+const ctx = useComboBoxContext('ComboBoxOption')
 
 const isSelected = computed(() => ctx.isOptionSelected(props.value))
 const isHighlighted = computed(() => ctx.isOptionHighlighted(props.index))

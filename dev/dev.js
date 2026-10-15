@@ -1,4 +1,4 @@
-import { createApp, h } from 'vue'
-import Dev from './Dev.vue'
+import { createApp } from 'vue'
+import DevPlayground from './DevPlayground.vue'
 
-createApp(Dev).mount('#app')
+createApp(DevPlayground).mount('#app')

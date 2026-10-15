@@ -58,4 +58,15 @@ describe('ComboBox', () => {
     expect(reader.vm.ctx.multiple.value).toBe(true)
     expect(reader.vm.ctx.placeholder.value).toBe('Pick...')
   })
+
+  it('passes state to the default slot', async () => {
+    const wrapper = mount(ComboBox, {
+      props: { options: ['one', 'two', 'three'], modelValue: 'two', open: true },
+      slots: {
+        default: (state: { open: boolean; filteredOptions: string[]; selected: string[] }) =>
+          h('div', `${state.open}|${state.filteredOptions.join(',')}|${state.selected.join(',')}`),
+      },
+    })
+    expect(wrapper.text()).toBe('true|one,two,three|two')
+  })
 })

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { inject, ref, watch, nextTick } from 'vue'
-import { ComboBoxKey } from '@/keys'
+import { ref, watch, nextTick } from 'vue'
+import { useComboBoxContext } from '@/keys'
 
 const props = withDefaults(
   defineProps<{
@@ -12,8 +12,7 @@ const props = withDefaults(
   { as: 'div', show: undefined }
 )
 
-const ctx = inject(ComboBoxKey)
-if (!ctx) throw new Error('ComboBoxMenu must be used inside a ComboBox component')
+const ctx = useComboBoxContext('ComboBoxMenu')
 const menuEl = ref<HTMLElement>()
 
 // Auto-scroll to keep highlighted option visible

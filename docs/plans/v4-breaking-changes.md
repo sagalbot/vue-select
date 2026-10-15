@@ -12,6 +12,7 @@ Status: **shipped** = on `@beta/dev` and in a published beta. **done** = impleme
 | Peer dependency `vue: ^3.5.0` | Upgrade Vue. Needed for SSR-safe ids (`useId()`). | done (T3) |
 | SCSS sources removed | Use the CSS custom properties (available since 3.18). | shipped |
 | `mixins` export removed | Use the headless primitives or `useComboBox`. | shipped |
+| The default export (and named `VueSelect` export) is the new component built on the headless primitives; the Options API `Select.vue` is gone | Most templates work unchanged; see the props, behavior and template-ref rows below. | done |
 | Build files renamed: `dist/vue-select.js` is now `dist/vue-select.umd.js` and `dist/vue-select.es.js` | Import from `vue-select`, not a `dist/` path. `vue-select/dist/vue-select.css` is unchanged. | shipped |
 | `exports` map blocks deep imports (`vue-select/src/...`) | Import from the package root. | shipped |
 

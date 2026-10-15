@@ -68,7 +68,7 @@ if (import.meta.dev) {
     title: 'v4 Progress (dev only)',
     links: [
       { href: '/plans/playground', title: 'Headless Playground' },
-      { href: '/plans/vue-select-v4', title: 'VueSelect v4 vs beta' },
+      { href: '/plans/vue-select-v4', title: 'VueSelect v4 playground' },
       { href: '/plans/icon-options', title: 'Icon options' },
       { href: '/plans/2026-10-14-styled-wrapper', title: 'Styled Wrapper Plan' },
       { href: '/plans/v4-breaking-changes', title: 'Breaking Changes' },

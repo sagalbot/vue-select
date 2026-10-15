@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { inject, ref, computed, useAttrs } from 'vue'
-import { ComboBoxKey } from '@/keys'
+import { ref, computed, useAttrs } from 'vue'
+import { useComboBoxContext } from '@/keys'
 import type { KeydownHandlers } from '@/types'
 
 defineOptions({ inheritAttrs: false })
@@ -14,14 +14,13 @@ defineSlots<{
   }) => unknown
 }>()
 
-const ctx = inject(ComboBoxKey)
-if (!ctx) throw new Error('ComboBoxInput must be used inside a ComboBox component')
+const ctx = useComboBoxContext('ComboBoxInput')
 const attrs = useAttrs()
 const isComposing = ref(false)
 
 const ariaAttrs = computed(() => ({
   role: 'combobox',
-  'aria-expanded': String(ctx.open.value),
+  'aria-expanded': ctx.open.value,
   'aria-controls': `vs-${ctx.uid.value}-listbox`,
   'aria-activedescendant':
     ctx.typeAheadPointer.value > -1

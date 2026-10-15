@@ -198,29 +198,3 @@ export interface ComboBoxContext {
   isOptionHighlighted: (index: number) => boolean
   optionList: ComputedRef<OptionValue[]>
 }
-
-/**
- * @deprecated Use ComboBoxProps instead. Will be removed in a future release.
- */
-export type VueSelectValue = unknown
-/**
- * @deprecated Use ComboBoxProps instead. Will be removed in a future release.
- */
-export type VueSelectOption = unknown
-/**
- * @deprecated Use ComboBoxProps instead. Will be removed in a future release.
- */
-export interface ListBoxProps {
-  modelValue: VueSelectValue
-  open?: boolean | undefined
-}
-/**
- * @deprecated Use ComboBoxContext instead. Will be removed in a future release.
- */
-export interface ResolvedListBoxProps extends Omit<ListBoxProps, 'open'> {
-  open: boolean
-  inputText: string
-  toggleOpen: () => boolean
-  setInputText: (text: string) => void
-  setModelValue: (value: unknown) => void
-}

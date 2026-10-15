@@ -130,19 +130,19 @@ File: `src/components/VueSelect.vue`, `<script setup lang="ts" generic="Option">
 - ✅ **T18 accessibility:** `ariaLabels` prop object for the search input, listbox, clear button, and per-tag deselect button (`(option) => string`). Defaults match v3 English text. Include `aria-multiselectable` (PR #1726). `inputAttrs` bound to the input.
 - ✅ **T19 instance API:** `defineExpose` the members people reach for through template refs in v3: `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur`.
 
-## Phase 2b: Fixes from `@nextcloud/vue-select`
+## Phase 2b: Fixes from `@nextcloud/vue-select` (done 2026-10-15)
 
 Nextcloud forked v3 in 2023, ported it to Vue 3, and shipped `@nextcloud/vue-select` 4.0/4.1 (April 2026). Audit of their non-dependency commits since our split (`https://github.com/nextcloud-libraries/vue-select`):
 
 | Fork commit | Fix | v4 status / proposal |
 |---|---|---|
 | `864a7e9` | ARIA attributes on the input, not the wrapper | Already the v4 design (ComboBoxInput is the combobox) |
-| `74d22e6` | Don't open the dropdown on keyboard focus (WCAG 3.2.1); hide the decorative chevron from assistive tech | **Decision needed.** Proposal: adopt. Mouse users are unaffected (clicking the toggle still opens); Tab no longer pops the list open before the field name is read. Mark `.vs__open-indicator` `aria-hidden`. |
-| `73e0b04` | Darker highlight color (`--vs-dropdown-option--active-bg` `#5897fb` → `#136cfb`) for WCAG AA contrast with white text | **Decision needed** (visible change). Proposal: adopt. |
-| `ac01c0f` | Highlight on `mousemove` instead of `mouseover`, so a list scrolling under a still pointer doesn't steal the keyboard highlight | Adopt in ComboBoxOption |
-| `12466c9`, `aab477b`, `89a6f98` | Keyboard focus returns to the input after clear; after a keyboard deselect, focus moves to the next/previous tag's deselect button | Adopt in VueSelect |
-| `71dd57d` | Long selected labels overflow the toggle (`min-width: 0`, `max-width: 100%`) (#754) | Adopt in CSS |
-| `26e2e59` / `4d8f668` | Throwing from `createOption` rejects the tag (input validation, e.g. email addresses) | Adopt in useComboBox |
+| `74d22e6` | Don't open the dropdown on keyboard focus (WCAG 3.2.1); hide the decorative chevron from assistive tech | ✅ Adopted, then extended: the dropdown opens from typing, ↓ and the toggle button (`openOnFocus` opts back in) |
+| `73e0b04` | Darker highlight color (`--vs-dropdown-option--active-bg` `#5897fb` → `#136cfb`) for WCAG AA contrast with white text | ✅ Adopted |
+| `ac01c0f` | Highlight on `mousemove` instead of `mouseover`, so a list scrolling under a still pointer doesn't steal the keyboard highlight | ✅ Done |
+| `12466c9`, `aab477b`, `89a6f98` | Keyboard focus returns to the input after clear; after a keyboard deselect, focus moves to the next/previous tag's deselect button | ✅ Done |
+| `71dd57d` | Long selected labels overflow the toggle (`min-width: 0`, `max-width: 100%`) (#754) | ✅ Done |
+| `26e2e59` / `4d8f668` | Throwing from `createOption` rejects the tag (input validation, e.g. email addresses) | ✅ Done |
 | `5baaa76` | Dropdown not opening after closing (PR #1742) | Covered: v4 ArrowDown/Space open a closed dropdown |
 | `eb042bb` | `resetFocusOnOptionsChange: false` keeps the highlight when options change | Consider; overlaps with the new highlight rules |
 | `a7ccfe1` | `limit` prop caps rendered options | Prefer virtual scrolling (T25); a `filter` slice already does this |
@@ -157,14 +157,14 @@ Result: the v3 suite (164 tests) runs against `VueSelect` as 164 tests: 163 pass
 
 The v3 specs are copied to `tests/unit/v3-compat/` and rewritten to use only the public interface (props, events, slots, DOM, template-ref API) through `tests/unit/v3-compat/helpers.js`. Tests that still fail on a real behavior difference are skipped with a `// V4-DIFF:` comment until the component is fixed. The original `tests/unit/*.spec.js` keep testing `Select.vue` until the cutover.
 
-- **T20 harness:** rewrite `tests/helpers.js` to drive the DOM (type into the input, press keys) instead of mutating `vm.search` and `$refs`. Point all legacy specs at `VueSelect`, updating only the props removed by the audit. Each other failing assertion either gets fixed or gets an entry in `docs/plans/v4-breaking-changes.md` with a migration note.
-- **T21 new coverage:** grouped options keyboard navigation, `appendTo` teleport cleanup on unmount, SSR hydration of `VueSelect`, controlled `open`.
+- ✅ **T20 harness:** rewrite `tests/helpers.js` to drive the DOM (type into the input, press keys) instead of mutating `vm.search` and `$refs`. Point all legacy specs at `VueSelect`, updating only the props removed by the audit. Each other failing assertion either gets fixed or gets an entry in `docs/plans/v4-breaking-changes.md` with a migration note.
+- ✅ **T21 new coverage:** grouped options keyboard navigation, `appendTo` teleport cleanup on unmount, SSR hydration of `VueSelect`, controlled `open`.
 
-## Phase 4: Cutover
+## Phase 4: Cutover (T22 and T24 done 2026-10-15; T23 next)
 
-- **T22 `feat!`:** default export becomes `VueSelect`. Restore the named `VueSelect` export that the beta dropped, so `import { VueSelect } from 'vue-select'` keeps working. Delete `Select.vue`, `src/mixins/`, `src/directives/appendToBody.js`, `src/components/childComponents.js`, `src/scss/`, `StyledComboBox.vue`, `useModelValue.ts`, and the deprecated `ListBox*` types and keys. `pnpm exec eslint .` passes with zero errors (the 22 current errors are in `Select.vue`, `Deselect.vue`, `dev/`, `postcss.config.js`, three legacy specs, and `useModelValue.ts`). `pnpm typecheck` (strict, `tsconfig.vitest.json`) passes: it currently reports 33 errors, mostly `ctx` possibly undefined in primitive templates.
+- ✅ **T22 `feat!`:** default export becomes `VueSelect`. Restore the named `VueSelect` export that the beta dropped, so `import { VueSelect } from 'vue-select'` keeps working. Delete `Select.vue`, `src/mixins/`, `src/directives/appendToBody.js`, `src/components/childComponents.js`, `src/scss/`, `StyledComboBox.vue`, `useModelValue.ts`, and the deprecated `ListBox*` types and keys. `pnpm exec eslint .` passes with zero errors (the 22 current errors are in `Select.vue`, `Deselect.vue`, `dev/`, `postcss.config.js`, three legacy specs, and `useModelValue.ts`). `pnpm typecheck` (strict, `tsconfig.vitest.json`) passes: it currently reports 33 errors, mostly `ctx` possibly undefined in primitive templates.
 - **T23 `build`:** `exports` map with `types`, `import`, and `require` conditions plus `./style.css`, keeping `./dist/vue-select.css` working. Emit `.d.ts` files. Set `output.exports: 'named'` to fix the mixed-export build warning. Update the bundlewatch limits.
-- **T24 `chore(dev)`:** update the `dev/` playground to show `VueSelect` and a headless composition side by side.
+- ✅ **T24 `chore(dev)`:** update the `dev/` playground to show `VueSelect` and a headless composition side by side.
 
 ## Phase 5: Stretch
 

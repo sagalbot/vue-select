@@ -215,9 +215,7 @@ describe('VueSelect (v4)', () => {
   describe('focus after removing values (keyboard)', () => {
     // Mount with a working v-model loop, as an app would have
     function mountWithModel(props: Record<string, unknown>) {
-      // eslint-disable-next-line prefer-const
-      let wrapper: ReturnType<typeof mount>
-      wrapper = mount(VueSelect, {
+      const wrapper: ReturnType<typeof mount> = mount(VueSelect, {
         props: {
           ...props,
           'onUpdate:modelValue': (value: unknown) => wrapper.setProps({ modelValue: value }),

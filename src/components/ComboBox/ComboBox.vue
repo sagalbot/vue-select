@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref, onMounted, onUnmounted } from 'vue'
+import { computed, provide, ref, onMounted, onUnmounted } from 'vue'
 import { useComboBox } from '@/hooks/useComboBox'
 import { useClickAway } from '@/hooks/useClickAway'
 import { ComboBoxKey } from '@/keys'
@@ -43,8 +43,19 @@ const emit = defineEmits<{
   'option:deselected': [option: unknown]
 }>()
 
-const ctx = useComboBox(props, emit)
+const ctx = useComboBox(props, emit as (event: string, ...args: unknown[]) => void)
 provide(ComboBoxKey, ctx)
+
+// State for the default slot, so templates can render options without
+// injecting the context: <ComboBox v-slot="{ filteredOptions }">
+const slotProps = computed(() => ({
+  open: ctx.open.value,
+  search: ctx.search.value,
+  selected: ctx.selectedValue.value,
+  filteredOptions: ctx.filteredOptions.value,
+  groupedOptions: ctx.groupedOptions.value,
+  loading: ctx.isLoading.value,
+}))
 
 // Click-away to close
 const el = ref<HTMLElement>()
@@ -52,11 +63,11 @@ const { addClickAwayListener, removeClickAwayListener } = useClickAway(() => {
   ctx.setOpen(false)
 })
 onMounted(() => addClickAwayListener(el.value))
-onUnmounted(() => removeClickAwayListener(el.value))
+onUnmounted(() => removeClickAwayListener())
 </script>
 
 <template>
   <div ref="el">
-    <slot />
+    <slot v-bind="slotProps" />
   </div>
 </template>

@@ -1,8 +1,8 @@
 // src/index.ts
-import Select from './components/Select.vue'
+import VueSelect from './components/VueSelect.vue'
 
-// v4 styled component, built on the headless primitives
-export { default as VueSelect } from './components/VueSelect.vue'
+// Styled component, built on the headless primitives
+export { VueSelect }
 
 // Headless primitives
 export { default as ComboBox } from './components/ComboBox/ComboBox.vue'
@@ -31,4 +31,4 @@ export type {
 } from './types'
 
 // Default export: the batteries-included component
-export default Select
+export default VueSelect
