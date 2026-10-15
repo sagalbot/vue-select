@@ -80,6 +80,7 @@ documentation is archived at [/v3](/v3/).
 | `calculatePosition` | receives the instance | receives the context |
 | Opening | on focus and click | on typing, Down Arrow and the toggle button (`openOnFocus` restores v3) |
 | Keyboard | v3 keys | WAI-ARIA APG combobox keys |
+| Enter on a closed dropdown | selects the highlighted option | default action (submits a form); creates a tag when `taggable` |
 | Empty single value after deselect | `[]` | `null` |
 | Backspace | no deselect events | emits `option:deselecting` / `option:deselected` |
 | `role="combobox"` | on `.vs__dropdown-toggle` | on the search input |
@@ -91,6 +92,8 @@ documentation is archived at [/v3](/v3/).
 | Clear button | single select only | single and multiple |
 | Escape | blurs on an empty search | keeps focus |
 | `vs--searching` | hidden by `noDrop` | set whenever there is search text |
+| `toggleDropdown()` | takes the mouse event | takes no argument |
+| CSS variables | `--vs-dropdown-option-bg`, two sets of `--vs-transition-*` | removed / defined once; disabled colors apply; new `--vs-focus-color`, `--vs-focus-ring` |
 | Template refs | the whole component instance | `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur` |
 
 ## Platform and packaging
@@ -222,6 +225,22 @@ npm uninstall @types/vue-select
 ```ts
 // v4
 import type { VueSelectProps, OptionValue, ComboBoxContext } from 'vue-select'
+```
+
+`VueSelect` is generic: the option type is inferred from `options` and flows into callbacks such
+as `reduce` and `getOptionLabel`, slot props and the `option:*` events. To type a callback you
+declare outside the template, use `VueSelectProps<YourOption>` rather than `OptionValue`, which is
+just `string | number | object`:
+
+```ts
+import type { VueSelectProps } from 'vue-select'
+
+interface Country {
+  code: string
+  name: string
+}
+
+const reduce: VueSelectProps<Country>['reduce'] = (country) => country.code
 ```
 
 ### ES2020 build
@@ -413,6 +432,9 @@ closed.
 <VueSelect taggable multiple :open="false" />
 ```
 
+Tagging keeps working while the dropdown is held closed: <kbd>Enter</kbd> creates a tag from the
+search text.
+
 ### `dropdownShouldOpen`
 
 Use `v-model:open`, or bind `open` and decide in your `@update:open` handler. When the decision
@@ -541,24 +563,21 @@ Attributes for the search input go in one [`inputAttrs`](/api/props#inputattrs) 
 ```vue
 <!-- v3 -->
 <label for="country">Country</label>
-<v-select input-id="country" :tabindex="3" :options="countries" />
+<v-select input-id="country" :tabindex="3" autocomplete="country-name" :options="countries" />
 
 <!-- v4 -->
 <label for="country">Country</label>
-<VueSelect :input-attrs="{ id: 'country', tabindex: 3 }" :options="countries" />
+<VueSelect
+  :input-attrs="{ id: 'country', tabindex: 3, autocomplete: 'country-name' }"
+  :options="countries"
+/>
 ```
 
-`autocomplete` has no replacement: v4 always renders `autocomplete="off"`, because browser
-autofill suggestions cover the dropdown. If you really need another value, render your own input
-with the [`search` slot](/api/slots), where your attributes win:
-
-```vue
-<VueSelect :options="countries">
-  <template #search="{ attributes, events }">
-    <input class="vs__search" v-bind="attributes" autocomplete="country-name" v-on="events" />
-  </template>
-</VueSelect>
-```
+`inputAttrs` can also override the input's `type` (`search` by default) and `placeholder`, and,
+with `:searchable="false"`, the select-only element's `tabindex`. A custom `search` slot follows
+the same rules. The attributes the combobox depends on stay managed: `role`, the ARIA state
+(`aria-expanded`, `aria-controls`, `aria-activedescendant`, `aria-autocomplete`), `value` and
+`disabled`.
 
 ### `searchInputQuerySelector`
 
@@ -611,7 +630,8 @@ uses Vue's `<Teleport>`.
 
 [`calculatePosition`](/api/props#calculateposition) still receives the menu element and
 `{ width, top, left }`, and can still return a cleanup function. Its second argument is the
-combobox context instead of the component instance.
+combobox context instead of the component instance, and the toggle element that v3 code read from
+`component.$refs.toggle` is passed as `position.toggle`.
 
 ```js
 // v3
@@ -623,10 +643,9 @@ function withPopper(dropdownList, component, { width }) {
 ```
 
 ```js
-// v4: find the toggle from the input, which the context exposes
-function withPopper(dropdownList, ctx, { width }) {
+// v4
+function withPopper(dropdownList, ctx, { width, toggle }) {
   dropdownList.style.width = width
-  const toggle = ctx.inputEl.value.closest('.vs__dropdown-toggle')
   const popper = createPopper(toggle, dropdownList, { placement: 'bottom' })
   return () => popper.destroy()
 }
@@ -689,7 +708,8 @@ examples.
 | <kbd>↓</kbd> / <kbd>↑</kbd> on a closed dropdown | open it | open it and highlight the selected option, or the first / last option when nothing is selected |
 | <kbd>↓</kbd> / <kbd>↑</kbd> at the end of the list | stop | wrap around |
 | <kbd>Enter</kbd> with nothing highlighted | nothing | closes the dropdown |
-| <kbd>Enter</kbd> on a closed dropdown | selects the last highlighted option | nothing |
+| <kbd>Enter</kbd> on a closed dropdown | selects the last highlighted option | does its default, e.g. submits the form; with `taggable` and search text, creates the tag |
+| <kbd>Space</kbd> on a closed dropdown | opens it | opens it when the search is empty; otherwise types a space |
 
 With `:searchable="false"` (select-only), arrows don't wrap; <kbd>Home</kbd>, <kbd>End</kbd>,
 <kbd>PageUp</kbd> and <kbd>PageDown</kbd> move the highlight; <kbd>Tab</kbd> and
@@ -697,7 +717,7 @@ With `:searchable="false"` (select-only), arrows don't wrap; <kbd>Home</kbd>, <k
 option, with a repeated letter cycling through the matches.
 
 To restore a v3 key, override it with `mapKeydown`. For example, Escape clearing the search
-before closing:
+before closing, and Enter selecting the highlighted option even when the dropdown is closed:
 
 ```vue
 <!-- v3: the default -->
@@ -708,10 +728,14 @@ before closing:
   :options="options"
   :map-keydown="(map, ctx) => ({
     ...map,
-    Escape: (e) => (ctx.search.value ? ctx.setSearch('') : map.Escape(e)),
+    Escape: (e) => (ctx.search.value ? (e.preventDefault(), ctx.setSearch('')) : map.Escape(e)),
+    Enter: (e) => (ctx.open.value ? map.Enter(e) : (e.preventDefault(), ctx.typeAheadSelect())),
   })"
 />
 ```
+
+Because Enter on a closed dropdown now does its default, pressing Enter in a Vue Select inside a
+`<form>` submits the form, like any other text field.
 
 ### Escape keeps focus in the field
 
@@ -846,6 +870,29 @@ the old SVG dimensions or the `scale()` transform may need adjusting:
 
 To use your own icons, see [`components`](#components) above.
 
+### CSS variable changes
+
+A few custom properties changed meaning, so check overrides that set them:
+
+- `--vs-dropdown-option-bg` is removed. v3 declared it but never applied it; style options with
+  `--vs-dropdown-option-color` and the `.vs__dropdown-option` class.
+- `--vs-transition-timing-function` and `--vs-transition-duration` are declared once, with the
+  values v3 actually applied (`cubic-bezier(1, 0.5, 0.8, 1)`, `150ms`). v3 declared them twice and
+  the second declaration won. The dropdown's fade-in now runs too: v3 used Vue 2's
+  `.vs__fade-enter` class, which Vue 3 doesn't apply.
+- `--vs-disabled-color` and `--vs-state-disabled-controls-color` now style the text and icons of a
+  disabled select, which therefore look lighter than in v3.
+- New: `--vs-focus-color` and `--vs-focus-ring` mark the field while it has focus (border color
+  and ring), and `--vs-controls--spinner-size` scales the loading spinner.
+
+```css
+/* closer to v3: dark disabled text, no focus ring */
+.v-select {
+  --vs-disabled-color: var(--vs-colors--dark);
+  --vs-focus-ring: none;
+}
+```
+
 ### Darker highlight color
 
 The default `--vs-dropdown-option--active-bg` is `#136cfb`, which has a 4.6:1 contrast ratio with
@@ -897,7 +944,7 @@ or `mutableLoading`. v4 exposes a small, stable API:
 | `select(option)` | Select an option. |
 | `deselect(option)` | Deselect an option. |
 | `clearSelection()` | Clear the value and emit `clear`. |
-| `toggleDropdown()` | Open or close the dropdown. |
+| `toggleDropdown()` | Open or close the dropdown. Takes no argument (v3 took the mouse event). |
 | `focus()` | Focus the search input. |
 | `blur()` | Blur the search input. |
 
@@ -942,6 +989,17 @@ function reset() {
 
 For anything else, use props, events and slots. The `search` event still passes a `toggleLoading`
 function as its second argument.
+
+`toggleDropdown()` no longer takes an event. v3 used the event to ignore clicks on the search
+input; call it without arguments:
+
+```js
+// v3
+this.$refs.select.toggleDropdown(event)
+
+// v4
+select.value.toggleDropdown()
+```
 
 ## CSS: from SCSS to custom properties
 

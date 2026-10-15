@@ -2,10 +2,7 @@
 import VueSelect from '@/index'
 import { countries } from '~/assets/static/data'
 
-function calculatePosition(menu, ctx, { width }) {
-  // The field the dropdown belongs to
-  const toggle = ctx.inputEl.value.closest('.vs__dropdown-toggle')
-
+function calculatePosition(menu, ctx, { width, toggle }) {
   function update() {
     const field = toggle.getBoundingClientRect()
     const spaceBelow = window.innerHeight - field.bottom
@@ -34,7 +31,7 @@ function calculatePosition(menu, ctx, { width }) {
 <template>
   <VueSelect
     :options="countries"
-    append-to="#teleports"
+    append-to="body"
     :calculate-position="calculatePosition"
     placeholder="Scroll this field near the bottom of the window, then open it"
   />

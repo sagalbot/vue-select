@@ -11,17 +11,13 @@ import {
 
 const languages = ['CSS', 'Go', 'HTML', 'JavaScript', 'Kotlin', 'PHP', 'Python', 'Ruby', 'Rust', 'Swift', 'TypeScript']
 const picked = ref(['JavaScript', 'TypeScript'])
-
-function remove(language) {
-  picked.value = picked.value.filter((l) => l !== language)
-}
 </script>
 
 <template>
   <div class="demo not-prose">
     <label for="headless-multiple-input" class="label">Languages</label>
     <ComboBox
-      v-slot="{ selected, filteredOptions }"
+      v-slot="{ selected, filteredOptions, deselect, focusInput }"
       v-model="picked"
       :options="languages"
       multiple
@@ -36,7 +32,7 @@ function remove(language) {
             type="button"
             class="tag-remove"
             :aria-label="`Remove ${language}`"
-            @click="remove(language)"
+            @click="deselect(language), focusInput()"
           >
             ×
           </button>

@@ -56,6 +56,7 @@ function onSearch(search, loading) {
     v-model="country"
     :options="options"
     :filterable="false"
+    :reduce="(option) => option.value"
     @search="onSearch"
   >
     <template #no-options="{ search }">
@@ -70,8 +71,11 @@ The demo stands in for a server with a 500ms delay. A few details make it behave
 - **Debouncing**: requests are only sent once the user pauses typing.
 - **Out-of-order responses**: a slow response for an old search is ignored, so it can't replace
   the results of a newer one.
+- **Empty searches**: `search` also fires with an empty string, for example when selecting an option
+  clears the search text. The handler cancels any pending request and turns loading off.
 - **Remembered selections**: when the options change after a search, the selected country keeps its
-  label, even with `reduce`. Vue Select remembers the options the user selects.
+  label, even though `reduce` stores only its code. Vue Select remembers the options the user
+  selects.
 
 If you set a saved value when the page loads (an id from your database, for example), include its
 option in `options`, so Vue Select can display its label. See

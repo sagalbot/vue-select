@@ -2,16 +2,15 @@
 import { ref } from 'vue'
 import VueSelect from '@/index'
 
-const options = [
-  { id: 1, label: 'Canada' },
-  { id: 2, label: 'Mexico' },
-  { id: 3, label: 'United States' },
-]
-const selected = ref([options[0], options[1]])
+const selected = ref(['Canada', 'Mexico'])
 </script>
 
 <template>
-  <VueSelect v-model="selected" :options="options" multiple>
+  <VueSelect
+    v-model="selected"
+    :options="['Canada', 'Mexico', 'United States']"
+    multiple
+  >
     <template #selected-option-container="{ option, deselect, disabled }">
       <span class="vs__selected">
         {{ option.label }}

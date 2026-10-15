@@ -77,16 +77,17 @@ need to change. There is no SCSS build: the styles are customized with
 Vue Select ships its own type definitions, so there's nothing extra to install. If you previously
 installed `@types/vue-select`, remove it.
 
-Props and events are typed when you use the component in a `.vue` file with
-[Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar) or `vue-tsc`. The
-package also exports the types you'll need when writing callbacks:
+`VueSelect` is a generic component: the option type is inferred from the `options` you pass. In a
+`.vue` file checked by [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+or `vue-tsc`, that type flows into the callback props (`reduce`, `getOptionLabel`, `selectable`,
+`filter`, `groupBy`, ...), the slot props and the `option:*` events, so you don't need casts:
 
 ```vue
 <script setup lang="ts">
 import { ref, useTemplateRef } from 'vue'
-import VueSelect, { type OptionValue } from 'vue-select'
+import VueSelect from 'vue-select'
 
-type Country = {
+interface Country {
   code: string
   name: string
 }
@@ -98,12 +99,9 @@ const countries: Country[] = [
 
 const selected = ref<string | null>(null)
 
-// Callbacks receive an OptionValue (string | number | object); narrow it to your type.
-const reduce = (option: OptionValue) => (option as Country).code
-
 // Template refs expose open, search, select, deselect, clearSelection,
 // toggleDropdown, focus and blur.
-const select = useTemplateRef<InstanceType<typeof VueSelect>>('select')
+const select = useTemplateRef('select')
 </script>
 
 <template>
@@ -112,20 +110,23 @@ const select = useTemplateRef<InstanceType<typeof VueSelect>>('select')
     v-model="selected"
     label="name"
     :options="countries"
-    :reduce="reduce"
-  />
+    :reduce="(country) => country.code"
+    :selectable="(country) => country.code !== 'US'"
+    @option:selected="(country) => console.log(country.name)"
+  >
+    <template #option="{ name, code }">{{ name }} ({{ code }})</template>
+  </VueSelect>
 </template>
 ```
 
-::callout{type="note" title="Use type aliases for option objects"}
-Object options are typed as `Record<string, unknown>`. TypeScript lets a `type` alias match that
-signature, but not an `interface`, so declare your option shapes with `type` (as above). With an
-interface, `:options` reports that the index signature is missing.
-::
+Here `country` is a `Country` in every callback, and the `option` slot receives its properties.
+Reading a property that doesn't exist, like `country.id`, is a type error. Options can be declared
+with an `interface` or a `type`.
 
-The exported types are `VueSelectProps`, `OptionValue`, `OptionKey`, `ModelValue`, `AriaLabels`,
-`CalculatePosition` and `KeydownHandlers`, plus `ComboBoxProps`, `ComboBoxContext` and `OptionGroup`
-for the [headless components](/guide/headless).
+The package also exports types for writing your own wrappers and helpers: `VueSelectProps<Option>`,
+`OptionValue`, `OptionKey`, `ModelValue`, `AriaLabels`, `CalculatePosition` and `KeydownHandlers`,
+plus `ComboBoxProps`, `ComboBoxContext` and `OptionGroup` for the
+[headless components](/guide/headless).
 
 ## Nuxt and SSR
 

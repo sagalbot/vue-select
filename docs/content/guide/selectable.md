@@ -11,7 +11,8 @@ it returns `false` for stay in the list, but they're disabled:
 
 - they get the `vs__dropdown-option--disabled` class and `aria-disabled="true"`,
 - clicking them does nothing,
-- the keyboard highlight skips over them.
+- the keyboard highlight skips over them,
+- calling `select()` through a [template ref](/api/methods) ignores them too.
 
 ```js
 selectable: (option) => true // the default

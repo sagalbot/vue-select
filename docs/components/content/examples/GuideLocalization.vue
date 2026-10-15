@@ -6,6 +6,7 @@ const selected = ref(['Canada'])
 
 const ariaLabels = {
   toggle: 'Afficher les options',
+  listbox: 'Pays',
   search: 'Rechercher un pays',
   clear: 'Effacer la sélection',
   deselect: (label) => `Retirer ${label}`,

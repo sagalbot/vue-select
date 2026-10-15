@@ -5,7 +5,8 @@ description: Customize how options, selections, icons and messages render with s
 ---
 
 Slots let you replace parts of Vue Select's template with your own markup, while the component keeps
-handling behavior and accessibility. This page covers the common cases. The [slots API](/api/slots)
+handling behavior and accessibility. With TypeScript, slot props are typed from your options; see
+[TypeScript](/guide/install#typescript). This page covers the common cases. The [slots API](/api/slots)
 lists every slot and the props it receives.
 
 ## Option Templates
@@ -73,7 +74,9 @@ the `option`, a `deselect` function, and the `multiple` and `disabled` props.
 </VueSelect>
 ```
 
-When you render your own buttons, give them an accessible name, as above.
+`deselect(option)` works with the slot's `option` for every kind of option, including strings and
+numbers, which the slot receives wrapped as `{ label: option }`. When you render your own buttons,
+give them an accessible name, as above.
 
 ## Icons
 
@@ -219,7 +222,8 @@ bind to your input: they carry the combobox role, ARIA attributes, the current s
 ::
 
 Attributes you set on the component through [`inputAttrs`](/guide/accessibility#input-attributes)
-are included in `attributes`. For an example of the search slot in a form, see
+are included in `attributes`, with the same precedence as on the built-in input: they can replace
+defaults like `type` and `autocomplete`, but not the combobox's ARIA state or `value`. For an example of the search slot in a form, see
 [Validation](/guide/validation).
 
 ## Around the Component

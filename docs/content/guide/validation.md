@@ -47,6 +47,9 @@ const submitted = ref(false)
 
 For a multiple select, use `required: !selected.length`.
 
+Pressing <kbd>Enter</kbd> in the field submits the form while the dropdown is closed, like any other
+input. While it's open, <kbd>Enter</kbd> selects the highlighted option instead.
+
 The [`search` slot](/guide/slots#the-search-input) works too, if you're already rendering your own
 input:
 

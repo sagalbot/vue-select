@@ -248,7 +248,8 @@ const select = useTemplateRef('select')
 ### Resetting When Options Change
 
 If the available options depend on another field, the old selection may no longer make sense when
-they change. Set `reset-on-options-change` to clear the selection whenever `options` changes:
+they change. Set `reset-on-options-change` to clear the selection whenever `options` changes, whether you
+replace the array or change it in place (for example with `push`):
 
 ```vue
 <VueSelect v-model="city" :options="citiesInCountry" reset-on-options-change />

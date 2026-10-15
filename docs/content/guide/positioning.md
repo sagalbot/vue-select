@@ -29,12 +29,6 @@ Both selects below sit in a card with `overflow: hidden`. Open them to compare:
 ::guide-append-to
 ::
 
-::callout{type="warning" title="Server-side rendering"}
-Vue can't hydrate content teleported straight into `body` during SSR, which leads to hydration
-mismatch warnings. In SSR apps, teleport to a dedicated container instead. Nuxt renders one for
-you: `append-to="#teleports"`. The demos on this page use it.
-::
-
 When the dropdown is teleported, Vue Select positions it with JavaScript each time it opens: the
 default `calculatePosition` places it directly below the field, at the field's width, using page
 coordinates. The menu keeps its `vs__dropdown-menu` class, so your styles still apply, but it's no
@@ -43,6 +37,8 @@ longer inside `.v-select`:
 - Selectors like `.my-select .vs__dropdown-menu` no longer match the menu.
 - [CSS variables](/guide/css#css-variables) set on a wrapper aren't inherited. Set them on `:root`
   or on the element you teleport to.
+- The menu carries the component's `dir`, so [right-to-left](/guide/localization#right-to-left)
+  selects stay right-to-left.
 - The default position is in page coordinates. If you teleport into an element other than `body`,
   that element and its ancestors shouldn't be positioned (`position: relative` and so on), or the
   coordinates won't line up. Otherwise, provide your own `calculatePosition`.
@@ -62,14 +58,19 @@ provide your own `calculatePosition`. It's only used together with `appendTo`.
 calculatePosition(
   menu: HTMLElement,
   ctx: ComboBoxContext,
-  position: { width: string; top: string; left: string },
+  position: {
+    width: string
+    top: string
+    left: string
+    toggle: HTMLElement
+  },
 ): void | (() => void)
 ```
 
 - `menu` is the dropdown `<ul>`. Set its `top`, `left` and `width` styles.
-- `ctx` is the combobox context. `ctx.inputEl.value` is the search input, which you can use to find
-  the field.
-- `position` is what the default implementation would use, as CSS pixel strings.
+- `ctx` is the combobox context, with the component's state.
+- `position` holds what the default implementation would use: `width`, `top` and `left` as CSS
+  pixel strings, and `toggle`, the field element (`.vs__dropdown-toggle`) to position against.
 - If you return a function, it's called when the dropdown closes (or the component unmounts). Use
   it to remove listeners or destroy a positioning library instance.
 
@@ -83,10 +84,7 @@ field while the page scrolls:
 <script setup>
 import VueSelect from 'vue-select'
 
-function calculatePosition(menu, ctx, { width }) {
-  // The field the dropdown belongs to
-  const toggle = ctx.inputEl.value.closest('.vs__dropdown-toggle')
-
+function calculatePosition(menu, ctx, { width, toggle }) {
   function update() {
     const field = toggle.getBoundingClientRect()
     const spaceBelow = window.innerHeight - field.bottom
@@ -135,9 +133,7 @@ returns its own cleanup function:
 ```js
 import { autoUpdate, computePosition, flip, offset, size } from '@floating-ui/dom'
 
-function calculatePosition(menu, ctx) {
-  const toggle = ctx.inputEl.value.closest('.vs__dropdown-toggle')
-
+function calculatePosition(menu, ctx, { toggle }) {
   return autoUpdate(toggle, menu, async () => {
     const { x, y, placement } = await computePosition(toggle, menu, {
       placement: 'bottom-start',

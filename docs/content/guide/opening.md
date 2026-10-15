@@ -9,7 +9,7 @@ description: When the dropdown opens and closes, how to open it on focus, and ho
 Following the [WAI-ARIA combobox pattern](/guide/accessibility), the dropdown opens when the user:
 
 - types in the search input,
-- presses <kbd>↓</kbd> or <kbd>↑</kbd> (or <kbd>Space</kbd> while it's closed),
+- presses <kbd>↓</kbd> or <kbd>↑</kbd> (or <kbd>Space</kbd> while it's closed and the search is empty),
 - clicks or taps the toggle button (the chevron).
 
 Focusing the field, by tabbing to it or clicking it, only moves focus. Keyboard and screen reader
@@ -88,6 +88,9 @@ controlled or not.
 ```vue
 <VueSelect :open="false" />
 ```
+
+This is how you build a free-form tag input: with `taggable`, <kbd>Enter</kbd> still creates tags
+while the dropdown is closed. See [Tag Inputs Without a Dropdown](/guide/tagging#tag-inputs-without-a-dropdown).
 
 ### Example: Open Only When There Is Search Text
 

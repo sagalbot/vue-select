@@ -8,9 +8,7 @@ const country = ref(null)
 // No preventDefault, so focus still moves to the next field
 const selectOnTab = (map, ctx) => ({
   ...map,
-  Tab: () => {
-    if (ctx.open.value) ctx.typeAheadSelect()
-  },
+  Tab: () => ctx.open.value && ctx.typeAheadSelect(),
 })
 </script>
 

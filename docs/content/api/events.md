@@ -6,6 +6,8 @@ description: Every event emitted by the VueSelect component, with its payload an
 
 Listen to events with `v-on` / `@`, e.g. `@option:selected="onSelected"`. Option payloads are always
 the full option, even when [`reduce`](/api/props#reduce) changes the value bound with `v-model`.
+`Option` is the type of your options, inferred from the `options` prop (see
+[TypeScript](/api/props#typescript)).
 
 ::callout{type="note" title="Coming from v3?"}
 The `input` event is now `update:modelValue`, so `@input` becomes `@update:model-value`. `v-model`
@@ -28,11 +30,11 @@ needs no change. See the [upgrade guide](/guide/upgrade).
 | [search:input](#searchinput) | `event: Event` |
 | [search:compositionstart](#searchcompositionstart) | `event: CompositionEvent` |
 | [search:compositionend](#searchcompositionend) | `event: CompositionEvent` |
-| [option:created](#optioncreated) | `option: OptionValue` |
-| [option:selecting](#optionselecting) | `option: OptionValue` |
-| [option:selected](#optionselected) | `option: OptionValue` |
-| [option:deselecting](#optiondeselecting) | `option: OptionValue` |
-| [option:deselected](#optiondeselected) | `option: OptionValue` |
+| [option:created](#optioncreated) | `option: Option` |
+| [option:selecting](#optionselecting) | `option: Option` |
+| [option:selected](#optionselected) | `option: Option` |
+| [option:deselecting](#optiondeselecting) | `option: Option` |
+| [option:deselected](#optiondeselected) | `option: Option` |
 
 Try it: the list below the select shows the ten most recent events, newest first.
 
@@ -141,10 +143,10 @@ Emitted when the clear button clears the selection, or when you call
 
 ## search
 
-Emitted when the search text changes: when the user types, when Escape or blur clears the text, or
-when you set [`search`](/api/methods#search) on a template ref. It isn't emitted when the text is
-cleared after selecting an option. When [`clearSearchOnBlur`](/api/props#clearsearchonblur)
-applies, blur emits it with an empty string even if the text was already empty.
+Emitted when the search text changes: when the user types, when the text is cleared (by selecting
+an option, by Escape, or on blur with [`clearSearchOnBlur`](/api/props#clearsearchonblur)), or when
+you set [`search`](/api/methods#search) on a template ref. It isn't emitted when the text stays the
+same, for example when an empty search is cleared on blur.
 
 The second argument toggles the loading state, which shows the spinner and hides the dropdown. Call
 it with `true` or `false`, or with no argument to flip the current state.
@@ -220,7 +222,7 @@ Emitted when the user selects a new option created from the search text with
 [`taggable`](/api/props#taggable). It fires after [`option:selecting`](#optionselecting) and before the
 value updates. VueSelect doesn't add the option to `options`; do it here if you want to keep it.
 
-- **Payload:** `option: OptionValue`, the option built by [`createOption`](/api/props#createoption)
+- **Payload:** `option: Option`, the option built by [`createOption`](/api/props#createoption)
 
 ```vue
 <VueSelect
@@ -238,13 +240,13 @@ Emitted when an option is chosen, before the value updates. It's also emitted wh
 option is already selected; then [`deselectFromDropdown`](/api/props#deselectfromdropdown) decides
 whether it's deselected.
 
-- **Payload:** `option: OptionValue`
+- **Payload:** `option: Option`
 
 ## option:selected
 
 Emitted after the value updates with a newly selected option.
 
-- **Payload:** `option: OptionValue`
+- **Payload:** `option: Option`
 
 ```vue
 <VueSelect :options="options" @option:selected="(option) => analytics.track('select', option)" />
@@ -257,14 +259,14 @@ Emitted when an option is removed, before the value updates: by its deselect but
 [`deselect()`](/api/methods#deselect) on a template ref. The clear button doesn't emit it; listen
 to [`clear`](#clear) instead.
 
-- **Payload:** `option: OptionValue`
+- **Payload:** `option: Option`
 
 ## option:deselected
 
 Emitted after an option is removed from the value. Like
 [`option:deselecting`](#optiondeselecting), it isn't emitted by the clear button.
 
-- **Payload:** `option: OptionValue`
+- **Payload:** `option: Option`
 
 ## Order of events
 
@@ -274,6 +276,7 @@ Selecting a new tag from the dropdown, with the default `closeOnSelect`, emits:
 2. `option:created`
 3. `update:modelValue`
 4. `option:selected`
-5. `update:open` (`false`), then `close`
+5. `search` (`''`), as the search text is cleared
+6. `update:open` (`false`), then `close`
 
 Deselecting emits `option:deselecting`, `update:modelValue`, then `option:deselected`.

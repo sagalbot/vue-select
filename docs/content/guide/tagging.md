@@ -18,6 +18,37 @@ text is offered as the first option in the dropdown, so pressing Enter selects i
 
 Tagging works with single selects too. Without `multiple`, the tag replaces the current value.
 
+## Tag Inputs Without a Dropdown
+
+For a free-form tag input, with no list of options to choose from, keep the dropdown closed with
+`:open="false"`. <kbd>Enter</kbd> still turns the search text into a tag. Here a comma does too,
+through [`mapKeydown`](/guide/keydown#comma):
+
+::guide-tagging-no-dropdown
+::
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+
+const tags = ref(['vue', 'select'])
+</script>
+
+<template>
+  <VueSelect
+    v-model="tags"
+    taggable
+    multiple
+    :open="false"
+    :map-keydown="(map) => ({ ...map, ',': map.Enter })"
+  />
+</template>
+```
+
+<kbd>Backspace</kbd> in the empty input removes the last tag, and each tag has its own remove
+button.
+
 ## Adding Tags to the Options
 
 New tags are selected, but they aren't added to `options`. Once a tag is deselected it's gone from
@@ -147,5 +178,6 @@ list shows what matches what the user is typing.
 
 ## Creating Tags with Other Keys
 
-Enter selects the highlighted tag. To also create tags with a comma, Tab or another key, map that
-key to the Enter handler with `mapKeydown`. See [Keydown Events](/guide/keydown#selecting-with-other-keys).
+<kbd>Enter</kbd> selects the highlighted tag, and creates the tag even while the dropdown is closed.
+To also create tags with a comma, <kbd>Tab</kbd> or another key, see
+[Keydown Events](/guide/keydown#selecting-with-other-keys).

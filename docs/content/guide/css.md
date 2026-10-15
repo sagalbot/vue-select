@@ -75,6 +75,9 @@ what it styles. A few worth knowing:
   4.6:1 contrast ratio with the white `--vs-dropdown-option--active-color`, which meets WCAG AA.
   If you change either, keep the contrast at 4.5:1 or higher.
 - `--vs-search-input-bg` is the field's background, and `--vs-dropdown-bg` the dropdown's.
+- `--vs-focus-color` and `--vs-focus-ring` style the [focus indicators](#focus-styles).
+- `--vs-state-disabled-bg`, `--vs-state-disabled-color` and `--vs-state-disabled-controls-color`
+  style a `disabled` select.
 
 ## Overriding Default Styles
 
@@ -149,15 +152,20 @@ The root element gets state classes: `vs--open`, `vs--single`, `vs--multiple`, `
 
 ### Focus Styles
 
-The default theme draws no focus ring around the field. If your app doesn't add one globally, style
-the field while the input has focus:
+While the search input has focus, the field (`.vs__dropdown-toggle`) shows a focus ring: its border
+turns `--vs-focus-color` and it gets the `--vs-focus-ring` box shadow. The clear, deselect and toggle
+buttons get a `--vs-focus-color` outline when they're focused from the keyboard (`:focus-visible`).
 
 ```css
-.v-select:focus-within .vs__dropdown-toggle {
-  outline: 2px solid #136cfb;
-  outline-offset: 1px;
+:root {
+  --vs-focus-color: #7c3aed;
+  /* a wider ring */
+  --vs-focus-ring: 0 0 0 3px rgb(124 58 237 / 0.35);
 }
 ```
+
+Set `--vs-focus-ring: none` to remove the ring around the field, for example when your app already
+styles `:focus-within` on its form fields. Keep some visible focus indicator either way.
 
 ## Dropdown Transition
 

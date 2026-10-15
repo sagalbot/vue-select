@@ -10,8 +10,8 @@ import { countries } from '~/assets/static/data'
       <VueSelect :options="countries" placeholder="Clipped by the card" />
     </div>
     <div class="card">
-      <p><code>append-to="#teleports"</code></p>
-      <VueSelect :options="countries" append-to="#teleports" placeholder="Escapes the card" />
+      <p><code>append-to="body"</code></p>
+      <VueSelect :options="countries" append-to="body" placeholder="Escapes the card" />
     </div>
   </div>
 </template>

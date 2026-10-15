@@ -52,22 +52,28 @@ combobox element). Use it for anything that belongs on the form control itself:
   :input-attrs="{
     id: 'country',
     name: 'country-search',
+    autocomplete: 'country-name',
     'aria-describedby': 'country-hint',
     'aria-invalid': hasError,
   }"
 />
 ```
 
-Vue Select manages the combobox attributes itself (`role`, `aria-expanded`, `aria-controls`,
-`aria-activedescendant` and `aria-autocomplete`), so don't set those in `inputAttrs`. Attributes set directly on `<VueSelect>`, like `class` or `id`, go
-to the root `.v-select` element, not the input.
+`inputAttrs` can also replace the input's defaults: `type` (`search`), `autocomplete` (`off`),
+`placeholder`, and with `:searchable="false"` the `tabindex`. The combobox's own state stays
+managed by Vue Select and can't be overridden: `role`, the ARIA state attributes (`aria-expanded`,
+`aria-controls`, `aria-activedescendant`, `aria-autocomplete`), `value` and `disabled`. Use the
+`disabled` prop to disable the select.
+
+Attributes set directly on `<VueSelect>`, like `class` or `id`, go to the root `.v-select` element,
+not the input.
 
 ## Roles and States
 
 | Element                         | Role and attributes                                                                                         |
 |---------------------------------|-------------------------------------------------------------------------------------------------------------|
-| Search input                    | `role="combobox"`, `aria-expanded`, `aria-controls` (the listbox), `aria-activedescendant` (the highlighted option), `aria-autocomplete="list"` |
-| Dropdown menu                   | `role="listbox"`                                                                                             |
+| Search input                    | `role="combobox"`, `aria-expanded`, `aria-controls` (the listbox), `aria-activedescendant` (the highlighted option, while open), `aria-autocomplete="list"` |
+| Dropdown menu                   | `role="listbox"`, `aria-label` ("Options", from [`ariaLabels.listbox`](/guide/localization#accessible-names)), and `aria-multiselectable="true"` with `multiple` |
 | Options                         | `role="option"`, `aria-selected` (whether it's selected), `aria-disabled` (not [selectable](/guide/selectable)) |
 | [Option groups](/guide/options#option-groups) | `role="group"`, labelled by the group header                                                   |
 | Toggle button                   | A `<button>` with `aria-label`, `aria-expanded` and `aria-controls`. It's outside the tab order (`tabindex="-1"`), as in the APG example, but available to pointer, touch and screen reader users. The chevron icon inside it is `aria-hidden`. |
@@ -87,9 +93,9 @@ communicated with `aria-activedescendant`, so screen readers announce it.
 | <kbd>↓</kbd>        | Opens, highlighting the selected option, or the first one               | Highlights the next option, wrapping to the first             |
 | <kbd>↑</kbd>        | Opens, highlighting the selected option, or the last one                | Highlights the previous option, wrapping to the last          |
 | <kbd>Alt</kbd>+<kbd>↓</kbd> | Opens without moving the highlight                              | Same as <kbd>↓</kbd>                                          |
-| <kbd>Enter</kbd>    | Nothing                                                                 | Selects the highlighted option, or closes if none is highlighted |
-| <kbd>Space</kbd>    | Opens the dropdown                                                      | Types a space                                                 |
-| <kbd>Escape</kbd>   | Clears the search text                                                  | Closes the dropdown                                           |
+| <kbd>Enter</kbd>    | Creates a tag (with `taggable` and search text); otherwise does the browser's default, like submitting the form | Selects the highlighted option, or closes if none is highlighted |
+| <kbd>Space</kbd>    | Opens the dropdown when the search is empty; otherwise types a space    | Types a space                                                 |
+| <kbd>Escape</kbd>   | Clears the search text                                                  | Closes the dropdown (a second press clears the search)        |
 | <kbd>Backspace</kbd> | With an empty search, removes the last selected value (when `clearable`) | Same                                                       |
 | <kbd>Tab</kbd>      | Moves focus                                                             | Closes the dropdown and moves focus                           |
 
@@ -124,8 +130,10 @@ see [Dropdown Opening](/guide/opening).
 
 ## Focus Visibility
 
-The default theme doesn't draw a focus ring on the field. Make sure your app shows one, for example
-with `:focus-within`; see [CSS & Theming](/guide/css#focus-styles).
+While the input has focus, the whole field gets a focus ring. The clear, deselect and toggle buttons
+get an outline when they're focused from the keyboard. Both use `--vs-focus-color`, and the field's
+ring is `--vs-focus-ring`. If you change them, keep the ring visible against your background; see
+[CSS & Theming](/guide/css#focus-styles).
 
 ## Autocomplete Behavior
 

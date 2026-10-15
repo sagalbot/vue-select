@@ -37,7 +37,7 @@ Shared colors that other variables default to.
 | Variable | Default | Used for |
 | --- | --- | --- |
 | `--vs-colors--lightest` | `rgba(60, 60, 60, 0.26)` | default of `--vs-border-color` |
-| `--vs-colors--light` | `rgba(60, 60, 60, 0.5)` | default of `--vs-controls-color` and `--vs-state-disabled-color`; option group labels |
+| `--vs-colors--light` | `rgba(60, 60, 60, 0.5)` | default of `--vs-controls-color`, `--vs-state-disabled-color` and `--vs-state-disabled-controls-color`; option group labels |
 | `--vs-colors--dark` | `#333` | default of `--vs-selected-color` |
 | `--vs-colors--darkest` | `rgba(0, 0, 0, 0.15)` | the color in `--vs-dropdown-box-shadow` |
 
@@ -72,7 +72,7 @@ The clear button, the open indicator and the deselect buttons on selected option
 | `--vs-controls-icon-size` | `calc(1.25rem * var(--vs-controls-size))` | width and height of the clear and open indicator icons |
 | `--vs-deselect-icon-size` | `1rem` | width and height of the deselect icon on selected options |
 | `--vs-controls--deselect-text-shadow` | `0 1px 0 #fff` | text shadow of the deselect button |
-| `--vs-controls--spinner-size` | not set | scale factor for the spinner; falls back to `--vs-controls-size` |
+| `--vs-controls--spinner-size` | `var(--vs-controls-size)` | scale factor for the loading spinner |
 
 ## Selected options
 
@@ -111,6 +111,24 @@ The selected options in the field. In single mode the background and border are 
 The default highlight color has a 4.6:1 contrast ratio with white text (WCAG AA). Keep that in mind
 when you change either variable.
 
+## Focus
+
+While focus is inside the field, its border takes `--vs-focus-color` and it gets the
+`--vs-focus-ring` shadow. The clear, deselect and toggle buttons show a 2px `--vs-focus-color`
+outline when focused from the keyboard (`:focus-visible`).
+
+| Variable | Default | Used for |
+| --- | --- | --- |
+| `--vs-focus-color` | `#136cfb` | border of the focused field, and the outline of focused buttons |
+| `--vs-focus-ring` | `0 0 0 1px var(--vs-focus-color)` | `box-shadow` around the focused field; set it to `none` to remove the ring |
+
+```css
+:root {
+  --vs-focus-color: #7c3aed;
+  --vs-focus-ring: 0 0 0 3px rgb(124 58 237 / 0.3);
+}
+```
+
 ## Disabled state
 
 | Variable | Default | Used for |
@@ -118,7 +136,9 @@ when you change either variable.
 | `--vs-state-disabled-bg` | `rgb(248, 248, 248)` | background of options rejected by [`selectable`](/api/props#selectable), and default of `--vs-disabled-bg` |
 | `--vs-state-disabled-color` | `var(--vs-colors--light)` | text color of options rejected by `selectable` |
 | `--vs-state-disabled-cursor` | `not-allowed` | cursor over options rejected by `selectable`, and default of `--vs-disabled-cursor` |
-| `--vs-disabled-bg` | `var(--vs-state-disabled-bg)` | background of the field and its controls when the component is [`disabled`](/api/props#disabled) |
+| `--vs-state-disabled-controls-color` | `var(--vs-colors--light)` | icon color of the clear, deselect and open indicator icons when the component is [`disabled`](/api/props#disabled) |
+| `--vs-disabled-bg` | `var(--vs-state-disabled-bg)` | background of the field and its controls when the component is disabled |
+| `--vs-disabled-color` | `var(--vs-state-disabled-color)` | text color of the search input and the selected options when the component is disabled |
 | `--vs-disabled-cursor` | `var(--vs-state-disabled-cursor)` | cursor over the field and its controls when the component is disabled |
 
 ## Transitions
@@ -126,9 +146,7 @@ when you change either variable.
 | Variable | Default | Used for |
 | --- | --- | --- |
 | `--vs-transition-timing-function` | `cubic-bezier(1, 0.5, 0.8, 1)` | the dropdown fade and the open indicator rotation |
-| `--vs-transition-duration` | `0.15s` | the dropdown fade and the open indicator rotation |
+| `--vs-transition-duration` | `150ms` | the dropdown fade and the open indicator rotation |
 
-## Defined but unused
-
-The stylesheet still defines `--vs-dropdown-option-bg` (`#000`), `--vs-state-disabled-controls-color`
-and `--vs-disabled-color`, but no rule reads them, so setting them has no effect.
+The dropdown fades in when it opens and fades out when it closes (the `vs__fade`
+[`transition`](/api/props#transition)).

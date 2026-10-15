@@ -44,6 +44,7 @@ function onSearch(search, loading) {
     v-model="country"
     :options="options"
     :filterable="false"
+    :reduce="(option) => option.value"
     placeholder="Search for a country"
     @search="onSearch"
   >

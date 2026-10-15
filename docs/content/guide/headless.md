@@ -18,6 +18,9 @@ import {
   ComboBoxOption,
   ComboBoxGroup,
   useComboBox,
+  useComboBoxContext,
+  ComboBoxKey,
+  comboBoxDefaults,
 } from 'vue-select'
 ```
 
@@ -133,20 +136,23 @@ A few things to notice:
 | Component | Renders | ARIA and behavior |
 | --- | --- | --- |
 | `ComboBox` | `<div>` around everything | Holds the state and provides it to the other primitives. Closes the dropdown on clicks outside it. Takes the props and emits the events listed [below](#combobox-props-and-events). |
-| `ComboBoxInput` | `<input type="search">`, or a `<div>` with `searchable: false` | `role="combobox"`, `aria-expanded`, `aria-controls` (the menu), `aria-activedescendant` (the highlighted option), `aria-autocomplete="list"`. Handles typing and the [keyboard](#keyboard). The select-only `<div>` gets `tabindex="0"` and `aria-disabled`. |
+| `ComboBoxInput` | `<input type="search">`, or a `<div>` with `searchable: false` | `role="combobox"`, `aria-expanded`, `aria-controls` (the menu), `aria-activedescendant` (the highlighted option, only while open), `aria-autocomplete="list"`. Handles typing and the [keyboard](#keyboard). The select-only `<div>` gets `tabindex="0"` and `aria-disabled`. |
 | `ComboBoxButton` | `<button type="button">` | `tabindex="-1"`, `aria-haspopup="listbox"`, `aria-expanded`, `aria-controls`. Toggles the dropdown and moves focus to the input. Give it an `aria-label`. |
-| `ComboBoxClear` | `<button type="button">` | `aria-label="Clear selection"` (override it with your own `aria-label`). Hidden while nothing is selected or when `clearable` is false. Clears the value and emits `clear`. |
-| `ComboBoxMenu` | `<div>` (`as` prop to change) | `role="listbox"`, `tabindex="-1"`. Shown while the dropdown is open (`v-show`), or as the `show` prop says. Keeps the highlighted option scrolled into view, and prevents `mousedown` so the input keeps focus. |
+| `ComboBoxClear` | `<button type="button">` | `aria-label="Clear selection"` (override it with your own `aria-label`). Hidden while nothing is selected or when `clearable` is false. Clears the value, emits `clear` and moves focus to the input. |
+| `ComboBoxMenu` | `<div>` (`as` prop to change) | `role="listbox"`, `tabindex="-1"`, `aria-multiselectable` with `multiple`. Give it an `aria-label` (`VueSelect` uses `ariaLabels.listbox`, "Options" by default). Shown while the dropdown is open (`v-show`), or as the `show` prop says. Keeps the highlighted option scrolled into view, and prevents `mousedown` so the input keeps focus. |
 | `ComboBoxOption` | `<div>` (`as` prop to change) | `role="option"`, `aria-selected`, `aria-disabled` when not [selectable](/api/props#selectable). Selects on click, highlights on mouse move. Props: `value`, `index`. |
 | `ComboBoxGroup` | `<div role="group">` with a label `<div>` (`as` and `label-as` props to change) | `aria-labelledby` points at the label. Prop: `label`. See [option groups](#option-groups). |
 
 `ComboBoxInput`, `ComboBoxButton`, `ComboBoxClear`, `ComboBoxMenu` and `ComboBoxOption` read their
-state from the nearest `ComboBox`. Outside one, they throw an error naming the component.
+state from the nearest `ComboBox`. Outside one, they throw an error naming the component. To build
+your own primitive, read the same state with `useComboBoxContext('MyComponent')` (see
+[Custom primitives](#custom-primitives)).
 
 ### Slots on the primitives
 
-- `ComboBox`: the default slot receives `{ open, search, selected, filteredOptions, groupedOptions, loading }`.
-  See [the slot props](#the-combobox-slot).
+- `ComboBox`: the default slot receives the state (`open`, `search`, `selected`, `filteredOptions`,
+  `groupedOptions`, `loading`) and methods (`select`, `deselect`, `clearSelection`, `setOpen`,
+  `toggleOpen`, `setSearch`, `focusInput`). See [the slot props](#the-combobox-slot).
 - `ComboBoxOption`: the default slot receives `{ isSelected, isHighlighted, isDisabled }`.
 - `ComboBoxGroup`: the `label` slot receives `{ label }`; the default slot holds the options.
 - `ComboBoxInput`: the `input` slot replaces the `<input>` with your own. Bind what it gives you:
@@ -164,7 +170,8 @@ state from the nearest `ComboBox`. Outside one, they throw an error naming the c
 
 ## The ComboBox slot
 
-`ComboBox`'s default slot gives your template the state it needs to render:
+`ComboBox`'s default slot gives your template the state it needs to render, and the methods to
+change it from your own markup:
 
 | Slot prop | Type | Description |
 | --- | --- | --- |
@@ -174,9 +181,31 @@ state from the nearest `ComboBox`. Outside one, they throw an error naming the c
 | `filteredOptions` | `OptionValue[]` | The options to show, filtered by the search, in the order they render. Includes the new tag when `taggable` is on. |
 | `groupedOptions` | `OptionGroup[]` | The same options in groups when `groupBy` is set: `{ label, options: { option, index }[] }[]`. |
 | `loading` | `boolean` | The loading state (the `loading` prop, or `toggleLoading` from the `search` event). |
+| `select(option)` | function | Select an option (or deselect it, when `deselectFromDropdown` allows). |
+| `deselect(option)` | function | Remove an option from the selection, emitting the `option:deselect*` events. |
+| `clearSelection()` | function | Clear the value and emit `clear`. |
+| `setOpen(open)`, `toggleOpen()` | function | Open or close the dropdown. |
+| `setSearch(text)` | function | Set the search text (opens the dropdown when it isn't empty). |
+| `focusInput()` | function | Focus the element `ComboBoxInput` rendered. |
 
-The slot doesn't pass methods. To change the selection from your own markup, for example a
-remove button on a tag, update your `v-model` directly, as in the next example.
+A template ref on `ComboBox` exposes the same methods, for code outside the template:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const combo = ref()
+
+function reset() {
+  combo.value.clearSelection()
+  combo.value.focusInput()
+}
+</script>
+
+<template>
+  <ComboBox ref="combo" v-model="value" :options="options">…</ComboBox>
+</template>
+```
 
 ### ComboBox props and events
 
@@ -200,7 +229,8 @@ and teleports in your own markup.
 ## Multiple selection
 
 With `multiple`, `selected` holds every selected option. This example renders them as tags with a
-remove button that updates the `v-model` array, and adds `ComboBoxClear`. `hide-selected` removes
+remove button that calls the slot's `deselect` and then moves focus back to the input with
+`focusInput`, and adds `ComboBoxClear`. `hide-selected` removes
 selected options from the menu, and `:close-on-select="false"` keeps it open while picking.
 <kbd>Backspace</kbd> in an empty input removes the last tag.
 
@@ -221,16 +251,12 @@ import {
 
 const languages = ['CSS', 'Go', 'HTML', 'JavaScript', 'Kotlin', 'PHP', 'Python', 'Ruby', 'Rust', 'Swift', 'TypeScript']
 const picked = ref(['JavaScript', 'TypeScript'])
-
-function remove(language) {
-  picked.value = picked.value.filter((l) => l !== language)
-}
 </script>
 
 <template>
   <label for="languages">Languages</label>
   <ComboBox
-    v-slot="{ selected, filteredOptions }"
+    v-slot="{ selected, filteredOptions, deselect, focusInput }"
     v-model="picked"
     :options="languages"
     multiple
@@ -241,7 +267,13 @@ function remove(language) {
     <div class="field">
       <span v-for="language in selected" :key="language" class="tag">
         {{ language }}
-        <button type="button" :aria-label="`Remove ${language}`" @click="remove(language)">×</button>
+        <button
+          type="button"
+          :aria-label="`Remove ${language}`"
+          @click="deselect(language), focusInput()"
+        >
+          ×
+        </button>
       </span>
       <ComboBoxInput id="languages" class="input" />
       <ComboBoxClear>Clear</ComboBoxClear>
@@ -412,9 +444,9 @@ on the input the whole time; the highlighted option is announced through
 | <kbd>↓</kbd> | Closed: opens and highlights the selected option, or the first option. Open: highlights the next option, wrapping to the first. |
 | <kbd>↑</kbd> | Closed: opens and highlights the selected option, or the last option. Open: highlights the previous option, wrapping to the last. |
 | <kbd>Alt</kbd>+<kbd>↓</kbd> | Opens without moving the highlight. |
-| <kbd>Enter</kbd> | Selects the highlighted option. With nothing highlighted, closes the dropdown. |
+| <kbd>Enter</kbd> | Open: selects the highlighted option, or closes the dropdown when nothing is highlighted. Closed: does its default, such as submitting the form; with `taggable` and search text, creates the tag. |
 | <kbd>Escape</kbd> | Closes the dropdown. If it's already closed, clears the search text. |
-| <kbd>Space</kbd> | Opens a closed dropdown. While open, types a space. |
+| <kbd>Space</kbd> | With an empty search on a closed dropdown, opens it. Otherwise types a space, e.g. in "New York". |
 | <kbd>Backspace</kbd> | In an empty input, removes the last selected value (when `clearable`). |
 | <kbd>Tab</kbd> | Moves focus on, closing the dropdown. |
 
@@ -463,8 +495,8 @@ function useComboBox(
 With `useComboBox` you're responsible for what the primitives would otherwise do: the
 `role="combobox"` / `listbox` / `option` attributes and their ids, `aria-activedescendant`, the
 keyboard handlers, closing on blur or on clicks outside, and keeping focus in the input when an
-option is clicked. The primitives read their state from the nearest `ComboBox`, so they can't be
-combined with a `useComboBox` instance.
+option is clicked. To mix your own markup with some of the primitives instead, provide your
+instance under `ComboBoxKey`, as `ComboBox` does: `provide(ComboBoxKey, combo)`.
 
 This color picker renders its own input and list, and handles the arrow keys, Enter and Escape:
 
@@ -598,24 +630,16 @@ function onBlur() {
 </template>
 ```
 
-Inside a reusable component, pass your component's own props and `emit`. Declare the boolean
-props with the same defaults as `ComboBox`: Vue turns an absent `boolean` prop into `false`, and
-`open: false` would mean "controlled and closed", `filterable: false` "never filter" and so on.
+Inside a reusable component, pass your component's own props and `emit`, and declare the props
+with `comboBoxDefaults`, the defaults `ComboBox` itself uses. Without them, Vue turns every absent
+`boolean` prop into `false`: `open: false` would mean "controlled and closed", `filterable: false`
+"never filter", and so on.
 
 ```vue
 <script setup lang="ts">
-import { useComboBox, type ComboBoxProps } from 'vue-select'
+import { useComboBox, comboBoxDefaults, type ComboBoxProps } from 'vue-select'
 
-const props = withDefaults(defineProps<ComboBoxProps>(), {
-  open: undefined, // uncontrolled
-  clearSearchOnBlur: undefined, // derived from clearSearchOnSelect and multiple
-  filterable: true,
-  searchable: true,
-  clearable: true,
-  closeOnSelect: true,
-  clearSearchOnSelect: true,
-  autoscroll: true,
-})
+const props = withDefaults(defineProps<ComboBoxProps>(), comboBoxDefaults)
 const emit = defineEmits(['update:modelValue', 'update:open', 'open', 'close', 'clear', 'search',
   'option:created', 'option:selecting', 'option:selected', 'option:deselecting', 'option:deselected'])
 
@@ -663,3 +687,41 @@ object as their context argument. State is made of refs, so read and write it wi
 | `getOptionLabel(option)`, `getOptionKey(option)` | Label and key, using the `label`, `getOptionLabel` and `getOptionKey` props. |
 | `isOptionSelected(option)`, `isOptionSelectable(option)`, `isOptionDeselectable(option)`, `isOptionHighlighted(index)` | State of one option. |
 | `mapKeydown(handlers)` | Runs the `mapKeydown` prop over a handler map. |
+
+## Custom primitives
+
+`ComboBoxKey` and `useComboBoxContext` let you write your own components that work alongside the
+built-in primitives inside a `ComboBox`. `useComboBoxContext(name)` returns the
+[context](#the-context) of the nearest `ComboBox`, and throws an error that mentions `name` when
+there is none.
+
+```vue
+<!-- SelectedTags.vue: the selected options as removable tags -->
+<script setup>
+import { useComboBoxContext } from 'vue-select'
+
+const combo = useComboBoxContext('SelectedTags')
+
+function remove(option) {
+  combo.deselect(option)
+  combo.focusInput()
+}
+</script>
+
+<template>
+  <span v-for="option in combo.selectedValue.value" :key="combo.getOptionKey(option)" class="tag">
+    {{ combo.getOptionLabel(option) }}
+    <button type="button" :aria-label="`Remove ${combo.getOptionLabel(option)}`" @click="remove(option)">
+      ×
+    </button>
+  </span>
+</template>
+```
+
+```vue
+<ComboBox v-model="languages" :options="options" multiple>
+  <SelectedTags />
+  <ComboBoxInput aria-label="Languages" />
+  <!-- ... -->
+</ComboBox>
+```

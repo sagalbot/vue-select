@@ -44,10 +44,10 @@ For the default, editable select:
 |---------------|------------------------------------------------------------------------|
 | `ArrowDown`   | Open the dropdown, or highlight the next option                        |
 | `ArrowUp`     | Open the dropdown, or highlight the previous option                    |
-| `Enter`       | Select the highlighted option, or close if none is highlighted         |
+| `Enter`       | Select the highlighted option, or close if none is highlighted. While the dropdown is closed, create a tag (with `taggable` and search text); otherwise leave the key to the browser, so it can submit a form |
 | `Escape`      | Close the dropdown, or clear the search text if it's already closed     |
 | `Backspace`   | With an empty search, remove the last selected value                   |
-| `' '` (Space) | Open a closed dropdown instead of typing a space                        |
+| `' '` (Space) | With an empty search, open a closed dropdown instead of typing a space  |
 
 With `:searchable="false"`, the map holds the
 [select-only handlers](/guide/accessibility#select-only) instead: `ArrowDown`, `ArrowUp`, `Home`,
@@ -57,8 +57,9 @@ With `:searchable="false"`, the map holds the
 
 ### Comma
 
-To create a tag when the user types a comma, map `','` to the `Enter` handler. The `Enter` handler
-calls `preventDefault()`, so the comma isn't typed into the input.
+To create a tag when the user types a comma, map `','` to the `Enter` handler. When it selects or
+creates an option, the `Enter` handler calls `preventDefault()`, so the comma isn't typed into the
+input. This also works in a [tag input without a dropdown](/guide/tagging#tag-inputs-without-a-dropdown).
 
 ::guide-keydown-comma
 ::
@@ -90,9 +91,7 @@ const country = ref(null)
 
 const selectOnTab = (map, ctx) => ({
   ...map,
-  Tab: () => {
-    if (ctx.open.value) ctx.typeAheadSelect()
-  },
+  Tab: () => ctx.open.value && ctx.typeAheadSelect(),
 })
 </script>
 

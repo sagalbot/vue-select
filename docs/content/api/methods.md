@@ -113,7 +113,8 @@ select.value.open = true
 ## search
 
 The current search text. Setting it works like typing: it emits the
-[`search`](/api/events#search) event, and a non-empty value opens the dropdown.
+[`search`](/api/events#search) event, and a non-empty value opens the dropdown. Setting the same
+text again does nothing.
 
 - **Type:** `string`
 
@@ -127,7 +128,8 @@ Selects an option, with the same events and effects as choosing it in the dropdo
 updates, the search text is cleared and the dropdown closes (following
 [`clearSearchOnSelect`](/api/props#clearsearchonselect) and
 [`closeOnSelect`](/api/props#closeonselect)). Pass the option itself, not its
-[`reduce`](/api/props#reduce)d value. [`selectable`](/api/props#selectable) is not checked.
+[`reduce`](/api/props#reduce)d value. Options rejected by [`selectable`](/api/props#selectable) are
+ignored.
 
 - **Type:** `(option: OptionValue) => void`
 
@@ -154,7 +156,7 @@ Clears the selection, to `null` in single mode or `[]` in multiple mode, and emi
 ## toggleDropdown
 
 Opens the dropdown when it's closed and closes it when it's open. Same as toggling
-[`open`](#open).
+[`open`](#open). It takes no arguments.
 
 - **Type:** `() => void`
 

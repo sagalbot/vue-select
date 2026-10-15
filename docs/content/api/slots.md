@@ -8,6 +8,9 @@ VueSelect uses scoped slots to let you replace any part of its markup, from a si
 whole search input. Slots that don't use their props can be written as `<template #clear>`; scoped
 slots take their props with `<template #option="{ label }">`.
 
+Slot props are typed: `Option` below is the type of your options, inferred from the `options` prop
+(see [TypeScript](/api/props#typescript)).
+
 ::callout{type="note" title="Coming from v3?"}
 The `components` prop is gone: replace a custom `OpenIndicator` with the
 [`open-indicator`](#open-indicator) slot and a custom `Deselect` with the [`deselect`](#deselect)
@@ -34,7 +37,7 @@ div.v-select
 │       ├── button.vs__open-indicator-button
 │       │   └── open-indicator
 │       └── spinner
-├── ul.vs__dropdown-menu                     (role="listbox")
+├── ul.vs__dropdown-menu                     (role="listbox", named by ariaLabels.listbox)
 │   ├── list-header
 │   ├── li.vs__dropdown-option               (once per option)
 │   │   └── option
@@ -60,11 +63,6 @@ Object options are passed as they are. String and number options are wrapped in 
 the [`label`](/api/props#label) key: with the default `label`, the option `'Canada'` becomes
 `{ label: 'Canada' }`.
 
-::callout{type="warning" title="Wrapped options and deselect()"}
-`deselect()` expects the original option. For string or number options, call it with
-`option.label` (or `option[yourLabelKey]`), not with the wrapper object.
-::
-
 ## header
 
 Rendered at the top of the component, above `.vs__dropdown-toggle`.
@@ -74,8 +72,8 @@ Rendered at the top of the component, above `.vs__dropdown-toggle`.
 | `search` | `string` | the current search text |
 | `loading` | `boolean` | whether the component is loading |
 | `searching` | `boolean` | whether there is search text |
-| `filteredOptions` | `OptionValue[]` | the options matching the search, in rendered order |
-| `deselect` | `(option: OptionValue) => void` | deselects an option |
+| `filteredOptions` | `Option[]` | the options matching the search, in rendered order |
+| `deselect` | `(option: Option) => void` | deselects an option |
 
 ::api-slot-header-footer
 ::
@@ -130,7 +128,7 @@ deselect button. If you use it in multiple mode, render your own way to deselect
 | Prop | Type | Description |
 | --- | --- | --- |
 | `option` | `object` | the selected option, see [option slot props](#option-slot-props) |
-| `deselect` | `(option: OptionValue) => void` | deselects an option |
+| `deselect` | `(option) => void` | deselects an option; accepts the slot's `option` (also for string options) or an original option |
 | `multiple` | `boolean` | the [`multiple`](/api/props#multiple) prop |
 | `disabled` | `boolean` | the [`disabled`](/api/props#disabled) prop |
 
@@ -142,16 +140,15 @@ deselect button. If you use it in multiple mode, render your own way to deselect
 import { ref } from 'vue'
 import VueSelect from 'vue-select'
 
-const options = [
-  { id: 1, label: 'Canada' },
-  { id: 2, label: 'Mexico' },
-  { id: 3, label: 'United States' },
-]
-const selected = ref([options[0], options[1]])
+const selected = ref(['Canada', 'Mexico'])
 </script>
 
 <template>
-  <VueSelect v-model="selected" :options="options" multiple>
+  <VueSelect
+    v-model="selected"
+    :options="['Canada', 'Mexico', 'United States']"
+    multiple
+  >
     <template #selected-option-container="{ option, deselect, disabled }">
       <span class="vs__selected">
         {{ option.label }}
@@ -195,8 +192,9 @@ See the [`open-indicator`](#open-indicator) slot for an example.
 
 Replaces the search input. Bind both props to your input: `attributes` holds its attributes (role,
 ARIA state, value, the `vs__search` class, a ref VueSelect uses to focus it, plus
-[`inputAttrs`](/api/props#inputattrs)), and `events` its event handlers. Without them, the keyboard,
-focus and screen reader support stop working.
+[`inputAttrs`](/api/props#inputattrs), with the same precedence as on the default input), and
+`events` its event handlers. Without them, the keyboard, focus and screen reader support stop
+working.
 
 Not used with `:searchable="false"`.
 
@@ -325,7 +323,7 @@ so use an `<li>` as the root element.
 | `search` | `string` | the current search text |
 | `loading` | `boolean` | whether the component is loading |
 | `searching` | `boolean` | whether there is search text |
-| `filteredOptions` | `OptionValue[]` | the options matching the search, in rendered order |
+| `filteredOptions` | `Option[]` | the options matching the search, in rendered order |
 
 ::api-slot-list-header-footer
 ::
@@ -397,7 +395,7 @@ The header of an option group when you use [`groupBy`](/api/props#groupby), insi
 | Prop | Type | Description |
 | --- | --- | --- |
 | `label` | `string` | the group label returned by `groupBy` |
-| `options` | `OptionValue[]` | the group's options that match the search |
+| `options` | `Option[]` | the group's options that match the search |
 
 ::api-slot-group-header
 ::

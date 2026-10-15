@@ -35,6 +35,7 @@ const selected = ref(['Canada'])
 
 const ariaLabels = {
   toggle: 'Afficher les options',
+  listbox: 'Pays',
   search: 'Rechercher un pays',
   clear: 'Effacer la sélection',
   deselect: (label) => `Retirer ${label}`,
@@ -65,6 +66,7 @@ optional; missing keys keep their English default.
 | Key        | Labels                                     | Default                |
 |------------|--------------------------------------------|------------------------|
 | `toggle`   | The button that opens and closes the dropdown | `'Toggle options'`  |
+| `listbox`  | The dropdown list of options               | `'Options'`            |
 | `search`   | The search input, when it has no other label (see below) | `'Search for option'` |
 | `clear`    | The clear button                           | `'Clear Selected'`     |
 | `deselect` | Each selected value's deselect button. A function that receives the option's label and the option. | `` (label) => `Deselect ${label}` `` |
@@ -94,6 +96,7 @@ library, for example with [vue-i18n](https://vue-i18n.intlify.dev/):
   :placeholder="t('country.placeholder')"
   :aria-labels="{
     toggle: t('select.toggle'),
+    listbox: t('select.options'),
     clear: t('select.clear'),
     deselect: (label) => t('select.deselect', { label }),
   }"
