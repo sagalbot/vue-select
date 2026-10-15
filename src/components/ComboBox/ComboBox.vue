@@ -3,31 +3,10 @@ import { computed, provide, ref, onMounted, onUnmounted } from 'vue'
 import { useComboBox } from '../../hooks/useComboBox'
 import { useClickAway } from '../../hooks/useClickAway'
 import { ComboBoxKey } from '../../keys'
+import { comboBoxDefaults } from '../../defaults'
 import type { ComboBoxProps } from '../../types'
 
-const props = withDefaults(defineProps<ComboBoxProps>(), {
-  options: () => [],
-  multiple: false,
-  filterable: true,
-  taggable: false,
-  clearable: true,
-  closeOnSelect: true,
-  clearSearchOnSelect: true,
-  disabled: false,
-  label: 'label',
-  loading: false,
-  searchable: true,
-  hideSelected: false,
-  openOnFocus: false,
-  // undefined = derive from clearSearchOnSelect and multiple
-  clearSearchOnBlur: undefined,
-  // undefined = uncontrolled; bind `open` (or v-model:open) to control it
-  open: undefined,
-  deselectFromDropdown: false,
-  autoscroll: true,
-  placeholder: '',
-  resetOnOptionsChange: false,
-})
+const props = withDefaults(defineProps<ComboBoxProps>(), comboBoxDefaults)
 
 const emit = defineEmits<{
   'update:modelValue': [value: unknown]
@@ -46,8 +25,19 @@ const emit = defineEmits<{
 const ctx = useComboBox(props, emit as (event: string, ...args: unknown[]) => void)
 provide(ComboBoxKey, ctx)
 
-// State for the default slot, so templates can render options without
-// injecting the context: <ComboBox v-slot="{ filteredOptions }">
+// Methods for the default slot and template refs
+const methods = {
+  select: ctx.select,
+  deselect: ctx.deselect,
+  clearSelection: ctx.clearSelection,
+  setOpen: ctx.setOpen,
+  toggleOpen: ctx.toggleOpen,
+  setSearch: ctx.setSearch,
+  focusInput: ctx.focusInput,
+}
+
+// State and methods for the default slot, so templates can render options
+// without injecting the context: <ComboBox v-slot="{ filteredOptions }">
 const slotProps = computed(() => ({
   open: ctx.open.value,
   search: ctx.search.value,
@@ -55,7 +45,10 @@ const slotProps = computed(() => ({
   filteredOptions: ctx.filteredOptions.value,
   groupedOptions: ctx.groupedOptions.value,
   loading: ctx.isLoading.value,
+  ...methods,
 }))
+
+defineExpose(methods)
 
 // Click-away to close
 const el = ref<HTMLElement>()

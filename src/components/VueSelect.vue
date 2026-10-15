@@ -2,7 +2,7 @@
 @import '../css/vue-select.css';
 </style>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="Option extends OptionValue = OptionValue">
 import {
   computed,
   h,
@@ -11,12 +11,12 @@ import {
   onMounted,
   provide,
   ref,
-  useSlots,
   watch,
   type FunctionalComponent,
 } from 'vue'
 import { useComboBox } from '../hooks/useComboBox'
 import { ComboBoxKey } from '../keys'
+import { comboBoxDefaults } from '../defaults'
 import ComboBoxInput from './ComboBox/ComboBoxInput.vue'
 import ComboBoxMenu from './ComboBox/ComboBoxMenu.vue'
 import ComboBoxOption from './ComboBox/ComboBoxOption.vue'
@@ -25,30 +25,18 @@ import ComboBoxButton from './ComboBox/ComboBoxButton.vue'
 import ChevronDownIcon from './icons/ChevronDownIcon.vue'
 import XMarkIcon from './icons/XMarkIcon.vue'
 import XMarkSmallIcon from './icons/XMarkSmallIcon.vue'
-import type { CalculatePosition, OptionValue, VueSelectProps } from '../types'
+import type {
+  CalculatePosition,
+  ComboBoxProps,
+  ListSlotScope,
+  OptionValue,
+  SlotOption,
+  VueSelectProps,
+  VueSelectSlots,
+} from '../types'
 
-const props = withDefaults(defineProps<VueSelectProps>(), {
-  options: () => [],
-  multiple: false,
-  filterable: true,
-  taggable: false,
-  clearable: true,
-  closeOnSelect: true,
-  clearSearchOnSelect: true,
-  disabled: false,
-  label: 'label',
-  loading: false,
-  deselectFromDropdown: false,
-  autoscroll: true,
-  placeholder: '',
-  resetOnOptionsChange: false,
-  searchable: true,
-  hideSelected: false,
-  openOnFocus: false,
-  // undefined = uncontrolled; bind `open` (or v-model:open) to control it
-  open: undefined,
-  // undefined = derive from clearSearchOnSelect and multiple
-  clearSearchOnBlur: undefined,
+const props = withDefaults(defineProps<VueSelectProps<Option>>(), {
+  ...comboBoxDefaults,
   dir: 'auto',
   transition: 'vs__fade',
   inputAttrs: () => ({}),
@@ -74,15 +62,19 @@ const emit = defineEmits<{
   'search:input': [event: Event]
   'search:compositionstart': [event: CompositionEvent]
   'search:compositionend': [event: CompositionEvent]
-  'option:created': [option: OptionValue]
-  'option:selecting': [option: OptionValue]
-  'option:selected': [option: OptionValue]
-  'option:deselecting': [option: OptionValue]
-  'option:deselected': [option: OptionValue]
+  'option:created': [option: Option]
+  'option:selecting': [option: Option]
+  'option:selected': [option: Option]
+  'option:deselecting': [option: Option]
+  'option:deselected': [option: Option]
 }>()
 
-const slots = useSlots()
-const ctx = useComboBox(props, emit as (event: string, ...args: unknown[]) => void)
+const slots = defineSlots<VueSelectSlots<Option>>()
+// The composable works with any option; Option only narrows the public types
+const ctx = useComboBox(
+  props as unknown as ComboBoxProps,
+  emit as (event: string, ...args: unknown[]) => void
+)
 provide(ComboBoxKey, ctx)
 
 const toggleEl = ref<HTMLElement>()
@@ -91,9 +83,14 @@ const menuComponent = ref<InstanceType<typeof ComboBoxMenu>>()
 // --- Display helpers ---
 
 /** Slot props for an option: objects as-is, primitives as `{ [label]: value }`. */
-function normalizeOptionForSlot(option: OptionValue) {
-  return typeof option === 'object' ? option : { [props.label]: option }
+function normalizeOptionForSlot(option: OptionValue): SlotOption<Option> {
+  return (
+    typeof option === 'object' ? option : { [props.label]: option }
+  ) as SlotOption<Option>
 }
+
+/** Options from the context, typed as the component's Option. */
+const asOptions = (options: OptionValue[]) => options as Option[]
 
 const label = (option: OptionValue) => ctx.getOptionLabel(option)
 
@@ -109,8 +106,8 @@ function selectedOptionScope(option: OptionValue) {
   const normalized = normalizeOptionForSlot(option)
   return {
     option: normalized,
-    deselect: (target: OptionValue) =>
-      ctx.deselect(target === normalized ? option : target),
+    deselect: (target: Option | SlotOption<Option>) =>
+      ctx.deselect(target === normalized ? option : (target as OptionValue)),
     multiple: props.multiple,
     disabled: props.disabled,
   }
@@ -151,11 +148,11 @@ const stateClasses = computed(() => ({
   'vs--disabled': props.disabled,
 }))
 
-const listSlotScope = computed(() => ({
+const listSlotScope = computed<ListSlotScope<Option>>(() => ({
   search: ctx.search.value,
   loading: ctx.isLoading.value,
   searching: ctx.isSearching.value,
-  filteredOptions: ctx.filteredOptions.value,
+  filteredOptions: asOptions(ctx.filteredOptions.value),
 }))
 
 const noOptionsScope = computed(() => ({
@@ -421,7 +418,7 @@ defineExpose({
                     <slot
                       name="group-header"
                       :label="group.label"
-                      :options="group.options.map((o) => o.option)"
+                      :options="asOptions(group.options.map((o) => o.option))"
                     >
                       {{ group.label }}
                     </slot>

@@ -138,7 +138,7 @@ export function useComboBox(
     if ('id' in option) return option.id as OptionKey
 
     try {
-      return sortAndStringify(option)
+      return sortAndStringify(option as Record<string, unknown>)
     } catch (e) {
       console.warn(
         '[vue-select warn]: Could not stringify this option to generate a ' +

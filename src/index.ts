@@ -13,8 +13,10 @@ export { default as ComboBoxButton } from './components/ComboBox/ComboBoxButton.
 export { default as ComboBoxClear } from './components/ComboBox/ComboBoxClear.vue'
 export { default as ComboBoxGroup } from './components/ComboBox/ComboBoxGroup.vue'
 
-// Composable
+// Composable, context and defaults for building your own primitives
 export { useComboBox } from './hooks/useComboBox'
+export { ComboBoxKey, useComboBoxContext } from './keys'
+export { comboBoxDefaults } from './defaults'
 
 // Types
 export type {
