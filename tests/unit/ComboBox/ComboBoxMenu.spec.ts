@@ -59,4 +59,30 @@ describe('ComboBoxMenu', () => {
     const el = wrapper.find('[role="listbox"]').element as HTMLElement
     expect(el.style.display).toBe('none')
   })
+
+  describe('accessible name', () => {
+    it('defaults to "Options"', () => {
+      const { wrapper } = mountMenu()
+      expect(wrapper.attributes('aria-label')).toBe('Options')
+    })
+
+    it('uses a given aria-label', () => {
+      const ctx = createMockContext()
+      const wrapper = mount(ComboBoxMenu, {
+        attrs: { 'aria-label': 'Countries' },
+        global: { provide: { [ComboBoxKey as symbol]: ctx } },
+      })
+      expect(wrapper.attributes('aria-label')).toBe('Countries')
+    })
+
+    it('drops the default when labelled by another element', () => {
+      const ctx = createMockContext()
+      const wrapper = mount(ComboBoxMenu, {
+        attrs: { 'aria-labelledby': 'country-label' },
+        global: { provide: { [ComboBoxKey as symbol]: ctx } },
+      })
+      expect(wrapper.attributes('aria-label')).toBeUndefined()
+      expect(wrapper.attributes('aria-labelledby')).toBe('country-label')
+    })
+  })
 })

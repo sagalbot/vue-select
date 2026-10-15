@@ -4,6 +4,8 @@ import { createSSRApp, h, nextTick } from 'vue'
 import { renderToString } from 'vue/server-renderer'
 import VueSelect from '@/components/VueSelect.vue'
 import type { OptionValue } from '@/types'
+// Type-only: these must be exported from the package entry
+import type { ListSlotScope, SlotOption, VueSelectSlots } from '@/index'
 
 /** A real click: mousedown, then click. */
 async function press(el: { trigger: (event: string) => Promise<void> }) {
@@ -285,8 +287,13 @@ describe('VueSelect (v4)', () => {
       const wrapper = mount(VueSelect, {
         props: { options: ['a', 'b'], multiple: true, modelValue: ['a', 'b'] },
         slots: {
-          'selected-option-container': ({ option, deselect }: { option: { label: string }; deselect: (o: unknown) => void }) =>
-            h('button', { class: 'custom-deselect', onClick: () => deselect(option) }, option.label),
+          'selected-option-container': (scope: Record<string, unknown>) => {
+            const { option, deselect } = scope as {
+              option: { label: string }
+              deselect: (o: unknown) => void
+            }
+            return h('button', { class: 'custom-deselect', onClick: () => deselect(option) }, option.label)
+          },
         },
       })
       await wrapper.findAll('.custom-deselect')[0].trigger('click')
@@ -352,5 +359,18 @@ describe('VueSelect (v4)', () => {
 
     const messages = [...warn.mock.calls, ...error.mock.calls].flat().join('\n')
     expect(messages).not.toMatch(/hydration/i)
+  })
+
+  it('exports the slot types from the package entry', () => {
+    const scope: ListSlotScope<{ label: string }> = {
+      search: '',
+      loading: false,
+      searching: false,
+      filteredOptions: [{ label: 'a' }],
+    }
+    const option: SlotOption<string> = { label: 'a' }
+    const slots: VueSelectSlots<string> = { option: () => option }
+    expect(scope.filteredOptions).toHaveLength(1)
+    expect(typeof slots.option).toBe('function')
   })
 })

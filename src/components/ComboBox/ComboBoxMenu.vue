@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
+import { computed, ref, watch, nextTick, useAttrs } from 'vue'
 import { useComboBoxContext } from '../../keys'
 
 const props = withDefaults(
@@ -13,6 +13,13 @@ const props = withDefaults(
 )
 
 const ctx = useComboBoxContext('ComboBoxMenu')
+
+// A listbox needs an accessible name. Default to 'Options' unless one is
+// given with aria-label or aria-labelledby.
+const attrs = useAttrs()
+const defaultLabel = computed(() =>
+  'aria-label' in attrs || 'aria-labelledby' in attrs ? undefined : 'Options'
+)
 const menuEl = ref<HTMLElement>()
 
 // Auto-scroll to keep highlighted option visible
@@ -40,6 +47,7 @@ watch(() => ctx.typeAheadPointer.value, async (pointer) => {
     ref="menuEl"
     :id="`vs-${ctx.uid.value}-listbox`"
     role="listbox"
+    :aria-label="defaultLabel"
     :aria-multiselectable="ctx.multiple.value || undefined"
     tabindex="-1"
     @mousedown.prevent

@@ -28,6 +28,9 @@ export type {
   OptionKey,
   OptionValue,
   VueSelectProps,
+  VueSelectSlots,
+  SlotOption,
+  ListSlotScope,
   AriaLabels,
   CalculatePosition,
 } from './types'
