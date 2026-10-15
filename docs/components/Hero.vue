@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Button from '~/components/Button.vue'
 import TimelineSvg from '~/components/TimelineSvg.vue'
-import VueSelect from '~/components/VueSelect.vue'
+import VueSelect from '@/index'
 import {
   SparklesIcon,
   ArrowDownTrayIcon,
@@ -38,7 +38,7 @@ import {
               up in a lightweight, extendable Vue component.
             </p>
             <div class="mt-8 flex gap-4 md:justify-center lg:justify-start">
-              <Button variant="primary"> Get started </Button>
+              <Button to="/guide/install" variant="primary"> Get started </Button>
               <Button
                 to="https://github.com/sagalbot/vue-select"
                 variant="secondary"

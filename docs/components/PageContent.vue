@@ -2,6 +2,7 @@
 import ContentFooterNavigation from '~/components/PageContentFooterNavigation.vue'
 import PageContentHeader from '~/components/PageContentHeader.vue'
 import PageTableOfContents from '~/components/PageTableOfContents.vue'
+import VersionBanner from '~/components/VersionBanner.vue'
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import PageTableOfContents from '~/components/PageTableOfContents.vue'
   >
     <article>
       <PageContentHeader />
+      <VersionBanner />
       <div
         :class="[
           'prose prose-slate max-w-none dark:prose-invert dark:text-slate-400',
@@ -23,6 +25,8 @@ import PageTableOfContents from '~/components/PageTableOfContents.vue'
           'prose-a:no-underline prose-a:shadow-[inset_0_-2px_0_0_var(--tw-prose-background,#fff),inset_0_calc(-1*(var(--tw-prose-underline-size,4px)+2px))_0_0_var(--tw-prose-underline,var(--color-sky-300))] prose-a:hover:[--tw-prose-underline-size:6px] dark:[--tw-prose-background:var(--color-slate-900)] dark:prose-a:shadow-[inset_0_calc(-1*var(--tw-prose-underline-size,2px))_0_0_var(--tw-prose-underline,var(--color-sky-800))] dark:prose-a:hover:[--tw-prose-underline-size:6px]',
           // pre
           'prose-pre:rounded-xl prose-pre:border-2 prose-pre:bg-white dark:prose-pre:border-0 dark:prose-pre:bg-slate-800/60 dark:prose-pre:shadow-lg dark:prose-pre:shadow-none dark:prose-pre:ring-1 dark:prose-pre:ring-slate-300/10',
+          // inline code, without the typography plugin's backticks
+          'prose-code:before:content-none prose-code:after:content-none',
           // hr
           'dark:prose-hr:border-slate-800',
         ]"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NuxtLink } from '#components'
 import ColorThemeSwitcher from '~/components/ThemeSwitcher.vue'
+import VersionSwitcher from '~/components/VersionSwitcher.vue'
 import { useWindowScroll } from '@vueuse/core'
 import SpringloadedLogo from '~/assets/svg/springloaded-logo.svg'
 
@@ -111,7 +112,10 @@ const isScrolled = computed(() => y.value !== 0)
         </kbd>
       </button>
     </div>
-    <div class="relative flex basis-0 justify-end gap-6 sm:gap-8 md:grow">
+    <div
+      class="relative flex basis-0 items-center justify-end gap-6 sm:gap-8 md:grow"
+    >
+      <VersionSwitcher />
       <ColorThemeSwitcher />
       <a
         class="group"

@@ -5,12 +5,16 @@ import SidebarNavigation from '~/components/SidebarNavigation.vue'
 import PageContent from '~/components/PageContent.vue'
 import '../src/css/vue-select.css'
 
+const { page } = useContent()
+const { version } = useDocsVersion()
+
 useHead({
-  title: 'Vue Select',
+  titleTemplate: (title) => {
+    const suffix = version.value.latest ? 'Vue Select' : `Vue Select ${version.value.id}`
+    return title && title !== 'Vue Select' ? `${title} · ${suffix}` : suffix
+  },
   bodyAttrs: { class: 'bg-white dark:bg-slate-900' },
 })
-
-const { page } = useContent()
 </script>
 
 <template>
