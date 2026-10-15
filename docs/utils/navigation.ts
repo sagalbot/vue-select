@@ -26,13 +26,14 @@ const sidebars: Record<string, NavSection[]> = {
         { href: '/guide/install', title: 'Installation' },
         { href: '/guide/options', title: 'Dropdown Options' },
         { href: '/guide/values', title: 'Selecting Values' },
+        { href: '/guide/tagging', title: 'Tagging' },
         { href: '/guide/upgrade', title: 'Upgrading from v3' },
       ],
     },
     {
       title: 'Templating & Styling',
       links: [
-        { href: '/guide/css', title: 'CSS & Selectors' },
+        { href: '/guide/css', title: 'CSS & Theming' },
         { href: '/guide/slots', title: 'Slots' },
       ],
     },
@@ -43,7 +44,7 @@ const sidebars: Record<string, NavSection[]> = {
     {
       title: 'Accessibility',
       links: [
-        { href: '/guide/accessibility', title: 'WAI-ARIA Spec' },
+        { href: '/guide/accessibility', title: 'Accessibility' },
         { href: '/guide/localization', title: 'Localization' },
       ],
     },
@@ -73,6 +74,8 @@ const sidebars: Record<string, NavSection[]> = {
         { href: '/api/props', title: 'Props' },
         { href: '/api/slots', title: 'Slots' },
         { href: '/api/events', title: 'Events' },
+        { href: '/api/methods', title: 'Methods' },
+        { href: '/api/css-variables', title: 'CSS Variables' },
       ],
     },
   ],

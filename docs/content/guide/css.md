@@ -1,88 +1,184 @@
-Vue Select offers many APIs for customizing the look and feel from the component. You can use
-[scoped slots](../api/slots.md), [custom child components](components.md), or modify the built in
-CSS properties.
+---
+title: CSS & Theming
+section: Templating & Styling
+description: Theme Vue Select with CSS custom properties, override its classes, and change the dropdown transition.
+---
+
+Vue Select's styles are built on CSS custom properties (variables), so you can theme it from your
+own stylesheet without a build step. For changes to markup rather than appearance, use
+[slots](/guide/slots).
+
+Remember to [include the stylesheet](/guide/install#css):
+
+```js
+import 'vue-select/style.css'
+```
 
 ## CSS Variables
 
-Vue Select uses custom CSS properties throughout the component to handle visual opinions. This
-allows for quite a bit of flexibility in styling, without having to hook into a build system for
-generating your own styles with something like SASS. If there is a value that you think should use a
-CSS property instead of a hardcoded CSS value, please submit a PR.
+Every color, border, size and timing in the component reads from a `--vs-*` variable. Set the
+variables on `:root` to change every select in your app, or on any element to change only the
+selects inside it.
 
-## Dark Mode Example
+In this example the variables are set on a wrapper element to give one select a dark theme:
 
-Without writing any CSS yourself, you can completely customize the look and feel of Vue Select
-through the use of CSS variables. In this example, we adjust the colors of the component to match
-for a dark mode application.
+::guide-css-variables
+::
 
-In this case, the variables are scoped to only this implementation of the component, but you could
-place these variables anywhere in your applications CSS file to implement at a global level for your
-app.
+```vue
+<template>
+  <div class="dark-theme">
+    <VueSelect :options="countries" placeholder="Choose a country" />
+  </div>
+</template>
 
-Check the MDN docs for more info
-about [CSS Custom Properties.](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+<style scoped>
+.dark-theme {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: #282c34;
 
-<CssVariables style="margin-top: 1rem;" />
+  --vs-controls-color: #a78bfa;
+  --vs-border-color: #664cc3;
 
-<<< @/.vitepress/components/CssVariables.vue
+  --vs-dropdown-bg: #282c34;
+  --vs-dropdown-color: #cc99cd;
+  --vs-dropdown-option-color: #cc99cd;
 
-### Available CSS Variables <Badge type="primary">3.18+</Badge>
+  --vs-selected-bg: #664cc3;
+  --vs-selected-color: #eeeeee;
 
-<<< @/../src/css/global/variables.css
+  --vs-search-input-color: #eeeeee;
+  --vs-search-input-bg: #282c34;
 
-## SCSS <Badge type="warning">Deprecated in v3.18</Badge>
+  --vs-dropdown-option--active-bg: #664cc3;
+  --vs-dropdown-option--active-color: #eeeeee;
+}
+</style>
+```
 
-::: warning Deprecation Notice 
-The SCSS build been deprecated for the `v3.x` release, and will be
-removed in `v4.0.0`. The files will remain in the v3 codebase if you really need them, but the
-recommended approach is to leverage the included CSS variables instead.
-:::
+::callout{type="warning" title="Teleported dropdowns"}
+With [`append-to`](/guide/positioning#teleporting-the-dropdown), the dropdown menu is moved
+outside the component, so it doesn't inherit variables set on a wrapper element. Set the dropdown
+variables on `:root` (or on the element you teleport to) instead.
+::
 
-Variables are leveraged in as much of the component styles as possible. If you really want to dig
-into the SCSS, the files are located in `src/scss`. The variables listed below can be found at
-[`src/scss/global/_variables`](https://github.com/sagalbot/vue-select/blob/master/src/scss/global/_variables.scss)
-.
+The variables are declared on `:root` and `:host`, so they also work inside a shadow root.
 
-All variables are implemented with `!default` in order to make them easier to override in your
-application.
+### Available Variables
 
-<<< @/../src/scss/global/_variables.scss
+The [CSS variables reference](/api/css-variables) lists every variable with its default value and
+what it styles. A few worth knowing:
+
+- `--vs-controls-size` scales the clear and toggle icons (and the spinner): `1` is 20px.
+- `--vs-dropdown-option--active-bg` is the highlighted option's background. The default has a
+  4.6:1 contrast ratio with the white `--vs-dropdown-option--active-color`, which meets WCAG AA.
+  If you change either, keep the contrast at 4.5:1 or higher.
+- `--vs-search-input-bg` is the field's background, and `--vs-dropdown-bg` the dropdown's.
 
 ## Overriding Default Styles
 
-Vue Select takes the approach of using selectors with a single level of specificity, while using
-classes that are very specific to Vue Select to avoid collisions with your app.
+Vue Select uses selectors with a single class wherever possible, and its class names are prefixed
+to avoid collisions with your app: `v-select` on the root element, `vs__*` for elements and
+`vs--*` for states.
 
-Most classes within Vue Select use the `vs__` prefix, and selectors are generally a single classname
-– unless there is a state being applied to the component.
+To override a default rule, add one level of specificity. Put `.v-select` in front of a `vs__*`
+selector to change every select, or use your own class to change one:
 
-In order to override a default property in your app, you should add one level of specificity. The
-easiest way to do this, is to add `.v-select` before the `vs__*` selector if you want to adjust all
-instances of Vue Select, or add your own classname if you just want to affect one.
+::guide-css-specificity
+::
 
-<CssSpecificity />  
+```vue
+<template>
+  <VueSelect
+    class="style-chooser"
+    placeholder="Choose a styling option"
+    :options="['Slots', 'CSS variables', 'Your own CSS']"
+  />
+</template>
 
-<<< @/.vitepress/components/CssSpecificity.vue
+<style>
+.style-chooser .vs__search::placeholder,
+.style-chooser .vs__dropdown-toggle,
+.style-chooser .vs__dropdown-menu {
+  background: #dfe5fb;
+  border: none;
+  color: #394066;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+
+.style-chooser .vs__clear,
+.style-chooser .vs__open-indicator {
+  fill: #394066;
+}
+</style>
+```
+
+Classes passed to `<VueSelect>` land on the root `.v-select` element. In a `<style scoped>`
+block, wrap the inner selectors in `:deep()`, for example `.style-chooser :deep(.vs__dropdown-toggle)`.
+
+### Class Reference
+
+| Class                             | Element                                                        |
+|-----------------------------------|----------------------------------------------------------------|
+| `.v-select`                       | Root element                                                   |
+| `.vs__dropdown-toggle`            | The field: selected values, search input and actions           |
+| `.vs__selected-options`           | Wraps the selected values and the search input                 |
+| `.vs__selected`                   | A selected value                                               |
+| `.vs__deselect`                   | The deselect button on a selected value (multiple)             |
+| `.vs__search`                     | The search input (a `div` when `searchable` is false)          |
+| `.vs__actions`                    | Wraps the clear button, toggle button and spinner              |
+| `.vs__clear`                      | The clear button                                               |
+| `.vs__open-indicator-button`      | The toggle button                                              |
+| `.vs__open-indicator`             | The icon inside the toggle button                              |
+| `.vs__icon`                       | The built-in SVG icons                                         |
+| `.vs__spinner`                    | The loading spinner                                            |
+| `.vs__dropdown-menu`              | The dropdown list (`ul`)                                       |
+| `.vs__dropdown-option`            | An option                                                      |
+| `.vs__dropdown-group`             | An option group                                                |
+| `.vs__dropdown-group-label`       | An option group's header                                       |
+| `.vs__no-options`                 | The "no options" message                                       |
+
+Options get modifier classes for their state: `--highlight` (the keyboard or mouse highlight),
+`--selected`, `--disabled` (not [selectable](/guide/selectable)), and `--deselect` (highlighted
+and will be deselected, with `deselectFromDropdown`).
+
+The root element gets state classes: `vs--open`, `vs--single`, `vs--multiple`, `vs--searching`
+(there is search text), `vs--searchable`, `vs--unsearchable`, `vs--loading` and `vs--disabled`.
+
+### Focus Styles
+
+The default theme draws no focus ring around the field. If your app doesn't add one globally, style
+the field while the input has focus:
+
+```css
+.v-select:focus-within .vs__dropdown-toggle {
+  outline: 2px solid #136cfb;
+  outline-offset: 1px;
+}
+```
 
 ## Dropdown Transition
 
-By default, the dropdown transitions with a `.15s` cubic-bezier opacity fade in/out. The component
-uses the [VueJS transition system](https://vuejs.org/v2/guide/transitions.html). By default, the
-transition name is `vs__fade`. There's a couple ways to override or change this transition.
+The dropdown fades in and out with a Vue `<Transition>` named `vs__fade`. To use your own
+transition, pass its name with the `transition` prop and define the
+[transition classes](https://vuejs.org/guide/built-ins/transition.html#transition-classes):
 
-1. Use the `transition` prop. Applying this prop will change the name of the animation classes and
-   negate the default CSS. If you want to remove it entirely, you can set it to an empty string.
-
-```html
-<v-select transition="" />
+```vue
+<VueSelect transition="slide" />
 ```
-
-2. You can also override the default CSS for the `vs__fade` transition. Again, if you wanted to
-   eliminate the transition entirely:
 
 ```css
-.vs__fade-enter-active,
-.vs__fade-leave-active {
-    transition: none;
+.slide-enter-active,
+.slide-leave-active {
+  transition: opacity 0.15s, transform 0.15s;
+}
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 ```
+
+To remove the transition entirely, set `transition=""`.
