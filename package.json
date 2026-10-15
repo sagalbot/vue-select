@@ -30,8 +30,8 @@
   "license": "MIT",
   "prepare": "npm run build",
   "scripts": {
-    "dev:docs": "cd docs && yarn dev",
-    "build:docs": "cd docs && yarn generate",
+    "dev:docs": "pnpm --dir docs dev",
+    "build:docs": "pnpm --dir docs generate",
     "semantic-release": "semantic-release",
     "commit": "git-cz",
     "dev": "vite",

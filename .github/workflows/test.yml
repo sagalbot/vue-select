@@ -4,7 +4,7 @@ on: [pull_request]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   test:
@@ -19,6 +19,9 @@ jobs:
 
       - name: ESLint
         run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm run typecheck
 
       - name: Report Coverage
         uses: coverallsapp/github-action@v2
