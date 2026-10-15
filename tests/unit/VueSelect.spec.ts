@@ -212,6 +212,62 @@ describe('VueSelect (v4)', () => {
     })
   })
 
+  describe('focus after removing values (keyboard)', () => {
+    // Mount with a working v-model loop, as an app would have
+    function mountWithModel(props: Record<string, unknown>) {
+      // eslint-disable-next-line prefer-const
+      let wrapper: ReturnType<typeof mount>
+      wrapper = mount(VueSelect, {
+        props: {
+          ...props,
+          'onUpdate:modelValue': (value: unknown) => wrapper.setProps({ modelValue: value }),
+        },
+        attachTo: document.body,
+      })
+      return wrapper
+    }
+
+    async function keyboardDeselect(wrapper: ReturnType<typeof mount>, index: number) {
+      const button = wrapper.findAll('.vs__deselect')[index]
+      ;(button.element as HTMLElement).focus()
+      await button.trigger('click')
+      await nextTick()
+    }
+
+    it('moves focus to the next tag’s deselect button', async () => {
+      const wrapper = mountWithModel({ options: ['a', 'b', 'c'], multiple: true, modelValue: ['a', 'b', 'c'] })
+      await keyboardDeselect(wrapper, 0)
+      expect(document.activeElement?.getAttribute('aria-label')).toBe('Deselect b')
+      wrapper.unmount()
+    })
+
+    it('moves focus to the previous tag when the last one is removed', async () => {
+      const wrapper = mountWithModel({ options: ['a', 'b', 'c'], multiple: true, modelValue: ['a', 'b'] })
+      await keyboardDeselect(wrapper, 1)
+      expect(document.activeElement?.getAttribute('aria-label')).toBe('Deselect a')
+      wrapper.unmount()
+    })
+
+    it('moves focus to the input when no tags are left', async () => {
+      const wrapper = mountWithModel({ options: ['a'], multiple: true, modelValue: ['a'] })
+      await keyboardDeselect(wrapper, 0)
+      expect(document.activeElement).toBe(wrapper.get('.vs__search').element)
+      wrapper.unmount()
+    })
+
+    it('moves focus to the input after clearing', async () => {
+      const wrapper = mount(VueSelect, {
+        props: { options: ['a'], modelValue: 'a' },
+        attachTo: document.body,
+      })
+      const clear = wrapper.get('.vs__clear')
+      ;(clear.element as HTMLElement).focus()
+      await clear.trigger('click')
+      expect(document.activeElement).toBe(wrapper.get('.vs__search').element)
+      wrapper.unmount()
+    })
+  })
+
   it('emits clear when the clear button is used', async () => {
     const wrapper = mount(VueSelect, { props: { options: ['a'], modelValue: 'a' } })
     await wrapper.get('.vs__clear').trigger('click')

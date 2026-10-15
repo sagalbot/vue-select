@@ -179,6 +179,32 @@ function onToggleMousedown(event: MouseEvent) {
   else if (ctx.openOnFocus.value) ctx.setOpen(true)
 }
 
+// --- Removing values ---
+
+// Focus stays somewhere sensible when the focused button disappears:
+// the input after clearing, and the next (or previous) tag's deselect
+// button after a keyboard deselect.
+function onClearClick() {
+  ctx.clearSelection()
+  ctx.focusInput()
+}
+
+async function onDeselectClick(option: OptionValue, event: MouseEvent) {
+  const button = event.currentTarget as HTMLElement
+  const usedKeyboard = button === document.activeElement
+  const buttons = [...(toggleEl.value?.querySelectorAll<HTMLElement>('.vs__deselect') ?? [])]
+  const index = buttons.indexOf(button)
+
+  ctx.deselect(option)
+  if (!usedKeyboard) return
+
+  await nextTick()
+  const remaining = [...(toggleEl.value?.querySelectorAll<HTMLElement>('.vs__deselect') ?? [])]
+  const next = remaining[index] ?? remaining[index - 1]
+  if (next) next.focus()
+  else ctx.focusInput()
+}
+
 // --- Teleported dropdown positioning ---
 
 let cleanupPosition: (() => void) | void
@@ -282,7 +308,7 @@ defineExpose({
                 class="vs__deselect"
                 :title="deselectLabel(option)"
                 :aria-label="deselectLabel(option)"
-                @click="ctx.deselect(option)"
+                @click="onDeselectClick(option, $event)"
               >
                 <slot name="deselect" :option="normalizeOptionForSlot(option)">
                   <XMarkSmallIcon />
@@ -319,7 +345,7 @@ defineExpose({
           class="vs__clear"
           :title="clearLabel"
           :aria-label="clearLabel"
-          @click="ctx.clearSelection()"
+          @click="onClearClick"
         >
           <slot name="clear"><XMarkIcon /></slot>
         </button>
