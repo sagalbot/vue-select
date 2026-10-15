@@ -194,10 +194,16 @@ export function useComboBox(
   function maybeAddTaggableOption(options: OptionValue[]): OptionValue[] {
     if (!taggable.value || !search.value) return options
 
-    // Create the tag option
-    const tagOption = props.createOption
-      ? props.createOption(search.value)
-      : defaultCreateOption(search.value)
+    // Create the tag option. createOption can throw to reject the text
+    // (e.g. validation), in which case no tag is offered.
+    let tagOption: OptionValue
+    try {
+      tagOption = props.createOption
+        ? props.createOption(search.value)
+        : defaultCreateOption(search.value)
+    } catch {
+      return options
+    }
 
     // Don't add if an option with the same key already exists
     const tagKey = getOptionKey(tagOption)

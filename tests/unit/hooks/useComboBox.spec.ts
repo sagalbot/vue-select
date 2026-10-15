@@ -931,6 +931,21 @@ describe('useComboBox', () => {
       expect(filteredOptions.value[0]).toEqual({ name: 'Mexico' })
     })
 
+    it('offers no tag when createOption throws', () => {
+      const { filteredOptions, setSearch } = createComboBox({
+        options: ['a@example.com'],
+        taggable: true,
+        createOption: (search: string) => {
+          if (!search.includes('@')) throw new Error('not an email')
+          return search
+        },
+      })
+      setSearch('nope')
+      expect(filteredOptions.value).toEqual([])
+      setSearch('b@example.com')
+      expect(filteredOptions.value).toEqual(['b@example.com'])
+    })
+
     it('uses custom createOption when provided', () => {
       const { select, setSearch, emit } = createComboBox({
         options: [],

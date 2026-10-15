@@ -69,6 +69,7 @@ export interface ComboBoxProps {
   getOptionLabel?: (option: OptionValue) => string
   getOptionKey?: (option: OptionValue) => OptionKey
   filter?: (options: OptionValue[], search: string) => OptionValue[]
+  /** Build a tag from the search text. Throw to reject the text. */
   createOption?: (search: string) => OptionValue
   loading?: boolean
   uid?: string
