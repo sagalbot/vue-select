@@ -20,6 +20,14 @@ const isSelected = computed(() => ctx.isOptionSelected(props.value))
 const isHighlighted = computed(() => ctx.isOptionHighlighted(props.index))
 const isDisabled = computed(() => !ctx.isOptionSelectable(props.value))
 
+// mousemove, not mouseover: a list scrolling under a still pointer fires
+// mouseover and would steal the keyboard highlight.
+function onMousemove() {
+  if (!isDisabled.value && ctx.typeAheadPointer.value !== props.index) {
+    ctx.typeAheadPointer.value = props.index
+  }
+}
+
 function onClick() {
   if (!isDisabled.value) ctx.select(props.value)
 }
@@ -33,7 +41,7 @@ function onClick() {
     :aria-selected="String(isSelected)"
     :aria-disabled="isDisabled || undefined"
     @click="onClick"
-    @mouseover="isDisabled || (ctx.typeAheadPointer.value = index)"
+    @mousemove="onMousemove"
   >
     <slot v-bind="{ isSelected, isHighlighted, isDisabled }" />
   </component>

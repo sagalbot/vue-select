@@ -66,7 +66,7 @@ const menu = (wrapper) => {
 const openAtOption1 = async (wrapper) => {
   menu(wrapper)
   await searchFocus(wrapper)
-  await dropdownOptions(wrapper)[1].trigger('mouseover')
+  await dropdownOptions(wrapper)[1].trigger('mousemove')
   await flushPromises()
   expect(highlightedIndex(wrapper)).toEqual(1)
   expect(menu(wrapper).scrollTop).toEqual(INITIAL_SCROLL_TOP)

@@ -12,7 +12,7 @@ import {
 
 /** Point the typeahead at an option by hovering it, as a user would. */
 const hoverOption = async (wrapper, index) => {
-  await dropdownOptions(wrapper)[index].trigger('mouseover')
+  await dropdownOptions(wrapper)[index].trigger('mousemove')
 }
 
 describe('Moving the Typeahead Pointer', () => {

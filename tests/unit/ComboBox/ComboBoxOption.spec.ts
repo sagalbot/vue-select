@@ -65,10 +65,10 @@ describe('ComboBoxOption', () => {
     expect(ctx.deselect).not.toHaveBeenCalled()
   })
 
-  it('mouseover updates typeAheadPointer', async () => {
+  it('mousemove updates typeAheadPointer', async () => {
     const pointer = ref(-1)
     const { wrapper } = mountOption({ index: 2 }, { typeAheadPointer: pointer })
-    await wrapper.trigger('mouseover')
+    await wrapper.trigger('mousemove')
     expect(pointer.value).toBe(2)
   })
 
@@ -87,20 +87,29 @@ describe('ComboBoxOption', () => {
     expect(wrapper.element.tagName).toBe('LI')
   })
 
-  it('mouseover highlights a selectable option', async () => {
+  it('mousemove highlights a selectable option', async () => {
     const typeAheadPointer = ref(-1)
     const { wrapper } = mountOption({ index: 3 }, { typeAheadPointer })
-    await wrapper.trigger('mouseover')
+    await wrapper.trigger('mousemove')
     expect(typeAheadPointer.value).toBe(3)
   })
 
-  it('mouseover does not highlight a disabled option', async () => {
+  it('mousemove does not highlight a disabled option', async () => {
     const typeAheadPointer = ref(-1)
     const { wrapper } = mountOption(
       { index: 3 },
       { typeAheadPointer, isOptionSelectable: () => false }
     )
-    await wrapper.trigger('mouseover')
+    await wrapper.trigger('mousemove')
     expect(typeAheadPointer.value).toBe(-1)
+  })
+
+  // A list scrolling under a still pointer fires mouseover; only real
+  // pointer movement should take the highlight from the keyboard.
+  it('mouseover alone does not move the highlight', async () => {
+    const typeAheadPointer = ref(0)
+    const { wrapper } = mountOption({ index: 3 }, { typeAheadPointer })
+    await wrapper.trigger('mouseover')
+    expect(typeAheadPointer.value).toBe(0)
   })
 })
