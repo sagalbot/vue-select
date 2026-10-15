@@ -124,7 +124,9 @@ Reading a property that doesn't exist, like `country.id`, is a type error. Optio
 with an `interface` or a `type`.
 
 The package also exports types for writing your own wrappers and helpers: `VueSelectProps<Option>`,
-`OptionValue`, `OptionKey`, `ModelValue`, `AriaLabels`, `CalculatePosition` and `KeydownHandlers`,
+`VueSelectSlots<Option>` (the slots and their props), `SlotOption<Option>` (an option as slots
+receive it) and `ListSlotScope<Option>` (the props of the list slots), plus `OptionValue`,
+`OptionKey`, `ModelValue`, `AriaLabels`, `CalculatePosition` and `KeydownHandlers`,
 plus `ComboBoxProps`, `ComboBoxContext` and `OptionGroup` for the
 [headless components](/guide/headless).
 

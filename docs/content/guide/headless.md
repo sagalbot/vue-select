@@ -139,7 +139,7 @@ A few things to notice:
 | `ComboBoxInput` | `<input type="search">`, or a `<div>` with `searchable: false` | `role="combobox"`, `aria-expanded`, `aria-controls` (the menu), `aria-activedescendant` (the highlighted option, only while open), `aria-autocomplete="list"`. Handles typing and the [keyboard](#keyboard). The select-only `<div>` gets `tabindex="0"` and `aria-disabled`. |
 | `ComboBoxButton` | `<button type="button">` | `tabindex="-1"`, `aria-haspopup="listbox"`, `aria-expanded`, `aria-controls`. Toggles the dropdown and moves focus to the input. Give it an `aria-label`. |
 | `ComboBoxClear` | `<button type="button">` | `aria-label="Clear selection"` (override it with your own `aria-label`). Hidden while nothing is selected or when `clearable` is false. Clears the value, emits `clear` and moves focus to the input. |
-| `ComboBoxMenu` | `<div>` (`as` prop to change) | `role="listbox"`, `tabindex="-1"`, `aria-multiselectable` with `multiple`. Give it an `aria-label` (`VueSelect` uses `ariaLabels.listbox`, "Options" by default). Shown while the dropdown is open (`v-show`), or as the `show` prop says. Keeps the highlighted option scrolled into view, and prevents `mousedown` so the input keeps focus. |
+| `ComboBoxMenu` | `<div>` (`as` prop to change) | `role="listbox"`, `tabindex="-1"`, `aria-multiselectable` with `multiple`. Named "Options" by default; pass `aria-label` or `aria-labelledby` to change it (`VueSelect` uses `ariaLabels.listbox`). Shown while the dropdown is open (`v-show`), or as the `show` prop says. Keeps the highlighted option scrolled into view, and prevents `mousedown` so the input keeps focus. |
 | `ComboBoxOption` | `<div>` (`as` prop to change) | `role="option"`, `aria-selected`, `aria-disabled` when not [selectable](/api/props#selectable). Selects on click, highlights on mouse move. Props: `value`, `index`. |
 | `ComboBoxGroup` | `<div role="group">` with a label `<div>` (`as` and `label-as` props to change) | `aria-labelledby` points at the label. Prop: `label`. See [option groups](#option-groups). |
 
@@ -611,7 +611,13 @@ function onBlur() {
     </div>
 
     <!-- mousedown.prevent keeps focus in the input while clicking an option -->
-    <ul v-show="open" :id="listboxId" role="listbox" @mousedown.prevent>
+    <ul
+      v-show="open"
+      :id="listboxId"
+      role="listbox"
+      aria-label="Colors"
+      @mousedown.prevent
+    >
       <li
         v-for="(option, index) in filteredOptions"
         :id="optionId(index)"

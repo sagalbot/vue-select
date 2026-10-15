@@ -34,12 +34,15 @@ function focusSelect() {
 
 ## Overview
 
+`Option` is the type of the items in your [`options`](/api/props#options), which `VueSelect`
+infers from the array you pass.
+
 | Member | Type |
 | --- | --- |
 | [open](#open) | `boolean` (read and write) |
 | [search](#search) | `string` (read and write) |
-| [select](#select) | `(option: OptionValue) => void` |
-| [deselect](#deselect) | `(option: OptionValue) => void` |
+| [select](#select) | `(option: Option) => void` |
+| [deselect](#deselect) | `(option: Option) => void` |
 | [clearSelection](#clearselection) | `() => void` |
 | [toggleDropdown](#toggledropdown) | `() => void` |
 | [focus](#focus) | `() => void` |
@@ -131,7 +134,7 @@ updates, the search text is cleared and the dropdown closes (following
 [`reduce`](/api/props#reduce)d value. Options rejected by [`selectable`](/api/props#selectable) are
 ignored.
 
-- **Type:** `(option: OptionValue) => void`
+- **Type:** `(option: Option) => void`
 
 ```js
 select.value.select({ code: 'CA', label: 'Canada' })
@@ -144,7 +147,7 @@ Removes an option from the selection and emits
 [`option:deselected`](/api/events#optiondeselected). Pass the option itself, not its reduced value.
 The events are emitted even when the option isn't selected; the value only changes when it is.
 
-- **Type:** `(option: OptionValue) => void`
+- **Type:** `(option: Option) => void`
 
 ## clearSelection
 

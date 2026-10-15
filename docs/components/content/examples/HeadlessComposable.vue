@@ -111,7 +111,14 @@ function onBlur() {
         </button>
       </div>
 
-      <ul v-show="open" :id="listboxId" role="listbox" class="listbox" @mousedown.prevent>
+      <ul
+        v-show="open"
+        :id="listboxId"
+        role="listbox"
+        aria-label="Colors"
+        class="listbox"
+        @mousedown.prevent
+      >
         <li
           v-for="(option, index) in filteredOptions"
           :id="optionId(index)"
