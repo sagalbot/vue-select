@@ -55,6 +55,8 @@
     /* Options */
     --vs-dropdown-option-color: var(--vs-dropdown-color);
     --vs-dropdown-option-padding: 3px 20px;
+    /* Group labels: 5.7:1 on white (WCAG AA) */
+    --vs-dropdown-group-label-color: #666;
 
     /* Active State */
     /* 4.6:1 with the default white text (WCAG AA); was #5897fb (2.9:1) */
@@ -72,8 +74,45 @@
 
     /* Spinner (scale; defaults to the controls size) */
     --vs-controls--spinner-size: var(--vs-controls-size);
+    --vs-spinner-color: rgba(60, 60, 60, 0.45);
+    --vs-spinner-track-color: rgba(100, 100, 100, 0.1);
 
     /* Focus: ring around the field while it has focus */
     --vs-focus-color: #136cfb;
     --vs-focus-ring: 0 0 0 1px var(--vs-focus-color);
+}
+
+/*
+ * Dark mode
+ *
+ * Colors follow the page's `color-scheme`: an element (or ancestor) with
+ * `color-scheme: dark`, or `light dark` while the OS is in dark mode, gets
+ * the dark values. Pages that never set `color-scheme` stay light.
+ *
+ * Override a color for both schemes with `light-dark(light, dark)`, or with
+ * a single color to use it in both.
+ *
+ * Inside @supports: a custom property accepts any value, so browsers without
+ * light-dark() would keep it and then drop the color where it's used. They
+ * skip this block and keep the light values above.
+ */
+@supports (color: light-dark(#000, #fff)) {
+    :root,
+    :host {
+        --vs-colors--lightest: light-dark(rgba(60, 60, 60, 0.26), rgba(255, 255, 255, 0.2));
+        --vs-colors--light: light-dark(rgba(60, 60, 60, 0.5), rgba(255, 255, 255, 0.45));
+        --vs-colors--dark: light-dark(#333, #e4e4e7);
+        --vs-colors--darkest: light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
+
+        --vs-search-input-bg: light-dark(rgb(255, 255, 255), #18181b);
+        --vs-state-disabled-bg: light-dark(rgb(248, 248, 248), #27272a);
+        --vs-controls--deselect-text-shadow: 0 1px 0 light-dark(#fff, transparent);
+        --vs-selected-bg: light-dark(#f0f0f0, #27272a);
+        --vs-dropdown-bg: light-dark(#fff, #18181b);
+        --vs-dropdown-group-label-color: light-dark(#666, #a1a1aa);
+        --vs-spinner-color: light-dark(rgba(60, 60, 60, 0.45), rgba(255, 255, 255, 0.6));
+        --vs-spinner-track-color: light-dark(rgba(100, 100, 100, 0.1), rgba(255, 255, 255, 0.12));
+        /* 7:1 against the dark field (#136cfb would be 3.9:1) */
+        --vs-focus-color: light-dark(#136cfb, #60a5fa);
+    }
 }

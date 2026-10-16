@@ -12,6 +12,6 @@
     padding: var(--vs-dropdown-option-padding);
     font-size: 0.85em;
     font-weight: 600;
-    color: var(--vs-colors--light);
+    color: var(--vs-dropdown-group-label-color);
     cursor: default;
 }
