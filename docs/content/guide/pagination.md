@@ -1,18 +1,77 @@
-::: tip <Badge text="3.8.0+" />
-Pagination is supported using slots available with Vue Select 3.8 and above.
-:::
+---
+title: Pagination
+section: Use Cases
+description: Render a page of options at a time, with previous and next buttons in the list-footer slot.
+---
 
-Pagination can be a super helpful tool when working with large sets of data. If you have 1,000
-options, the component is going to render 1,000 DOM nodes. That's a lot of nodes to insert/remove,
-and chances are your user is only interested in a few of them anyways.
+Pagination helps with large sets of options. If you have 1,000 options, the component renders
+1,000 DOM nodes, and chances are your user is only interested in a few of them.
 
-To implement pagination with Vue Select, you can take advantage of the `list-footer` slot. It
-appears below all other options in the drop down list.
+To paginate, render one page of options at a time and put the controls in the `list-footer`
+slot, which appears below the options in the dropdown.
 
-To make pagination work properly with filtering, you'll have to handle it yourself in the parent.
-You can use the `filterable` boolean to turn off Vue Select's filtering, and then hook into the
-`search` event to use the current search query in the parent component.
+Pagination has to work together with filtering, so the filtering moves into your component: turn
+off Vue Select's own filtering with `:filterable="false"`, keep track of the search text with the
+`search` event, and filter before you slice out the current page.
 
-<Paginated />
+::guide-pagination
+::
 
-<<< @/.vitepress/components/Paginated.vue
+```vue
+<script setup>
+import { computed, ref } from 'vue'
+import VueSelect from 'vue-select'
+import { countries } from './data'
+
+const search = ref('')
+const offset = ref(0)
+const limit = 10
+
+const filtered = computed(() =>
+  countries.filter((country) =>
+    country.toLocaleLowerCase().includes(search.value.toLocaleLowerCase())
+  )
+)
+const paginated = computed(() => filtered.value.slice(offset.value, offset.value + limit))
+const hasPrevPage = computed(() => offset.value > 0)
+const hasNextPage = computed(() => offset.value + limit < filtered.value.length)
+
+function onSearch(query) {
+  search.value = query
+  offset.value = 0
+}
+</script>
+
+<template>
+  <VueSelect :options="paginated" :filterable="false" @search="onSearch">
+    <template #list-footer>
+      <li class="pagination">
+        <button type="button" :disabled="!hasPrevPage" @click="offset -= limit">Prev</button>
+        <button type="button" :disabled="!hasNextPage" @click="offset += limit">Next</button>
+      </li>
+    </template>
+  </VueSelect>
+</template>
+
+<style scoped>
+.pagination {
+  display: flex;
+  gap: 0.25rem;
+  margin: 0.25rem 0.25rem 0;
+}
+.pagination button {
+  flex-grow: 1;
+  padding: 0.25rem;
+  border: 1px solid var(--vs-border-color);
+  border-radius: var(--vs-border-radius);
+  cursor: pointer;
+}
+.pagination button:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+</style>
+```
+
+Clicking the buttons doesn't move focus out of the search input, so the dropdown stays open while
+the user pages through the results.

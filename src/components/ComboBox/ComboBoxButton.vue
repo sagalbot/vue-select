@@ -1,28 +1,26 @@
 <script setup lang="ts">
-import { inject } from 'vue'
-import { ListBoxKey } from '@/keys'
 
-withDefaults(
-  defineProps<{
-    as?: string
-  }>(),
-  {
-    as: 'button',
-  },
-)
+import { useComboBoxContext } from '../../keys'
 
-const listBoxProps = inject(ListBoxKey)
+const ctx = useComboBoxContext('ComboBoxButton')
 </script>
 
+<!--
+  Toggle button for the dropdown. Out of the tab order (the input handles
+  the keyboard), but available to pointer, touch and assistive tech, as in
+  the WAI-ARIA APG editable combobox example. Focus moves to the input.
+-->
 <template>
-  <Component
-    :is="as"
-    tabindex="0"
+  <button
     type="button"
-    aria-haspopup="true"
-    :aria-expanded="listBoxProps.open"
-    @click="listBoxProps.toggleOpen"
+    tabindex="-1"
+    aria-haspopup="listbox"
+    :aria-expanded="ctx.open.value"
+    :aria-controls="`vs-${ctx.uid.value}-listbox`"
+    :disabled="ctx.disabled.value || undefined"
+    @click="ctx.toggleOpen(), ctx.focusInput()"
+    @mousedown.prevent
   >
-    <slot></slot>
-  </Component>
+    <slot />
+  </button>
 </template>

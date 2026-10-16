@@ -168,6 +168,22 @@ Plan 3: Documentation                  │      backward compat)
 - **Plan 3 Phase C** (upgrade guide, headless docs) waits for Plans 1 + 2
 - **Plan 4** (release) waits for everything
 
+## Branching & Commit Strategy
+
+**Integration branch:** `@beta/dev` is the canonical integration branch for all v4 work.
+
+**Feature branches:** Each workstream/task gets an isolated feature branch off `@beta/dev`:
+- `feat/combobox-*` -- headless primitives work
+- `fix/*` -- bugfixes
+- `docs/*` -- documentation work
+- `chore/*` -- build/CI/dependency changes
+
+**Commit convention:** [Conventional Commits](https://www.conventionalcommits.org/) via `cz-conventional-changelog`. This project uses `semantic-release` to auto-publish from the `beta` release branch.
+
+**Breaking changes:** Any commit with a breaking change MUST include a `BREAKING CHANGE:` footer. All breaking changes are tracked in the implementation plans and will be collected into the v4 upgrade guide.
+
+**Release flow:** `@beta/dev` -> `beta` (prerelease channel) -> `master` (stable v4.0.0)
+
 ## Key Decisions Made
 
 1. **Ship both headless primitives and styled wrapper** in v4.0
@@ -176,6 +192,8 @@ Plan 3: Documentation                  │      backward compat)
 4. **Parallel workstreams, ship when ready** -- no artificial timeline pressure
 5. **v3 docs archived under `/v3/` path** via content migration into Nuxt
 6. **Each plan gets its own detailed implementation plan** in a separate planning session
+7. **Feature branches** for isolated work, merged back into `@beta/dev`
+8. **Semantic commits** with `BREAKING CHANGE:` footers for all breaking changes
 
 ## Current Project State (as of 2026-02-16)
 

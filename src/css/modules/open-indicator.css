@@ -7,7 +7,6 @@
 
 .vs__open-indicator {
     fill: var(--vs-controls-color);
-    transform: scale(var(--vs-controls-size));
     transition: transform var(--vs-transition-duration)
         var(--vs-transition-timing-function);
     transition-timing-function: var(--vs-transition-timing-function);
@@ -16,11 +15,27 @@
 /* Open State */
 
 .vs--open .vs__open-indicator {
-    transform: rotate(180deg) scale(var(--vs-controls-size));
+    transform: rotate(180deg);
 }
 
 /* Loading State */
 
 .vs--loading .vs__open-indicator {
     opacity: 0;
+}
+
+/* Toggle button wrapping the indicator */
+
+.vs__open-indicator-button {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.vs--disabled .vs__open-indicator-button {
+    cursor: var(--vs-disabled-cursor);
 }

@@ -7,17 +7,18 @@ description: Everything you wish the HTML select element could do, shipped as a 
 ---
 
 :::lead
-Vue Select is a feature rich combobox component. You might know it as a dropdown or
+Vue Select is a feature rich combobox component for Vue 3. You might know it as a dropdown or
 typeahead select. They're a staple on the web, and they're notoriously tough to get right!
 :::
 
 Vue Select provides a default template that fits most use cases. The component is designed
 to be as lightweight as possible, while maintaining high standards for accessibility, developer
-experience, and customization.
+experience, and customization. When the default template doesn't fit, the same behavior is
+available as unstyled headless components.
 
 :::quick-links
 
-:::quick-link{title="Installation" href="/guide/install"}
+:::quick-link{title="Installation" icon="installation" href="/guide/install"}
 Step-by-step instructions to install Vue Select in your project. Couple lines and you're done!
 
 #icon
@@ -26,18 +27,17 @@ Step-by-step instructions to install Vue Select in your project. Couple lines an
 </svg>
 :::
 
-:::quick-link{title="Options and Selections" href="/"}
+:::quick-link{title="Options and Selections" icon="options" href="/guide/options"}
 You'll need to register some options so your users can select them.
 
 #icon
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 <path stroke-linecap="round" stroke-linejoin="round" d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0l-3.75-3.75M17.25 21L21 17.25" />
 </svg>
-
 :::
 
-:::quick-link{title="Customizing" href="/"}
-Vue Select is plug-and-play by design, but you can always customize the look and feel.
+:::quick-link{title="Customizing" icon="customizing" href="/guide/slots"}
+Vue Select is plug-and-play by design, but slots and CSS variables let you change the look and feel.
 
 #icon
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -45,33 +45,50 @@ Vue Select is plug-and-play by design, but you can always customize the look and
 </svg>
 :::
 
-:::quick-link{title="Premium Resources" icon="theming" href="/"}
-Pre-built Vue Select instances with custom themes and features. Infinite scroll, remote option
-loading and more.
+:::quick-link{title="Headless Components" icon="headless" href="/guide/headless"}
+Build your own markup and styles on top of the same accessible combobox behavior.
 
 #icon
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
+<path stroke-linecap="round" stroke-linejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3" />
 </svg>
+:::
 
+:::quick-link{title="Accessibility" icon="accessibility" href="/guide/accessibility"}
+Keyboard support, screen reader semantics and labelling, following the WAI-ARIA combobox pattern.
+
+#icon
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+</svg>
+:::
+
+:::quick-link{title="Upgrading from v3" icon="upgrade" href="/guide/upgrade"}
+Moving from Vue Select 3? Here's everything that changed in v4, and how to migrate.
+
+#icon
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+<path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+</svg>
 :::
 
 :::
 
 ## Features
 
+- Single and multiple selection
+- Filtering and searching, with your own filter if you need one
 - Tagging
-- Filtering / Searching
-- Vuex Support
-- AJAX Support
-- SSR Support
-- Accessible
-- ~20kb Total / ~5kb CSS / ~15kb JS
-- Select Single/Multiple Options
-- Customizable with slots and SCSS variables
-- Zero dependencies
+- Option groups
+- AJAX support
+- SSR support
+- Accessible: follows the WAI-ARIA combobox pattern
+- TypeScript types included
+- Customizable with slots and CSS variables
+- Headless components and a composable for fully custom markup
+- Zero dependencies besides Vue
 
 ## Resources
 
 - **[GitHub](https://github.com/sagalbot/vue-select)**
-- **[CodePen Template](http://codepen.io/sagalbot/pen/NpwrQO)**
+- **[Vue Select 3 documentation](/v3)** (Vue 2)

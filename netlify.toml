@@ -1,25 +1,14 @@
 # Settings in the [build] context are global and are applied to all contexts
-# unless otherwise overridden by more specific contexts.
-# @see https://www.netlify.com/docs/netlify-toml-reference/
-[build]
-  base = "docs"
-  publish = "docs/.vuepress/dist"
-  command = "yarn build"
-
-# Deploy Preview context
+# (production, deploy previews, branch deploys) unless overridden.
+# @see https://docs.netlify.com/configure-builds/file-based-configuration/
 #
-# All deploys resulting from a pull/merge request will
-# inherit these settings.
-[context.deploy-preview]
-  command = "yarn build:preview"
+# The docs are a Nuxt site in docs/, a package in the root pnpm workspace,
+# so the build runs from the repository root. Legacy VuePress URL redirects
+# live in docs/public/_redirects.
+[build]
+  base = ""
+  command = "npm i -g pnpm@9 && pnpm install --frozen-lockfile && pnpm run build:docs"
+  publish = "docs/.output/public"
 
-# Branch Deploy context: all deploys that are not from a pull/merge request or
-# from the Production branch will inherit these settings.
-[context.branch-deploy]
-  command = "yarn build:preview"
-
-# Redirects and headers are GLOBAL for all builds – they do not get scoped to
-# contexts no matter where you define them in the file.
-[[redirects]]
-  from = "/guide/templating.html"
-  to = "/guide/slots.html"
+[build.environment]
+  NODE_VERSION = "24"

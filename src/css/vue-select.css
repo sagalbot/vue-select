@@ -8,6 +8,7 @@
 @import './modules/clear.css';
 @import './modules/dropdown-menu.css';
 @import './modules/dropdown-option.css';
+@import './modules/dropdown-group.css';
 @import './modules/selected.css';
 @import './modules/search-input.css';
 @import './modules/spinner.css';

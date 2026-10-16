@@ -36,3 +36,6 @@ dist-ssr
 docs/.vuepress/dist
 .claude/settings.local.json
 /.pnpm-store
+
+# Amp orb portals
+.amp/portals/*

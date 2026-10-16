@@ -1,0 +1,25 @@
+# Rebuilds the docs site every day so the sponsor and contributor lists, which are
+# fetched from GitHub at build time, stay current between docs releases.
+name: Refresh docs data
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    if: github.repository == 'sagalbot/vue-select'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger a Netlify build
+        env:
+          BUILD_HOOK: ${{ secrets.NETLIFY_DOCS_BUILD_HOOK }}
+        run: |
+          if [ -z "$BUILD_HOOK" ]; then
+            echo "::warning::NETLIFY_DOCS_BUILD_HOOK is not set, so the docs were not rebuilt."
+            exit 0
+          fi
+          curl --fail --silent --show-error -X POST -d '{}' "$BUILD_HOOK"

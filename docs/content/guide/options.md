@@ -1,54 +1,147 @@
-## Options Prop
+---
+title: Dropdown Options
+section: Getting Started
+description: Pass options as strings, numbers or objects, choose how their labels are generated, and group them under headers.
+---
 
-`vue-select` accepts arrays of primitive values or objects to use as options through the `options` prop:
+## The `options` Prop
 
-```html
-<!-- array of strings or numbers -->
-<v-select :options="['Canada', 'United States']"></v-select>
+Vue Select takes its options as an array through the `options` prop. Each option can be a string, a
+number, or an object.
+
+```vue
+<!-- an array of strings or numbers -->
+<VueSelect :options="['Canada', 'United States']" />
 ```
 
-<v-select :options="['Canada', 'United States']"></v-select>
+::vue-select{:options='["Canada","United States"]'}
+::
 
-```html
-<!-- or, an array of objects -->
-<v-select :options="[{label: 'Canada', code: 'ca'}]"></v-select>
+```vue
+<!-- an array of objects -->
+<VueSelect :options="[{ label: 'Canada', code: 'ca' }]" />
 ```
 
-<v-select :options="[{label: 'Canada', code: 'ca'}]"></v-select>
+::vue-select{:options='[{"label":"Canada","code":"ca"}]'}
+::
+
+`options` must always be an array. If you don't have any options yet, for example while they're
+[loading from a server](/guide/ajax), pass an empty array.
 
 ## Option Labels
 
-#### Options as Primitives (strings, numbers, boolean)
+### Strings and Numbers
 
-When `options` contains strings or numbers, they'll be used as the label for the option within the
-component. No further configuration is necessary. 
+When the options are strings or numbers, they're used as their own labels. No further configuration
+is needed.
 
-#### Options as Objects
+### Objects
 
-When `options` is an array of objects, the component must generate a label to be shown as the 
-options text. By default, `vue-select` will attempt to render `option.label` as the option label. 
-You might not have a `label` key in your objects, so you can set your own label to match your 
-source data using the `label {String}` prop.
+When the options are objects, Vue Select needs to know which property to display. By default it
+renders `option.label`. If your objects use a different key, set it with the `label` prop.
 
-For example, consider an object with `countryCode` and `countryName` properties:
+For example, consider options with `countryCode` and `countryName` properties:
 
-```json
-{
-  countryCode: "CA",
-  countryName: "Canada"
-}
+```js
+const countries = [
+  { countryCode: 'CA', countryName: 'Canada' },
+  { countryCode: 'US', countryName: 'United States' },
+]
 ```
 
-If you wanted to display `Canada` in the dropdown, you'd use the `countryName` key:
+To display the country name, set `label` to `countryName`:
 
-```html
-<v-select label="countryName" :options="countries"></v-select>
+```vue
+<VueSelect label="countryName" :options="countries" />
 ```
 
-<country-select />
+::vue-select{label="countryName" :options='[{"countryCode":"CA","countryName":"Canada"},{"countryCode":"US","countryName":"United States"}]'}
+::
 
-## Null / Empty Options
+If an object doesn't have the `label` key, Vue Select logs a warning in the console and renders an
+empty label.
 
-`vue-select` requires the `options` prop to be an `array`. If you are using Vue in development 
-mode, you will get warnings attempting to pass anything other than an `array` to the `options` prop. 
-If you need a `null`/`empty` value, use an empty array `[]`.
+### Computed Labels with `getOptionLabel`
+
+When the label isn't a single property, for example when it's nested or built from several fields,
+pass a `getOptionLabel` function instead. It receives an option and returns the text to display.
+The same text is used for filtering, so users can search for anything that's in the label.
+
+```vue
+<VueSelect
+  :options="books"
+  :get-option-label="(book) => `${book.title} by ${book.author.lastName}`"
+/>
+```
+
+`getOptionLabel` takes precedence over `label`.
+
+## Option Keys
+
+Vue Select identifies each option by a key. Keys decide whether an option is selected, so two
+options with the same key are treated as the same option. The default `getOptionKey`:
+
+- uses strings and numbers as their own keys,
+- uses `option.id` when an object has an `id` property,
+- otherwise serializes the object (with its keys sorted, so property order doesn't matter).
+
+If your objects have a different unique field, or they can't be serialized (circular references,
+for example), provide your own `getOptionKey`:
+
+```vue
+<VueSelect :options="users" label="name" :get-option-key="(user) => user.uuid" />
+```
+
+## Option Groups
+
+Long lists are easier to scan when related options sit under a heading. Pass a `groupBy` function
+that returns the group label for an option. Options in the same group are rendered together under a
+header with that label.
+
+::guide-option-groups
+::
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+
+const options = [
+  { label: 'Apple', type: 'Fruit' },
+  { label: 'Banana', type: 'Fruit' },
+  { label: 'Carrot', type: 'Vegetable' },
+  { label: 'Cherry', type: 'Fruit' },
+  { label: 'Broccoli', type: 'Vegetable' },
+  { label: 'Salt' },
+]
+
+const selected = ref(null)
+</script>
+
+<template>
+  <VueSelect
+    v-model="selected"
+    :options="options"
+    :group-by="(option) => option.type"
+    placeholder="Pick an ingredient"
+  />
+</template>
+```
+
+How groups are built:
+
+- `options` stays a flat array. You don't need to restructure your data.
+- Groups appear in the order of their first option. Within a group, options keep their order from
+  `options`.
+- Options for which `groupBy` returns `null` or `undefined` aren't grouped. They're listed first,
+  without a header ("Salt" above).
+- Filtering happens before grouping, so a group with no matching options is hidden.
+- Keyboard navigation follows the order on screen.
+- With [`taggable`](/guide/tagging), a new tag is never grouped, so it stays at the top of the
+  list.
+
+Groups are rendered with `role="group"` and labelled by their header, so screen readers announce the
+group name as the user moves into it. This replaces the old workaround of adding disabled
+"heading" options, which assistive technology announces as unavailable options.
+
+To customize the header, use the [`group-header` slot](/guide/slots#group-headers).

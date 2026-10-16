@@ -11,13 +11,25 @@ export default defineNuxtConfig({
     'nuxt-svgo',
   ],
 
+  components: [
+    // live demos used in markdown as ::example-name, without a path prefix
+    { path: '~/components/content/examples', pathPrefix: false, global: true },
+    '~/components',
+  ],
+
   // https://color-mode.nuxtjs.org/
   colorMode: { classSuffix: '' },
 
   app: {
     head: {
       title: 'Vue Select',
-      meta: [{ name: 'description', content: 'My amazing site.' }],
+      meta: [
+        {
+          name: 'description',
+          content:
+            'Everything you wish the HTML select element could do, wrapped up into a lightweight, accessible and extensible Vue component.',
+        },
+      ],
     },
   },
 

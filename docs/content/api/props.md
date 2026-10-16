@@ -1,607 +1,872 @@
-## appendToBody <Badge text="v3.7.0+" />
+---
+title: Props
+section: API
+description: Every prop accepted by the VueSelect component, with its type, default value and an example.
+---
 
-Append the dropdown element to the end of the body
-and size/position it dynamically. Use it if you have
-overflow or z-index issues.
+::callout{type="note" title="Coming from v3?"}
+v4 removes or replaces several v3 props, including `value`, `appendToBody`, `noDrop`,
+`dropdownShouldOpen`, `pushTags`, `filterBy`, `components`, `inputId`, `tabindex`, `selectOnTab` and
+`selectOnKeyCodes`. The [upgrade guide](/guide/upgrade) lists each one with its replacement.
+::
 
-See [Dropdown Position](../guide/positioning.md) for more details.
+Props can be written in camelCase or kebab-case. The examples on this page use kebab-case in
+templates, e.g. `:get-option-label`.
 
-```js
-appendToBody: {
-    type: Boolean,
-    default: false
-},
+In the types below, `Option` is the type of your options (see [TypeScript](#typescript)). Without
+TypeScript, or when it can't be inferred, it is `OptionValue`: `string | number | object`.
+
+## Overview
+
+| Prop | Default |
+| --- | --- |
+| [appendTo](#appendto) | `undefined` |
+| [ariaLabels](#arialabels) | `{}` |
+| [autoscroll](#autoscroll) | `true` |
+| [calculatePosition](#calculateposition) | sets `top`, `left` and `width` |
+| [clearable](#clearable) | `true` |
+| [clearSearchOnBlur](#clearsearchonblur) | `undefined` (see below) |
+| [clearSearchOnSelect](#clearsearchonselect) | `true` |
+| [closeOnSelect](#closeonselect) | `true` |
+| [createOption](#createoption) | see below |
+| [deselectFromDropdown](#deselectfromdropdown) | `false` |
+| [dir](#dir) | `'auto'` |
+| [disabled](#disabled) | `false` |
+| [filter](#filter) | case-insensitive label match |
+| [filterable](#filterable) | `true` |
+| [getOptionKey](#getoptionkey) | see below |
+| [getOptionLabel](#getoptionlabel) | see below |
+| [groupBy](#groupby) | `undefined` |
+| [hideSelected](#hideselected) | `false` |
+| [inputAttrs](#inputattrs) | `{}` |
+| [label](#label) | `'label'` |
+| [loading](#loading) | `false` |
+| [mapKeydown](#mapkeydown) | `undefined` |
+| [modelValue](#modelvalue) | `undefined` |
+| [multiple](#multiple) | `false` |
+| [open](#open) | `undefined` |
+| [openOnFocus](#openonfocus) | `false` |
+| [options](#options) | `[]` |
+| [placeholder](#placeholder) | `''` |
+| [reduce](#reduce) | `undefined` |
+| [resetOnOptionsChange](#resetonoptionschange) | `false` |
+| [searchable](#searchable) | `true` |
+| [selectable](#selectable) | `undefined` (every option is selectable) |
+| [taggable](#taggable) | `false` |
+| [transition](#transition) | `'vs__fade'` |
+
+## TypeScript
+
+`VueSelect` is a generic component. The option type is inferred from the `options` prop and flows
+into the callback props (`reduce`, `getOptionLabel`, `filter`, ...), the slot props and the
+`option:*` events, so callbacks written inline in the template are typed without annotations:
+
+```vue
+<script setup lang="ts">
+import VueSelect from 'vue-select'
+
+interface Country {
+  code: string
+  name: string
+}
+
+const countries: Country[] = [
+  { code: 'CA', name: 'Canada' },
+  { code: 'MX', name: 'Mexico' },
+]
+</script>
+
+<template>
+  <!-- country is a Country in both callbacks -->
+  <VueSelect
+    :options="countries"
+    :get-option-label="(country) => country.name"
+    :reduce="(country) => country.code"
+  />
+</template>
 ```
 
+Options declared with an `interface` are accepted. To type a callback defined in `<script>`, index
+`VueSelectProps<Option>` with the prop name:
 
-## autocomplete
+```ts
+import type { VueSelectProps } from 'vue-select'
 
-The value provided here will be bound to the [autocomplete
-HTML attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete)
-on the search input. Defaults to `off`.
-
-```js
-autocomplete: {
-    type: String,
-    default: 'off'
-},
+const reduce: VueSelectProps<Country>['reduce'] = (country) => country.code
+const filter: VueSelectProps<Country>['filter'] = (options, search) =>
+  options.filter((country) => country.name.startsWith(search))
 ```
 
+The package also exports `OptionValue`, `OptionKey`, `AriaLabels`, `CalculatePosition`,
+`KeydownHandlers` and `ComboBoxContext`. `modelValue` and `update:modelValue` are typed `unknown`,
+because [`reduce`](#reduce) can turn the selection into any value.
 
-## autoscroll <Badge text="v3.10.0+" />
+## appendTo
 
-When true, the dropdown will automatically scroll to ensure
-that the option highlighted is fully within the dropdown viewport
-when navigating with keyboard arrows.
+Teleports the dropdown menu to another element, such as `body`, with Vue's `<Teleport>`. Use it when
+an ancestor with `overflow: hidden` or a stacking context cuts off the dropdown. While the menu is
+teleported, [`calculatePosition`](#calculateposition) positions it every time it opens. The menu
+moves after the component mounts, so server rendering and hydration work as usual, and it carries
+the component's [`dir`](#dir).
+
+- **Type:** `string | HTMLElement` (a CSS selector or an element)
+- **Default:** `undefined` (the menu renders inside the component)
+
+```vue
+<VueSelect :options="options" append-to="body" />
+```
+
+A teleported menu is no longer inside the `.v-select` element. Selectors such as
+`.my-select .vs__dropdown-menu`, and CSS variables set on the component rather than on `:root`, don't
+reach it. See [Dropdown Position](/guide/positioning).
+
+## ariaLabels
+
+Text for the accessible names of the controls VueSelect renders. Set any subset of the keys; the
+others keep their English defaults. See [Localization](/guide/localization).
+
+- **Type:** `AriaLabels`
+- **Default:** `{}`
+
+| Key | Type | Labels | Default |
+| --- | --- | --- | --- |
+| `toggle` | `string` | the toggle button around the open indicator | `'Toggle options'` |
+| `listbox` | `string` | the dropdown list of options | `'Options'` |
+| `search` | `string` | the search input, only when `inputAttrs` has no `id`, `aria-label` or `aria-labelledby` | `'Search for option'` |
+| `clear` | `string` | the clear button | `'Clear Selected'` |
+| `deselect` | `(label: string, option: OptionValue) => string` | each selected tag's deselect button | ``(label) => `Deselect ${label}` `` |
+
+```vue
+<VueSelect
+  :options="options"
+  :aria-labels="{
+    toggle: 'Optionen anzeigen',
+    listbox: 'Länder',
+    search: 'Land suchen',
+    clear: 'Auswahl löschen',
+    deselect: (label) => `${label} entfernen`,
+  }"
+/>
+```
+
+## autoscroll
+
+When the highlighted option changes, scroll the dropdown so the option is fully visible.
+
+- **Type:** `boolean`
+- **Default:** `true`
+
+## calculatePosition
+
+Positions the dropdown when [`appendTo`](#appendto) is set. It runs each time the dropdown opens,
+after the menu is rendered. If it returns a function, that function runs when the dropdown closes
+or the component unmounts, so you can remove listeners you added.
+
+- **Type:** `CalculatePosition`
+
+```ts
+type CalculatePosition = (
+  menu: HTMLElement,
+  ctx: ComboBoxContext,
+  position: { width: string; top: string; left: string; toggle: HTMLElement }
+) => void | (() => void)
+```
+
+- **Default:** below the toggle, at the same width: copies `top`, `left` and `width` onto the
+  menu's inline styles:
 
 ```js
-autoscroll: {
-  type: Boolean,
-  default: true
+(menu, ctx, { width, top, left }) => {
+  menu.style.top = top
+  menu.style.left = left
+  menu.style.width = width
 }
 ```
 
+`position` holds pixel values measured from the toggle (`.vs__dropdown-toggle`): its width, and the
+document coordinates of its bottom-left corner, plus `toggle`, the toggle element itself. `ctx` is
+the combobox context (`ComboBoxContext`); for example `ctx.open.value` is the open state.
 
-## calculatePosition <Badge text="v3.7.0+" />
+This version uses [Floating UI](https://floating-ui.com) to flip the menu above the field when there
+is no room below, and to follow the field while the page scrolls:
 
-When `appendToBody` is true, this function is responsible for positioning the drop down list.
+```vue
+<script setup>
+import { autoUpdate, computePosition, flip } from '@floating-ui/dom'
+import VueSelect from 'vue-select'
 
-If a function is returned from `calculatePosition`, it will be called when the drop down list
-is removed from the DOM. This allows for any garbage collection you may need to do.
-
-See [Dropdown Position](../guide/positioning.md) for more details.
-
-```js
-calculatePosition: {
-    type: Function,
-    /**
-     * @param dropdownList {HTMLUListElement}
-     * @param component {Vue} current instance of vue select
-     * @param width {string} calculated width in pixels of the dropdown menu
-     * @param top {string} absolute position top value in pixels relative to the document
-     * @param left {string} absolute position left value in pixels relative to the document
-     * @return {function|void}
-     */
-    default(dropdownList, component, {width, top, left}) {
-      dropdownList.style.top = top;
-      dropdownList.style.left = left;
-      dropdownList.style.width = width;
-    }
+function calculatePosition(menu, ctx, { width, toggle }) {
+  menu.style.width = width
+  // autoUpdate returns its own cleanup function
+  return autoUpdate(toggle, menu, async () => {
+    const { x, y } = await computePosition(toggle, menu, {
+      placement: 'bottom-start',
+      middleware: [flip()],
+    })
+    Object.assign(menu.style, { left: `${x}px`, top: `${y}px` })
+  })
 }
-```
+</script>
 
+<template>
+  <VueSelect :options="options" append-to="body" :calculate-position="calculatePosition" />
+</template>
+```
 
 ## clearable
 
-Can the user clear the selected property?
+Shows the clear button (`.vs__clear`) while something is selected and the dropdown is closed, in
+both single and multiple mode. When `false`, Backspace in an empty search no longer removes the last
+selection, and [`deselectFromDropdown`](#deselectfromdropdown) never leaves the value empty.
 
-```js
-clearable: {
-	type: Boolean,
-	default: true
-},
+- **Type:** `boolean`
+- **Default:** `true`
+
+::vue-select{:options='["Canada","Mexico","United States"]' :clearable="false"}
+::
+
+```vue
+<VueSelect :options="options" :clearable="false" />
 ```
-
 
 ## clearSearchOnBlur
 
-Enables/disables clearing the search text when the search input is blurred.
+Clears the search text when the input loses focus.
 
-```js
-clearSearchOnBlur: {
-    type: Function,
-    default: function ({ clearSearchOnSelect, multiple }) {
-      return clearSearchOnSelect && !multiple
-    }
-},
+- **Type:** `boolean`
+- **Default:** `undefined`, which means `true` for single selects with
+  [`clearSearchOnSelect`](#clearsearchonselect) enabled, and `false` otherwise
+
+```vue
+<!-- keep the typed text when the user tabs away -->
+<VueSelect :options="options" :clear-search-on-blur="false" />
 ```
-
 
 ## clearSearchOnSelect
 
-Enables/disables clearing the search text when an option is selected.
+Clears the search text after an option is selected.
 
-```js
-clearSearchOnSelect: {
-	type: Boolean,
-	default: true
-},
+- **Type:** `boolean`
+- **Default:** `true`
+
+```vue
+<!-- keep the search while picking several matches -->
+<VueSelect :options="options" multiple :clear-search-on-select="false" :close-on-select="false" />
 ```
-
 
 ## closeOnSelect
 
-Close a dropdown when an option is chosen. Set to false to keep the dropdown
-open (useful when combined with multi-select, for example)
+Closes the dropdown after an option is selected. Set it to `false` to pick several options in a row
+in multiple mode.
 
-```js
-closeOnSelect: {
-	type: Boolean,
-	default: true
-},
+- **Type:** `boolean`
+- **Default:** `true`
+
+::vue-select{:options='["Canada","Mexico","United States"]' multiple :close-on-select="false"}
+::
+
+```vue
+<VueSelect :options="options" multiple :close-on-select="false" />
 ```
-
-## components <Badge text="v3.1.0+" />
-
-API to overwrite default vue-select components with your own. This can be used to change the clear button or select chevron with your own markup.
-
-The object provided to the components prop will be merged with Vue Select's default components.
-
-See [Components guide](../guide/components.md) for more details.
-
-```js
-import Deselect from './Deselect';
-import OpenIndicator from './OpenIndicator';
-
-// ...
-
-components: {
-  type: Object,
-  default: function () {
-      Deselect,
-      OpenIndicator
-  }
-},
-```
-
 
 ## createOption
 
-User defined function for adding Options
+Builds a new option from the search text when [`taggable`](#taggable) is on. VueSelect calls it while
+the user types, to offer the new option at the top of the list, so keep it free of side effects. To
+reject the text, throw: no new option is offered.
 
-```js
-createOption: {
-  type: Function,
-  default(newOption) {
-    if (typeof this.optionList[0] === 'object') {
-      newOption = {[this.label]: newOption}
-    }
+- **Type:** `(search: string) => Option`
+- **Default:** returns an object `{ [label]: search }` when the first option in `options` is an
+  object, otherwise the search string itself
 
-    this.$emit('option:created', newOption)
-    return newOption
-  }
-},
+```vue
+<script setup>
+function createOption(search) {
+  if (!search.includes('@')) throw new Error('Not an email address')
+  return { email: search }
+}
+</script>
+
+<template>
+  <VueSelect v-model="recipients" :options="contacts" label="email" multiple taggable :create-option="createOption" />
+</template>
 ```
 
-## deselectFromDropdown <Badge text="v3.12.0+" />
+## deselectFromDropdown
 
-Determines whether the user can deselect an option by clicking 
-it from within the dropdown menu.
+Lets the user deselect an option by choosing it again in the dropdown. A highlighted selected option
+gets the `vs__dropdown-option--deselect` class. The value is never left empty when
+[`clearable`](#clearable) is `false`.
 
-```js
-deselectFromDropdown: {
-    type: Boolean,
-    default: false
-},
+- **Type:** `boolean`
+- **Default:** `false`
+
+::vue-select{:options='["Canada","Mexico","United States"]' multiple deselect-from-dropdown :close-on-select="false"}
+::
+
+```vue
+<VueSelect :options="options" multiple deselect-from-dropdown />
 ```
 
 ## dir
 
-Sets RTL support. Accepts `ltr`, `rtl`, `auto`.
+Text direction, set as the `dir` attribute of the root `.v-select` element, and of the dropdown
+menu when it is teleported with [`appendTo`](#appendto).
 
-```js
-dir: {
-	type: String,
-	default: "auto"
-},
+- **Type:** `'ltr' | 'rtl' | 'auto'`
+- **Default:** `'auto'`
+
+::vue-select{:options='["كندا","المكسيك","الولايات المتحدة"]' dir="rtl"}
+::
+
+```vue
+<VueSelect :options="options" dir="rtl" />
 ```
-
 
 ## disabled
 
-Disable the entire component.
+Disables the component: the input, the clear, toggle and deselect buttons are disabled and the
+dropdown can't open. The root element gets the `vs--disabled` class.
 
-```js
-disabled: {
-	type: Boolean,
-	default: false
-},
+- **Type:** `boolean`
+- **Default:** `false`
+
+::vue-select{:options='["Canada","Mexico","United States"]' :model-value='"Canada"' disabled}
+::
+
+```vue
+<VueSelect v-model="selected" :options="options" disabled />
 ```
-
-## dropdownShouldOpen <Badge text="v3.12.0+" />
-
-Determines whether the dropdown should open. Used
-for overriding the default dropdown behaviour. Receives
-the vue-select instance as the single argument to the function.
-
-```js
-dropdownShouldOpen: {
-    type: Function,
-    default({noDrop, open, mutableLoading}) {
-      return noDrop ? false : open && !mutableLoading;
-    }
-}
-```
-
 
 ## filter
 
-Callback to filter results when search text
-is provided. Default implementation loops
-each option, and returns the result of
-this.filterBy.
+Filters the options while the user types. It receives all of `options` and the search text, and
+returns the options to show. It only runs when there is search text, and not at all when
+[`filterable`](#filterable) is `false` (unless [`taggable`](#taggable) is on).
 
-```js
-filter: {
-	type: Function,
-	default(options, search) {
-		return options.filter(option => {
-			let label = this.getOptionLabel(option);
-			if (typeof label === "number") {
-				label = label.toString();
-			}
-			return this.filterBy(option, label, search);
-		});
-	}
-},
+- **Type:** `(options: Option[], search: string) => Option[]`
+- **Default:** keeps the options whose label (from [`getOptionLabel`](#getoptionlabel)) contains the
+  search text, ignoring case
+
+```vue
+<script setup>
+// match the country name, or the exact country code
+function filter(options, search) {
+  const query = search.toLowerCase()
+  return options.filter(
+    ({ label, code }) => label.toLowerCase().includes(query) || code.toLowerCase() === query
+  )
+}
+</script>
+
+<template>
+  <VueSelect :options="countries" :filter="filter" />
+</template>
 ```
 
+See [Option Filtering](/guide/filtering).
 
 ## filterable
 
-When true, existing options will be filtered
-by the search text. Should not be used in conjunction
-with taggable.
+When `false`, typing doesn't filter the options; the list stays as you pass it in. Use it when you
+filter on the server, with the [`search`](/api/events#search) event. Ignored when
+[`taggable`](#taggable) is on.
 
-```js
-filterable: {
-	type: Boolean,
-	default: true
-},
+- **Type:** `boolean`
+- **Default:** `true`
+
+```vue
+<VueSelect :options="results" :filterable="false" @search="fetchResults" />
 ```
 
-
-## filterBy
-
-Callback to determine if the provided option should
-match the current search text. Used to determine
-if the option should be displayed.
-
-```js
-filterBy: {
-  type: Function,
-  default(option, label, search) {
-    return (label || '').toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) > -1
-  }
-},
-```
-
+See [AJAX](/guide/ajax).
 
 ## getOptionKey
 
-Callback to get an option key. If `option`
-is an object and has an `id`, returns `option.id`
-by default, otherwise tries to serialize `option`
-to JSON.
+Returns a unique key for an option. VueSelect compares keys to tell whether an option is selected,
+uses them as the `key` when rendering options and tags, and to detect when a new tag already exists.
 
-The key must be unique for an option.
+- **Type:** `(option: Option) => string | number`
+- **Default:** strings and numbers are their own key; objects use their `id` property when they have
+  one, and otherwise a JSON string of the object with its keys sorted
 
-```js
-getOptionKey: {
-  type: Function,
-  default(option) {
-    if (typeof option === 'object' && option.id) {
-      return option.id
-    } else {
-      try {
-        return JSON.stringify(option)
-      } catch(e) {
-        return console.warn(
-          `[vue-select warn]: Could not stringify option ` +
-          `to generate unique key. Please provide 'getOptionKey' prop ` +
-          `to return a unique key for each option.\n` +
-          'https://vue-select.org/api/props.html#getoptionkey'
-        )
-        return null
-      }
-    }
-  }
-},
+```vue
+<VueSelect :options="books" label="title" :get-option-key="(book) => book.isbn" />
 ```
-
 
 ## getOptionLabel
 
-Callback to generate the label text. If `{option}`
-is an object, returns `option[this.label]` by default.
+Returns the text displayed for an option, in the dropdown and for the selection. It is also the
+text the default [`filter`](#filter) matches against.
 
-Label text is used for filtering comparison and
-displaying. If you only need to adjust the
-display, you should use the `option` and
-`selected-option` slots.
+- **Type:** `(option: Option) => string`
+- **Default:** strings and numbers are converted to a string; objects return
+  `option[label]` (see [`label`](#label)), with a console warning and an empty label when the
+  object has no such key
 
-```js
-getOptionLabel: {
-  type: Function,
-  default(option) {
-    if (typeof option === 'object') {
-      if (!option.hasOwnProperty(this.label)) {
-        return console.warn(
-          `[vue-select warn]: Label key "option.${this.label}" does not` +
-          ` exist in options object ${JSON.stringify(option)}.\n` +
-          'https://vue-select.org/api/props.html#getoptionlabel'
-        )
-      }
-      return option[this.label]
-    }
-    return option;
-  }
-},
+```vue
+<VueSelect
+  :options="authors"
+  :get-option-label="(author) => `${author.firstName} ${author.lastName}`"
+/>
 ```
 
+## groupBy
 
-## inputId
+Groups the options under headers. It returns the group label for an option, or `null` /
+`undefined` for options without a group. Ungrouped options render first, and groups appear in the
+order of their first option. Keyboard navigation follows the rendered order. When
+[`taggable`](#taggable) is on, a new tag stays ungrouped at the top.
 
-Sets the id of the input element.
+Each group renders as `role="group"` labelled by its header. Customize the header with the
+[`group-header`](/api/slots#group-header) slot.
 
-```js
-inputId: {
-	type: String
-},
+- **Type:** `(option: Option) => string | null | undefined`
+- **Default:** `undefined` (no groups)
+
+::api-prop-group-by
+::
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+
+const options = [
+  { label: 'Apple', type: 'Fruit' },
+  { label: 'Banana', type: 'Fruit' },
+  { label: 'Carrot', type: 'Vegetable' },
+  { label: 'Cherry', type: 'Fruit' },
+  { label: 'Potato', type: 'Vegetable' },
+  { label: 'Water' },
+]
+const selected = ref(null)
+</script>
+
+<template>
+  <VueSelect
+    v-model="selected"
+    :options="options"
+    :group-by="(option) => option.type"
+  />
+</template>
 ```
 
+## hideSelected
+
+In multiple mode, removes selected options from the dropdown. Has no effect on single selects.
+
+- **Type:** `boolean`
+- **Default:** `false`
+
+::vue-select{:options='["Canada","Mexico","United States"]' multiple hide-selected}
+::
+
+```vue
+<VueSelect :options="options" multiple hide-selected />
+```
+
+## inputAttrs
+
+Attributes bound to the search input (or, with `:searchable="false"`, to the focusable
+`role="combobox"` element). Use it for an `id` to pair with a `<label for>`, a `name`, a `tabindex`,
+an `autocomplete` hint, or `aria-*` attributes such as `aria-describedby`.
+
+When `inputAttrs` has an `id`, `aria-label` or `aria-labelledby`, VueSelect doesn't add its own
+`aria-label` (see [`ariaLabels.search`](#arialabels)).
+
+- **Type:** `Record<string, unknown>`
+- **Default:** `{}`
+
+```vue
+<label for="country">Country</label>
+<VueSelect
+  :options="countries"
+  :input-attrs="{ id: 'country', autocomplete: 'country-name' }"
+/>
+```
+
+`inputAttrs` overrides the input's default `type` (`search`), `autocomplete` (`off`) and
+`placeholder` (from the [`placeholder`](#placeholder) prop), and the select-only element's default
+`tabindex`. The state the combobox owns can't be overridden: `role`, `aria-expanded`,
+`aria-controls`, `aria-activedescendant`, `aria-autocomplete`, `value` and `disabled` (and
+`aria-disabled` on the select-only element).
 
 ## label
 
-Tells vue-select what key to use when generating option
-labels when each `option` is an object.
+The key of an option object that holds its display text. Used by the default
+[`getOptionLabel`](#getoptionlabel) and [`createOption`](#createoption), and as the key that
+wraps string and number options in [slot props](/api/slots#option).
 
-```js
-label: {
-	type: String,
-	default: "label"
-},
+- **Type:** `string`
+- **Default:** `'label'`
+
+```vue
+<script setup>
+const options = [
+  { code: 'CA', country: 'Canada' },
+  { code: 'US', country: 'United States' },
+]
+</script>
+
+<template>
+  <VueSelect :options="options" label="country" />
+</template>
 ```
-
 
 ## loading
 
- Show spinner if the component is in a loading state.
+Shows the loading spinner and adds the `vs--loading` class. The dropdown stays hidden while loading
+and reappears when loading ends, if it is still open. The `toggleLoading` function passed to the
+[`search`](/api/events#search) event changes the same state; a later change of this prop overrides it.
 
-```js
-loading: {
-	type: Boolean,
-	default: false
-},
+- **Type:** `boolean`
+- **Default:** `false`
+
+::vue-select{:options='["Canada","Mexico","United States"]' loading}
+::
+
+```vue
+<VueSelect :options="options" :loading="isFetching" />
 ```
 
+## mapKeydown
 
-## maxHeight
+Customizes keyboard handling in the search input. It receives the default handlers, keyed by
+[`KeyboardEvent.key`](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key), and the
+combobox context, and returns the handlers to use. Keys without a handler keep the browser's
+behavior. Handlers don't run during IME composition.
 
-::: warning Deprecated in `v2.x` & Removed in `v3.0`
-This prop was removed in `v3.0`. You can use the `$vs-dropdown-max-height`
-SCSS variable to adjust this setting in `v3.x`.
-:::
+- **Type:** `(handlers: KeydownHandlers, ctx: ComboBoxContext) => KeydownHandlers`, where
+  `KeydownHandlers` is `Record<string, (e: KeyboardEvent) => void>`
+- **Default:** `undefined` (the default handlers are used as is)
 
-Sets the max-height property on the dropdown list.
+The default handlers follow the WAI-ARIA combobox examples:
 
-```js
-maxHeight: {
-	type: String,
-	default: "400px"
-},
+| Mode | Keys with a default handler |
+| --- | --- |
+| searchable (default) | `ArrowDown`, `ArrowUp`, `Enter`, `Escape`, `Backspace`, `' '` (Space) |
+| `:searchable="false"` | `ArrowDown`, `ArrowUp`, `Home`, `End`, `PageDown`, `PageUp`, `Enter`, `' '` (Space), `Tab`, `Escape` |
+
+In the searchable mode, while the dropdown is closed:
+
+- **Enter** does its default action, such as submitting the form. With [`taggable`](#taggable) and
+  search text, it creates the tag instead.
+- **Escape** closes the dropdown on the first press and clears the search text on the second.
+- **Space** opens the dropdown only when the search is empty; otherwise it types a space.
+
+Select with a comma as well as Enter (handy for tagging):
+
+```vue
+<VueSelect
+  :options="options"
+  taggable
+  multiple
+  :map-keydown="(handlers) => ({ ...handlers, ',': handlers.Enter })"
+/>
 ```
 
+Select the highlighted option with Tab and let focus move on:
+
+```vue
+<VueSelect
+  :options="options"
+  :map-keydown="(handlers, ctx) => ({
+    ...handlers,
+    Tab: () => ctx.open.value && ctx.typeAheadSelect(),
+  })"
+/>
+```
+
+See [Keydown Events](/guide/keydown).
+
+## modelValue
+
+The selected value, usually bound with `v-model`. In multiple mode it is an array. With
+[`reduce`](#reduce), it holds the reduced values instead of the options. Nothing selected is `null`
+in single mode and `[]` in multiple mode.
+
+If you don't bind it, VueSelect keeps track of the selection itself.
+
+- **Type:** `unknown` (an option, an array of options, reduced values or `null`)
+- **Default:** `undefined`
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+
+const selected = ref('Canada')
+</script>
+
+<template>
+  <VueSelect v-model="selected" :options="['Canada', 'Mexico', 'United States']" />
+</template>
+```
+
+See [Selecting Values](/guide/values).
 
 ## multiple
 
-Equivalent to the `multiple` attribute on a `<select>` input.
+Allows selecting several options. The value becomes an array, and each selection renders as a tag
+with a deselect button. Changing `multiple` after mount resets the value to `[]` or `null`.
 
-```js
-multiple: {
-	type: Boolean,
-	default: false
-},
+- **Type:** `boolean`
+- **Default:** `false`
+
+::vue-select{:options='["Canada","Mexico","United States"]' multiple}
+::
+
+```vue
+<VueSelect v-model="selected" :options="options" multiple />
 ```
 
+## open
 
-## noDrop
+Controls whether the dropdown is open. Leave it unbound to let VueSelect open and close itself.
+Once bound, the prop is the source of truth: VueSelect never opens or closes on its own, it emits
+[`update:open`](/api/events#updateopen) with the state it wants, and you decide. Bind it with
+`v-model:open`.
 
-Disable the dropdown entirely.
+- **Type:** `boolean`
+- **Default:** `undefined` (uncontrolled)
 
-```js
-noDrop: {
-	type: Boolean,
-	default: false
-},
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+
+const options = ref([])
+const tags = ref([])
+const open = ref(false)
+</script>
+
+<template>
+  <!-- never open the dropdown (v3's noDrop); Enter still creates tags -->
+  <VueSelect v-model="tags" multiple taggable :open="false" />
+
+  <!-- decide in the handler: only open when there are options to show -->
+  <VueSelect
+    :options="options"
+    :open="open"
+    @update:open="(value) => (open = value && options.length > 0)"
+  />
+</template>
 ```
 
+Make the decision in the `update:open` handler, as above, rather than in the bound expression:
+VueSelect only emits `update:open` when the requested state differs from the bound value, so a
+condition in the expression can swallow a request to close.
 
-## onTab
+See [Dropdown Opening](/guide/opening).
 
-Select the current value if `selectOnTab` is enabled
+## openOnFocus
 
-```js
-onTab: {
-	type: Function,
-	default: function() {
-		if (this.selectOnTab) {
-			this.typeAheadSelect();
-		}
-	}
-},
+Opens the dropdown when the input receives focus, including focus from a click. By default the
+dropdown opens on typing, Down Arrow or the toggle button, as in the WAI-ARIA examples, and focusing
+the input doesn't open it.
+
+- **Type:** `boolean`
+- **Default:** `false`
+
+::vue-select{:options='["Canada","Mexico","United States"]' open-on-focus}
+::
+
+```vue
+<VueSelect :options="options" open-on-focus />
 ```
-
 
 ## options
 
-An array of strings or objects to be used as dropdown choices.
-If you are using an array of objects, vue-select will look for
-a `label` key (ex. `[{label: 'Canada', value: 'CA'}]`). A
-custom label key can be set with the `label` prop.
+The options to choose from: strings, numbers or objects. Objects need a display text, by default
+in their `label` key (see [`label`](#label) and [`getOptionLabel`](#getoptionlabel)).
 
-```js
-options: {
-	type: Array,
-	default() {
-		return [];
-	}
-},
+- **Type:** `Option[]`
+- **Default:** `[]`
+
+```vue
+<VueSelect :options="['Canada', 'Mexico', 'United States']" />
+<VueSelect :options="[{ label: 'Canada', code: 'CA' }, { label: 'Mexico', code: 'MX' }]" />
 ```
 
+See [Dropdown Options](/guide/options).
 
 ## placeholder
 
-Equivalent to the `placeholder` attribute on an `<input>`.
+Shown while nothing is selected: as the input's `placeholder`, or as text in the field with
+`:searchable="false"`.
 
-```js
-placeholder: {
-	type: String,
-	default: ""
-},
+- **Type:** `string`
+- **Default:** `''`
+
+::vue-select{:options='["Canada","Mexico","United States"]' placeholder="Choose a country"}
+::
+
+```vue
+<VueSelect :options="options" placeholder="Choose a country" />
 ```
-
-
-## pushTags
-
-When true, newly created tags will be added to
-the options list.
-
-```js
-pushTags: {
-	type: Boolean,
-	default: false
-},
-```
-
 
 ## reduce
 
-When working with objects, the reduce
-prop allows you to transform a given
-object to only the information you
-want passed to a v-model binding
-or @input event.
+Transforms the selected option into the value emitted through `v-model`, for example to keep only
+an id. The component maps the value back to its option to display the label, and remembers options
+that are later removed from `options` (for example when AJAX results change).
 
-```js
-reduce: {
-  type: Function,
-  default: option => option,
-},
+- **Type:** `(option: Option) => unknown`
+- **Default:** `undefined` (the option itself is the value)
+
+::api-prop-reduce
+::
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+
+const options = [
+  { code: 'CA', country: 'Canada' },
+  { code: 'MX', country: 'Mexico' },
+  { code: 'US', country: 'United States' },
+]
+const selected = ref('CA')
+</script>
+
+<template>
+  <VueSelect
+    v-model="selected"
+    :options="options"
+    label="country"
+    :reduce="(option) => option.code"
+  />
+  <p>Selected: <code>{{ JSON.stringify(selected) }}</code></p>
+</template>
 ```
 
+See [Selecting Values](/guide/values).
 
 ## resetOnOptionsChange
 
-When false, updating the options will not reset the selected value.
+Clears the selection when `options` changes: when a new array is passed in, or when the array is
+changed in place (for example with `push` or `splice`). A function decides case by case: it receives
+the new options, the old options and the selected options, and returns whether to clear. After an
+in-place change, the new and old options are the same array. Ignored when [`taggable`](#taggable)
+is on.
 
-Since `v3.4+` the prop accepts either a `boolean` or `function` that returns a `boolean`.
+- **Type:** `boolean | ((newOptions: Option[], oldOptions: Option[], selected: Option[]) => boolean)`
+- **Default:** `false`
 
-If defined as a function, it will receive the params listed below.
-
-```js
-/**
-* @type {Boolean|Function}
-* @param {Array} newOptions
-* @param {Array} oldOptions
-* @param {Array} selectedValue
-*/
-resetOnOptionsChange: {
-    default: false,
-    validator: (value) => ['function', 'boolean'].includes(typeof value)
-},
+```vue
+<!-- clear the selection when it is no longer in the options -->
+<VueSelect
+  v-model="city"
+  :options="citiesInCountry"
+  :reset-on-options-change="(newOptions, oldOptions, selected) =>
+    selected.some((option) => !newOptions.some((o) => o.id === option.id))"
+/>
 ```
-
 
 ## searchable
 
-Enable/disable filtering the options.
+When `false`, the field is a select-only combobox: a focusable element that can't be typed into,
+like a native `<select>`. Clicking it toggles the dropdown, and the keyboard follows the WAI-ARIA
+select-only combobox: the arrow keys, Home/End and PageUp/PageDown move the highlight without
+wrapping, Enter, Space, Tab and Alt+Up select, and typing letters highlights the matching option.
+The [`search`](/api/slots#search) slot isn't used, and there's no toggle button.
 
-```js
-searchable: {
-	type: Boolean,
-	default: true
-},
+- **Type:** `boolean`
+- **Default:** `true`
+
+::vue-select{:options='["Canada","Mexico","United States"]' :searchable="false" placeholder="Choose a country"}
+::
+
+```vue
+<VueSelect :options="options" :searchable="false" placeholder="Choose a country" />
 ```
 
+## selectable
 
-## selectable <Badge text="v3.3.0+" />
+Decides whether an option can be selected. Options it rejects stay in the list with the
+`vs__dropdown-option--disabled` class and `aria-disabled="true"`, the keyboard skips them, and
+[`select()`](/api/methods#select) on a template ref ignores them.
 
-The `selectable` prop determines if an option is selectable or not. If `selectable` returns false
-for a given option, it will be displayed with a `vs__dropdown-option--disabled` class. The option
-will be disabled and unable to be selected.
+- **Type:** `(option: Option) => boolean`
+- **Default:** `undefined` (every option is selectable)
 
-```js
-selectable: {
-  type: Function,
-  /**
-   * @param {Object|String} option
-   * @return {boolean}
-   */
-  default: option => true,
-},
+::api-prop-selectable
+::
+
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+
+const options = [
+  { label: 'Small', inStock: true },
+  { label: 'Medium', inStock: false },
+  { label: 'Large', inStock: true },
+  { label: 'Extra Large', inStock: false },
+]
+const size = ref(null)
+</script>
+
+<template>
+  <VueSelect
+    v-model="size"
+    :options="options"
+    :selectable="(option) => option.inStock"
+  />
+</template>
 ```
 
-
-## selectOnTab
-
-When true, hitting the 'tab' key will select the current select value
-
-```js
-selectOnTab: {
-	type: Boolean,
-	default: false
-}
-```
-
-
-## tabindex
-
-Set the tabindex for the input field.
-
-```js
-tabindex: {
-	type: Number,
-	default: null
-},
-```
-
+See [Limiting Selections](/guide/selectable).
 
 ## taggable
 
-Enable/disable creating options from searchInput.
+Lets the user create options that aren't in `options`. While typing, the new option (built by
+[`createOption`](#createoption)) appears at the top of the list; selecting it emits
+[`option:created`](/api/events#optioncreated). VueSelect doesn't add it to `options`: do that in the
+event handler if you want to keep it.
 
-```js
-taggable: {
-	type: Boolean,
-	default: false
-},
+Enter creates the tag from the search text even while the dropdown is closed, so a tag input that
+never shows a dropdown works with [`:open="false"`](#open).
+
+- **Type:** `boolean`
+- **Default:** `false`
+
+::vue-select{:options='["Canada","Mexico","United States"]' taggable multiple}
+::
+
+```vue
+<VueSelect
+  v-model="selected"
+  :options="options"
+  taggable
+  multiple
+  @option:created="(option) => options.push(option)"
+/>
 ```
 
+See [Tagging](/guide/tagging).
 
 ## transition
 
-Sets a Vue transition property on the `.dropdown-menu`. vue-select
-does not include CSS for transitions, you'll need to add them yourself.
+The name of the Vue `<Transition>` around the dropdown menu. The stylesheet ships the `vs__fade`
+transition; to use your own, define the classes for its name.
 
-```js
-transition: {
-	type: String,
-	default: "fade"
-},
-```
+- **Type:** `string`
+- **Default:** `'vs__fade'`
 
-## uid
+```vue
+<VueSelect :options="options" transition="slide" />
 
-A unique identifier used to generate IDs and DOM attributes.
-Must be unique for every instance of the component.
-
-```js
-uid: {
-  type: [String, Number],
-  default: () => uniqueId(),
-},
-```
-
-
-## value
-
-Contains the currently selected value. Very similar to a
-`value` attribute on an `<input>`. You can listen for changes
-using the 'input' event.
-
-```js
-value: {
-	default: null
-},
+<style>
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.15s ease;
+}
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateY(-0.5rem);
+}
+</style>
 ```
