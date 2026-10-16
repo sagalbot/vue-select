@@ -20,20 +20,20 @@ Every color, border, size and timing in the component reads from a `--vs-*` vari
 variables on `:root` to change every select in your app, or on any element to change only the
 selects inside it.
 
-In this example the variables are set on a wrapper element to give one select a dark theme:
+In this example the variables are set on a wrapper element to give one select its own theme:
 
 ::guide-css-variables
 ::
 
 ```vue
 <template>
-  <div class="dark-theme">
+  <div class="purple-theme">
     <VueSelect :options="countries" placeholder="Choose a country" />
   </div>
 </template>
 
 <style scoped>
-.dark-theme {
+.purple-theme {
   padding: 1rem;
   border-radius: 0.5rem;
   background: #282c34;
@@ -78,6 +78,65 @@ what it styles. A few worth knowing:
 - `--vs-focus-color` and `--vs-focus-ring` style the [focus indicators](#focus-styles).
 - `--vs-state-disabled-bg`, `--vs-state-disabled-color` and `--vs-state-disabled-controls-color`
   style a `disabled` select.
+
+## Dark Mode
+
+Vue Select follows the page's [`color-scheme`](https://developer.mozilla.org/docs/Web/CSS/color-scheme).
+Under `color-scheme: dark` the field, dropdown, selected tags, icons, spinner and focus ring switch
+to dark colors. Pages that never set `color-scheme` stay light, so nothing changes until you opt in.
+
+::guide-dark-mode
+::
+
+The scheme comes from the nearest element that sets it, so you can set it on `<html>` for the whole
+page or on a wrapper for one section:
+
+```css
+/* follow the operating system */
+:root {
+  color-scheme: light dark;
+}
+
+/* Tailwind, Nuxt color mode and other class-based dark modes */
+.dark {
+  color-scheme: dark;
+}
+```
+
+To keep a select in one scheme on a page that switches, set `color-scheme` on the select itself
+(and on the [`append-to`](/guide/positioning#teleporting-the-dropdown) target if you teleport the
+dropdown):
+
+```css
+.v-select {
+  color-scheme: light;
+}
+```
+
+Option and search text use `inherit`, so they take the page's text color in either scheme. The
+highlighted option (`#136cfb` with white text) and the deselect color look the same in both.
+
+::callout{type="note" title="Teleported dropdowns"}
+A dropdown moved with `append-to` takes the `color-scheme` of its new parent (for example `body`),
+not of the field.
+::
+
+### Customizing Dark Colors
+
+There are no separate dark variables. Each color variable holds both values in
+[`light-dark()`](https://developer.mozilla.org/docs/Web/CSS/color_value/light-dark), so set a
+`light-dark()` pair to change both schemes, or a single color to use it in both:
+
+```css
+:root {
+  --vs-dropdown-bg: light-dark(#ffffff, #0f172a);
+  --vs-search-input-bg: light-dark(#ffffff, #0f172a);
+  --vs-selected-bg: light-dark(#f1f5f9, #1e293b);
+}
+```
+
+The [CSS Variables reference](/api/css-variables) lists the dark value of each variable. Browsers
+without `light-dark()` (before Chrome 123, Safari 17.5 and Firefox 120) always show the light colors.
 
 ## Overriding Default Styles
 

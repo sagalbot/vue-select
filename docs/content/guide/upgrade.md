@@ -93,7 +93,7 @@ documentation is archived at [/v3](/v3/).
 | Escape | blurs on an empty search | keeps focus |
 | `vs--searching` | hidden by `noDrop` | set whenever there is search text |
 | `toggleDropdown()` | takes the mouse event | takes no argument |
-| CSS variables | `--vs-dropdown-option-bg`, two sets of `--vs-transition-*` | removed / defined once; disabled colors apply; new `--vs-focus-color`, `--vs-focus-ring` |
+| CSS variables | `--vs-dropdown-option-bg`, two sets of `--vs-transition-*` | removed / defined once; disabled colors apply; new `--vs-focus-color`, `--vs-focus-ring`; colors follow `color-scheme` (dark mode) |
 | Template refs | the whole component instance | `open`, `search`, `select`, `deselect`, `clearSelection`, `toggleDropdown`, `focus`, `blur` |
 
 ## Platform and packaging
@@ -884,6 +884,13 @@ A few custom properties changed meaning, so check overrides that set them:
   disabled select, which therefore look lighter than in v3.
 - New: `--vs-focus-color` and `--vs-focus-ring` mark the field while it has focus (border color
   and ring), and `--vs-controls--spinner-size` scales the loading spinner.
+- Colors follow the page's `color-scheme`: under `color-scheme: dark` (or `light dark` with the OS
+  in dark mode) the field, dropdown, tags, icons, spinner and focus ring turn dark. Pages that never
+  set `color-scheme` stay light, as do browsers without `light-dark()`. If your app already has a
+  dark theme for Vue Select, either keep it (plain colors in your overrides apply to both schemes)
+  or move it into `light-dark()` pairs. See [Dark Mode](/guide/css#dark-mode).
+- New: `--vs-dropdown-group-label-color` (group labels, now AA contrast), `--vs-spinner-color` and
+  `--vs-spinner-track-color`.
 
 ```css
 /* closer to v3: dark disabled text, no focus ring */

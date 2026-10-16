@@ -4,13 +4,13 @@ import { countries } from '~/assets/static/data'
 </script>
 
 <template>
-  <div class="dark-theme">
+  <div class="purple-theme">
     <VueSelect :options="countries" placeholder="Choose a country" />
   </div>
 </template>
 
 <style scoped>
-.dark-theme {
+.purple-theme {
   padding: 1rem;
   border-radius: 0.5rem;
   background: #282c34;

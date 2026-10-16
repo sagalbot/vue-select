@@ -37,6 +37,8 @@ longer inside `.v-select`:
 - Selectors like `.my-select .vs__dropdown-menu` no longer match the menu.
 - [CSS variables](/guide/css#css-variables) set on a wrapper aren't inherited. Set them on `:root`
   or on the element you teleport to.
+- The menu takes the [`color-scheme`](/guide/css#dark-mode) of the element you teleport to, not of
+  the field, so a dark section on a light page needs `color-scheme` on the target too.
 - The menu carries the component's `dir`, so [right-to-left](/guide/localization#right-to-left)
   selects stay right-to-left.
 - The default position is in page coordinates. If you teleport into an element other than `body`,
