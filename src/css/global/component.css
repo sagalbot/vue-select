@@ -7,3 +7,17 @@
 .v-select * {
   box-sizing: border-box;
 }
+
+/* Icons (Heroicons): sized by CSS; fill is inherited from the control
+   (--vs-controls-color by default) */
+.vs__icon {
+  display: block;
+  flex-shrink: 0;
+  width: var(--vs-controls-icon-size);
+  height: var(--vs-controls-icon-size);
+}
+
+.vs__icon--small {
+  width: var(--vs-deselect-icon-size);
+  height: var(--vs-deselect-icon-size);
+}

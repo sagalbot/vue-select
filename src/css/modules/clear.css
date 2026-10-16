@@ -6,5 +6,6 @@
     border: 0;
     background-color: transparent;
     cursor: pointer;
-    margin-right: 8px;
+    /* the 20px icons carry ~5px of whitespace each side: no extra gap needed */
+    margin-right: 0;
 }

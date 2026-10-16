@@ -1,49 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ref, computed } from 'vue'
 import ComboBoxButton from '@/components/ComboBox/ComboBoxButton.vue'
 import { ComboBoxKey } from '@/keys'
-import type { ComboBoxContext, OptionValue } from '@/types'
-
-function createMockContext(overrides = {}): ComboBoxContext {
-  return {
-    open: ref(false),
-    search: ref(''),
-    selectedValue: computed(() => []),
-    filteredOptions: computed(() => []),
-    typeAheadPointer: ref(-1),
-    isLoading: ref(false),
-    disabled: computed(() => false),
-    multiple: computed(() => false),
-    filterable: computed(() => true),
-    noDrop: computed(() => false),
-    clearable: computed(() => true),
-    taggable: computed(() => false),
-    placeholder: computed(() => ''),
-    isValueEmpty: computed(() => true),
-    isSearching: computed(() => false),
-    uid: computed(() => 'test'),
-    deselectFromDropdown: computed(() => false),
-    autoscroll: computed(() => true),
-    select: vi.fn(),
-    deselect: vi.fn(),
-    clearSelection: vi.fn(),
-    toggleOpen: vi.fn(),
-    setOpen: vi.fn(),
-    setSearch: vi.fn(),
-    typeAheadUp: vi.fn(),
-    typeAheadDown: vi.fn(),
-    typeAheadSelect: vi.fn(),
-    toggleLoading: vi.fn(),
-    getOptionLabel: (opt: OptionValue) => String(opt),
-    getOptionKey: (opt: OptionValue) => JSON.stringify(opt),
-    isOptionSelected: () => false,
-    isOptionSelectable: () => true,
-    isOptionHighlighted: () => false,
-    optionList: computed(() => []),
-    ...overrides,
-  }
-}
+import { createMockContext } from './mockContext'
 
 function mountButton(ctxOverrides = {}) {
   const ctx = createMockContext(ctxOverrides)
@@ -70,6 +30,17 @@ describe('ComboBoxButton', () => {
   it('has aria-controls pointing to listbox', () => {
     const { wrapper } = mountButton()
     expect(wrapper.attributes('aria-controls')).toBe('vs-test-listbox')
+  })
+
+  it('is out of the tab order', () => {
+    const { wrapper } = mountButton()
+    expect(wrapper.attributes('tabindex')).toBe('-1')
+  })
+
+  it('click moves focus to the input', async () => {
+    const { wrapper, ctx } = mountButton()
+    await wrapper.trigger('click')
+    expect(ctx.focusInput).toHaveBeenCalled()
   })
 
   it('click calls toggleOpen', async () => {

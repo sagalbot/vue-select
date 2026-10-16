@@ -1,8 +1,3 @@
-:root {
-    --vs-transition-timing-function: cubic-bezier(1, 0.5, 0.8, 1);
-    --vs-transition-duration: 0.15s;
-}
-
 /* KeyFrames */
 @-webkit-keyframes vSelectSpinner {
     0% {
@@ -29,7 +24,8 @@
     transition: opacity var(--vs-transition-duration)
         var(--vs-transition-timing-function);
 }
-.vs__fade-enter,
+/* Vue 3 class names (v3 used Vue 2's .vs__fade-enter, so the fade-in never ran) */
+.vs__fade-enter-from,
 .vs__fade-leave-to {
     opacity: 0;
 }

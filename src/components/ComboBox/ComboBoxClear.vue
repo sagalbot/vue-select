@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { inject } from 'vue'
-import { ComboBoxKey } from '@/keys'
 
-const ctx = inject(ComboBoxKey)
-if (!ctx) throw new Error('ComboBoxClear must be used inside a ComboBox component')
+import { useComboBoxContext } from '../../keys'
+
+const ctx = useComboBoxContext('ComboBoxClear')
 </script>
 
 <template>
@@ -11,7 +10,7 @@ if (!ctx) throw new Error('ComboBoxClear must be used inside a ComboBox componen
     v-show="!ctx.isValueEmpty.value && ctx.clearable.value"
     type="button"
     aria-label="Clear selection"
-    @click="ctx.clearSelection()"
+    @click="ctx.clearSelection(), ctx.focusInput()"
     @mousedown.prevent
   >
     <slot />

@@ -1,0 +1,17 @@
+/* Option groups */
+
+.vs__dropdown-group,
+.vs__dropdown-group-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.vs__dropdown-group-label {
+    display: block;
+    padding: var(--vs-dropdown-option-padding);
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--vs-dropdown-group-label-color);
+    cursor: default;
+}

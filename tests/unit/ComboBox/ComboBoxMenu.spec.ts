@@ -1,53 +1,14 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import ComboBoxMenu from '@/components/ComboBox/ComboBoxMenu.vue'
 import { ComboBoxKey } from '@/keys'
-import type { ComboBoxContext, OptionValue } from '@/types'
+import { createMockContext } from './mockContext'
 
-function createMockContext(overrides = {}): ComboBoxContext {
-  return {
-    open: ref(false),
-    search: ref(''),
-    selectedValue: computed(() => []),
-    filteredOptions: computed(() => []),
-    typeAheadPointer: ref(-1),
-    isLoading: ref(false),
-    disabled: computed(() => false),
-    multiple: computed(() => false),
-    filterable: computed(() => true),
-    noDrop: computed(() => false),
-    clearable: computed(() => true),
-    taggable: computed(() => false),
-    placeholder: computed(() => ''),
-    isValueEmpty: computed(() => true),
-    isSearching: computed(() => false),
-    uid: computed(() => 'test'),
-    deselectFromDropdown: computed(() => false),
-    autoscroll: computed(() => true),
-    select: vi.fn(),
-    deselect: vi.fn(),
-    clearSelection: vi.fn(),
-    toggleOpen: vi.fn(),
-    setOpen: vi.fn(),
-    setSearch: vi.fn(),
-    typeAheadUp: vi.fn(),
-    typeAheadDown: vi.fn(),
-    typeAheadSelect: vi.fn(),
-    toggleLoading: vi.fn(),
-    getOptionLabel: (opt: OptionValue) => String(opt),
-    getOptionKey: (opt: OptionValue) => JSON.stringify(opt),
-    isOptionSelected: () => false,
-    isOptionSelectable: () => true,
-    isOptionHighlighted: () => false,
-    optionList: computed(() => []),
-    ...overrides,
-  }
-}
-
-function mountMenu(ctxOverrides = {}, slotContent?: string) {
+function mountMenu(ctxOverrides = {}, slotContent?: string, props = {}) {
   const ctx = createMockContext(ctxOverrides)
   const wrapper = mount(ComboBoxMenu, {
+    props,
     global: {
       provide: { [ComboBoxKey as symbol]: ctx },
     },
@@ -82,13 +43,46 @@ describe('ComboBoxMenu', () => {
     expect(wrapper.isVisible()).toBe(false)
   })
 
-  it('is hidden when noDrop is true even if open', () => {
-    const { wrapper } = mountMenu({ open: ref(true), noDrop: computed(() => true) })
-    expect(wrapper.isVisible()).toBe(false)
-  })
 
   it('renders slot content', () => {
     const { wrapper } = mountMenu({ open: ref(true) }, 'Test options')
     expect(wrapper.text()).toContain('Test options')
+  })
+
+  it('renders the element given by as', () => {
+    const { wrapper } = mountMenu({}, undefined, { as: 'ul' })
+    expect(wrapper.find('[role="listbox"]').element.tagName).toBe('UL')
+  })
+
+  it('show overrides the open state', () => {
+    const { wrapper } = mountMenu({ open: ref(true) }, undefined, { show: false })
+    const el = wrapper.find('[role="listbox"]').element as HTMLElement
+    expect(el.style.display).toBe('none')
+  })
+
+  describe('accessible name', () => {
+    it('defaults to "Options"', () => {
+      const { wrapper } = mountMenu()
+      expect(wrapper.attributes('aria-label')).toBe('Options')
+    })
+
+    it('uses a given aria-label', () => {
+      const ctx = createMockContext()
+      const wrapper = mount(ComboBoxMenu, {
+        attrs: { 'aria-label': 'Countries' },
+        global: { provide: { [ComboBoxKey as symbol]: ctx } },
+      })
+      expect(wrapper.attributes('aria-label')).toBe('Countries')
+    })
+
+    it('drops the default when labelled by another element', () => {
+      const ctx = createMockContext()
+      const wrapper = mount(ComboBoxMenu, {
+        attrs: { 'aria-labelledby': 'country-label' },
+        global: { provide: { [ComboBoxKey as symbol]: ctx } },
+      })
+      expect(wrapper.attributes('aria-label')).toBeUndefined()
+      expect(wrapper.attributes('aria-labelledby')).toBe('country-label')
+    })
   })
 })

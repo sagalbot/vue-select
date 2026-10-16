@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { inject, defineComponent, h } from 'vue'
 import ComboBox from '@/components/ComboBox/ComboBox.vue'
+import WrappedComboBox from './fixtures/WrappedComboBox.vue'
 import { ComboBoxKey } from '@/keys'
 
 // Helper component to inspect injected context
@@ -57,5 +58,48 @@ describe('ComboBox', () => {
     const reader = wrapper.findComponent(ContextReader)
     expect(reader.vm.ctx.multiple.value).toBe(true)
     expect(reader.vm.ctx.placeholder.value).toBe('Pick...')
+  })
+
+  it('passes state to the default slot', async () => {
+    const wrapper = mount(ComboBox, {
+      props: { options: ['one', 'two', 'three'], modelValue: 'two', open: true },
+      slots: {
+        default: (state: Record<string, unknown>) => {
+          const { open, filteredOptions, selected } = state as {
+            open: boolean
+            filteredOptions: string[]
+            selected: string[]
+          }
+          return h('div', `${open}|${filteredOptions.join(',')}|${selected.join(',')}`)
+        },
+      },
+    })
+    expect(wrapper.text()).toBe('true|one,two,three|two')
+  })
+
+  describe('wrapped in a component with comboBoxDefaults', () => {
+    it('keeps filtering on and opening uncontrolled', async () => {
+      const wrapper = mount(WrappedComboBox, { props: { options: ['apple', 'banana'] } })
+      await wrapper.find('button').trigger('click')
+      const listbox = wrapper.get('[role="listbox"]').element as HTMLElement
+      expect(listbox.style.display).not.toBe('none')
+      await wrapper.find('input').setValue('ban')
+      expect(wrapper.findAll('[role="option"]').map((o) => o.text())).toEqual(['banana'])
+    })
+
+    it('passes methods to the default slot', async () => {
+      const wrapper = mount(WrappedComboBox, { props: { options: ['apple'], modelValue: 'apple' } })
+      await wrapper.get('button.clear').trigger('click')
+      expect(wrapper.findComponent(ComboBox).emitted('update:modelValue')).toEqual([[null]])
+    })
+  })
+
+  it('exposes methods on a template ref', async () => {
+    const wrapper = mount(ComboBox, { props: { options: ['a', 'b'] } })
+    const vm = wrapper.vm as unknown as { select: (o: string) => void; setOpen: (v: boolean) => void }
+    vm.select('b')
+    expect(wrapper.emitted('update:modelValue')).toEqual([['b']])
+    vm.setOpen(true)
+    expect(wrapper.emitted('open')).toHaveLength(1)
   })
 })

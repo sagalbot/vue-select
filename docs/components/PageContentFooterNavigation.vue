@@ -9,7 +9,7 @@
       <dd class="mt-1">
         <a
           class="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300"
-          href="/docs/installation"
+          href="/guide/install"
         >
           Installation
           <span aria-hidden="true">→</span></a

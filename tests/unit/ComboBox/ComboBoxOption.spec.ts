@@ -1,49 +1,9 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import ComboBoxOption from '@/components/ComboBox/ComboBoxOption.vue'
 import { ComboBoxKey } from '@/keys'
-import type { ComboBoxContext, OptionValue } from '@/types'
-
-function createMockContext(overrides = {}): ComboBoxContext {
-  return {
-    open: ref(false),
-    search: ref(''),
-    selectedValue: computed(() => []),
-    filteredOptions: computed(() => []),
-    typeAheadPointer: ref(-1),
-    isLoading: ref(false),
-    disabled: computed(() => false),
-    multiple: computed(() => false),
-    filterable: computed(() => true),
-    noDrop: computed(() => false),
-    clearable: computed(() => true),
-    taggable: computed(() => false),
-    placeholder: computed(() => ''),
-    isValueEmpty: computed(() => true),
-    isSearching: computed(() => false),
-    uid: computed(() => 'test'),
-    deselectFromDropdown: computed(() => false),
-    autoscroll: computed(() => true),
-    select: vi.fn(),
-    deselect: vi.fn(),
-    clearSelection: vi.fn(),
-    toggleOpen: vi.fn(),
-    setOpen: vi.fn(),
-    setSearch: vi.fn(),
-    typeAheadUp: vi.fn(),
-    typeAheadDown: vi.fn(),
-    typeAheadSelect: vi.fn(),
-    toggleLoading: vi.fn(),
-    getOptionLabel: (opt: OptionValue) => String(opt),
-    getOptionKey: (opt: OptionValue) => JSON.stringify(opt),
-    isOptionSelected: () => false,
-    isOptionSelectable: () => true,
-    isOptionHighlighted: () => false,
-    optionList: computed(() => []),
-    ...overrides,
-  }
-}
+import { createMockContext } from './mockContext'
 
 function mountOption(props = {}, ctxOverrides = {}) {
   const ctx = createMockContext(ctxOverrides)
@@ -92,23 +52,10 @@ describe('ComboBoxOption', () => {
     expect(ctx.select).toHaveBeenCalledWith('test')
   })
 
-  it('click calls deselect when already selected and deselectFromDropdown is true', async () => {
-    const { wrapper, ctx } = mountOption({}, {
-      isOptionSelected: () => true,
-      deselectFromDropdown: computed(() => true),
-    })
+  it('click on a selected option calls select, which decides whether to deselect', async () => {
+    const { wrapper, ctx } = mountOption({}, { isOptionSelected: () => true })
     await wrapper.trigger('click')
-    expect(ctx.deselect).toHaveBeenCalledWith('test')
-  })
-
-  it('click does nothing when already selected and deselectFromDropdown is false', async () => {
-    const { wrapper, ctx } = mountOption({}, {
-      isOptionSelected: () => true,
-      deselectFromDropdown: computed(() => false),
-    })
-    await wrapper.trigger('click')
-    expect(ctx.select).not.toHaveBeenCalled()
-    expect(ctx.deselect).not.toHaveBeenCalled()
+    expect(ctx.select).toHaveBeenCalledWith('test')
   })
 
   it('click does nothing when disabled', async () => {
@@ -118,10 +65,10 @@ describe('ComboBoxOption', () => {
     expect(ctx.deselect).not.toHaveBeenCalled()
   })
 
-  it('mouseover updates typeAheadPointer', async () => {
+  it('mousemove updates typeAheadPointer', async () => {
     const pointer = ref(-1)
     const { wrapper } = mountOption({ index: 2 }, { typeAheadPointer: pointer })
-    await wrapper.trigger('mouseover')
+    await wrapper.trigger('mousemove')
     expect(pointer.value).toBe(2)
   })
 
@@ -133,5 +80,36 @@ describe('ComboBoxOption', () => {
     expect(wrapper.text()).toContain('selected:true')
     expect(wrapper.text()).toContain('highlighted:true')
     expect(wrapper.text()).toContain('disabled:false')
+  })
+
+  it('renders the element given by as', () => {
+    const { wrapper } = mountOption({ as: 'li' })
+    expect(wrapper.element.tagName).toBe('LI')
+  })
+
+  it('mousemove highlights a selectable option', async () => {
+    const typeAheadPointer = ref(-1)
+    const { wrapper } = mountOption({ index: 3 }, { typeAheadPointer })
+    await wrapper.trigger('mousemove')
+    expect(typeAheadPointer.value).toBe(3)
+  })
+
+  it('mousemove does not highlight a disabled option', async () => {
+    const typeAheadPointer = ref(-1)
+    const { wrapper } = mountOption(
+      { index: 3 },
+      { typeAheadPointer, isOptionSelectable: () => false }
+    )
+    await wrapper.trigger('mousemove')
+    expect(typeAheadPointer.value).toBe(-1)
+  })
+
+  // A list scrolling under a still pointer fires mouseover; only real
+  // pointer movement should take the highlight from the keyboard.
+  it('mouseover alone does not move the highlight', async () => {
+    const typeAheadPointer = ref(0)
+    const { wrapper } = mountOption({ index: 3 }, { typeAheadPointer })
+    await wrapper.trigger('mouseover')
+    expect(typeAheadPointer.value).toBe(0)
   })
 })

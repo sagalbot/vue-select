@@ -36,7 +36,7 @@ describe('useClickAway', () => {
     const callback = vi.fn()
     const { addClickAwayListener, removeClickAwayListener } = useClickAway(callback)
     addClickAwayListener(el)
-    removeClickAwayListener(el)
+    removeClickAwayListener()
 
     document.body.click()
     expect(callback).not.toHaveBeenCalled()
@@ -45,6 +45,6 @@ describe('useClickAway', () => {
   it('does not throw when removing listener before adding', () => {
     const callback = vi.fn()
     const { removeClickAwayListener } = useClickAway(callback)
-    expect(() => removeClickAwayListener(el)).not.toThrow()
+    expect(() => removeClickAwayListener()).not.toThrow()
   })
 })

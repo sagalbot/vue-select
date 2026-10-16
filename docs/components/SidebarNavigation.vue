@@ -61,6 +61,22 @@ const navigation = [
     ],
   },
 ]
+
+// v4 work-in-progress pages, served from docs/plans by the dev server only
+if (import.meta.dev) {
+  navigation.unshift({
+    title: 'v4 Progress (dev only)',
+    links: [
+      { href: '/plans/playground', title: 'Headless Playground' },
+      { href: '/plans/vue-select-v4', title: 'VueSelect v4 playground' },
+      { href: '/plans/icon-options', title: 'Icon options' },
+      { href: '/plans/2026-10-14-styled-wrapper', title: 'Styled Wrapper Plan' },
+      { href: '/plans/v4-breaking-changes', title: 'Breaking Changes' },
+      { href: '/plans/2026-02-16-v4-release-design', title: 'Release Design' },
+      { href: '/plans/2026-02-16-headless-primitives', title: 'Primitives Plan' },
+    ],
+  })
+}
 const router = { pathname: '' }
 </script>
 
