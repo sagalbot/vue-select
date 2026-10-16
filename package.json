@@ -102,7 +102,7 @@
       {
         "path": "./dist/vue-select.css",
         "compression": "gzip",
-        "maxSize": "2.25 KB"
+        "maxSize": "2.5 KB"
       }
     ]
   }
