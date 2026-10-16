@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { NuxtLink } from '#components'
 import ColorThemeSwitcher from '~/components/ThemeSwitcher.vue'
-import VersionSwitcher from '~/components/VersionSwitcher.vue'
+import MobileNavigation from '~/components/MobileNavigation.vue'
 import { useWindowScroll } from '@vueuse/core'
 import SpringloadedLogo from '~/assets/svg/springloaded-logo.svg'
 
@@ -20,32 +20,7 @@ const isScrolled = computed(() => y.value !== 0)
     ]"
   >
     <div class="mr-4 flex sm:mr-6 lg:hidden">
-      <button type="button" class="relative" aria-label="Open navigation">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke-width="2"
-          stroke-linecap="round"
-          class="h-6 w-6 stroke-slate-500"
-        >
-          <path d="M4 7h16M4 12h16M4 17h16"></path>
-        </svg>
-      </button>
-      <div
-        style="
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          padding: 0;
-          margin: -1px;
-          overflow: hidden;
-          clip: rect(0, 0, 0, 0);
-          white-space: nowrap;
-          border-width: 0;
-          display: none;
-        "
-      ></div>
+      <MobileNavigation />
     </div>
     <div class="relative flex grow basis-0 items-center">
       <NuxtLink
@@ -115,7 +90,6 @@ const isScrolled = computed(() => y.value !== 0)
     <div
       class="relative flex basis-0 items-center justify-end gap-4 sm:gap-8 md:grow"
     >
-      <VersionSwitcher />
       <ColorThemeSwitcher />
       <a
         class="group"
@@ -134,7 +108,7 @@ const isScrolled = computed(() => y.value !== 0)
         </svg>
       </a>
       <a
-        class="group hidden sm:block"
+        class="group"
         aria-label="Springloaded"
         target="_blank"
         href="https://springloaded.co"
