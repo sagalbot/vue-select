@@ -1,44 +1,87 @@
-## Selectable Prop <Badge text="v3.3.0+" />
+---
+title: Limiting Selections
+section: Use Cases
+description: Disable individual options with the selectable prop, and cap how many options can be selected.
+---
 
-The `selectable` prop determines if an option is selectable or not. If `selectable` returns false
-for a given option, it will be displayed with a `vs__dropdown-option--disabled` class. The option
-will be disabled and unable to be selected. 
+## The `selectable` Prop
+
+`selectable` is a function that receives an option and returns whether it can be selected. Options
+it returns `false` for stay in the list, but they're disabled:
+
+- they get the `vs__dropdown-option--disabled` class and `aria-disabled="true"`,
+- clicking them does nothing,
+- the keyboard highlight skips over them,
+- calling `select()` through a [template ref](/api/methods) ignores them too.
 
 ```js
-selectable: {
-  type: Function,
-  /**
-   * @param {Object|String} option
-   * @return {boolean}
-   */
-  default: option => true,
-},
+selectable: (option) => true // the default
 ```
 
-### Example
+## Example: Disabling Some Options
 
-Here `selectable` is used to prevent books by a certain author from being chosen. In this case,
-the options passed to the component are objects: 
+Here the options are book objects, and books by one author can't be chosen:
 
-```json
-{ 
-    title: "Right Ho Jeeves", 
-    author: { firstName: "P.D", lastName: "Woodhouse" }, 
-}
+```js
+{ title: 'Right Ho, Jeeves', author: { firstName: 'P.G.', lastName: 'Woodhouse' } }
 ```
 
-This object will be passed to `selectable`, so we can check if the author should be selectable or not.
+Each option is passed to `selectable`, which checks the author:
 
-<UnselectableExample />
+::guide-selectable-author
+::
 
-<<< @/.vitepress/components/UnselectableExample.vue{6}
+```vue
+<script setup>
+import VueSelect from 'vue-select'
+import { books } from './data'
+</script>
+
+<template>
+  <VueSelect
+    placeholder="Choose a book to read"
+    label="title"
+    :options="books"
+    :selectable="(book) => book.author.lastName !== 'Woodhouse'"
+  >
+    <template #option="{ title, author }">
+      {{ title }} <em style="opacity: 0.7">({{ author.lastName }})</em>
+    </template>
+  </VueSelect>
+</template>
+```
+
+If users need to know *why* an option is disabled, say so in the [option slot](/guide/slots#option-templates).
 
 ## Limiting the Number of Selections
 
-`selectable` can also be used a bit more creatively to limit the number selections that can be made 
-within the component. In this case, the user can select any author, but may only select a maximum
-of three books.
+`selectable` can also cap how many options a multiple select accepts. The function doesn't have
+to look at the option at all: here every option becomes unselectable once three books are
+selected. Removing a book makes the rest selectable again.
 
-<LimitSelectionQuantity />
+::guide-selectable-limit
+::
 
-<<< @/.vitepress/components/LimitSelectionQuantity.vue{8}
+```vue
+<script setup>
+import { ref } from 'vue'
+import VueSelect from 'vue-select'
+import { books } from './data'
+
+const selected = ref([])
+</script>
+
+<template>
+  <VueSelect
+    v-model="selected"
+    multiple
+    placeholder="Choose up to 3 books!"
+    label="title"
+    :options="books"
+    :selectable="() => selected.length < 3"
+  />
+</template>
+```
+
+Consider telling users about the limit up front, as the placeholder does here, or in a hint
+connected with `aria-describedby` through [`inputAttrs`](/guide/accessibility#input-attributes).

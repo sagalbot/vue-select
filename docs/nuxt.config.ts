@@ -11,30 +11,31 @@ export default defineNuxtConfig({
     'nuxt-svgo',
   ],
 
+  components: [
+    // live demos used in markdown as ::example-name, without a path prefix
+    { path: '~/components/content/examples', pathPrefix: false, global: true },
+    '~/components',
+  ],
+
   // https://color-mode.nuxtjs.org/
   colorMode: { classSuffix: '' },
 
   app: {
     head: {
       title: 'Vue Select',
-      meta: [{ name: 'description', content: 'My amazing site.' }],
+      meta: [
+        {
+          name: 'description',
+          content:
+            'Everything you wish the HTML select element could do, wrapped up into a lightweight, accessible and extensible Vue component.',
+        },
+      ],
     },
   },
 
   // https://content.nuxtjs.org/api/configuration
   content: {
     documentDriven: true,
-    // v4 work-in-progress pages (plans, breaking changes, playground), dev server only
-    sources:
-      process.env.NODE_ENV === 'production'
-        ? {}
-        : {
-            plans: {
-              driver: 'fs',
-              prefix: '/plans',
-              base: resolve(__dirname, 'plans'),
-            },
-          },
     // https://content.nuxtjs.org/api/configuration/#highlighttheme
     highlight: {
       theme: {

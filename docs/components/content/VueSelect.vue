@@ -1,5 +1,5 @@
 <script setup>
-import VueSelect from '~/components/VueSelect.vue'
+import VueSelect from '@/index'
 </script>
 
 <template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NuxtLink } from '#components'
 import ColorThemeSwitcher from '~/components/ThemeSwitcher.vue'
+import MobileNavigation from '~/components/MobileNavigation.vue'
 import { useWindowScroll } from '@vueuse/core'
 import SpringloadedLogo from '~/assets/svg/springloaded-logo.svg'
 
@@ -18,33 +19,8 @@ const isScrolled = computed(() => y.value !== 0)
         : 'dark:bg-transparent',
     ]"
   >
-    <div class="mr-6 flex lg:hidden">
-      <button type="button" class="relative" aria-label="Open navigation">
-        <svg
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke-width="2"
-          stroke-linecap="round"
-          class="h-6 w-6 stroke-slate-500"
-        >
-          <path d="M4 7h16M4 12h16M4 17h16"></path>
-        </svg>
-      </button>
-      <div
-        style="
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          padding: 0;
-          margin: -1px;
-          overflow: hidden;
-          clip: rect(0, 0, 0, 0);
-          white-space: nowrap;
-          border-width: 0;
-          display: none;
-        "
-      ></div>
+    <div class="mr-4 flex sm:mr-6 lg:hidden">
+      <MobileNavigation />
     </div>
     <div class="relative flex grow basis-0 items-center">
       <NuxtLink
@@ -79,12 +55,12 @@ const isScrolled = computed(() => y.value !== 0)
         </svg>
 
         <span
-          class="font-bold font-display tracking-tight text-sky-900 dark:text-sky-50"
+          class="whitespace-nowrap font-bold font-display tracking-tight text-sky-900 dark:text-sky-50"
           >Vue Select</span
         >
       </NuxtLink>
     </div>
-    <div class="-my-5 mr-6 sm:mr-8 md:mr-0">
+    <div class="-my-5 mr-4 sm:mr-8 md:mr-0">
       <button
         type="button"
         class="group flex h-6 w-6 items-center justify-center sm:justify-start md:h-auto md:w-80 md:flex-none md:rounded-lg md:py-2.5 md:pl-4 md:pr-3.5 md:text-sm md:ring-1 md:ring-slate-200 md:hover:ring-slate-300 dark:md:bg-slate-800/75 dark:md:ring-inset dark:md:ring-white/5 dark:md:hover:bg-slate-700/40 dark:md:hover:ring-slate-500 lg:w-96"
@@ -111,7 +87,9 @@ const isScrolled = computed(() => y.value !== 0)
         </kbd>
       </button>
     </div>
-    <div class="relative flex basis-0 justify-end gap-6 sm:gap-8 md:grow">
+    <div
+      class="relative flex basis-0 items-center justify-end gap-4 sm:gap-8 md:grow"
+    >
       <ColorThemeSwitcher />
       <a
         class="group"

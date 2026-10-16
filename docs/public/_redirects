@@ -1,0 +1,30 @@
+# Netlify redirects. The VuePress site (v3) served pages as /path.html; send those
+# links to the archived v3 page they were written against.
+/api/events.html  /v3/api/events  301
+/api/props.html  /v3/api/props  301
+/api/slots.html  /v3/api/slots  301
+/guide/accessibility.html  /v3/guide/accessibility  301
+/guide/ajax.html  /v3/guide/ajax  301
+/guide/components.html  /v3/guide/components  301
+/guide/css.html  /v3/guide/css  301
+/guide/filtering.html  /v3/guide/filtering  301
+/guide/infinite-scroll.html  /v3/guide/infinite-scroll  301
+/guide/install.html  /v3/guide/install  301
+/guide/keydown.html  /v3/guide/keydown  301
+/guide/localization.html  /v3/guide/localization  301
+/guide/loops.html  /v3/guide/loops  301
+/guide/opening.html  /v3/guide/opening  301
+/guide/options.html  /v3/guide/options  301
+/guide/pagination.html  /v3/guide/pagination  301
+/guide/positioning.html  /v3/guide/positioning  301
+/guide/selectable.html  /v3/guide/selectable  301
+/guide/slots.html  /v3/guide/slots  301
+/guide/upgrading.html  /v3/guide/upgrading  301
+/guide/validation.html  /v3/guide/validation  301
+/guide/values.html  /v3/guide/values  301
+/guide/vuex.html  /v3/guide/vuex  301
+/guide/templating.html  /v3/guide/slots  301
+/sponsors.html  /sponsors  301
+/contributors.html  /contributors  301
+/sandbox.html  /  301
+/validation.html  /v3/guide/validation  301
