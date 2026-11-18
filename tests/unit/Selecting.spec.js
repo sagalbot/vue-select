@@ -50,6 +50,28 @@ describe('VS - Selecting Values', () => {
     expect(Select.selectedValue).toEqual(Select.value)
   })
 
+  it('ignores a pending option click when disabled before mouseup', async () => {
+    const select = mount(VueSelect, {
+      propsData: { value: 'Apple', options: ['Apple', 'Orange'] },
+    })
+    const search = select.findComponent({ ref: 'search' })
+    await search.trigger('focus')
+    const orange = select.findAll('[role="option"]').at(1)
+    await orange.trigger('mousedown')
+    await select.setProps({ disabled: true })
+    await search.trigger('blur')
+    await orange.trigger('mouseup')
+    await orange.trigger('click')
+
+    expect(select.emitted('input')).toBeUndefined()
+    expect(select.emitted('option:selecting')).toBeUndefined()
+
+    await select.setProps({ disabled: false })
+    await orange.trigger('click')
+    expect(select.emitted('input')).toEqual([['Orange']])
+    select.destroy()
+  })
+
   it('can select an option on tab', () => {
     const Select = shallowMount(VueSelect, {
       propsData: {

@@ -996,6 +996,8 @@ export default {
      * @return {void}
      */
     select(option) {
+      if (this.disabled) return
+
       this.$emit('option:selecting', option)
       if (!this.isOptionSelected(option)) {
         if (this.taggable && !this.optionExists(option)) {
