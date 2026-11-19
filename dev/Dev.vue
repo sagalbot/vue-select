@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-select v-model="selected" v-bind="config" />
+    <v-select v-model="selected" v-bind="config"/>
   </div>
 </template>
 
